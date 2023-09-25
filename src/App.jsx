@@ -1,91 +1,35 @@
-import {
-  Add,
-  Comment,
-  DoorBack,
-  Favorite,
-  Help,
-  Home,
-  Menu,
-  NotificationAdd,
-  People,
-  Search,
-  Settings,
-  Star,
-  ViewHeadline,
-  ViewWeek,
-} from "@mui/icons-material";
-import {
-  Button,
-  Card,
-  IconButton,
-  InputAdornment,
-  MenuItem,
-  TextField,
-} from "@mui/material";
+import { Add, Menu, NotificationAdd } from "@mui/icons-material";
+import { Button, Card, IconButton } from "@mui/material";
 import React from "react";
-import { NavLink, Route, Routes } from "react-router-dom";
+import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
 import SeachBarTextField from "./components/SeachBarTextField";
 import Avatar from "@mui/material/Avatar";
 import avatarImage from "./assets/images/avatar.jpg";
 import ProfileMenu from "./components/Menu/ProfileMenu";
 import SavedFilters from "./components/MenuButtons/SavedFilters";
 import LightAndDarkModeSwitch from "./components/Switch/LightAndDarkModeSwitch";
-import manutd from "./assets/images/manutd.png";
-import ghana from "./assets/images/ghana.png";
-import ronaldo from "./assets/images/Ronaldo.png";
 import "bootstrap/dist/css/bootstrap.min.css";
-import NewsCarousel from "./components/Carousel/NewsCarousel";
-import MatchedPlayerCard from "./components/Cards/MatchedPlayerCard";
-import Top10PlayerPicksOfTheWeek from "./components/Carousel/Top10PlayerPicksOfTheWeek";
+import HomePage from "./screens/HomePage";
+import NavBarButton from "./components/NavBarButtons/NavBarButton";
+import PlayerDetails from "./screens/PlayerDetails";
 
 const App = () => {
-  const currencies = [
-    {
-      value: "USD",
-      label: "Yaw Sarpong",
-    },
-    {
-      value: "EUR",
-      label: "Yaw Sarpong",
-    },
-    {
-      value: "BTC",
-      label: "฿",
-    },
-    {
-      value: "JPY",
-      label: "¥",
-    },
+  const menuButtonsArray = [
+    { name: "Home", icon: "home" },
+    // The none values are for the savedFilters which is an accordion and not a button.. skipped over it in the map
+    { name: "none", icon: "none" },
+    { name: "Favourite", icon: "favorite" },
+    { name: "Community", icon: "people" },
+    { name: "News", icon: "comment" },
   ];
 
-  const NewsData = [
-    {
-      source: "espn",
-      title: "Spurs' Maddison, Son form dangerous duo in post-Harry Kane era",
-      url: "https://www.espn.in/football/story/_/id/38476998/heung-min-son-james-maddison-form-dangerous-duo-tottenham-hotspur-frustrate-arsenal",
-      img: "https://a.espncdn.com/photo/2023/0924/r1229084_1296x729_16-9.jpg",
-    },
-    {
-      title:
-        "10-man Man City still unstoppable, Man United end winless streak, more",
-      url: "https://www.espn.in/football/story/_/id/38471068/european-soccer-league-weekend-news-results-highlights-storylines-stats",
-      img: "https://a.espncdn.com/photo/2023/0923/r1228712_1296x729_16-9.jpg",
-      source: "espn",
-    },
-    {
-      source: "espn",
-      title:
-        "Sorry, Harry: Why Kane's hat trick for Bayern doesn't count in Germany",
-      url: "https://www.espn.in/football/story/_/id/38477403/why-harry-kane-hat-trick-bayern-munich-doesnt-count-germany",
-      img: "https://a.espncdn.com/photo/2023/0924/r1228979_1296x729_16-9.jpg",
-    },
-    {
-      title: "Kylian Mbappé comes off injured during Le Classique",
-      url: "https://onefootball.com/en/news/kylian-mbappe-comes-off-injured-during-le-classique-38275425",
-      img: "https://image-service.onefootball.com/transform?w=64&h=64&dpr=2&image=https%3A%2F%2Fwww.getfootballnewsfrance.com%2Fassets%2Ffbl-fra-ligue1-psg-marseille-19-scaled.webp",
-      source: "onefootball.com",
-    },
+  const menuButtonsArrayTWO2 = [
+    { name: "Help", icon: "help" },
+    { name: "Settings", icon: "settings" },
+    { name: "Logout", icon: "door_back" },
   ];
+
+  const navigate = useNavigate();
 
   return (
     <div
@@ -103,7 +47,6 @@ const App = () => {
         <div
           style={{
             flex: ".18",
-            // background: "yellow",
             paddingTop: "1%",
             display: "flex",
           }}
@@ -169,7 +112,6 @@ const App = () => {
         <div
           style={{
             flex: ".18",
-            // background: "red",
             display: "flex",
             flexDirection: "column",
             paddingTop: "5vh",
@@ -179,74 +121,35 @@ const App = () => {
           {/* // NavBAR FIRST HALF */}
           <div style={{ flex: ".65", overflowY: "scroll", maxHeight: "45vh" }}>
             <ul style={{ listStyleType: "none", marginLeft: "2vw" }}>
-              <li style={{ display: "flex" }}>
-                <Button
-                  style={{
-                    fontSize: ".8em",
-                    fontWeight: "600",
-                    textTransform: "none",
-                    textTransform: "none",
-                  }}
-                  startIcon={<Home style={{ width: 20, height: 20 }} />}
-                >
-                  {" "}
-                  Home{" "}
-                </Button>{" "}
-                <IconButton sx={{ marginLeft: "9vw" }}>
-                  {" "}
-                  <Menu />{" "}
-                </IconButton>
-              </li>
-              <li>
-                {/* <Button
-                style={{ fontSize: ".8em", fontWeight: "600" , textTransform:"none" }}
-                startIcon={<Star style={{ width: 20, height: 20  }} />}
-              >
-                {" "}
-                Saved Filters{" "}
-              </Button> */}
-                <SavedFilters />
-              </li>
+              {menuButtonsArray &&
+                menuButtonsArray.map((data) => {
+                  const { name, icon } = data;
 
-              <li>
-                <Button
-                  style={{
-                    fontSize: ".8em",
-                    fontWeight: "600",
-                    textTransform: "none",
-                  }}
-                  startIcon={<Favorite style={{ width: 20, height: 20 }} />}
-                >
-                  {" "}
-                  Favourites{" "}
-                </Button>
-              </li>
-              <li>
-                <Button
-                  style={{
-                    fontSize: ".8em",
-                    fontWeight: "600",
-                    textTransform: "none",
-                  }}
-                  startIcon={<People style={{ width: 20, height: 20 }} />}
-                >
-                  {" "}
-                  Community{" "}
-                </Button>
-              </li>
-              <li>
-                <Button
-                  style={{
-                    fontSize: ".8em",
-                    fontWeight: "600",
-                    textTransform: "none",
-                  }}
-                  startIcon={<Comment style={{ width: 20, height: 20 }} />}
-                >
-                  {" "}
-                  News{" "}
-                </Button>
-              </li>
+                  if (name === "none") {
+                    // this is to display the accordion list
+                    return (
+                      <li>
+                        <SavedFilters />
+                      </li>
+                    );
+                  } else if (name == "Home") {
+                    // This is to add the button which collapses the navbar
+                    return (
+                      <li style={{ display: "flex" }}>
+                        <NavBarButton ButtonName={name} ButtonImage={icon} />
+                        <IconButton sx={{ marginLeft: "9vw" }}>
+                          <Menu />
+                        </IconButton>
+                      </li>
+                    );
+                  } else {
+                    return (
+                      <li>
+                        <NavBarButton ButtonName={name} ButtonImage={icon} />
+                      </li>
+                    );
+                  }
+                })}
             </ul>
           </div>
 
@@ -254,47 +157,15 @@ const App = () => {
 
           <div style={{ flex: ".35" }}>
             <ul style={{ listStyleType: "none", marginLeft: "2vw" }}>
-              <li style={{ display: "flex" }}>
-                <Button
-                  style={{
-                    fontSize: ".8em",
-                    fontWeight: "600",
-                    textTransform: "none",
-                  }}
-                  startIcon={<Help style={{ width: 20, height: 20 }} />}
-                >
-                  {" "}
-                  Help{" "}
-                </Button>{" "}
-              </li>
-
-              <li style={{ display: "flex" }}>
-                <Button
-                  style={{
-                    fontSize: ".8em",
-                    fontWeight: "600",
-                    textTransform: "none",
-                  }}
-                  startIcon={<Settings style={{ width: 20, height: 20 }} />}
-                >
-                  {" "}
-                  Settings{" "}
-                </Button>{" "}
-              </li>
-
-              <li style={{ display: "flex" }}>
-                <Button
-                  style={{
-                    fontSize: ".8em",
-                    fontWeight: "600",
-                    textTransform: "none",
-                  }}
-                  startIcon={<DoorBack style={{ width: 20, height: 20 }} />}
-                >
-                  {" "}
-                  Logout{" "}
-                </Button>{" "}
-              </li>
+              {menuButtonsArrayTWO2 &&
+                menuButtonsArrayTWO2.map((data) => {
+                  const { name, icon } = data;
+                  return (
+                    <li>
+                      <NavBarButton ButtonName={name} ButtonImage={icon} />
+                    </li>
+                  );
+                })}
             </ul>
 
             <Card
@@ -337,176 +208,14 @@ const App = () => {
         <div
           style={{
             flex: ".82",
-            // background: "blue",
-            display: "flex",
-            flexDirection: "column",
             padding: "2vh 1.5vw",
-            gap: "1vh",
+            // background: "blue",
           }}
         >
-          {/* // FIRST SECTION`` */}
-          <div
-            style={{
-              flex: ".55",
-              // background: "yellow",
-              padding: "1vh .7vw",
-              display: "flex",
-              gap: "1.1vw",
-            }}
-          >
-            {/* // Transfer News carousel */}
-            <div
-              style={{
-                flex: ".6",
-                // background: "white",
-                borderRadius: "1vw",
-                position: "relative",
-              }}
-            >
-              <NewsCarousel NewsArray={NewsData} />
-            </div>
-            {/* // Most Viewed Player /&& fantasy player of the week ,  free agent pick of the week */}
-            <div
-              style={{
-                flex: ".4",
-                // background: "whitesmoke",
-                display: "flex",
-              }}
-            >
-              {/* // Players of the Week Pick */}
-              <div
-                style={{
-                  flex: "1",
-                  // background: "green",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <div style={{ flex: ".2", background: "white" }}>
-                  {" "}
-                  <h4 style={{ fontWeight: "900" }}>
-                    {" "}
-                    Player Picks of the Week{" "}
-                  </h4>{" "}
-                </div>
-                {/* // Player Pick Card */}
-                <div
-                  style={{
-                    flex: ".8",
-                    // background: "blue",
-                    borderRadius: "1vw",
-                    paddingLeft: ".5vw",
-                    paddingRight: ".5vw",
-                    paddingTop: ".5vh",
-                    paddingBottom: ".5vh",
-                  }}
-                >
-                  <Top10PlayerPicksOfTheWeek
-                    PlayerCountry={ghana}
-                    PlayerImage={ronaldo}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* SECOND SECTION */}
-          <div
-            style={{
-              flex: ".45",
-              // background: "green",
-              padding: ".4vh .5vw",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            {/* // Headers */}
-            <div style={{ flex: ".12", background: "white" }}>
-              <h6 style={{ float: "left", fontWeight: "800" }}>
-                Matched Players
-              </h6>
-              <h6
-                style={{
-                  float: "right",
-                  fontSize: ".95em",
-                  fontWeight: "800",
-                  cursor: "pointer",
-                }}
-              >
-                {" "}
-                View All{" "}
-              </h6>{" "}
-              <ViewWeek
-                sx={{
-                  float: "right",
-                  width: 20,
-                  height: 20,
-                  marginRight: ".7vw",
-                }}
-              />{" "}
-              <ViewHeadline
-                sx={{
-                  float: "right",
-                  width: 20,
-                  height: 20,
-                  marginRight: "1vw",
-                }}
-              />
-            </div>
-
-            {/* // Suggested Cards */}
-            <div
-              style={{
-                flex: ".88",
-                padding: ".5vh 1.5vw",
-                display: "flex",
-                gap: "1.2vw",
-              }}
-            >
-              <MatchedPlayerCard
-                PlayerClub={manutd}
-                PlayerCountry={ghana}
-                PlayerImage={ronaldo}
-                PlayerName={"Ronaldo"}
-                PlayerPosition={"ST"}
-              />
-              <MatchedPlayerCard
-                PlayerClub={manutd}
-                PlayerCountry={ghana}
-                PlayerImage={ronaldo}
-                PlayerName={"Ronaldo"}
-                PlayerPosition={"ST"}
-              />
-              <MatchedPlayerCard
-                PlayerClub={manutd}
-                PlayerCountry={ghana}
-                PlayerImage={ronaldo}
-                PlayerName={"Ronaldo"}
-                PlayerPosition={"ST"}
-              />
-              <MatchedPlayerCard
-                PlayerClub={manutd}
-                PlayerCountry={ghana}
-                PlayerImage={ronaldo}
-                PlayerName={"Ronaldo"}
-                PlayerPosition={"ST"}
-              />
-              <MatchedPlayerCard
-                PlayerClub={manutd}
-                PlayerCountry={ghana}
-                PlayerImage={ronaldo}
-                PlayerName={"Ronaldo"}
-                PlayerPosition={"ST"}
-              />
-              <MatchedPlayerCard
-                PlayerClub={manutd}
-                PlayerCountry={ghana}
-                PlayerImage={ronaldo}
-                PlayerName={"Ronaldo"}
-                PlayerPosition={"ST"}
-              />
-            </div>
-          </div>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/player-details" element={<PlayerDetails />} />
+          </Routes>
         </div>
       </div>
     </div>
@@ -514,117 +223,3 @@ const App = () => {
 };
 
 export default App;
-
-{
-  /* <div style={{ flex: ".88", padding: ".5vh 1.5vw" }}>
-<MatchedPlayerCard
-  PlayerClub={manutd}
-  PlayerCountry={ghana}
-  PlayerImage={ronaldo}
-  PlayerName={"Ronaldo"}
-  PlayerPosition={"ST"}
-/>
-</div> */
-}
-
-//   {/* // Player Picks of the  weel card area */}
-
-//   <div
-//   style={{
-//     // flex: "1",
-//     display: "flex",
-//     // background: "white",
-//   }}
-// >
-//   {" "}
-//   {/* // Image Of player */}
-//   <div
-//     style={{
-//       flex: ".25",
-//       borderRadius: ".7vw",
-//       backgroundImage: `url(${ronaldo})`,
-//       backgroundSize: "cover",
-//     }}
-//   ></div>
-//   {/* Player information */}
-//   <div
-//     style={{
-//       flex: ".55",
-//       background: "blue",
-//       display: "flex",
-//       flexDirection: "column",
-//       paddingLeft: ".5vw",
-//     }}
-//   >
-//     <div
-//       style={{
-//         flex: ".15",
-//         display: "flex",
-//         fontWeight: "900",
-//       }}
-//     >
-//       {" "}
-//       Cristiano Ronaldo{" "}
-//     </div>
-//     <div style={{ flex: ".4" }}>
-//       {" "}
-//       <span style={{ fontWeight: "900" }}>
-//         {" "}
-//         market value:{" "}
-//       </span>{" "}
-//       $15.00m
-//       <br />{" "}
-//       <span style={{ fontWeight: "900" }}>
-//         {" "}
-//         Position :{" "}
-//       </span>{" "}
-//       Striker{" "}
-//     </div>
-//   </div>
-//   {/* // Rank Number */}
-//   <div
-//     style={{
-//       flex: ".2",
-//       fontWeight: "900",
-//       fontSize: "2em",
-//     }}
-//   >
-//     {" "}
-//     #1{" "}
-//     <img
-//       src={ghana}
-//       style={{ width: "60px", height: "45px" }}
-//     />
-//   </div>
-// </div>
-// {/* // View Profile Button Area */}
-// <div
-//   style={{
-//     // flex: ".35",
-//     paddingTop: "3vh",
-
-//     // background: "white",
-//   }}
-// >
-//   <Button
-//     sx={{
-//       textTransform: "none",
-//       background: "black",
-//       fontWeight: "900",
-//       marginRight: "1vw",
-//     }}
-//   >
-//     {" "}
-//     Show Interest{" "}
-//   </Button>
-//   <Button
-//     sx={{
-//       textTransform: "none",
-//       background: "black",
-//       fontWeight: "900",
-//     }}
-//   >
-//     {" "}
-//     View Profile{" "}
-//   </Button>
-// </div>
