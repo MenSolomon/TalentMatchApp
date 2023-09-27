@@ -27,7 +27,10 @@ const MatchedPlayerCard = ({
           position: "relative",
           width: "10vw",
           height: "30vh",
-          // background: "red",
+          background:
+            "linear-gradient(133deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
+          // background: "#1B1E2B",
+          color: "white",
           borderBottomLeftRadius: "0px",
           borderBottomRightRadius: "6%",
           borderTopRightRadius: "6%",
@@ -37,6 +40,8 @@ const MatchedPlayerCard = ({
           padding: "1vh .7vw",
           gap: "1vh",
           cursor: "pointer",
+          // borderBottom: "3px solid white",
+          // borderLeft: "3px solid white",
         }}
       >
         {/* Player Image And Club */}

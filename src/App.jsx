@@ -136,16 +136,32 @@ const App = () => {
                     // This is to add the button which collapses the navbar
                     return (
                       <li style={{ display: "flex" }}>
-                        <NavBarButton ButtonName={name} ButtonImage={icon} />
-                        <IconButton sx={{ marginLeft: "9vw" }}>
+                        <NavBarButton
+                          ButtonName={name}
+                          ButtonImage={icon}
+                          buttonStyle={{
+                            background:
+                              "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
+                            // width: "14vw",
+                            marginRight: "1vw",
+                            borderRadius: ".5vw",
+                            color: "white",
+                          }}
+                        />
+
+                        {/* <IconButton sx={{ marginLeft: "9vw" }}>
                           <Menu />
-                        </IconButton>
+                        </IconButton> */}
                       </li>
                     );
                   } else {
                     return (
                       <li>
-                        <NavBarButton ButtonName={name} ButtonImage={icon} />
+                        <NavBarButton
+                          ButtonName={name}
+                          ButtonImage={icon}
+                          buttonStyle={{ color: "#095F68" }}
+                        />
                       </li>
                     );
                   }
@@ -171,13 +187,16 @@ const App = () => {
             <Card
               sx={{
                 width: 145,
-                height: 90,
-                marginLeft: "2vw",
+                height: 80,
+                marginLeft: "4.6vw",
                 paddingTop: "1vh",
                 paddingLeft: ".6vw",
                 paddingRight: ".6vw",
                 display: "flex",
+                background:
+                  "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
                 // background: "#1B1E2B",
+                color: "white",
               }}
             >
               <div

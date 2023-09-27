@@ -85,7 +85,7 @@ const HomePage = () => {
               flexDirection: "column",
             }}
           >
-            <div style={{ flex: ".2", background: "white" }}>
+            <div style={{ flex: ".2", background: "transparent" }}>
               {" "}
               <h4 style={{ fontWeight: "900" }}>
                 {" "}
@@ -122,7 +122,7 @@ const HomePage = () => {
         }}
       >
         {/* // Headers */}
-        <div style={{ flex: ".12", background: "white" }}>
+        <div style={{ flex: ".12", background: "transparent" }}>
           <h6 style={{ float: "left", fontWeight: "800" }}>Matched Players</h6>
           <h6
             style={{

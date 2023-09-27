@@ -16,10 +16,12 @@ export const SideBarNavButtons = ({
       <Button
         sx={{
           position: "relative",
-          right: "14%",
+          right: "17%",
           fontSize: ".7em",
           fontWeight: "700",
+          color: "#095F68",
           textTransform: "none",
+          width: "10vw",
         }}
         onClick={() => {
           navigate(`${path}`);
@@ -28,7 +30,7 @@ export const SideBarNavButtons = ({
         endIcon={endIcon}
         // disabled={disabled}
       >
-        <span style={{ fontSize: "1.1em" }}>{label} </span>
+        <span style={{ fontSize: "1.25em" }}>{label} </span>
       </Button>{" "}
     </Box>
   );

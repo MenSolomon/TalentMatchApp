@@ -64,8 +64,12 @@ const PlayerDetails = () => {
             sx={{
               width: "100%",
               height: "100%",
-              background: "#20316F",
+              background:
+                "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
               padding: "1.5vw",
+              borderBottom: "3px solid #BECBCC",
+              borderRight: "3px solid #BECBCC",
+              borderRadius: "1vw",
               display: "flex",
               //   borderRadius: "1vw",
             }}
@@ -82,7 +86,7 @@ const PlayerDetails = () => {
             <div
               style={{
                 flex: ".6",
-                color: "#C7E980",
+                color: "white",
                 paddingLeft: ".4vw",
               }}
             >
@@ -133,11 +137,15 @@ const PlayerDetails = () => {
             sx={{
               width: "100%",
               height: "100%",
-              background: "#12193F",
+              background:
+                "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
               padding: "1.5vw",
               display: "flex",
               flexDirection: "column",
-              color: "#C7E980",
+              borderBottom: "3px solid #BECBCC",
+              borderRight: "3px solid #BECBCC",
+              borderRadius: "1vw",
+              color: "white",
             }}
           >
             {/* Club name and Club Image Area , Nationality Area */}
@@ -209,16 +217,20 @@ const PlayerDetails = () => {
             sx={{
               width: "100%",
               height: "100%",
-              background: "#20316F",
+              background:
+                "linear-gradient(133deg, rgba(218,233,234,1) 0%, rgba(189,202,203,1) 35%, rgba(221,234,235,1) 73%, rgba(218,233,234,1) 100%)",
+              borderBottom: "3px solid #0d818e",
+              borderRight: "3px solid #0d818e",
+              borderRadius: "1vw",
               padding: "1.5vw",
               display: "flex",
-              color: "#C7E980",
+              color: "black",
               flexDirection: "column",
             }}
           >
             <div style={{ flex: ".3", display: "flex" }}>
               {" "}
-              Market Value :
+              <span style={{ fontWeight: "bolder" }}> Market Value :</span>
               <Card
                 sx={{
                   width: "4vw",
@@ -312,13 +324,32 @@ const PlayerDetails = () => {
             sx={{
               width: "100%",
               height: "100%",
-              background: "#12193F",
+              background:
+                "linear-gradient(133deg, rgba(218,233,234,1) 0%, rgba(189,202,203,1) 35%, rgba(221,234,235,1) 73%, rgba(218,233,234,1) 100%)",
+              borderBottom: "3px solid #0d818e",
+              borderRight: "3px solid #0d818e",
+              borderRadius: "1vw",
               paddingTop: "1.5vw",
               paddingLeft: "1.5vw",
 
-              color: "#C7E980",
+              color: "black",
             }}
           >
+            {/* <Card
+              sx={{
+                width: "100%",
+                height: "100%",
+                background:
+                  "linear-gradient(133deg, rgba(218,233,234,1) 0%, rgba(189,202,203,1) 35%, rgba(221,234,235,1) 73%, rgba(218,233,234,1) 100%)",
+                borderBottom: "3px solid #0d818e",
+                borderRight: "3px solid #0d818e",
+                // borderTop: "2px solid #0d818e",
+                padding: "1vw",
+                // fontWeight: "800",
+                borderRadius: "1vw",
+              }}
+            > */}
+
             <div
               style={{
                 display: "flex",
@@ -346,7 +377,17 @@ const PlayerDetails = () => {
               }
               sx={{ fontSize: ".8em" }}
             />
-            <Button sx={{ textTransform: "none", background: "white" }}>
+            <Button
+              sx={{
+                textTransform: "none",
+                fontWeight: "bold",
+                background:
+                  "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
+
+                borderRadius: ".5vw",
+                color: "white",
+              }}
+            >
               Show interest
             </Button>
           </Card>{" "}

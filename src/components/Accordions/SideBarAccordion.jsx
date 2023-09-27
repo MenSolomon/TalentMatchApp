@@ -27,10 +27,15 @@ export default function SideBarAccordion({
 
   return (
     <div>
-      <MuiAccordion disableGutters elevation={0} square>
+      <MuiAccordion
+        sx={{ background: "transparent" }}
+        disableGutters
+        elevation={0}
+        square
+      >
         <MuiAccordionSummary
           sx={{ height: "5px" }}
-          expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.95rem" }} />}
+          expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "1.1rem" }} />}
         >
           <SideBarNavButtons
             label={categoryLabel}
