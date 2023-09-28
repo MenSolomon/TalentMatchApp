@@ -129,6 +129,15 @@ li {
   margin-top: -7vh;
 }
 
+table thead tr th {
+  height: 40px;
+}
+table tbody tr td {
+  padding-bottom: 5px;
+  padding-top: 5px;
+  font-size: 0.9em;
+}
+
 /* 
 .kepperCirle {
   border: 2px solid white;

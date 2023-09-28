@@ -18,7 +18,7 @@ function CustomTabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <Typography sx={{ fontWeight: "bolder" }}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -38,13 +38,7 @@ function a11yProps(index) {
   };
 }
 
-export default function PlayerDetailsMenuTab({
-  PlayerTabItemsArray,
-  totalUnits,
-  activeUnits,
-  propertyImage1,
-  propertyImage2,
-}) {
+export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -53,15 +47,18 @@ export default function PlayerDetailsMenuTab({
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box sx={{ borderColor: "divider" }}>
         <Tabs
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
           sx={{
-            background: "#F3F0EB",
+            background: "transparent",
             borderRadius: "1vw",
-            borderBottom: "none",
+            borderBottom: "3px solid #0d818e",
+            borderRight: "3px solid #0d818e",
+            fontWeight: "bolder",
+            // border: "3px solid green",
           }}
         >
           {/* REMIND ME TO ADD NAVIGATE BASED ON THE NAME OF THE SCREEN  */}
@@ -72,7 +69,7 @@ export default function PlayerDetailsMenuTab({
             return (
               <Tab
                 label={data}
-                sx={{ width: "10vw", marginRight: "2vw", fontWeight: "900" }}
+                sx={{ width: "10vw", marginRight: "2vw", fontWeight: "bold" }}
                 {...a11yProps(key)}
               />
             );
