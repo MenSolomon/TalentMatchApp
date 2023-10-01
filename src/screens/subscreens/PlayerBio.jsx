@@ -42,10 +42,10 @@ const PlayerBio = () => {
               sx={{
                 width: "100%",
                 height: "100%",
-                background:
-                  "linear-gradient(133deg, rgba(218,233,234,1) 0%, rgba(189,202,203,1) 35%, rgba(221,234,235,1) 73%, rgba(218,233,234,1) 100%)",
-                borderBottom: "3px solid #0d818e",
-                borderRight: "3px solid #0d818e",
+                // background:
+                //   "linear-gradient(133deg, rgba(218,233,234,1) 0%, rgba(189,202,203,1) 35%, rgba(221,234,235,1) 73%, rgba(218,233,234,1) 100%)",
+                // borderBottom: "1px solid #0d818e",
+                // borderRight: "1px solid #0d818e",
                 // borderTop: "2px solid #0d818e",
                 padding: "1vw",
                 // fontWeight: "800",
@@ -134,10 +134,10 @@ const PlayerBio = () => {
               sx={{
                 width: "100%",
                 height: "100%",
-                background:
-                  "linear-gradient(133deg, rgba(218,233,234,1) 0%, rgba(189,202,203,1) 35%, rgba(221,234,235,1) 73%, rgba(218,233,234,1) 100%)",
-                borderBottom: "3px solid #0d818e",
-                borderRight: "3px solid #0d818e",
+                // background:
+                //   "linear-gradient(133deg, rgba(218,233,234,1) 0%, rgba(189,202,203,1) 35%, rgba(221,234,235,1) 73%, rgba(218,233,234,1) 100%)",
+                // borderBottom: "1px solid #0d818e",
+                // borderRight: "1px solid #0d818e",
                 // borderTop: "2px solid #0d818e",
                 paddingTop: "1vh",
                 borderRadius: "1vw",
@@ -151,10 +151,10 @@ const PlayerBio = () => {
               sx={{
                 width: "100%",
                 height: "100%",
-                background:
-                  "linear-gradient(133deg, rgba(218,233,234,1) 0%, rgba(189,202,203,1) 35%, rgba(221,234,235,1) 73%, rgba(218,233,234,1) 100%)",
-                borderBottom: "3px solid #0d818e",
-                borderRight: "3px solid #0d818e",
+                // background:
+                //   "linear-gradient(133deg, rgba(218,233,234,1) 0%, rgba(189,202,203,1) 35%, rgba(221,234,235,1) 73%, rgba(218,233,234,1) 100%)",
+                // borderBottom: "1px solid #0d818e",
+                // borderRight: "1px solid #0d818e",
                 // borderTop: "2px solid #0d818e",
 
                 borderRadius: "1vw",

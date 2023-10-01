@@ -14,8 +14,8 @@ const PlayerStatsDoughnut = ({ Percentage2ValuesArray }) => {
       {
         label: "Player Attributes",
         data: Percentage2ValuesArray,
-        backgroundColor: ["#0C7580", "transparent"],
-        borderColor: ["#0C7580", "transparent"],
+        backgroundColor: ["#5585fe", "transparent"],
+        borderColor: ["#5585fe", "transparent"],
         borderWidth: 0,
         borderRadius: 10,
       },

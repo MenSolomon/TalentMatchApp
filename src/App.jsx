@@ -140,8 +140,9 @@ const App = () => {
                           ButtonName={name}
                           ButtonImage={icon}
                           buttonStyle={{
-                            background:
-                              "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
+                            // background:
+                            //   "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
+                            background: "#5585fe",
                             // width: "14vw",
                             marginRight: "1vw",
                             borderRadius: ".5vw",
@@ -160,7 +161,7 @@ const App = () => {
                         <NavBarButton
                           ButtonName={name}
                           ButtonImage={icon}
-                          buttonStyle={{ color: "#095F68" }}
+                          buttonStyle={{ color: "#5585fe" }}
                         />
                       </li>
                     );
@@ -178,7 +179,11 @@ const App = () => {
                   const { name, icon } = data;
                   return (
                     <li>
-                      <NavBarButton ButtonName={name} ButtonImage={icon} />
+                      <NavBarButton
+                        ButtonName={name}
+                        ButtonImage={icon}
+                        buttonStyle={{ color: "#5585fe" }}
+                      />
                     </li>
                   );
                 })}
@@ -193,8 +198,9 @@ const App = () => {
                 paddingLeft: ".6vw",
                 paddingRight: ".6vw",
                 display: "flex",
-                background:
-                  "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
+                // background:
+                //   "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
+                background: "#5585fe",
                 // background: "#1B1E2B",
                 color: "white",
               }}

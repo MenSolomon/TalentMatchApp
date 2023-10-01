@@ -55,10 +55,10 @@ export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
           sx={{
             background: "transparent",
             borderRadius: "1vw",
-            borderBottom: "3px solid #0d818e",
-            borderRight: "3px solid #0d818e",
+            borderBottom: "1px solid #0d818e",
+            borderRight: "1px solid #0d818e",
             fontWeight: "bolder",
-            // border: "3px solid green",
+            // border: "1px solid green",
           }}
         >
           {/* REMIND ME TO ADD NAVIGATE BASED ON THE NAME OF THE SCREEN  */}

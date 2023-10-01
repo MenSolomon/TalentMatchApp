@@ -19,8 +19,9 @@ export const SideBarNavButtons = ({
           right: "17%",
           fontSize: ".7em",
           fontWeight: "700",
-          color: "#095F68",
+          color: "#5585fe",
           textTransform: "none",
+          // textAlign: "left",
           width: "10vw",
         }}
         onClick={() => {
@@ -30,7 +31,7 @@ export const SideBarNavButtons = ({
         endIcon={endIcon}
         // disabled={disabled}
       >
-        <span style={{ fontSize: "1.25em" }}>{label} </span>
+        <span style={{ fontSize: "1.25em", textAlign: "left" }}>{label} </span>
       </Button>{" "}
     </Box>
   );

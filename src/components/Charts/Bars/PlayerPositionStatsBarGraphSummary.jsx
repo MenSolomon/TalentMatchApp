@@ -52,7 +52,7 @@ const PlayerPositionStatsBarGraphSummary = () => {
       <Bar
         data={data}
         options={options}
-        style={{ width: "100%" }}
+        style={{ width: "100%", marginTop: "6vh" }}
         // style={{ background: "transparent" ,padding:"1px"}}
       ></Bar>
     </div>
