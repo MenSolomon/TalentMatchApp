@@ -51,6 +51,7 @@ const PlayerDetails = () => {
     "News",
     "MarketValue",
     "Achievements",
+    "Gallery",
   ];
 
   const isCardsCollapsedVariable = useSelector(selectIsCollapesedVariable);

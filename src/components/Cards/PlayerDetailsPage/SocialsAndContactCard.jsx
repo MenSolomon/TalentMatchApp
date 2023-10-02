@@ -47,12 +47,7 @@ const SocialAndContactAreaCard = ({ instagram, facebook }) => {
       </div>
 
       <FormControlLabel
-        control={
-          <Checkbox
-            icon={<StarBorder sx={{ color: "white" }} />}
-            checkedIcon={<Star />}
-          />
-        }
+        control={<Checkbox icon={<StarBorder />} checkedIcon={<Star />} />}
         label={<span style={{ fontSize: "0.8em" }}>Mark as favourite</span>}
         sx={{ fontSize: ".8em" }}
       />

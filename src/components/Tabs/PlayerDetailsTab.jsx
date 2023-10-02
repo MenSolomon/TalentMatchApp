@@ -55,8 +55,9 @@ export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
           sx={{
             background: "transparent",
             borderRadius: "1vw",
-            borderBottom: "1px solid #0d818e",
-            borderRight: "1px solid #0d818e",
+            // border: "2px solid #5585fe",
+
+            // borderRight: "1px solid #0d818e",
             fontWeight: "bolder",
             // border: "1px solid green",
           }}

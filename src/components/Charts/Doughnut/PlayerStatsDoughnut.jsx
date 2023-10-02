@@ -37,6 +37,8 @@ const PlayerStatsDoughnut = ({ Percentage2ValuesArray }) => {
 
   return (
     <div style={{ position: "relative" }}>
+      {/* <span> Solomon </span> */}
+
       <Doughnut
         data={data}
         options={options}
