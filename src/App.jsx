@@ -203,6 +203,7 @@ const App = () => {
                 background: "#5585fe",
                 // background: "#1B1E2B",
                 color: "white",
+                cursor: "pointer",
               }}
             >
               <div
