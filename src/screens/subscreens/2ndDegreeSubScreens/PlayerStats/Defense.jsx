@@ -68,8 +68,15 @@ const RawStatsDisplay = ({ value, label }) => {
   };
   return (
     <>
-      <h2 style={{ ...hTagStyle, textAlign: "center" }}>{value}</h2>{" "}
-      <h6 style={{ textAlign: "center" }}>{label}</h6>{" "}
+      <h2
+        className="primaryColor"
+        style={{ ...hTagStyle, textAlign: "center" }}
+      >
+        {value}
+      </h2>{" "}
+      <h6 className="primaryColor" style={{ textAlign: "center" }}>
+        {label}
+      </h6>{" "}
     </>
   );
 };

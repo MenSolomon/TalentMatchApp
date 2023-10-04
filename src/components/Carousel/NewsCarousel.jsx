@@ -31,13 +31,15 @@ const NewsCarousel = ({ NewsArray }) => {
             >
               <Card sx={{ borderRadius: "1vw" }}>
                 <div
+                  className="newsGradient"
                   style={{
                     position: "absolute",
                     top: "0",
                     left: "0",
                     width: "100%",
                     height: "100%",
-                    background: "rgba(0, 0, 0, 0.2)",
+                    borderRadius: "1vw",
+                    // background: "rgba(0, 0, 0, 0.2)",
                   }}
                 ></div>
 

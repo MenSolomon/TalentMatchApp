@@ -16,14 +16,15 @@ const Top10PlayerPicksOfTheWeek = ({ PlayerImage, PlayerCountry }) => {
       <Carousel.Item>
         {/* // Player Picks of the  weel card area */}
         <Card
+          className="cardBackground primaryColor cardBorder"
           sx={{
             height: "34.5vh",
             background: "teal",
             padding: "1vh 1vw",
             borderRadius: "1vw",
-            background:
-              "linear-gradient(133deg, rgba(218,233,234,1) 0%, rgba(189,202,203,1) 35%, rgba(221,234,235,1) 73%, rgba(218,233,234,1) 100%)",
-            color: "white",
+            // background:
+            //   "linear-gradient(133deg, rgba(218,233,234,1) 0%, rgba(189,202,203,1) 35%, rgba(221,234,235,1) 73%, rgba(218,233,234,1) 100%)",
+            // color: "white",
             borderBottom: "1px solid #0d818e",
             borderRight: "1px solid #0d818e",
           }}
@@ -32,7 +33,6 @@ const Top10PlayerPicksOfTheWeek = ({ PlayerImage, PlayerCountry }) => {
             style={{
               // flex: "1",
               display: "flex",
-              color: "black",
 
               // background: "white",
             }}
@@ -61,7 +61,6 @@ const Top10PlayerPicksOfTheWeek = ({ PlayerImage, PlayerCountry }) => {
                 style={{
                   flex: ".15",
                   display: "flex",
-                  color: "black",
                   fontWeight: "900",
                 }}
               >
@@ -107,12 +106,11 @@ const Top10PlayerPicksOfTheWeek = ({ PlayerImage, PlayerCountry }) => {
             <Button
               sx={{
                 textTransform: "none",
-                background: "black",
+
                 fontWeight: "900",
                 marginRight: "1vw",
                 color: "white",
-                background:
-                  "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
+                background: "#5585FE",
               }}
             >
               {" "}
@@ -121,11 +119,10 @@ const Top10PlayerPicksOfTheWeek = ({ PlayerImage, PlayerCountry }) => {
             <Button
               sx={{
                 textTransform: "none",
-                background: "black",
+
                 fontWeight: "900",
                 color: "white",
-                background:
-                  "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
+                background: "#5585FE",
               }}
             >
               {" "}

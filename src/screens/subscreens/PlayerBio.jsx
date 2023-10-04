@@ -39,6 +39,7 @@ const PlayerBio = () => {
           <div className="div" style={{ flex: ".32" }}>
             {" "}
             <Card
+              className="primaryColor"
               sx={{
                 width: "100%",
                 height: "100%",
@@ -50,6 +51,7 @@ const PlayerBio = () => {
                 padding: "1vw",
                 // fontWeight: "800",
                 borderRadius: "1vw",
+                background: "transparent",
               }}
             >
               <h6 style={{ fontWeight: "bolder" }}>Personal Information</h6>
@@ -131,6 +133,7 @@ const PlayerBio = () => {
           </div>
           <div className="div" style={{ flex: ".33" }}>
             <Card
+              className="primaryColor"
               sx={{
                 width: "100%",
                 height: "100%",
@@ -141,6 +144,7 @@ const PlayerBio = () => {
                 // borderTop: "2px solid #0d818e",
                 paddingTop: "1vh",
                 borderRadius: "1vw",
+                background: "transparent",
               }}
             >
               <PlayerPositionStatsBarGraphSummary />
@@ -148,6 +152,7 @@ const PlayerBio = () => {
           </div>
           <div className="div" style={{ flex: ".35" }}>
             <Card
+              className="primaryColor"
               sx={{
                 width: "100%",
                 height: "100%",
@@ -158,6 +163,7 @@ const PlayerBio = () => {
                 // borderTop: "2px solid #0d818e",
 
                 borderRadius: "1vw",
+                background: "transparent",
               }}
             >
               <PlayerOverallAttributes />

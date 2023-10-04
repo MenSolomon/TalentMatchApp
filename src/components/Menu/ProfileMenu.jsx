@@ -19,6 +19,7 @@ export default function ProfileMenu({ style, name }) {
   return (
     <div style={importStyle}>
       <Button
+        className="primaryColor"
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"

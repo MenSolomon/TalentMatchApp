@@ -96,7 +96,13 @@ const PlayerStats = () => {
           onChange={handleCategoryChange}
           // label="Select"
           defaultValue="Club Stats"
-          style={{ width: "15%", marginRight: "1vw" }}
+          style={{
+            width: "15%",
+            marginRight: "1vw",
+
+            border: ".6px solid white",
+            borderRadius: ".3vw",
+          }}
         >
           {statisticsMenu.map((option) => (
             <MenuItem key={option.value} value={option.value}>

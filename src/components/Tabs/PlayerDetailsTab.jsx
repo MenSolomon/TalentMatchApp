@@ -18,7 +18,9 @@ function CustomTabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography sx={{ fontWeight: "bolder" }}>{children}</Typography>
+          <Typography sx={{ fontWeight: "bolder", color: "white" }}>
+            {children}
+          </Typography>
         </Box>
       )}
     </div>
@@ -56,7 +58,7 @@ export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
             background: "transparent",
             borderRadius: "1vw",
             // border: "2px solid #5585fe",
-
+            color: "white",
             // borderRight: "1px solid #0d818e",
             fontWeight: "bolder",
             // border: "1px solid green",
@@ -69,8 +71,13 @@ export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
           {PlayerTabItemsArray.map((data, key) => {
             return (
               <Tab
+                className="primaryColor"
                 label={data}
-                sx={{ width: "10vw", marginRight: "2vw", fontWeight: "bold" }}
+                sx={{
+                  width: "10vw",
+                  // marginRight: "2vw",
+                  fontWeight: "bold",
+                }}
                 {...a11yProps(key)}
               />
             );

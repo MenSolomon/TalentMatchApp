@@ -48,7 +48,7 @@ const PlayerDetails = () => {
   const menuLabelArray = [
     "Bio",
     "Stats",
-    "News",
+    // "News",
     "MarketValue",
     "Achievements",
     "Gallery",

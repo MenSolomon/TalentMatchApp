@@ -19,7 +19,6 @@ const ClubandNationalTeamDisplayCard = ({
         // borderBottom: "1px solid ",
         // borderRight: "1px solid #BECBCC",
         borderRadius: "1vw",
-        color: "black",
       }}
     >
       {/* Club name and Club Image Area , Nationality Area */}

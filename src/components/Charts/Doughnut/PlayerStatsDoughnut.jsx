@@ -45,6 +45,7 @@ const PlayerStatsDoughnut = ({ Percentage2ValuesArray }) => {
         style={{ width: "50%", height: "10vh" }}
       />
       <div
+        className="primaryColor"
         style={{
           position: "absolute",
           bottom: "32%",

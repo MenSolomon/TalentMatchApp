@@ -1,6 +1,6 @@
 import { Add, Menu, NotificationAdd } from "@mui/icons-material";
 import { Button, Card, IconButton } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
 import SeachBarTextField from "./components/SeachBarTextField";
 import Avatar from "@mui/material/Avatar";
@@ -12,6 +12,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import HomePage from "./screens/HomePage";
 import NavBarButton from "./components/NavBarButtons/NavBarButton";
 import PlayerDetails from "./screens/PlayerDetails";
+import { useSelector } from "react-redux";
+import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 
 const App = () => {
   const menuButtonsArray = [
@@ -29,7 +31,94 @@ const App = () => {
     { name: "Logout", icon: "door_back" },
   ];
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+
+  // const [themePallette, setThemePallette] = useState({us});
+
+  // const [isSwitched, setIsSwitched] = useState(false);
+
+  const themeProviderObject = useSelector(selectThemeProviderObject);
+
+  const { background, cardBackground, primaryTextColor } = themeProviderObject;
+
+  const styles = `.playerCard , .field {
+
+    border: 1px solid transparent;
+  
+    background: linear-gradient(${cardBackground}, ${cardBackground}) padding-box,
+      linear-gradient(
+          90deg,
+          hsla(280, 81%, 58%, 1) 0%,
+          hsla(279, 81%, 59%, 1) 3%,
+          hsla(276, 79%, 60%, 1) 9%,
+          hsla(274, 79%, 60%, 1) 15%,
+          hsla(269, 76%, 61%, 1) 15%,
+          hsla(271, 77%, 61%, 1) 23%,
+          hsla(259, 72%, 62%, 1) 32%,
+          hsla(246, 68%, 64%, 1) 49%,
+          hsla(226, 67%, 60%, 1) 56%,
+          hsla(194, 96%, 42%, 1) 74%,
+          hsla(196, 80%, 79%, 1) 100%
+        )
+        border-box;
+  }
+
+  .playerCard{
+    color: ${primaryTextColor}
+  }
+  
+  .primaryColor{
+    color: ${primaryTextColor}
+  }
+
+  .cardBackground{
+    background-color: ${cardBackground}
+  }
+
+  .cardBorder{
+    border-right:  .2px solid ${
+      primaryTextColor !== "black"
+        ? "rgba(19, 19, 19, 0.849)"
+        : "rgba(54, 54, 54, 0.671)"
+    }  ;
+    border-bottom: .2px solid ${
+      primaryTextColor !== "black"
+        ? "rgba(19, 19, 19, 0.849)"
+        : "rgba(54, 54, 54, 0.671)"
+    }  ;
+   
+  }
+
+.newsGradient{
+  background: linear-gradient(
+    270deg,
+    hsla(280, 81%, 58%, 1) 0%,
+    hsla(279, 81%, 59%, 1) 3%,
+    hsla(276, 79%, 60%, 1) 9%,
+    hsla(274, 79%, 60%, 1) 15%,
+    hsla(269, 76%, 61%, 1) 15%,
+    hsla(271, 77%, 61%, 1) 23%,
+    hsla(259, 72%, 62%, 1) 32%,
+    hsla(246, 68%, 64%, 1) 49%,
+    hsla(226, 67%, 60%, 1) 56%,
+    hsla(194, 96%, 42%, 1) 74%,
+    hsla(196, 80%, 79%, 1) 100%
+  );
+
+  opacity:.5
+}
+  
+  `;
+
+  useEffect(() => {
+    const { background, cardBackground } = themeProviderObject;
+
+    const body = document.querySelector("body");
+
+    if (body) {
+      body.style.background = background;
+    }
+  }, [themeProviderObject]);
 
   return (
     <div
@@ -38,6 +127,9 @@ const App = () => {
         flexDirection: "column",
         height: "100vh",
         width: "100vw",
+        // background: background,
+        color: primaryTextColor,
+        // zIndex: "-3",
       }}
     >
       {/* //=====  NAVBAR ======= \\ */}
@@ -67,7 +159,7 @@ const App = () => {
         {/* // Search Area? */}
         <div style={{ flex: ".45", paddingTop: "1%", paddingLeft: "4vw" }}>
           {/* "#3D2A2F */}
-          <SeachBarTextField label={"Search Player"} marginLeft="3vw" />{" "}
+          {/* <SeachBarTextField label={"Search Player"} marginLeft="3vw" />{" "} */}
         </div>
         {/* // profile details Area */}
         <div
@@ -88,7 +180,7 @@ const App = () => {
           />
 
           <IconButton sx={{ float: "right", marginLeft: ".5vw" }}>
-            <NotificationAdd />
+            <NotificationAdd className="primaryColor" />
           </IconButton>
           <Avatar
             sx={{
@@ -161,7 +253,7 @@ const App = () => {
                         <NavBarButton
                           ButtonName={name}
                           ButtonImage={icon}
-                          buttonStyle={{ color: "#5585fe" }}
+                          // buttonStyle={{ color: "#E4E8F9" }}
                         />
                       </li>
                     );
@@ -182,7 +274,7 @@ const App = () => {
                       <NavBarButton
                         ButtonName={name}
                         ButtonImage={icon}
-                        buttonStyle={{ color: "#5585fe" }}
+                        // buttonStyle={{ color: "#E4E8F9" }}
                       />
                     </li>
                   );
@@ -244,6 +336,7 @@ const App = () => {
           </Routes>
         </div>
       </div>
+      <style dangerouslySetInnerHTML={{ __html: styles }} />;
     </div>
   );
 };

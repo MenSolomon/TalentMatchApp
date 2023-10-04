@@ -1,6 +1,9 @@
 const Discipline = () => {
   return (
-    <div style={{ width: "100%", height: "100%", display: "flex", gap: "5vw" }}>
+    <div
+      className="primaryColor"
+      style={{ width: "100%", height: "100%", display: "flex", gap: "5vw" }}
+    >
       <CardDisplay
         CardName="Yellow Cards"
         number="4"
@@ -64,6 +67,7 @@ export const CardDisplay = ({
           placeContent: "center",
           borderRadius: ".4vw",
           marginBottom: "1.5vh",
+          color: "black",
         }}
       >
         {number}

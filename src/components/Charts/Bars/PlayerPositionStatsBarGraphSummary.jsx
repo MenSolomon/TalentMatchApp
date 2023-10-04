@@ -46,7 +46,11 @@ const PlayerPositionStatsBarGraphSummary = () => {
 
   return (
     <div
-      style={{ marginTop: "1vh", paddingLeft: ".6vw", paddingRight: ".6vw" }}
+      style={{
+        marginTop: "1vh",
+        paddingLeft: ".6vw",
+        paddingRight: ".6vw",
+      }}
     >
       <h6 style={{ fontWeight: "bolder" }}>Last 5 matches G/A ratio</h6>
       <Bar

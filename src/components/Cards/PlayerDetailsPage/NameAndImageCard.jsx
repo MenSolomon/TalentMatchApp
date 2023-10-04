@@ -7,9 +7,7 @@ const NameAndImageCard = ({ hTagStyle, ronaldo }) => {
       style={{
         width: "100%",
         height: "100%",
-
         padding: "1.5vw",
-
         borderRadius: "1vw",
         display: "flex",
         //   borderRadius: "1vw",
@@ -24,7 +22,7 @@ const NameAndImageCard = ({ hTagStyle, ronaldo }) => {
       <div
         style={{
           flex: ".6",
-          //   color: "white",
+
           paddingLeft: ".4vw",
         }}
       >

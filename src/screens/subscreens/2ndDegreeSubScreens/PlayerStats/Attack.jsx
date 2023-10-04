@@ -6,7 +6,7 @@ import header from "../../../../assets/images/header.png";
 
 const Attack = () => {
   return (
-    <div style={{ display: "flex" }}>
+    <div className="primaryColor" style={{ display: "flex" }}>
       <div style={{ flex: ".4" }}>
         {" "}
         <PlayerGoalDetailsGraph />
@@ -141,6 +141,7 @@ export const DisplayGoalTypeCard = ({
 }) => {
   return (
     <div
+      className="primaryColor"
       style={{
         gridArea: gridArea,
         display: "flex",

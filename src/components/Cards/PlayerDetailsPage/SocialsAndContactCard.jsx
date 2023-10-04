@@ -1,8 +1,13 @@
 import { Star, StarBorder } from "@mui/icons-material";
 import { Button, Checkbox, FormControlLabel } from "@mui/material";
 import BasicButton from "../../Buttons/BasicButton";
+import { useSelector } from "react-redux";
+import { selectThemeProviderObject } from "../../../statemanager/slices/ThemeProviderSlice";
 
 const SocialAndContactAreaCard = ({ instagram, facebook }) => {
+  const themeProviderObject = useSelector(selectThemeProviderObject);
+  const { primaryTextColor } = themeProviderObject;
+
   return (
     <div
       className="playerCard"
@@ -12,8 +17,6 @@ const SocialAndContactAreaCard = ({ instagram, facebook }) => {
         borderRadius: "1vw",
         paddingTop: "1.5vw",
         paddingLeft: "1.5vw",
-
-        color: "black",
       }}
     >
       {/* <Card
@@ -47,16 +50,24 @@ const SocialAndContactAreaCard = ({ instagram, facebook }) => {
       </div>
 
       <FormControlLabel
-        control={<Checkbox icon={<StarBorder />} checkedIcon={<Star />} />}
-        label={<span style={{ fontSize: "0.8em" }}>Mark as favourite</span>}
+        control={
+          <Checkbox
+            icon={<StarBorder style={{ color: primaryTextColor }} />}
+            checkedIcon={<Star />}
+          />
+        }
+        label={
+          <span style={{ fontSize: "0.8em", color: primaryTextColor }}>
+            Mark as favourite
+          </span>
+        }
         sx={{ fontSize: ".8em" }}
       />
       <BasicButton
         style={{
           textTransform: "none",
-          fontWeight: "bold",
-
           color: "white",
+          fontWeight: "bold",
         }}
         innerText={"Show interest"}
       />

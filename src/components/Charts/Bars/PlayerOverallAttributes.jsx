@@ -34,8 +34,8 @@ const PlayerOverallAttributes = () => {
         label: "Player Attributes",
         data: [13, 16, 19, 3, 8, 10, 3, 5],
         backgroundColor: "aqua",
-        borderColor: "black",
-        borderWidth: 1,
+        borderColor: "white",
+        borderWidth: 2,
       },
       //   {
       //     label: "Defending",

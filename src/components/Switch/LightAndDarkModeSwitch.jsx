@@ -1,7 +1,14 @@
-import * as React from "react";
 import { styled } from "@mui/material/styles";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectThemeProviderObject,
+  setThemeProviderToDarkMode,
+  setThemeProviderToLightMode,
+} from "../../statemanager/slices/ThemeProviderSlice";
+import { useEffect, useState } from "react";
+import { red } from "@mui/material/colors";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -51,11 +58,56 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 }));
 
 export default function LightAndDarkModeSwitch({ style }) {
+  const [isSwitched, setIsSwitched] = useState(false);
+
   let SwitchStyle = style;
+
+  const themeProviderObject = useSelector(selectThemeProviderObject);
+  const dispatch = useDispatch();
+
+  console.log(themeProviderObject);
+
+  const handleChangeSwithValue = (e) => {
+    const Event = e.target.checked;
+    setIsSwitched(Event);
+    if (Event === true) {
+      dispatch(setThemeProviderToDarkMode());
+    } else if (Event === false) {
+      dispatch(setThemeProviderToLightMode());
+    }
+  };
+
+  const { background, cardBackground } = themeProviderObject;
+
+  // useEffect(() => {
+  //   const { background, cardBackground } = themeProviderObject;
+
+  //   const root = document.documentElement;
+  //   const body = document.querySelector("body");
+  //   const cards = document.querySelector(".playerCard");
+  //   const field = document.querySelector(".field");
+
+  //   if (body && cards && field) {
+  //     // Set the styles only if the elements exist
+  //     body.style.background = background;
+  //     field.style.background = cardBackground;
+  //     // cards.style.background = "#141c3f";
+  //     root.style.setProperty("--cardBackground", cardBackground);
+  //     // root.style.background = background;
+  //   }
+  // }, [isSwitched, themeProviderObject.background]);
+
   return (
     <FormControlLabel
       sx={{ SwitchStyle }}
-      control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked />}
+      control={
+        <MaterialUISwitch
+          sx={{ m: 1 }}
+          defaultChecked={background === "#09142D" ? true : false}
+          // defaultChecked
+          onChange={handleChangeSwithValue}
+        />
+      }
     />
   );
 }

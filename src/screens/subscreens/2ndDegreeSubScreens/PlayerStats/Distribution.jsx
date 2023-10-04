@@ -2,7 +2,10 @@ import PlayerStatsDoughnut from "../../../../components/Charts/Doughnut/PlayerSt
 
 const Distribution = () => {
   return (
-    <div style={{ display: "flex", width: "100%", height: "100%" }}>
+    <div
+      className="primaryColor"
+      style={{ display: "flex", width: "100%", height: "100%" }}
+    >
       {/* PASS SUCCESS GRAPHS */}
       <div style={{ flex: ".4", display: "flex" }}>
         {/* Successful passes */}
@@ -199,7 +202,7 @@ export default Distribution;
 
 export const AttributesToFormat = ({ number, name }) => {
   return (
-    <span style={{ textAlign: "center" }}>
+    <span className="primaryColor" style={{ textAlign: "center" }}>
       {" "}
       <span
         style={{

@@ -1,8 +1,62 @@
 import { Details, Favorite } from "@mui/icons-material";
 import { Avatar, Card, Icon } from "@mui/material";
 import BasicButton from "../../Buttons/BasicButton";
+import { selectThemeProviderObject } from "../../../statemanager/slices/ThemeProviderSlice";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const AchievementAndMarketValueCard = ({ worldCup, BalonDor, uefa }) => {
+  const themeProviderObject = useSelector(selectThemeProviderObject);
+  const { cardBackground } = themeProviderObject;
+
+  // const [background,setBackground]= useState()
+
+  const backgroundGradient = `linear-gradient(${cardBackground}, ${cardBackground})
+padding-box,
+linear-gradient(
+  90deg,
+  hsla(280, 81%, 58%, 1) 0%,
+  hsla(279, 81%, 59%, 1) 3%,
+  hsla(276, 79%, 60%, 1) 9%,
+  hsla(274, 79%, 60%, 1) 15%,
+  hsla(269, 76%, 61%, 1) 15%,
+  hsla(271, 77%, 61%, 1) 23%,
+  hsla(259, 72%, 62%, 1) 32%,
+  hsla(246, 68%, 64%, 1) 49%,
+  hsla(226, 67%, 60%, 1) 56%,
+  hsla(194, 96%, 42%, 1) 74%,
+  hsla(196, 80%, 79%, 1) 100%
+)
+border-box;`;
+
+  {
+    /* <style>
+
+.playerCard {
+
+  border: 1px solid transparent;
+
+  background: linear-gradient(red, red) padding-box,
+    linear-gradient(
+        90deg,
+        hsla(280, 81%, 58%, 1) 0%,
+        hsla(279, 81%, 59%, 1) 3%,
+        hsla(276, 79%, 60%, 1) 9%,
+        hsla(274, 79%, 60%, 1) 15%,
+        hsla(269, 76%, 61%, 1) 15%,
+        hsla(271, 77%, 61%, 1) 23%,
+        hsla(259, 72%, 62%, 1) 32%,
+        hsla(246, 68%, 64%, 1) 49%,
+        hsla(226, 67%, 60%, 1) 56%,
+        hsla(194, 96%, 42%, 1) 74%,
+        hsla(196, 80%, 79%, 1) 100%
+      )
+      border-box;
+}
+
+</style> */
+  }
+
   return (
     <div
       className="playerCard"
@@ -12,7 +66,7 @@ const AchievementAndMarketValueCard = ({ worldCup, BalonDor, uefa }) => {
         borderRadius: "1vw",
         padding: "1.5vw",
         display: "flex",
-        color: "black",
+        // color: "#E4E8F9",
         flexDirection: "column",
       }}
     >
