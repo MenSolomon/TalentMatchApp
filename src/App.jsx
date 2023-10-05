@@ -15,6 +15,7 @@ import PlayerDetails from "./screens/PlayerDetails";
 import { useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 import ViewAllScreen from "./screens/ViewAllScreen";
+import CreateProfileModal from "./components/Modals/CreateProfileModal";
 
 const App = () => {
   const menuButtonsArray = [
@@ -129,7 +130,7 @@ const App = () => {
   `;
 
   useEffect(() => {
-    const { background, cardBackground } = themeProviderObject;
+    const { background } = themeProviderObject;
 
     const body = document.querySelector("body");
 
@@ -232,20 +233,20 @@ const App = () => {
           <div style={{ flex: ".65", overflowY: "scroll", maxHeight: "45vh" }}>
             <ul style={{ listStyleType: "none", marginLeft: "2vw" }}>
               {menuButtonsArray &&
-                menuButtonsArray.map((data) => {
+                menuButtonsArray.map((data, index) => {
                   const { name, icon } = data;
 
                   if (name === "none") {
                     // this is to display the accordion list
                     return (
-                      <li>
+                      <li key={index}>
                         <SavedFilters />
                       </li>
                     );
                   } else if (name == "Home") {
                     // This is to add the button which collapses the navbar
                     return (
-                      <li style={{ display: "flex" }}>
+                      <li key={index} style={{ display: "flex" }}>
                         <NavBarButton
                           ButtonName={name}
                           ButtonImage={icon}
@@ -267,7 +268,7 @@ const App = () => {
                     );
                   } else {
                     return (
-                      <li>
+                      <li key={index}>
                         <NavBarButton
                           ButtonName={name}
                           ButtonImage={icon}
@@ -285,10 +286,10 @@ const App = () => {
           <div style={{ flex: ".35" }}>
             <ul style={{ listStyleType: "none", marginLeft: "2vw" }}>
               {menuButtonsArrayTWO2 &&
-                menuButtonsArrayTWO2.map((data) => {
+                menuButtonsArrayTWO2.map((data, index) => {
                   const { name, icon } = data;
                   return (
-                    <li>
+                    <li key={index}>
                       <NavBarButton
                         ButtonName={name}
                         ButtonImage={icon}
@@ -298,46 +299,9 @@ const App = () => {
                   );
                 })}
             </ul>
-
-            <Card
-              sx={{
-                width: 145,
-                height: 80,
-                marginLeft: "4.6vw",
-                paddingTop: "1vh",
-                paddingLeft: ".6vw",
-                paddingRight: ".6vw",
-                display: "flex",
-                // background:
-                //   "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
-                background: "#5585fe",
-                // background: "#1B1E2B",
-                color: "white",
-                cursor: "pointer",
-              }}
-            >
-              <div
-                style={{
-                  flex: ".93",
-                  fontSize: ".85em",
-                  display: "grid",
-                  placeItems: "center",
-                }}
-              >
-                {" "}
-                Friend Chat or Group Chat{" "}
-              </div>
-              <div
-                style={{
-                  flex: ".07",
-                  display: "flex",
-                }}
-              >
-                {" "}
-                <Add sx={{ marginTop: "4.4vh", color: "gold" }} />{" "}
-              </div>
-            </Card>
+            <CreateProfileModal />
           </div>
+          {/* Create New Profile Modal */}
         </div>
 
         {/* // ROUTES SECTION */}
