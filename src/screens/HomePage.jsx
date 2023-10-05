@@ -6,6 +6,7 @@ import NewsCarousel from "../components/Carousel/NewsCarousel";
 import MatchedPlayerCard from "../components/Cards/MatchedPlayerCard";
 import Top10PlayerPicksOfTheWeek from "../components/Carousel/Top10PlayerPicksOfTheWeek";
 import MatchedPlayersCarousel from "../components/Carousel/MatchedPlayersCarousel";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const NewsData = [
@@ -39,6 +40,8 @@ const HomePage = () => {
 
   //
   const matchedPlayerArrayDummy = ["1", "2", "3", "1", "1", "1"];
+
+  const navigate = useNavigate();
 
   return (
     <div
@@ -130,6 +133,9 @@ const HomePage = () => {
               fontSize: ".95em",
               fontWeight: "800",
               cursor: "pointer",
+            }}
+            onClick={() => {
+              navigate("/view-all");
             }}
           >
             {" "}

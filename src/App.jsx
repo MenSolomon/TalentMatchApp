@@ -14,6 +14,7 @@ import NavBarButton from "./components/NavBarButtons/NavBarButton";
 import PlayerDetails from "./screens/PlayerDetails";
 import { useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
+import ViewAllScreen from "./screens/ViewAllScreen";
 
 const App = () => {
   const menuButtonsArray = [
@@ -39,7 +40,8 @@ const App = () => {
 
   const themeProviderObject = useSelector(selectThemeProviderObject);
 
-  const { background, cardBackground, primaryTextColor } = themeProviderObject;
+  const { cardBackground, primaryTextColor, buttonColor, secondaryTextColor } =
+    themeProviderObject;
 
   const styles = `.playerCard , .field {
 
@@ -70,6 +72,22 @@ const App = () => {
   .primaryColor{
     color: ${primaryTextColor}
   }
+
+  .primaryTextColor{
+    color: ${primaryTextColor}
+
+  }
+  .secondaryTextColor{
+    color: ${secondaryTextColor}
+
+  }
+  .styleTextColor{
+    color: ${buttonColor}
+
+  }
+
+  
+  
 
   .cardBackground{
     background-color: ${cardBackground}
@@ -332,6 +350,7 @@ const App = () => {
         >
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/view-all" element={<ViewAllScreen />} />
             <Route path="/player-details" element={<PlayerDetails />} />
           </Routes>
         </div>
