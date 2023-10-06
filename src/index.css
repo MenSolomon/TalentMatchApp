@@ -278,6 +278,43 @@ table tbody tr td {
   padding-top: 5px;
   font-size: 0.9em;
 }
+/* 
+.MuiFormControl-root,
+.MuiTextField-root,
+.css-1u3bzj6-MuiFormControl-root-MuiTextField-root {
+  border-radius: 10px;
+  background-color: #313543;
+  color: white;
+}
+
+.MuiInputBase-input,
+.MuiOutlinedInput-input,
+.MuiInputBase-inputAdornedEnd,
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+  color: white;
+}
+
+#outlined-adornment-password {
+  color: white;
+}
+
+.MuiFormLabel-root,
+.MuiInputLabel-root,
+.MuiInputLabel-formControl,
+.MuiInputLabel-animated,
+.MuiInputLabel-sizeMedium,
+.MuiInputLabel-outlined,
+.MuiFormLabel-colorPrimary,
+.MuiInputLabel-root,
+.MuiInputLabel-formControl,
+.MuiInputLabel-animated,
+.MuiInputLabel-sizeMedium,
+.MuiInputLabel-outlined,
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+  color: white;
+
+  text-emphasis-color: white;
+} */
 
 /* 
 .kepperCirle {

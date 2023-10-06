@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import store from "./statemanager/store.jsx";
+import Login from "./screens/Login.jsx";
 
 let persistor = persistStore(store);
 
@@ -14,7 +15,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <HashRouter>
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-          <App />
+          {/* <App /> */}
+          <Login />
         </PersistGate>
       </Provider>
     </HashRouter>

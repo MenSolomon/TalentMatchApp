@@ -92,13 +92,13 @@ export default function CreateProfileModal() {
         <div
           style={{
             flex: ".93",
-            fontSize: ".85em",
+            fontSize: "1em",
             display: "grid",
             placeItems: "center",
           }}
         >
           {" "}
-          Friend Chat or Group Chat{" "}
+          Create new profile{" "}
         </div>
         <div
           style={{
