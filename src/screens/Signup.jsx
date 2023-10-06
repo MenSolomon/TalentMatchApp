@@ -9,7 +9,6 @@ import {
 import React from "react";
 import FormControl from "@mui/material/FormControl";
 import {
-  Book,
   Facebook,
   Instagram,
   LibraryBooks,
@@ -20,6 +19,8 @@ import {
 } from "@mui/icons-material";
 import Avatar from "@mui/material/Avatar";
 import imageBackground from "../assets/images/FootballLogo.jpg";
+import { useNavigate } from "react-router-dom";
+import WorldMaps from "../components/WorldMap";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -32,13 +33,16 @@ const Signup = () => {
 
   const iconColor = { color: "white" };
 
+  const Navigate = useNavigate();
+
   return (
     <div
       style={{
         width: "100%",
         height: "100vh",
         // backgroundImage: `linear-gradient(0deg, rgba(46,46,46,1) 0%, rgba(255,255,255,1) 100%),url("${imageBackground}")`,
-        backgroundImage: ` linear-gradient(90deg, rgba(27,27,27,1) 0%, rgba(97,95,95,0.9780111873851103) 48%, rgba(142,142,142,0.3449579660965949) 74%, rgba(255,255,255,1) 100%),url("${imageBackground}")`,
+        // backgroundImage: ` linear-gradient(90deg, rgba(27,27,27,1) 0%, rgba(97,95,95,0.9780111873851103) 48%, rgba(142,142,142,0.3449579660965949) 74%, rgba(255,255,255,1) 100%),url("${imageBackground}")`,
+        backgroundImage: `linear-gradient(90deg, rgba(32,32,32,0.975210066936931) 0%, rgba(55,54,54,0.9780111873851103) 34%, rgba(23,21,21,1) 100%),url("${imageBackground}")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         // background: "blue",
@@ -72,8 +76,8 @@ const Signup = () => {
             paddingTop: "1vh",
           }}
         >
-          <h5>Home</h5>
-          <h5>Join</h5>
+          {/* <h5>Home</h5>
+          <h5>Join</h5> */}
         </div>
       </div>
 
@@ -89,7 +93,14 @@ const Signup = () => {
 
           <h5>
             Already a member?{" "}
-            <span style={{ color: "#5585FE", cursor: "pointer" }}>Login</span>{" "}
+            <span
+              style={{ color: "#5585FE", cursor: "pointer" }}
+              onClick={() => {
+                Navigate("/login");
+              }}
+            >
+              Login
+            </span>{" "}
           </h5>
 
           {/* //First Name And Surname */}
@@ -227,6 +238,12 @@ const Signup = () => {
                 </li>
               </ul>{" "}
             </div>{" "}
+          </div>
+          <div style={{ flex: ".8" }}>
+            <h4 style={{ marginTop: "9vh", marginBottom: "5vh" }}>
+              Get matched with player accros the globe
+            </h4>
+            <WorldMaps />
           </div>
         </div>
       </div>

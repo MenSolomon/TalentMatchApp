@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { KeyboardArrowDown } from "@mui/icons-material";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function ProfileMenu({ style, name }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -15,6 +16,8 @@ export default function ProfileMenu({ style, name }) {
   };
 
   let importStyle = style;
+
+  const Navigate = useNavigate();
 
   return (
     <div style={importStyle}>
@@ -41,7 +44,14 @@ export default function ProfileMenu({ style, name }) {
       >
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            Navigate("/login");
+          }}
+        >
+          Logout
+        </MenuItem>
       </Menu>
     </div>
   );

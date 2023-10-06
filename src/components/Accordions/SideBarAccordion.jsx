@@ -39,7 +39,7 @@ export default function SideBarAccordion({
         >
           <SideBarNavButtons
             label={categoryLabel}
-            path={"/"}
+            path={"/view-all"}
             startIcon={
               <Icon style={{ fontSize: "1.8em" }}>{categoryIcon}</Icon>
             }

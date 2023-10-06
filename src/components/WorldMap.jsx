@@ -8,8 +8,9 @@ const WorldMaps = () => {
     MY: 2,
     GB: 100,
     FK: 10,
-    AR: 50,
+    AR: 800,
     VE: 90,
+    GH: 70,
   };
 
   const missingCountries = [
@@ -17,17 +18,17 @@ const WorldMaps = () => {
     { name: "Bermuda", LatLng: [32.3078, 64.7505] },
   ];
 
-  const colorScale = ["#E2AEFF", "#5E32CA"];
+  const colorScale = ["#5585FE", "#0e328e"];
 
   return (
-    <div style={{ width: "100%", height: "400px", background: "red" }}>
+    <div style={{ width: "80%", height: "80%" }}>
       <VectorMap
         map={worldMill}
-        backgroundColor="black" // Set the background color
+        backgroundColor="transparent" // Set the background color
         markers={missingCountries}
         markerStyle={{
           initial: {
-            fill: "red",
+            fill: "pink",
           },
         }}
         containerStyle={{
