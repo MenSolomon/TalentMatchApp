@@ -18,27 +18,30 @@ export const SideBarNavButtons = ({
   const { buttonColor } = themeProviderObject;
 
   return (
-    <Box>
-      <Button
-        sx={{
-          position: "relative",
-          right: "17%",
-          fontSize: ".7em",
-          fontWeight: "700",
-          color: buttonColor,
-          textTransform: "none",
-          // textAlign: "left",
-          width: "10vw",
-        }}
-        onClick={() => {
-          navigate(`${path}`);
-        }}
-        startIcon={startIcon}
-        endIcon={endIcon}
-        // disabled={disabled}
-      >
-        <span style={{ fontSize: "1.25em", textAlign: "left" }}>{label} </span>
-      </Button>{" "}
-    </Box>
+    <Button
+      className="styleTextColor"
+      sx={{
+        position: "relative",
+        right: "17%",
+        fontSize: ".75em",
+        fontWeight: "700",
+        // textAlign: "left",
+        // color:"red",
+        // color: buttonColor,
+        // textTransform: "none",
+        // background: "red",
+        textAlign: "left",
+        // textAlign: "left",
+        // width: "10vw",
+      }}
+      // onClick={() => {
+      //   navigate(`${path}`);
+      // }}
+      startIcon={startIcon}
+      endIcon={endIcon}
+      // disabled={disabled}
+    >
+      {label}{" "}
+    </Button>
   );
 };

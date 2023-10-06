@@ -3,18 +3,18 @@ import SideBarAccordion from "../Accordions/SideBarAccordion";
 
 const SavedFilters = () => {
   const dataSet = [
-    { label: "Left-Back", path: "/view-all" },
+    { label: "Left-Back" },
     {
       label: "Strikers",
 
-      path: "/view-all",
+      // path: "/view-all",
     },
-    { label: "Center-Back", path: "/view-all" },
+    { label: "Center-Back" },
     {
       label: "Right Winger",
-      path: "/view-all",
+      // path: "/view-all",
     },
-    { label: "Goal Kepper", path: "/view-all" },
+    { label: "Goal Kepper" },
   ];
 
   return (

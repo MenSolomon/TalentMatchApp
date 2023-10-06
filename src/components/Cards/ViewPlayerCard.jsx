@@ -24,7 +24,7 @@ const ViewPlayerCard = ({
       }}
     >
       {/* Image Area */}
-      <div style={{ flex: ".25" }}>
+      <div style={{ flex: ".3" }}>
         <img
           src={image}
           style={{ width: "100%", height: "100%", borderRadius: ".8vw" }}
@@ -68,7 +68,7 @@ const ViewPlayerCard = ({
       {/* Jersey Number */}
       <div
         style={{
-          flex: ".15",
+          flex: ".1",
           display: "flex",
           alignContent: "center",
           justifyContent: "center",

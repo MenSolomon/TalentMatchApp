@@ -1,6 +1,9 @@
 import ViewPlayerCard from "../components/Cards/ViewPlayerCard";
 import Ronaldo from "../assets/images/RonaldoImage.png";
 import kudus from "../assets/images/kudus.webp";
+import partey from "../assets/images/partey.webp";
+import messi from "../assets/images/messi.webp";
+import Pagination from "@mui/material/Pagination";
 
 const ViewAllScreen = () => {
   const PlayerArray = [
@@ -30,6 +33,33 @@ const ViewAllScreen = () => {
       position: "CDM",
       jerseyNumber: "17",
       // image: "../assets/images/Ronaldo.png",
+    },
+    {
+      firstName: "Mohammed",
+      surName: "Kudus",
+      Age: "22",
+      position: "RW",
+      Nationality: "Ghana",
+      jerseyNumber: "17",
+      image: "../assets/images/Ronaldo.png",
+    },
+    {
+      firstName: "Mohammed",
+      surName: "Kudus",
+      Age: "22",
+      position: "RW",
+      Nationality: "Ghana",
+      jerseyNumber: "17",
+      image: "../assets/images/Ronaldo.png",
+    },
+    {
+      firstName: "Mohammed",
+      surName: "Kudus",
+      Age: "22",
+      position: "RW",
+      Nationality: "Ghana",
+      jerseyNumber: "17",
+      image: "../assets/images/Ronaldo.png",
     },
     {
       firstName: "Mohammed",
@@ -88,6 +118,45 @@ const ViewAllScreen = () => {
                 jerseyNumber={jerseyNumber}
               />
             );
+          } else if (firstName === "Cristiano") {
+            return (
+              <ViewPlayerCard
+                key={key}
+                image={Ronaldo}
+                firstName={firstName}
+                surName={surName}
+                age={Age}
+                nationality={Nationality}
+                position={position}
+                jerseyNumber={jerseyNumber}
+              />
+            );
+          } else if (firstName === "Lionel") {
+            return (
+              <ViewPlayerCard
+                key={key}
+                image={messi}
+                firstName={firstName}
+                surName={surName}
+                age={Age}
+                nationality={Nationality}
+                position={position}
+                jerseyNumber={jerseyNumber}
+              />
+            );
+          } else if (firstName === "Thomas") {
+            return (
+              <ViewPlayerCard
+                key={key}
+                image={partey}
+                firstName={firstName}
+                surName={surName}
+                age={Age}
+                nationality={Nationality}
+                position={position}
+                jerseyNumber={jerseyNumber}
+              />
+            );
           } else {
             return (
               <ViewPlayerCard
@@ -110,11 +179,18 @@ const ViewAllScreen = () => {
           flex: ".05",
           //   paddingTop: "2vh",
           //   gap: "2vw",
-          flexWrap: "wrap",
+          // flexWrap: "wrap",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        {" "}
-        Pagination{" "}
+        <Pagination
+          className="primaryTextColor"
+          sx={{ color: "white" }}
+          count={1}
+          color="primary"
+        />
       </div>
     </div>
   );

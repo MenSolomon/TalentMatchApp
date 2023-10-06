@@ -12,28 +12,29 @@ const HomePage = () => {
   const NewsData = [
     {
       source: "espn",
-      title: "Spurs' Maddison, Son form dangerous duo in post-Harry Kane era",
-      url: "https://www.espn.in/football/story/_/id/38476998/heung-min-son-james-maddison-form-dangerous-duo-tottenham-hotspur-frustrate-arsenal",
-      img: "https://a.espncdn.com/photo/2023/0924/r1229084_1296x729_16-9.jpg",
+
+      title: "Are Man United asking Hojlund to do too much?",
+      url: "https://www.espn.in/football/story/_/id/38572972/rasmus-hojlund-manchester-united-stress-pressure-premier-league",
+      img: "https://a.espncdn.com/photo/2023/1005/r1234194_1296x729_16-9.jpg",
     },
     {
       title:
-        "10-man Man City still unstoppable, Man United end winless streak, more",
-      url: "https://www.espn.in/football/story/_/id/38471068/european-soccer-league-weekend-news-results-highlights-storylines-stats",
-      img: "https://a.espncdn.com/photo/2023/0923/r1228712_1296x729_16-9.jpg",
+        "What crisis? Man City look like their old selves at Leipzig as youngsters step up",
+      url: "https://www.espn.in/football/story/_/id/38566713/man-city-back-normal-ucl-win-leipzig-phil-foden-rico-lewis",
+      img: "https://a.espncdn.com/photo/2023/1004/r1233949_1296x729_16-9.jpg",
       source: "espn",
     },
     {
       source: "espn",
       title:
-        "Sorry, Harry: Why Kane's hat trick for Bayern doesn't count in Germany",
-      url: "https://www.espn.in/football/story/_/id/38477403/why-harry-kane-hat-trick-bayern-munich-doesnt-count-germany",
-      img: "https://a.espncdn.com/photo/2023/0924/r1228979_1296x729_16-9.jpg",
+        "LIVE Transfer Talk: Messi to get Barcelona loan if Inter Miami miss playoffs",
+      url: "https://www.espn.in/football/story/_/id/38577927/transfer-talk-barcelona-loan-lionel-messi-inter-miami-miss-playoffs",
+      img: "https://a.espncdn.com/photo/2023/0929/r1231155_1296x729_16-9.jpg",
     },
     {
-      title: "Kylian Mbappé comes off injured during Le Classique",
-      url: "https://onefootball.com/en/news/kylian-mbappe-comes-off-injured-during-le-classique-38275425",
-      img: "https://image-service.onefootball.com/transform?w=64&h=64&dpr=2&image=https%3A%2F%2Fwww.getfootballnewsfrance.com%2Fassets%2Ffbl-fra-ligue1-psg-marseille-19-scaled.webp",
+      title: "UCL talking points: Best player so far, how to save Man Utd?",
+      url: "https://www.espn.in/football/story/_/id/38548855/ucl-talking-points-best-player-far-how-save-man-utd",
+      img: "https://a.espncdn.com/photo/2023/1005/r1234067_1296x729_16-9.jpg",
       source: "onefootball.com",
     },
   ];

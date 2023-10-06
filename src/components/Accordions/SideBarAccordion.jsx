@@ -11,6 +11,7 @@ import { SideBarNavButtons } from "../Buttons/SideBarNavButtons";
 import "@fontsource/material-icons";
 import Icon from "@mui/material/Icon";
 import { useTheme } from "@emotion/react";
+import { MainAccordionNavButton } from "../Buttons/MainAccordionButton";
 
 export default function SideBarAccordion({
   categoryIcon,
@@ -35,11 +36,16 @@ export default function SideBarAccordion({
       >
         <MuiAccordionSummary
           sx={{ height: "5px" }}
-          expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "1.1rem" }} />}
+          expandIcon={
+            <ArrowForwardIosSharpIcon
+              className="primaryTextColor"
+              sx={{ fontSize: "1.1rem" }}
+            />
+          }
         >
-          <SideBarNavButtons
+          <MainAccordionNavButton
             label={categoryLabel}
-            path={"/view-all"}
+            // path={"/view-all"}
             startIcon={
               <Icon style={{ fontSize: "1.8em" }}>{categoryIcon}</Icon>
             }

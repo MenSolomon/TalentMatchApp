@@ -11,6 +11,20 @@ const WorldMaps = () => {
     AR: 800,
     VE: 90,
     GH: 70,
+    NG: 89,
+    BF: 79,
+    EG: 22,
+    CM: 89,
+    DZ: 79,
+    ML: 22,
+    SN: 199,
+    ZA: 88,
+    US: 30,
+    JP: 12,
+    BR: 89,
+    CD: 79,
+    AO: 22,
+    AU: 79,
   };
 
   const missingCountries = [

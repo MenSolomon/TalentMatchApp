@@ -20,13 +20,14 @@ const NavBarButton = ({ ButtonName, ButtonImage, path, buttonStyle }) => {
 
   return (
     <Button
+      className="NavBarBtns"
       style={{
         ...buttonStyle,
         fontSize: ".9em",
         fontWeight: "600",
         textTransform: "none",
         paddingRight: "5vw",
-        color: buttonColor,
+        // color: buttonColor,
       }}
       startIcon={<Icon>{ButtonImage}</Icon>}
       onClick={handleNavigate}

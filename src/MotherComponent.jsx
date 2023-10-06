@@ -1,7 +1,7 @@
 import { NotificationAdd } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import avatarImage from "./assets/images/avatar.jpg";
 import ProfileMenu from "./components/Menu/ProfileMenu";
@@ -123,6 +123,28 @@ const MotherComponent = () => {
   opacity:.5
 }
   
+.css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root {
+
+  color: ${primaryTextColor}
+}
+
+.nav-link.active {
+  color: red;
+  font-weight: bold; 
+}
+
+
+.NavBarBtns{
+  color: ${buttonColor}
+}
+
+
+
+.active .NavBarBtns{
+  color: white ;
+  border-radius: .5vw ;
+  background: #5585fe
+}
   `;
 
   useEffect(() => {
@@ -191,7 +213,7 @@ const MotherComponent = () => {
 
           <ProfileMenu
             style={{ float: "right", marginLeft: "1vw", borderBottom: "none" }}
-            name="Michael Solomon"
+            name="Active user name"
           />
 
           <IconButton sx={{ float: "right", marginLeft: ".5vw" }}>
@@ -236,26 +258,33 @@ const MotherComponent = () => {
                     // this is to display the accordion list
                     return (
                       <li key={index}>
-                        <SavedFilters />
+                        {" "}
+                        <NavLink to="/view-all">
+                          <SavedFilters />{" "}
+                        </NavLink>
                       </li>
                     );
                   } else if (name == "Home") {
                     // This is to add the button which collapses the navbar
                     return (
                       <li key={index} style={{ display: "flex" }}>
-                        <NavBarButton
-                          ButtonName={name}
-                          ButtonImage={icon}
-                          buttonStyle={{
-                            // background:
-                            //   "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
-                            background: "#5585fe",
-                            // width: "14vw",
-                            marginRight: "1vw",
-                            borderRadius: ".5vw",
-                            color: "white",
-                          }}
-                        />
+                        <NavLink to="/">
+                          <NavBarButton
+                            ButtonName={name}
+                            ButtonImage={icon}
+                            buttonStyle={
+                              {
+                                // background:
+                                //   "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
+                                // background: "#5585fe",
+                                // width: "14vw",
+                                // marginRight: "1vw",
+                                // borderRadius: ".5vw",
+                                // color: "white",
+                              }
+                            }
+                          />
+                        </NavLink>
 
                         {/* <IconButton sx={{ marginLeft: "9vw" }}>
                           <Menu />
