@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import "@fontsource/material-icons";
 import Icon from "@mui/material/Icon";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../../statemanager/slices/ThemeProviderSlice";
 
@@ -19,21 +19,23 @@ const NavBarButton = ({ ButtonName, ButtonImage, path, buttonStyle }) => {
   // Use createtheme from api to create theme for page
 
   return (
-    <Button
-      className="NavBarBtns"
-      style={{
-        ...buttonStyle,
-        fontSize: ".9em",
-        fontWeight: "600",
-        textTransform: "none",
-        paddingRight: "5vw",
-        // color: buttonColor,
-      }}
-      startIcon={<Icon>{ButtonImage}</Icon>}
-      onClick={handleNavigate}
-    >
-      {ButtonName}
-    </Button>
+    <NavLink to={path}>
+      <Button
+        className="NavBarBtns"
+        style={{
+          ...buttonStyle,
+          fontSize: ".9em",
+          fontWeight: "600",
+          textTransform: "none",
+          paddingRight: "5vw",
+          // color: buttonColor,
+        }}
+        startIcon={<Icon>{ButtonImage}</Icon>}
+        onClick={handleNavigate}
+      >
+        {ButtonName}
+      </Button>
+    </NavLink>
   );
 };
 

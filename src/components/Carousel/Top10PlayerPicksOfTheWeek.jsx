@@ -1,6 +1,7 @@
 import { Button, Card } from "@mui/material";
 import React from "react";
 import { Carousel } from "react-bootstrap";
+import CreateShowInterestModal from "../Modals/CreateShowInterestModal";
 
 const Top10PlayerPicksOfTheWeek = ({ PlayerImage, PlayerCountry }) => {
   return (
@@ -99,11 +100,13 @@ const Top10PlayerPicksOfTheWeek = ({ PlayerImage, PlayerCountry }) => {
             style={{
               // flex: ".35",
               paddingTop: "3vh",
-
+              display: "flex",
               // background: "white",
             }}
           >
-            <Button
+            {/* // REmove this button */}
+
+            {/* <Button
               sx={{
                 textTransform: "none",
 
@@ -112,10 +115,10 @@ const Top10PlayerPicksOfTheWeek = ({ PlayerImage, PlayerCountry }) => {
                 color: "white",
                 background: "#5585FE",
               }}
-            >
-              {" "}
-              Show Interest{" "}
-            </Button>
+            > */}
+            <CreateShowInterestModal playerName={"Pepi"} />
+            {/* </Button> */}
+            {/* End of button */}
             <Button
               sx={{
                 textTransform: "none",

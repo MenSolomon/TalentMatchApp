@@ -5,6 +5,8 @@ import ViewAllScreen from "./screens/ViewAllScreen";
 import MotherComponent from "./MotherComponent";
 import Login from "./screens/Login";
 import Signup from "./screens/Signup";
+import Community from "./screens/Community";
+import PlayerComparison from "./screens/PlayerComparison";
 
 const App = () => {
   return (
@@ -14,6 +16,8 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="view-all" element={<ViewAllScreen />} />
           <Route path="player-details" element={<PlayerDetails />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/player-conmpare" element={<PlayerComparison />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

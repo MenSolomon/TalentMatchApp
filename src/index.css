@@ -296,6 +296,7 @@ div:not(:hover)::-webkit-scrollbar-thumb {
 
 div::-webkit-scrollbar-thumb:hover {
   background-color: #555;
+  /* color: rgba(255, 255, 255, 0.466); */
 }
 
 /* //ACTIBE LINK */

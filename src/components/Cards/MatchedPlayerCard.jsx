@@ -124,7 +124,7 @@ const MatchedPlayerCard = ({
         </div>
         {/* Player Stats && Value */}
         <div style={{ flex: ".3", fontSize: ".7em" }}>
-          Value : {MarketValue} <br />
+          Defense : {MarketValue} <br />
           <span>Goal Ratio : 0.61</span>
         </div>
       </Card>

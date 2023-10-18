@@ -15,18 +15,23 @@ import CreateProfileModal from "./components/Modals/CreateProfileModal";
 
 const MotherComponent = () => {
   const menuButtonsArray = [
-    { name: "Home", icon: "home" },
+    { name: "Home", icon: "home", path: "/" },
     // The none values are for the savedFilters which is an accordion and not a button.. skipped over it in the map
     { name: "none", icon: "none" },
-    { name: "Favourite", icon: "favorite" },
-    { name: "Community", icon: "people" },
-    { name: "News", icon: "comment" },
+    { name: "Favourite", icon: "favorite", path: "none" },
+    { name: "Community", icon: "people", path: "/community" },
+    { name: "News", icon: "comment", path: "none" },
+    {
+      name: "Comparison",
+      icon: "compare_arrows",
+      path: "/player-conmpare",
+    },
   ];
 
   const menuButtonsArrayTWO2 = [
-    { name: "Help", icon: "help" },
-    { name: "Settings", icon: "settings" },
-    { name: "Logout", icon: "door_back" },
+    { name: "Help", icon: "help", path: "none" },
+    { name: "Settings", icon: "settings", path: "none" },
+    { name: "Logout", icon: "door_back", path: "none" },
   ];
 
   // const navigate = useNavigate();
@@ -37,8 +42,13 @@ const MotherComponent = () => {
 
   const themeProviderObject = useSelector(selectThemeProviderObject);
 
-  const { cardBackground, primaryTextColor, buttonColor, secondaryTextColor } =
-    themeProviderObject;
+  const {
+    background,
+    cardBackground,
+    primaryTextColor,
+    buttonColor,
+    secondaryTextColor,
+  } = themeProviderObject;
 
   const styles = `.playerCard , .field {
 
@@ -84,7 +94,9 @@ const MotherComponent = () => {
   }
 
   
-  
+  .background{
+    background-color: ${background}
+  }
 
   .cardBackground{
     background-color: ${cardBackground}
@@ -145,6 +157,28 @@ const MotherComponent = () => {
   border-radius: .5vw ;
   background: #5585fe
 }
+
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root{
+  color:${primaryTextColor};
+  background: ${cardBackground}
+}
+
+
+
+.css-7cyndw-MuiFormControl-root-MuiTextField-root {
+  border: 1px solid ${primaryTextColor} ;
+  border-radius: .3vw
+}
+
+
+.css-i4bv87-MuiSvgIcon-root{
+  color:${primaryTextColor}
+}
+.css-1ua80n0-MuiInputBase-input-MuiOutlinedInput-input{
+  color:${primaryTextColor}
+}
+
+
   `;
 
   useEffect(() => {
@@ -252,7 +286,7 @@ const MotherComponent = () => {
             <ul style={{ listStyleType: "none", marginLeft: "2vw" }}>
               {menuButtonsArray &&
                 menuButtonsArray.map((data, index) => {
-                  const { name, icon } = data;
+                  const { name, icon, path } = data;
 
                   if (name === "none") {
                     // this is to display the accordion list
@@ -264,40 +298,13 @@ const MotherComponent = () => {
                         </NavLink>
                       </li>
                     );
-                  } else if (name == "Home") {
-                    // This is to add the button which collapses the navbar
-                    return (
-                      <li key={index} style={{ display: "flex" }}>
-                        <NavLink to="/">
-                          <NavBarButton
-                            ButtonName={name}
-                            ButtonImage={icon}
-                            buttonStyle={
-                              {
-                                // background:
-                                //   "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
-                                // background: "#5585fe",
-                                // width: "14vw",
-                                // marginRight: "1vw",
-                                // borderRadius: ".5vw",
-                                // color: "white",
-                              }
-                            }
-                          />
-                        </NavLink>
-
-                        {/* <IconButton sx={{ marginLeft: "9vw" }}>
-                          <Menu />
-                        </IconButton> */}
-                      </li>
-                    );
                   } else {
                     return (
                       <li key={index}>
                         <NavBarButton
                           ButtonName={name}
+                          path={path}
                           ButtonImage={icon}
-                          // buttonStyle={{ color: "#E4E8F9" }}
                         />
                       </li>
                     );
@@ -312,12 +319,13 @@ const MotherComponent = () => {
             <ul style={{ listStyleType: "none", marginLeft: "2vw" }}>
               {menuButtonsArrayTWO2 &&
                 menuButtonsArrayTWO2.map((data, index) => {
-                  const { name, icon } = data;
+                  const { name, icon, path } = data;
                   return (
                     <li key={index}>
                       <NavBarButton
                         ButtonName={name}
                         ButtonImage={icon}
+                        path={path}
                         // buttonStyle={{ color: "#E4E8F9" }}
                       />
                     </li>
