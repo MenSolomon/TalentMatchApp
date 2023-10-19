@@ -4,6 +4,8 @@ import CountrySelect from "../../components/Autocompletes/CountrySelect";
 import AgeRangeSlider from "../../components/Slider/AgeRangeSlider";
 import { AddOutlined } from "@mui/icons-material";
 import PlayerCompareDisplayCard from "../../components/Cards/PlayerComparisonFilterPageCards/PlayerCompareDisplayCard";
+import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInAgencySlice";
+import { useSelector } from "react-redux";
 
 const PlayerFilter = () => {
   const soccerPositions = [
@@ -30,13 +32,15 @@ const PlayerFilter = () => {
     marginTop: "1vh",
   };
 
-  const dummyPlayerFilteredArray = [
-    { name: "Jerry Akamenko", position: "ST" },
-    { name: "Agyekum Boateng", position: "DEF" },
-    { name: "Yamal Sulemann", position: "GK" },
-    { name: "Sammy Adjei", position: "MDF" },
-    { name: "John Asante", position: "LWB" },
-  ];
+  const playerData = useSelector(selectPlayersInAgencyArray);
+
+  //   const dummyPlayerFilteredArray = [
+  //     { name: "Jerry Akamenko", position: "ST" },
+  //     { name: "Agyekum Boateng", position: "DEF" },
+  //     { name: "Yamal Sulemann", position: "GK" },
+  //     { name: "Sammy Adjei", position: "MDF" },
+  //     { name: "John Asante", position: "LWB" },
+  //   ];
 
   return (
     <div style={{ height: "77vh", display: "flex", flexDirection: "column" }}>
@@ -61,14 +65,15 @@ const PlayerFilter = () => {
           //   flexDirection: "column",
         }}
       >
-        {dummyPlayerFilteredArray.map((data, index) => {
-          const { name, position } = data;
+        {playerData.map((data, index) => {
+          const { firstName, surName, position } = data;
 
           return (
             <PlayerCompareDisplayCard
               key={index}
-              playerName={name}
-              playerPosition={position}
+              firstName={firstName}
+              surName={surName}
+              position={position}
             />
           );
         })}

@@ -1,5 +1,4 @@
-import { Mail } from "@mui/icons-material";
-import { InputAdornment } from "@mui/material";
+import { Icon, InputAdornment } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 
@@ -27,18 +26,24 @@ const CssTextField = styled(TextField)({
   },
 });
 
-export default function CustomizedInputsStyled() {
+export default function CustomizedInputsStyled({ style, label, iconArray }) {
   return (
     <CssTextField
-      sx={{ width: "80%", marginBottom: "4vh" }}
+      sx={style}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
-            <Mail />
+            {" "}
+            {iconArray &&
+              iconArray?.map((data, index) => (
+                <Icon key={index} className="primaryTextColor">
+                  {data}
+                </Icon>
+              ))}
           </InputAdornment>
         ),
       }}
-      label="Custom CSS"
+      label={label}
       id="custom-css-outlined-input"
     />
   );

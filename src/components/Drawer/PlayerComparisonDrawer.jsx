@@ -34,6 +34,7 @@ export default function PlayerComparisonDrawer() {
         padding: "3vh 1vw",
         display: "flex",
         flexDirection: "column",
+        zIndex: "10000",
       }}
       role="presentation"
       //   onClick={toggleDrawer(anchor, false)}

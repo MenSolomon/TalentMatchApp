@@ -1,20 +1,36 @@
 import { AccountCircleOutlined, Close, Flag } from "@mui/icons-material";
-import { Card, Divider } from "@mui/material";
+import { Card, Divider, IconButton } from "@mui/material";
 import PlayerComparisonAccordion from "../../Accordions/PlayerComparisonAccordion/PlayerComparisonAccordion";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectPlayerToCompareArray,
+  setSelectedPlayerToCompareArray,
+} from "../../../statemanager/slices/PlayersInAgencySlice";
 
-function PlayerComparisonDetails() {
+const PlayerComparisonCard = ({ firstName, surName, position }) => {
+  const dispatch = useDispatch();
+  const currentPlayerSelectedArray = useSelector(selectPlayerToCompareArray);
+
+  const handleCardClose = () => {
+    const filteredRemovedName = currentPlayerSelectedArray.filter((data) => {
+      // CJANGE AND USE A UNIQUE ID INSTEAD OF NAME TO FITLER
+      return `${data.firstName} ${data.surName}` !== `${firstName} ${surName}`;
+    });
+
+    dispatch(setSelectedPlayerToCompareArray(filteredRemovedName));
+  };
+
   return (
-    <Card sx={{ borderRadius: "10px" }}>
+    <Card
+      className="primaryTextColor cardBackground"
+      sx={{ borderRadius: "1vw", width: "28%", height: "70vh" }}
+    >
       <div
-        className="primaryTextColor cardBackground"
         style={{
-          // background: "peru",
-          width: "25vw",
-          height: "80vh",
-          // margin: "19px",
+          width: "100%",
+          height: "100%",
           display: "flex",
           flexDirection: "column",
-          //   borderRadius: "10px",
         }}
       >
         {/* Player Profiles */}
@@ -51,24 +67,28 @@ function PlayerComparisonDetails() {
                 //   background: "cyan",
               }}
             >
+              {/* NAME AND POSITION AREA  */}
               <div
                 style={{
                   marginTop: "10px",
                 }}
               ></div>
-              <h6>Wakaso Muncho J.</h6>
-              <h6>midfielder</h6>
+              <h6>{`${firstName} ${surName} `} </h6>
+              <h6> {position} </h6>
             </div>
           </div>
           <div style={{ flex: ".3" }}>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Close />
+              <IconButton onClick={handleCardClose}>
+                <Close />
+              </IconButton>
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <Flag sx={{ fontSize: "50px" }} />
             </div>
           </div>
         </div>
+        {/* // CLubs Section */}
         <div style={{ flex: ".1", padding: "10px" }}>
           <h5>Clubs</h5>
           <Divider style={{ background: "black" }} />
@@ -93,6 +113,6 @@ function PlayerComparisonDetails() {
       </div>
     </Card>
   );
-}
+};
 
-export default PlayerComparisonDetails;
+export default PlayerComparisonCard;

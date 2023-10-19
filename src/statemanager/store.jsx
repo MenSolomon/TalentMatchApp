@@ -5,18 +5,20 @@ import { combineReducers } from "@reduxjs/toolkit";
 // import incomeReducer from "./slices/incomeSlice";
 import playerDetailsCardsCollapseReducer from "./slices/CollapsePlayerDisplayCards";
 import ThemeProviderReducer from "./slices/ThemeProviderSlice";
+import PlayersInAgencyReducer from "./slices/PlayersInAgencySlice";
 
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  // blacklist: ["CollapsePlayerCards"],
+  blacklist: ["PlayersInAgencySlice"],
 };
 
 const reducer = combineReducers({
   //   files: incomeReducer,
   CollapsePlayerCards: playerDetailsCardsCollapseReducer,
   ThemeProviderSlice: ThemeProviderReducer,
+  PlayersInAgencySlice: PlayersInAgencyReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

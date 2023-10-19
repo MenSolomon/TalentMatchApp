@@ -3,7 +3,8 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { IconButton } from "@mui/material";
 import { AddOutlined, Close } from "@mui/icons-material";
-import PlayerComparisonDetails from "./PlayerComparisonDetails/PlayerComparisonDetails";
+import PlayerComparisonDrawer from "../Drawer/PlayerComparisonDrawer";
+import PlayerCompareDisplayCard from "../Cards/PlayerComparisonFilterPageCards/PlayerCompareDisplayCard";
 
 const style = {
   position: "absolute",
@@ -18,6 +19,7 @@ const style = {
   boxShadow: 24,
   display: "flex",
   borderRadius: "10px",
+  flexDirection: "column",
 };
 
 export default function PlayerComparisonModal() {
@@ -26,7 +28,7 @@ export default function PlayerComparisonModal() {
   const handleClose = () => setOpen(false);
 
   return (
-    <div className="primaryTextColor cardBackground">
+    <div>
       <IconButton
         size="small"
         sx={{ background: "#5585FE" }}
@@ -40,48 +42,67 @@ export default function PlayerComparisonModal() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box className="background" sx={style}>
-          <div
-            style={{
-              flex: ".33",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <PlayerComparisonDetails />
-          </div>
-          <div
-            style={{
-              flex: ".33",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <PlayerComparisonDetails />
-          </div>
-          <div
-            style={{
-              flex: ".32",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <PlayerComparisonDetails />
-          </div>
-          <div
-            style={{
-              flex: ".02",
+        <Box className="primaryTextColor background" sx={style}>
+          {/* // COMPARISON HEADER */}
 
+          <div
+            style={{
+              flex: "0.1",
               display: "flex",
-              justifyContent: "flex-end",
-              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "relative",
             }}
-            onClick={handleClose}
           >
-            <Close />
+            <h4 style={{ textAlign: "center" }}>Player Comparison</h4>
+
+            <IconButton style={{ position: "absolute", right: "0" }}>
+              {" "}
+              <Close />
+            </IconButton>
+          </div>
+
+          {/* // PLAYER COMPARISON CARDS  */}
+          <div style={{ flex: "0.9", display: "flex" }}>
+            {/* =========================== */}
+
+            {/* // FIRST PLAYER CARD AREA  */}
+            <div
+              style={{
+                flex: ".33",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <PlayerCompareDisplayCard />
+            </div>
+
+            {/* // SECOND PLAYER CARD AREA */}
+
+            <div
+              style={{
+                flex: ".33",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <PlayerComparisonDrawer />
+            </div>
+
+            {/* // THIRD PLAYER CARD AREA */}
+
+            <div
+              style={{
+                flex: ".34",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            ></div>
+
+            {/* ============================ */}
           </div>
         </Box>
       </Modal>

@@ -1,8 +1,38 @@
 import { AddOutlined } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import PlayerComparisonModal from "../../Modals/PlayerComparisonModal";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectPlayerToCompareArray,
+  setSelectedPlayerToCompareArray,
+} from "../../../statemanager/slices/PlayersInAgencySlice";
+import { useEffect } from "react";
 
-const PlayerCompareDisplayCard = ({ playerName, playerPosition }) => {
+const PlayerCompareDisplayCard = ({ firstName, surName, position }) => {
+  const dispatch = useDispatch();
+  const currentPlayerSelectedArray = useSelector(selectPlayerToCompareArray);
+
+  const handlePlayerSelectedClicked = () => {
+    if (Array.isArray(currentPlayerSelectedArray)) {
+      if (currentPlayerSelectedArray.length > 0) {
+        dispatch(
+          setSelectedPlayerToCompareArray([
+            ...currentPlayerSelectedArray,
+            { firstName, surName, position },
+          ])
+        );
+      } else {
+        dispatch(
+          setSelectedPlayerToCompareArray([{ firstName, surName, position }])
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    console.log(currentPlayerSelectedArray, "ARRAY SELECTED");
+  }, [currentPlayerSelectedArray]);
+
   return (
     <div
       className="primaryTextColor"
@@ -24,7 +54,15 @@ const PlayerCompareDisplayCard = ({ playerName, playerPosition }) => {
           placeContent: "center",
         }}
       >
-        <PlayerComparisonModal />
+        {/* <PlayerComparisonModal /> */}
+
+        <IconButton
+          size="small"
+          sx={{ background: "#5585FE" }}
+          onClick={handlePlayerSelectedClicked}
+        >
+          <AddOutlined style={{ color: "white" }} />{" "}
+        </IconButton>
       </div>
       {/* NAME AREA */}
       <div
@@ -36,7 +74,7 @@ const PlayerCompareDisplayCard = ({ playerName, playerPosition }) => {
           paddingTop: "1.5vh",
         }}
       >
-        <h6> {playerName} </h6>
+        <h6> {`${firstName} ${surName}`} </h6>
       </div>
       {/* POSITION AREA */}
       <div
@@ -48,7 +86,7 @@ const PlayerCompareDisplayCard = ({ playerName, playerPosition }) => {
           paddingTop: "1.5vh",
         }}
       >
-        <h6> {playerPosition} </h6>
+        <h6> {position} </h6>
       </div>
     </div>
   );
