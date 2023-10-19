@@ -8,7 +8,7 @@ import {
 } from "../../../statemanager/slices/PlayersInAgencySlice";
 import { useEffect } from "react";
 
-const PlayerCompareDisplayCard = ({ firstName, surName, position }) => {
+const PlayerCompareDisplayCard = ({ firstName, surName, position, image }) => {
   const dispatch = useDispatch();
   const currentPlayerSelectedArray = useSelector(selectPlayerToCompareArray);
 
@@ -18,12 +18,14 @@ const PlayerCompareDisplayCard = ({ firstName, surName, position }) => {
         dispatch(
           setSelectedPlayerToCompareArray([
             ...currentPlayerSelectedArray,
-            { firstName, surName, position },
+            { firstName, surName, position, image },
           ])
         );
       } else {
         dispatch(
-          setSelectedPlayerToCompareArray([{ firstName, surName, position }])
+          setSelectedPlayerToCompareArray([
+            { firstName, surName, position, image },
+          ])
         );
       }
     }

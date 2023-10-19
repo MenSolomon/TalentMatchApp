@@ -1,5 +1,5 @@
 import { AccountCircleOutlined, Close, Flag } from "@mui/icons-material";
-import { Card, Divider, IconButton } from "@mui/material";
+import { Avatar, Card, Divider, IconButton } from "@mui/material";
 import PlayerComparisonAccordion from "../../Accordions/PlayerComparisonAccordion/PlayerComparisonAccordion";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -7,7 +7,7 @@ import {
   setSelectedPlayerToCompareArray,
 } from "../../../statemanager/slices/PlayersInAgencySlice";
 
-const PlayerComparisonCard = ({ firstName, surName, position }) => {
+const PlayerComparisonCard = ({ firstName, surName, position, image }) => {
   const dispatch = useDispatch();
   const currentPlayerSelectedArray = useSelector(selectPlayerToCompareArray);
 
@@ -59,7 +59,8 @@ const PlayerComparisonCard = ({ firstName, surName, position }) => {
                 alignItems: "center",
               }}
             >
-              <AccountCircleOutlined sx={{ fontSize: "65px" }} />
+              {/* <AccountCircleOutlined sx={{ fontSize: "65px" }} /> */}
+              <Avatar src={image} sx={{ width: 50, height: 50 }}></Avatar>
             </div>
             <div
               style={{
@@ -74,7 +75,7 @@ const PlayerComparisonCard = ({ firstName, surName, position }) => {
                 }}
               ></div>
               <h6>{`${firstName} ${surName} `} </h6>
-              <h6> {position} </h6>
+              <h6> {position}</h6>
             </div>
           </div>
           <div style={{ flex: ".3" }}>

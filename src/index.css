@@ -299,6 +299,10 @@ div::-webkit-scrollbar-thumb:hover {
   /* color: rgba(255, 255, 255, 0.466); */
 }
 
+.newsText:hover {
+  text-decoration: underline;
+}
+
 /* //ACTIBE LINK */
 
 /* button.MuiButtinBase-root.MuiButtin-root.MuiButton-text.MuiButton-textPrimary */

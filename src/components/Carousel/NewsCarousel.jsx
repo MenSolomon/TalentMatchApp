@@ -1,5 +1,4 @@
 import { Card } from "@mui/material";
-import React from "react";
 import { Carousel } from "react-bootstrap";
 
 const NewsCarousel = ({ NewsArray }) => {
@@ -14,11 +13,12 @@ const NewsCarousel = ({ NewsArray }) => {
       }}
     >
       {NewsArray &&
-        NewsArray.map((data) => {
+        NewsArray.map((data, index) => {
           const { img, url, source, title } = data;
 
           return (
             <Carousel.Item
+              key={index}
               style={{
                 backgroundImage: `url(${img})`,
                 backgroundSize: "cover",

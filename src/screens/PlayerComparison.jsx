@@ -10,7 +10,7 @@ import PlayerComparisonCard from "../components/Cards/PlayerComparisonPageCards/
 const PlayerComparison = () => {
   const selectedPlayersToCompare = useSelector(selectPlayerToCompareArray);
 
-  //   console.log(playerData);
+  console.log(selectedPlayersToCompare, "SSA");
 
   return (
     <div
@@ -51,7 +51,7 @@ const PlayerComparison = () => {
           }}
         >
           {selectedPlayersToCompare.map((data, index) => {
-            const { firstName, surName, position } = data;
+            const { firstName, surName, position, image } = data;
 
             return (
               <>
@@ -59,6 +59,7 @@ const PlayerComparison = () => {
                   firstName={firstName}
                   surName={surName}
                   position={position}
+                  image={image}
                   key={index}
                 />
               </>

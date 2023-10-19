@@ -7,6 +7,7 @@ import Login from "./screens/Login";
 import Signup from "./screens/Signup";
 import Community from "./screens/Community";
 import PlayerComparison from "./screens/PlayerComparison";
+import News from "./screens/News";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="player-details" element={<PlayerDetails />} />
           <Route path="/community" element={<Community />} />
           <Route path="/player-conmpare" element={<PlayerComparison />} />
+          <Route path="/news" element={<News />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

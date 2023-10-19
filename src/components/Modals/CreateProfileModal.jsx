@@ -13,6 +13,7 @@ import DatePickerTool from "../DatePicker/DatePicker";
 import BasicAutoComplete from "../Autocompletes/BasicAutoComplete";
 import GroupedRadio from "../Radio/GroupedRadio";
 import CheckboxesGroup from "../CheckBoxes/GroupedCheckBox";
+import AgeRangeSlider from "../Slider/AgeRangeSlider";
 
 const style = {
   position: "absolute",
@@ -173,14 +174,6 @@ export default function CreateProfileModal() {
                 <CountrySelect selectLabel="Place of birth" />
                 {/* Nationality  */}
                 <CountrySelect selectLabel="Nationality" />
-                {/* Age */}
-                <TextField
-                  id="outlined-basic"
-                  label="Age"
-                  type="number"
-                  variant="outlined"
-                  sx={inputStyles}
-                />
                 {/* Height */}
                 <TextField
                   id="outlined-basic"
@@ -190,6 +183,8 @@ export default function CreateProfileModal() {
                   sx={inputStyles}
                 />
                 <DatePickerTool style={inputStyles} label="Date of birth" />
+                {/* Age */}
+                <AgeRangeSlider />
                 <Button
                   sx={{
                     width: "23vw",

@@ -20,7 +20,7 @@ const MotherComponent = () => {
     { name: "none", icon: "none" },
     { name: "Favourite", icon: "favorite", path: "none" },
     { name: "Community", icon: "people", path: "/community" },
-    { name: "News", icon: "comment", path: "none" },
+    { name: "News", icon: "comment", path: "/news" },
     {
       name: "Comparison",
       icon: "compare_arrows",

@@ -66,7 +66,7 @@ const PlayerFilter = () => {
         }}
       >
         {playerData.map((data, index) => {
-          const { firstName, surName, position } = data;
+          const { firstName, surName, position, image } = data;
 
           return (
             <PlayerCompareDisplayCard
@@ -74,6 +74,7 @@ const PlayerFilter = () => {
               firstName={firstName}
               surName={surName}
               position={position}
+              image={image}
             />
           );
         })}
