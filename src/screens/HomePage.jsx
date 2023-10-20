@@ -7,6 +7,11 @@ import MatchedPlayerCard from "../components/Cards/MatchedPlayerCard";
 import Top10PlayerPicksOfTheWeek from "../components/Carousel/Top10PlayerPicksOfTheWeek";
 import MatchedPlayersCarousel from "../components/Carousel/MatchedPlayersCarousel";
 import { useNavigate } from "react-router-dom";
+import {
+  selectPlayerToCompareArray,
+  selectPlayersInAgencyArray,
+} from "../statemanager/slices/PlayersInAgencySlice";
+import { useSelector } from "react-redux";
 
 const HomePage = () => {
   const NewsData = [
@@ -40,6 +45,10 @@ const HomePage = () => {
   ];
 
   //
+  const playersInAgencyArray = useSelector(selectPlayersInAgencyArray);
+
+  console.log(playersInAgencyArray);
+
   const matchedPlayerArrayDummy = ["1", "2", "3", "1", "1", "1"];
 
   const navigate = useNavigate();
@@ -167,9 +176,7 @@ const HomePage = () => {
             padding: ".5vh .3vw",
           }}
         >
-          <MatchedPlayersCarousel
-            MatchedPlayersArray={matchedPlayerArrayDummy}
-          />
+          <MatchedPlayersCarousel MatchedPlayersArray={playersInAgencyArray} />
         </div>
       </div>
     </div>

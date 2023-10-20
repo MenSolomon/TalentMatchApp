@@ -60,6 +60,9 @@ const PlayerComparison = () => {
                   surName={surName}
                   position={position}
                   image={image}
+                  height={"1'7"}
+                  age={20}
+                  playerName={"King"}
                   key={index}
                 />
               </>

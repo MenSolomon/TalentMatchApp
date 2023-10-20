@@ -1,12 +1,12 @@
 import { Flag, MoreHoriz, ThumbDown, ThumbUp } from "@mui/icons-material";
 import { Card, IconButton } from "@mui/material";
 import sourceLogo from "../../../assets/images/espn.svg";
+import { useNavigate } from "react-router-dom";
 
 const NewsCard = ({ title, image, url, source }) => {
-  const test = `Lorem ipsum dolor sit amet consectetur,Lorem, ipsum dolor sit
-    ,Lorem, ipsum dolor sit sadsadasds sasas`;
-
-  console.log(test.length);
+  const handNavigateUrl = (url) => {
+    window.open(url, "_blank");
+  };
 
   return (
     <>
@@ -21,6 +21,7 @@ const NewsCard = ({ title, image, url, source }) => {
           flexDirection: "column",
           position: "relative",
           color: "white",
+          borderRadius: "10px",
         }}
       >
         {/* // SHADOW GRADIENT */}
@@ -64,7 +65,13 @@ const NewsCard = ({ title, image, url, source }) => {
               //   wordSpacing: ".1px",
             }}
           >
-            <small className="newsText" style={{ cursor: "pointer" }}>
+            <small
+              onClick={() => {
+                handNavigateUrl(url);
+              }}
+              className="newsText"
+              style={{ cursor: "pointer" }}
+            >
               {title && title?.length > 100
                 ? `${title?.substring(0, 100)} ...`
                 : title}

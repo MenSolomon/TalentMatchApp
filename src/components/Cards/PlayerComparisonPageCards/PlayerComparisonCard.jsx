@@ -6,8 +6,17 @@ import {
   selectPlayerToCompareArray,
   setSelectedPlayerToCompareArray,
 } from "../../../statemanager/slices/PlayersInAgencySlice";
+import sourceLogo from "../../../../public/ghana.png";
 
-const PlayerComparisonCard = ({ firstName, surName, position, image }) => {
+const PlayerComparisonCard = ({
+  firstName,
+  surName,
+  position,
+  image,
+  age,
+  height,
+  playerName,
+}) => {
   const dispatch = useDispatch();
   const currentPlayerSelectedArray = useSelector(selectPlayerToCompareArray);
 
@@ -36,8 +45,7 @@ const PlayerComparisonCard = ({ firstName, surName, position, image }) => {
         {/* Player Profiles */}
         <div
           style={{
-            flex: ".3",
-            // background: "pink",
+            flex: ".1",
             display: "flex",
             padding: "10px",
           }}
@@ -85,26 +93,23 @@ const PlayerComparisonCard = ({ firstName, surName, position, image }) => {
               </IconButton>
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Flag sx={{ fontSize: "50px" }} />
+              {/* <Flag sx={{ fontSize: "50px" }} /> */}
+              <img src={sourceLogo} style={{ width: "45px" }} />
             </div>
           </div>
         </div>
         {/* // CLubs Section */}
         <div style={{ flex: ".1", padding: "10px" }}>
-          <h5>Clubs</h5>
-          <Divider style={{ background: "black" }} />
-          <div>
-            <h6>Club Name: Odabo</h6>
-            <h6>Club Seasons: Odabo</h6>
-          </div>
+          <h6>Club Name: {playerName}</h6>
+          <h6>Age: {age}</h6>
+          <h6>Height: {height} </h6>
         </div>
         <div
           style={{
-            flex: ".6",
-            // background: "pink",
-            display: "flex",
-            flexDirection: "column",
-            gap: "15px",
+            flex: ".8",
+            // display: "flex",
+            // flexDirection: "column",
+            // gap: "15px",
             overflowY: "scroll",
             padding: "10px",
           }}

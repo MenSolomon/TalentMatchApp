@@ -1,4 +1,4 @@
-import { Card } from "@mui/material";
+import { Avatar, Card } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -79,7 +79,7 @@ const MatchedPlayerCard = ({
             {/* Player Country */}
             <div
               style={{
-                flex: ".4",
+                flex: ".31",
                 backgroundImage: `url(${PlayerCountry})`,
                 backgroundSize: "contain",
               }}
@@ -87,16 +87,16 @@ const MatchedPlayerCard = ({
             {/* Player Club */}
             <div
               style={{
-                flex: ".35",
+                flex: ".39",
                 //   background: "indigo",
                 paddingTop: ".4vh",
                 display: "grid",
                 placeContent: "center",
               }}
             >
-              <img
+              <Avatar
                 src={PlayerClub}
-                style={{ width: "23px", borderRadius: "50%" }}
+                style={{ width: "23px", height: "23px", borderRadius: "50%" }}
               />
             </div>
           </div>
@@ -104,7 +104,8 @@ const MatchedPlayerCard = ({
           <div
             style={{
               flex: ".6",
-              backgroundImage: `url(${PlayerImage})`,
+              // used the regex to fix bug of images not displaying (images with white white spaces between names ) .. regex replaces all the spaces with %20 to suit  ES6 imports rules
+              backgroundImage: `url(${PlayerImage.replace(/ /g, "%20")})`,
               backgroundSize: "cover",
               borderRadius: "15%",
             }}
