@@ -14,6 +14,10 @@ const PlayerGallery = () => {
       url: "https://www.youtube.com/watch?v=aDc-o4ML2NM",
       videoCategory: "Passing",
     },
+    {
+      url: "/shaibuJuggling.mp4",
+      videoCategory: "Passing",
+    },
   ];
 
   return (

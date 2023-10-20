@@ -1,6 +1,13 @@
 import { Avatar } from "@mui/material";
 
-const NameAndImageCard = ({ hTagStyle, ronaldo }) => {
+const NameAndImageCard = ({
+  hTagStyle,
+  firstname,
+  surname,
+  image,
+  age,
+  position,
+}) => {
   return (
     <div
       className="playerCard"
@@ -16,7 +23,7 @@ const NameAndImageCard = ({ hTagStyle, ronaldo }) => {
       {/* // Image flex area */}
       <div style={{ flex: ".4" }}>
         {" "}
-        <img src={ronaldo} style={{ width: "100%", borderRadius: "5%" }} />{" "}
+        <img src={image} style={{ width: "100%", borderRadius: "5%" }} />{" "}
       </div>
       {/* // names flex area */}
       <div
@@ -27,13 +34,13 @@ const NameAndImageCard = ({ hTagStyle, ronaldo }) => {
         }}
       >
         {/* // Names */}
-        <h5 style={hTagStyle}> Cristiano </h5> <h5> Ronaldo </h5>{" "}
+        <h5 style={hTagStyle}> {firstname} </h5> <h5> {surname} </h5>{" "}
         {/* // Age And Postion */}
         <div style={{ width: "100%", height: "35%", display: "flex" }}>
           <div style={{ flex: ".4" }}>
             {/* **** Reduce the size of Age label */}
             <h6 style={hTagStyle}>Age</h6>
-            <h6>20</h6>
+            <h6>{age}</h6>
           </div>
           <div
             style={{
@@ -59,7 +66,7 @@ const NameAndImageCard = ({ hTagStyle, ronaldo }) => {
               >
                 <img src="" alt="" />
               </Avatar>
-              ST
+              {position}
             </div>
           </div>
         </div>

@@ -21,6 +21,7 @@ import Avatar from "@mui/material/Avatar";
 import imageBackground from "../assets/images/FootballLogo.jpg";
 import { useNavigate } from "react-router-dom";
 import WorldMaps from "../components/WorldMap";
+import logoImage from "../assets/images/AppLogoBlue.png";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -49,8 +50,9 @@ const Signup = () => {
         backgroundRepeat: "no-repeat",
         display: "flex",
         flexDirection: "column",
-        padding: "2vw",
         paddingLeft: "3vw",
+        padding: "3vw",
+        paddingTop: "1.5vh",
         color: "white",
       }}
     >
@@ -59,13 +61,14 @@ const Signup = () => {
         {/* LOGO AREA */}
         <div style={{ flex: ".2", display: "flex" }}>
           {" "}
-          <Avatar
+          {/* <Avatar
             src="/static/images/avatar/1.jpg"
             style={{ background: "blue", color: "blue" }}
           >
             r
           </Avatar>{" "}
-          <h4 style={{ marginLeft: ".7vw", marginTop: "1vh" }}>Talent Match</h4>
+          <h4 style={{ marginLeft: ".7vw", marginTop: "1vh" }}>Talent Match</h4> */}
+          <img style={{ width: "120px" }} src={logoImage} />
         </div>
         <div
           style={{
@@ -73,7 +76,7 @@ const Signup = () => {
 
             display: "flex",
             gap: "6vw",
-            paddingTop: "1vh",
+            paddingTop: "0vh",
           }}
         >
           {/* <h5>Home</h5>

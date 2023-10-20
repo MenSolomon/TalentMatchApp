@@ -1,7 +1,10 @@
+import { Avatar } from "@mui/material";
+
 const ClubandNationalTeamDisplayCard = ({
   hTagStyle,
   clubImage,
   countryImage,
+  ClubName,
 }) => {
   return (
     <div
@@ -53,7 +56,7 @@ const ClubandNationalTeamDisplayCard = ({
                   fontSize: ".94em",
                 }}
               >
-                Manchester United Football Club
+                {ClubName}
               </p>{" "}
             </div>
             <div style={{ flex: ".4" }}>
@@ -67,7 +70,8 @@ const ClubandNationalTeamDisplayCard = ({
 
           {/* Club Image */}
           <div style={{ flex: ".3", paddingLeft: ".3vw" }}>
-            <img src={clubImage} style={{ width: "100%" }} />
+            {/* <img src={clubImage} style={{ width: "100%" }} /> */}
+            <Avatar sx={{ width: 60, height: 60 }} src={clubImage}></Avatar>
           </div>
         </div>
         {/* // Height And Preffered Foot Area */}

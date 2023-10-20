@@ -56,7 +56,7 @@ export default function CreateShowInterestModal({ playerName }) {
             component="h2"
             sx={{ fontWeight: "bold" }}
           >
-            Player Name: {playerName}
+            Player Name: Benjamin Bature
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 4 }}>
             <TextField

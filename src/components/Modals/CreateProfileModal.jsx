@@ -59,7 +59,7 @@ export default function CreateProfileModal() {
     "Winger (W)",
   ];
 
-  const preferredFootArray = ["left", "right", "both", "any"];
+  const preferredFootArray = ["Left", "Right", "Both", "Any"];
   const captainArray = ["Yes", "No", "Any"];
 
   const contractStatusArray = [

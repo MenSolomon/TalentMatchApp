@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import avatarImage from "./assets/images/avatar.jpg";
+
+import logoImage from "./assets/images/AppLogoBlue.png";
 import ProfileMenu from "./components/Menu/ProfileMenu";
 import SavedFilters from "./components/MenuButtons/SavedFilters";
 import LightAndDarkModeSwitch from "./components/Switch/LightAndDarkModeSwitch";
@@ -18,8 +20,8 @@ const MotherComponent = () => {
     { name: "Home", icon: "home", path: "/" },
     // The none values are for the savedFilters which is an accordion and not a button.. skipped over it in the map
     { name: "none", icon: "none" },
-    { name: "Favourite", icon: "favorite", path: "none" },
-    { name: "Community", icon: "people", path: "/community" },
+    { name: "Favourite", icon: "favorite", path: "/none" },
+    // { name: "Community", icon: "people", path: "/community" },
     { name: "News", icon: "comment", path: "/news" },
     {
       name: "Comparison",
@@ -211,21 +213,12 @@ const MotherComponent = () => {
           style={{
             flex: ".18",
             paddingTop: "1%",
-            display: "flex",
+            display: "grid",
+            placeContent: "center",
           }}
         >
-          <Avatar
-            sx={{
-              // marginLeft: "2vw",
-              width: 62,
-              height: 62,
-              border: "4px solid blue",
-              marginLeft: ".4vw",
-              marginRight: ".4vw",
-            }}
-            src={avatarImage}
-          ></Avatar>
-          <h4 style={{ marginTop: "2vh" }}>Talent Match</h4>
+          <img style={{ width: "110px" }} src={logoImage} />
+          {/* <h4 style={{ marginTop: "2vh" }}>Talent Match</h4> */}
         </div>
         {/* // Search Area? */}
         <div style={{ flex: ".45", paddingTop: "1%", paddingLeft: "4vw" }}>

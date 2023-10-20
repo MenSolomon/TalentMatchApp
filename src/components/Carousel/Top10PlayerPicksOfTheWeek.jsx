@@ -1,9 +1,15 @@
 import { Button, Card } from "@mui/material";
-import React from "react";
 import { Carousel } from "react-bootstrap";
 import CreateShowInterestModal from "../Modals/CreateShowInterestModal";
 
-const Top10PlayerPicksOfTheWeek = ({ PlayerImage, PlayerCountry }) => {
+const Top10PlayerPicksOfTheWeek = ({
+  PlayerImage,
+  PlayerCountry,
+  firstname,
+  surname,
+  position,
+  rank,
+}) => {
   return (
     <Carousel
       interval={200000}
@@ -44,7 +50,7 @@ const Top10PlayerPicksOfTheWeek = ({ PlayerImage, PlayerCountry }) => {
               style={{
                 flex: ".25",
                 borderRadius: ".7vw",
-                backgroundImage: `url(${PlayerImage})`,
+                backgroundImage: `url(${PlayerImage.replace(/ /g, "%20")})`,
                 backgroundSize: "cover",
               }}
             ></div>
@@ -66,7 +72,7 @@ const Top10PlayerPicksOfTheWeek = ({ PlayerImage, PlayerCountry }) => {
                 }}
               >
                 {" "}
-                Cristiano Ronaldo{" "}
+                {firstname} {surname}{" "}
               </div>
               <div style={{ flex: ".4" }}>
                 {" "}
@@ -76,7 +82,7 @@ const Top10PlayerPicksOfTheWeek = ({ PlayerImage, PlayerCountry }) => {
                   {" "}
                   Position :{" "}
                 </span>{" "}
-                Striker{" "}
+                {position}
               </div>
             </div>
             {/* // Rank Number */}
@@ -88,7 +94,7 @@ const Top10PlayerPicksOfTheWeek = ({ PlayerImage, PlayerCountry }) => {
               }}
             >
               {" "}
-              #1{" "}
+              #{rank}
               <img
                 src={PlayerCountry}
                 style={{ width: "60px", height: "45px" }}

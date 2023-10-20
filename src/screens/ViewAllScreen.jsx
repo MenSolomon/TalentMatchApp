@@ -1,199 +1,69 @@
+import { useSelector } from "react-redux";
+import { selectPlayersInAgencyArray } from "../statemanager/slices/PlayersInAgencySlice";
 import ViewPlayerCard from "../components/Cards/ViewPlayerCard";
-import Ronaldo from "../assets/images/RonaldoImage.png";
-import kudus from "../assets/images/kudus.webp";
-import partey from "../assets/images/partey.webp";
-import messi from "../assets/images/messi.webp";
-import Pagination from "@mui/material/Pagination";
+import { Pagination } from "@mui/material";
 
-const ViewAllScreen = () => {
-  const PlayerArray = [
-    {
-      firstName: "Cristiano",
-      surName: "Ronaldo",
-      Age: "7",
-      position: "ST",
-      Nationality: "Portugal",
-      jerseyNumber: "7",
-      //   image: "../assets/images/Ronaldo.png",
-    },
-    {
-      firstName: "Lionel",
-      surName: "Messi",
-      Age: "33",
-      Nationality: "Argentina",
-      position: "CF",
-      jerseyNumber: "10",
-      // image: "../assets/images/Ronaldo.png",
-    },
-    {
-      firstName: "Thomas",
-      surName: "Partey",
-      Nationality: "Ghana",
-      Age: "25",
-      position: "CDM",
-      jerseyNumber: "17",
-      // image: "../assets/images/Ronaldo.png",
-    },
-    {
-      firstName: "Mohammed",
-      surName: "Kudus",
-      Age: "22",
-      position: "RW",
-      Nationality: "Ghana",
-      jerseyNumber: "17",
-      image: "../assets/images/Ronaldo.png",
-    },
-    {
-      firstName: "Mohammed",
-      surName: "Kudus",
-      Age: "22",
-      position: "RW",
-      Nationality: "Ghana",
-      jerseyNumber: "17",
-      image: "../assets/images/Ronaldo.png",
-    },
-    {
-      firstName: "Mohammed",
-      surName: "Kudus",
-      Age: "22",
-      position: "RW",
-      Nationality: "Ghana",
-      jerseyNumber: "17",
-      image: "../assets/images/Ronaldo.png",
-    },
-    {
-      firstName: "Mohammed",
-      surName: "Kudus",
-      Age: "22",
-      position: "RW",
-      Nationality: "Ghana",
-      jerseyNumber: "17",
-      image: "../assets/images/Ronaldo.png",
-    },
-  ];
-
+const Players = () => {
+  const PlayerArray = useSelector(selectPlayersInAgencyArray);
   return (
     <div
       style={{
-        width: "100%",
-        height: "100%",
         display: "flex",
         flexDirection: "column",
+        height: "100%",
+        width: "100%",
       }}
     >
       <div style={{ flex: ".1" }}>
-        <h4>Default Profile</h4>
+        <h3 style={{ margin: 0, float: "left" }}>Default Profile</h3>{" "}
       </div>
-      {/* Cards */}
-      <div
-        style={{
-          flex: ".85",
-          //   paddingTop: "2vh",
-          //   gap: "2vw",
-          flexWrap: "wrap",
-          display: "flex",
-        }}
-      >
-        {PlayerArray.map((data, key) => {
+
+      <div style={{ flex: ".8", flexWrap: "wrap", display: "flex" }}>
+        {PlayerArray.slice(0, 9).map((data, index) => {
           const {
             firstName,
             surName,
             Age,
             position,
+            Nationality,
             jerseyNumber,
             image,
-            Nationality,
           } = data;
 
-          if (firstName === "Mohammed") {
-            return (
-              <ViewPlayerCard
-                key={key}
-                image={kudus}
-                firstName={firstName}
-                surName={surName}
-                age={Age}
-                nationality={Nationality}
-                position={position}
-                jerseyNumber={jerseyNumber}
-              />
-            );
-          } else if (firstName === "Cristiano") {
-            return (
-              <ViewPlayerCard
-                key={key}
-                image={Ronaldo}
-                firstName={firstName}
-                surName={surName}
-                age={Age}
-                nationality={Nationality}
-                position={position}
-                jerseyNumber={jerseyNumber}
-              />
-            );
-          } else if (firstName === "Lionel") {
-            return (
-              <ViewPlayerCard
-                key={key}
-                image={messi}
-                firstName={firstName}
-                surName={surName}
-                age={Age}
-                nationality={Nationality}
-                position={position}
-                jerseyNumber={jerseyNumber}
-              />
-            );
-          } else if (firstName === "Thomas") {
-            return (
-              <ViewPlayerCard
-                key={key}
-                image={partey}
-                firstName={firstName}
-                surName={surName}
-                age={Age}
-                nationality={Nationality}
-                position={position}
-                jerseyNumber={jerseyNumber}
-              />
-            );
-          } else {
-            return (
-              <ViewPlayerCard
-                key={key}
-                image={Ronaldo}
-                firstName={firstName}
-                surName={surName}
-                age={Age}
-                nationality={Nationality}
-                position={position}
-                jerseyNumber={jerseyNumber}
-              />
-            );
-          }
+          return (
+            <ViewPlayerCard
+              key={index}
+              image={image}
+              surName={surName}
+              age={Age}
+              position={position}
+              jerseyNumber={jerseyNumber}
+              firstName={firstName}
+              nationality={Nationality}
+            />
+          );
         })}
       </div>
+      {/* // Pagination Area  */}
 
       <div
         style={{
-          flex: ".05",
-          //   paddingTop: "2vh",
-          //   gap: "2vw",
-          // flexWrap: "wrap",
+          flex: ".1",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
+        {" "}
         <Pagination
           className="primaryTextColor"
           sx={{ color: "white" }}
           count={1}
           color="primary"
-        />
+        />{" "}
       </div>
     </div>
   );
 };
 
-export default ViewAllScreen;
+export default Players;

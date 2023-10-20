@@ -22,6 +22,7 @@ import facebookLogo from "../assets/images/facebookImage.svg";
 import GoogleLogo from "../assets/images/google.svg";
 import { useNavigate } from "react-router-dom";
 import WorldMaps from "../components/WorldMap";
+import logoImage from "../assets/images/AppLogoBlue.png";
 
 const Login = () => {
   // Settings for password input
@@ -50,8 +51,11 @@ const Login = () => {
         backgroundRepeat: "no-repeat",
         display: "flex",
         flexDirection: "column",
-        padding: "2vw",
+        // padding: "2vw",
         paddingLeft: "3vw",
+        padding: "3vw",
+        paddingTop: "1.5vh",
+
         color: "white",
       }}
     >
@@ -60,13 +64,14 @@ const Login = () => {
         {/* LOGO AREA */}
         <div style={{ flex: ".2", display: "flex" }}>
           {" "}
-          <Avatar
+          <img style={{ width: "120px" }} src={logoImage} />
+          {/* <Avatar
             src="/static/images/avatar/1.jpg"
             style={{ background: "blue", color: "blue" }}
           >
             r
           </Avatar>{" "}
-          <h4 style={{ marginLeft: ".7vw", marginTop: "1vh" }}>Talent Match</h4>
+          <h4 style={{ marginLeft: ".7vw", marginTop: "1vh" }}>Talent Match</h4> */}
         </div>
         <div
           style={{

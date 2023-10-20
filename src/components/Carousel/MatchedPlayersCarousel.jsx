@@ -2,6 +2,8 @@ import { Carousel } from "react-bootstrap";
 import MatchedPlayerCard from "../Cards/MatchedPlayerCard";
 import manutd from "../../assets/images/manutd.png";
 import ghana from "../../assets/images/ghana.png";
+import nigeria from "../../assets/images/nigeria.jpg";
+import senegal from "../../assets/images/senegal.png";
 
 const MatchedPlayersCarousel = ({ MatchedPlayersArray }) => {
   // using the
@@ -16,7 +18,7 @@ const MatchedPlayersCarousel = ({ MatchedPlayersArray }) => {
         height: "100%",
         width: "100%",
         borderRadius: "1vw",
-        paddingLeft: "2vw",
+        paddingLeft: "5.5vw",
       }}
     >
       <Carousel.Item>
@@ -31,15 +33,24 @@ const MatchedPlayersCarousel = ({ MatchedPlayersArray }) => {
                 Nationality,
                 jerseyNumber,
                 image,
+                clubLogo,
               } = data;
-
               return (
                 <MatchedPlayerCard
                   key={index}
-                  PlayerClub={manutd}
-                  PlayerCountry={ghana}
+                  PlayerClub={clubLogo}
+                  PlayerCountry={
+                    Nationality === "Ghana"
+                      ? ghana
+                      : Nationality === "Nigeria"
+                      ? nigeria
+                      : Nationality === "Senegal"
+                      ? senegal
+                      : ""
+                  }
                   PlayerImage={`${image}`}
-                  PlayerName={surName}
+                  PlayerFirstName={firstName}
+                  PlayerSurName={surName}
                   PlayerPosition={position}
                 />
               );
@@ -53,7 +64,7 @@ const MatchedPlayersCarousel = ({ MatchedPlayersArray }) => {
       <Carousel.Item>
         <div style={{ display: "flex", gap: "1.2vw" }}>
           {MatchedPlayersArray &&
-            MatchedPlayersArray.slice(7, 12).map((data, index) => {
+            MatchedPlayersArray.slice(6, 12).map((data, index) => {
               const {
                 firstName,
                 surName,
@@ -62,15 +73,25 @@ const MatchedPlayersCarousel = ({ MatchedPlayersArray }) => {
                 Nationality,
                 jerseyNumber,
                 image,
+                clubLogo,
               } = data;
 
               return (
                 <MatchedPlayerCard
                   key={index}
-                  PlayerClub={manutd}
-                  PlayerCountry={ghana}
-                  PlayerImage={image}
-                  PlayerName={surName}
+                  PlayerClub={clubLogo}
+                  PlayerCountry={
+                    Nationality === "Ghana"
+                      ? ghana
+                      : Nationality === "Nigeria"
+                      ? nigeria
+                      : Nationality === "Senegal"
+                      ? senegal
+                      : ""
+                  }
+                  PlayerImage={`${image}`}
+                  PlayerFirstName={firstName}
+                  PlayerSurName={surName}
                   PlayerPosition={position}
                 />
               );

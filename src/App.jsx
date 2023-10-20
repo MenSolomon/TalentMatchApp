@@ -16,7 +16,7 @@ const App = () => {
         <Route path="/" element={<MotherComponent />}>
           <Route path="/" element={<HomePage />} />
           <Route path="view-all" element={<ViewAllScreen />} />
-          <Route path="player-details" element={<PlayerDetails />} />
+          <Route path="player-details/:playerId" element={<PlayerDetails />} />
           <Route path="/community" element={<Community />} />
           <Route path="/player-conmpare" element={<PlayerComparison />} />
           <Route path="/news" element={<News />} />

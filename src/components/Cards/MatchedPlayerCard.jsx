@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 const MatchedPlayerCard = ({
   PlayerImage,
   PlayerClub,
-  PlayerName,
+  PlayerSurName,
+  PlayerFirstName,
   MarketValue,
   PlayerPosition,
   PlayerCountry,
@@ -16,7 +17,7 @@ const MatchedPlayerCard = ({
 
   // For now all the menu buttons navigate to the homepage
   const handleNavigate = () => {
-    navigate(`/player-details`);
+    navigate(`/player-details/${PlayerFirstName}${PlayerSurName}`);
   };
 
   return (
@@ -81,7 +82,7 @@ const MatchedPlayerCard = ({
               style={{
                 flex: ".31",
                 backgroundImage: `url(${PlayerCountry})`,
-                backgroundSize: "contain",
+                backgroundSize: "cover",
               }}
             ></div>
             {/* Player Club */}
@@ -121,7 +122,7 @@ const MatchedPlayerCard = ({
             placeContent: "center",
           }}
         >
-          {PlayerName}
+          {PlayerSurName}
         </div>
         {/* Player Stats && Value */}
         <div style={{ flex: ".3", fontSize: ".7em" }}>

@@ -52,7 +52,7 @@ const NewsCarousel = ({ NewsArray }) => {
                     fontWeight: "bold",
                   }}
                 >
-                  <h6 style={{ marginTop: "30%" }}> source : {source} </h6>
+                  <h6 style={{ marginTop: "30%" }}> source : ESPN </h6>
                   <h4 style={{}}>{title}</h4>
                 </span>
                 {/* </div> */}

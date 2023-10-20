@@ -6,10 +6,12 @@ import {
   FormControlLabel,
   Icon,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ronaldo from "../assets/images/Ronaldo.png";
 import manu from "../assets/images/manunited.png";
 import ghana from "../assets/images/ghana.png";
+import nigeria from "../assets/images/Nigeria.jpg";
+
 import uefa from "../assets/images/uefa.png";
 import BalonDor from "../assets/images/BalonDor.png";
 import worldCup from "../assets/images/worldCup.png";
@@ -36,8 +38,30 @@ import {
   setIsCollapseFalse,
   setIsCollapseTrue,
 } from "../statemanager/slices/CollapsePlayerDisplayCards";
+import { useParams } from "react-router-dom";
+import { selectPlayersInAgencyArray } from "../statemanager/slices/PlayersInAgencySlice";
 
 const PlayerDetails = () => {
+  const { playerId } = useParams();
+  const [selectedPlayerArray, setSelectedPlayerArray] = useState([]);
+  const [firstName, setFirstName] = useState("");
+  const [surName, setSurName] = useState("");
+
+  const allPlayersArray = useSelector(selectPlayersInAgencyArray);
+
+  useEffect(() => {
+    const fileteredPlayer = allPlayersArray.filter((data) => {
+      // should be id for filtering not name
+      const { firstName, surName } = data;
+      return playerId === `${firstName}${surName}`;
+    });
+
+    // setSurName(selectedPlayerArray[0]?.surName);
+    // console.log(surName);
+    setSelectedPlayerArray(fileteredPlayer);
+    console.log(selectedPlayerArray, fileteredPlayer);
+  }, [playerId, allPlayersArray]);
+
   const hTagStyle = {
     marginBottom: 0,
     marginTop: 0,
@@ -99,15 +123,29 @@ const PlayerDetails = () => {
       >
         {/* // Image And Name Area */}
         <div style={{ flex: ".26", padding: "1vw" }}>
-          <NameAndImageCard ronaldo={ronaldo} hTagStyle={hTagStyle} />
+          <NameAndImageCard
+            firstname={selectedPlayerArray[0]?.firstName}
+            surname={selectedPlayerArray[0]?.surName}
+            position={selectedPlayerArray[0]?.position}
+            age={selectedPlayerArray[0]?.Age}
+            image={selectedPlayerArray[0]?.image}
+            hTagStyle={hTagStyle}
+          />
         </div>
         {/* Club and Value Area */}
         <div style={{ flex: ".27", padding: "1vw" }}>
           {" "}
           <ClubandNationalTeamDisplayCard
             hTagStyle={hTagStyle}
-            clubImage={manu}
-            countryImage={ghana}
+            clubImage={selectedPlayerArray[0]?.clubLogo}
+            countryImage={
+              selectedPlayerArray[0]?.Nationality === "Ghana"
+                ? ghana
+                : selectedPlayerArray[0]?.Nationality === "Nigeria"
+                ? nigeria
+                : ""
+            }
+            ClubName={selectedPlayerArray[0]?.clubName}
           />
         </div>
         {/* Achievements and Trophies Area */}
