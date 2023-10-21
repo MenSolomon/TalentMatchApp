@@ -9,6 +9,8 @@ import Community from "./screens/Community";
 import PlayerComparison from "./screens/PlayerComparison";
 import News from "./screens/News";
 import MembershipPlanPage from "./screens/MembershipPlanPage";
+import FreeTrial from "./screens/FreeTrial";
+import SubscribeTrial from "./screens/SubscribeTrial";
 
 const App = () => {
   return (
@@ -24,7 +26,10 @@ const App = () => {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+
         <Route path="/membership-plans" element={<MembershipPlanPage />} />
+        <Route path="/freetrial" element={<FreeTrial />} />
+        <Route path="/subscribeTrial" element={<SubscribeTrial />} />
       </Routes>
     </div>
   );
