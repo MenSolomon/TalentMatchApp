@@ -26,6 +26,8 @@ const GalleryVideoComponent = ({ url, videoCategory }) => {
           url={url}
           height="100%"
           width="100%"
+          show
+
           style={{ position: "relative" }}
         />{" "}
       </div>

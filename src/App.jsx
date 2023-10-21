@@ -8,6 +8,7 @@ import Signup from "./screens/Signup";
 import Community from "./screens/Community";
 import PlayerComparison from "./screens/PlayerComparison";
 import News from "./screens/News";
+import MembershipPlanPage from "./screens/MembershipPlanPage";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/membership-plans" element={<MembershipPlanPage />} />
       </Routes>
     </div>
   );

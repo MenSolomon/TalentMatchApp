@@ -102,10 +102,10 @@ const Login = () => {
             <span
               style={{ color: "#5585FE", cursor: "pointer" }}
               onClick={() => {
-                Navigate("/signup");
+                Navigate("/membership-plans");
               }}
             >
-              Signup
+              Choose a plan
             </span>{" "}
           </h5>
 
