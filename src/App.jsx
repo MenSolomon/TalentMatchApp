@@ -11,6 +11,8 @@ import News from "./screens/News";
 import MembershipPlanPage from "./screens/MembershipPlanPage";
 import FreeTrial from "./screens/FreeTrial";
 import SubscribeTrial from "./screens/SubscribeTrial";
+import Coaches from "./screens/CreatingAccountScreens/Coaches";
+import Player from "./screens/CreatingAccountScreens/Player";
 
 const App = () => {
   return (
@@ -30,6 +32,8 @@ const App = () => {
         <Route path="/membership-plans" element={<MembershipPlanPage />} />
         <Route path="/freetrial" element={<FreeTrial />} />
         <Route path="/subscribeTrial" element={<SubscribeTrial />} />
+        <Route path="/createaccountplayer" element={<Player />} />
+        <Route path="/createaccountcoaches" element={<Coaches />} />
       </Routes>
     </div>
   );
