@@ -142,12 +142,12 @@ const Coaches = () => {
                   <CreateAccountTextField
                     variant={"outlined"}
                     type={"name"}
-                    value={"first name"}
+                    placeholder={"first name"}
                     style={"20vw"}
                   />
                   <CreateAccountTextField
                     variant={"outlined"}
-                    value={"last name"}
+                    placeholder={"last name"}
                     style={"20vw"}
                   />
                 </div>
@@ -166,12 +166,12 @@ const Coaches = () => {
                   <CreateAccountTextField
                     variant={"outlined"}
                     style={"20vw"}
-                    value={"password"}
+                    placeholder={"password"}
                   />
                   <CreateAccountTextField
                     variant={"outlined"}
                     style={"20vw"}
-                    value={"confirm password"}
+                    placeholder={"confirm password"}
                   />
                 </div>
                 {/* ====== */}
@@ -194,11 +194,10 @@ const Coaches = () => {
                   textAlign: "center",
                 }}
               >
-                <small>
-                  Start by filling out your personal data in the User
-                  Credentials <br />
-                  form below. These data must be of the administrator of this
-                  account.
+                <small style={{ fontWeight: "bold" }}>
+                  You have the option to link multiple organizations to your
+                  Talent Match <br /> account. Let's get started by entering the
+                  details for your first organization.
                 </small>
               </div>
               <div style={{ flex: "0.8" }}>
