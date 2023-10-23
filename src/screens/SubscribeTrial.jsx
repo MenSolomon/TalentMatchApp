@@ -21,92 +21,44 @@ import iconImage from "../assets/images/kudus.webp";
 // import SubscribeTrialRightPaper from "../components/Paper/SubscribeTrialRightPaper";
 import logoImage from "../assets/images/AppLogoBlue.png";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectCompleteSteps,
+  selectRoleSelected,
+  setCompletedSteps,
+} from "../statemanager/slices/SignupStepperSlice";
 
 const SubscribeTrial = () => {
   return (
     <div
       style={{
         // background: "red",
-        width: "100vw",
-        height: "100vh",
+        width: "100%",
+        height: "100%",
         display: "flex",
-        flexDirection: "column",
+        // flexDirection: "column",
       }}
     >
-      {/* Header for free trial page */}
       <div
         style={{
-          flex: "0.1",
-          // background: "red",
+          flex: "0.5",
+          //   background: "red",
           display: "flex",
-          padding: "10px",
+          justifyContent: "flex-end",
+          paddingRight: "10px",
         }}
       >
-        <div
-          style={{
-            flex: "0.5",
-            // background: "yellow",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-start",
-          }}
-        >
-          <img style={{ width: "120px" }} src={logoImage} />
-        </div>
-        <div
-          style={{
-            flex: "0.5",
-            // background: "pink",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-          }}
-        >
-          {/* <FreeTrialMenu /> */}
-        </div>
+        <SubscribeTrialLeftPaper iconImage={iconImage} />
       </div>
-      {/* Stepper for free trial */}
       <div
         style={{
-          flex: "0.2",
-          // background: "yellow",
+          flex: "0.5",
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          // padding: "20px",
+          justifyContent: "flex-start",
+          paddingLeft: "10px",
         }}
       >
-        <FreetrialStepper stepperValue={1} />
-      </div>
-      {/* free trial membership */}
-      <div
-        style={{
-          flex: "0.7",
-          // background: "red",
-          display: "flex",
-        }}
-      >
-        <div
-          style={{
-            flex: "0.5",
-            //   background: "red",
-            display: "flex",
-            justifyContent: "flex-end",
-            paddingRight: "10px",
-          }}
-        >
-          <SubscribeTrialLeftPaper iconImage={iconImage} />
-        </div>
-        <div
-          style={{
-            flex: "0.5",
-            display: "flex",
-            justifyContent: "flex-start",
-            paddingLeft: "10px",
-          }}
-        >
-          <SubscribeTrialRightPaper />
-        </div>
+        <SubscribeTrialRightPaper />
       </div>
     </div>
   );
@@ -116,6 +68,10 @@ export default SubscribeTrial;
 
 const SubscribeTrialLeftPaper = ({ iconImage }) => {
   const navigate = useNavigate();
+
+  const roleSelected = useSelector(selectRoleSelected);
+
+  const roles = ["Player", "Agent", "Scout", "Coach"];
 
   return (
     <>
@@ -142,7 +98,21 @@ const SubscribeTrialLeftPaper = ({ iconImage }) => {
               alignItems: "center",
             }}
           >
-            <img src={iconImage} width="100px" />
+            {/* 
+
+ */}
+
+            {roleSelected === "Player" ? (
+              <img src="/public/playerImage.png" width="100px" />
+            ) : roleSelected === "Agent" ? (
+              <img src="/public/agentImage.png" width="100px" />
+            ) : roleSelected === "Coach" ? (
+              <img src="/public/coachImage.png" width="100px" />
+            ) : roleSelected === "Scout" ? (
+              <img src="/public/scoutImage.png" width="100px" />
+            ) : (
+              <img alt="No Role selected" width="100px" />
+            )}
           </div>
 
           <div
@@ -161,15 +131,15 @@ const SubscribeTrialLeftPaper = ({ iconImage }) => {
             >
               <div>
                 <h5 style={{ fontWeight: "bold" }}>
-                  Start your free trial for 15 <br /> days
+                  Start your free trial for 90 <br /> days
                 </h5>
-                <h5 style={{ fontWeight: "bold" }}>Independent Coach</h5>
+                <h5 style={{ fontWeight: "bold" }}>{roleSelected}</h5>
                 <small>
                   Doesn't suit you ?{" "}
                   <span
                     style={{ color: "#5585FE", cursor: "pointer" }}
                     onClick={() => {
-                      navigate("/freetrial");
+                      navigate("/create-account/freetrial");
                     }}
                   >
                     change your membership
@@ -187,7 +157,7 @@ const SubscribeTrialLeftPaper = ({ iconImage }) => {
             justifyContent: "flex-start",
           }}
         >
-          <h6 style={{ fontWeight: "bold" }}>Video Packs</h6>
+          <h6 style={{ fontWeight: "bold" }}>Packages</h6>
         </div>
         <div
           style={{
@@ -220,6 +190,20 @@ const SubscribeTrialLeftPaper = ({ iconImage }) => {
 };
 
 const SubscribeTrialRightPaper = () => {
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  const handleTrialNavigation = () => {
+    navigate("/create-account/confirm-details");
+  };
+
+  const completedStepsObject = useSelector(selectCompleteSteps);
+
+  const handleStepsCompleted = () => {
+    dispatch(setCompletedSteps({ ...completedStepsObject, 1: true }));
+  };
+
   return (
     <>
       <Card
@@ -372,7 +356,16 @@ const SubscribeTrialRightPaper = () => {
             // background: "green",
           }}
         >
-          <Button variant="outlined"> start a free trail </Button>
+          <Button
+            onClick={() => {
+              handleTrialNavigation();
+              handleStepsCompleted();
+            }}
+            variant="outlined"
+          >
+            {" "}
+            start a free trail{" "}
+          </Button>
           <small>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit
             perferendis beatae officiis dolorem error sint. Sit quidem dolor

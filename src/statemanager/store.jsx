@@ -6,12 +6,13 @@ import { combineReducers } from "@reduxjs/toolkit";
 import playerDetailsCardsCollapseReducer from "./slices/CollapsePlayerDisplayCards";
 import ThemeProviderReducer from "./slices/ThemeProviderSlice";
 import PlayersInAgencyReducer from "./slices/PlayersInAgencySlice";
+import SignupStepperReducer from "./slices/SignupStepperSlice";
 
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  blacklist: ["PlayersInAgencySlice"],
+  blacklist: ["PlayersInAgencySlice", "FormStepper"],
 };
 
 const reducer = combineReducers({
@@ -19,6 +20,7 @@ const reducer = combineReducers({
   CollapsePlayerCards: playerDetailsCardsCollapseReducer,
   ThemeProviderSlice: ThemeProviderReducer,
   PlayersInAgencySlice: PlayersInAgencyReducer,
+  FormStepper: SignupStepperReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

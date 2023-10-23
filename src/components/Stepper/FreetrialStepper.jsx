@@ -5,7 +5,9 @@ import Step from "@mui/material/Step";
 import StepButton from "@mui/material/StepButton";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { selectCompleteSteps } from "../../statemanager/slices/SignupStepperSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const steps = [
   "Select your role",
@@ -144,14 +146,32 @@ const steps = [
 //   );
 // }
 
-export default function FreetrialStepper({
-  stepperValue,
-  completeFormFunction,
-}) {
+export default function FreetrialStepper({ stepperValue }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentUrl = location.pathname;
 
-  const [activeStep, setActiveStep] = React.useState(stepperValue);
+  const completedSlice = useSelector(selectCompleteSteps);
+  const dispatch = useDispatch();
+
+  const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
+
+  /// THIS use effect is to change the number of active step when the url changes
+
+  React.useEffect(() => {
+    switch (currentUrl) {
+      case "/create-account/freetrial":
+        setActiveStep(0);
+        break;
+      case "/create-account/subscribeTrial":
+        setActiveStep(1);
+        break;
+      case "/create-account/confirm-details":
+        setActiveStep(3);
+        break;
+    }
+  }, [currentUrl]);
 
   const totalSteps = () => {
     return steps.length;
@@ -184,16 +204,17 @@ export default function FreetrialStepper({
 
     switch (label) {
       case "Select your role":
-        navigate("/freetrial");
+        navigate("/create-account/freetrial");
         break;
       case "Choose a package":
-        navigate("/subscribeTrial");
+        navigate("/create-account/subscribeTrial");
         break;
       case "Create your account":
         // alert("You clicked on 'Create your account'");
         break;
       case "Confirm details":
-        alert("You clicked on 'Confirm details'");
+        navigate("/create-account/confirm-details");
+
         break;
       default:
         // Handle any other cases here
@@ -203,8 +224,10 @@ export default function FreetrialStepper({
 
   const handleComplete = () => {
     const newCompleted = completed;
+    console.log(newCompleted, "stepper");
     newCompleted[activeStep] = true;
     setCompleted(newCompleted);
+    console.log(completed, "completed");
     // handleNext();
   };
 
@@ -217,7 +240,7 @@ export default function FreetrialStepper({
     <Box sx={{ width: "70%" }}>
       <Stepper nonLinear activeStep={activeStep}>
         {steps.map((label, index) => (
-          <Step key={label} completed={completed[index]}>
+          <Step key={label} completed={completedSlice[index]}>
             <StepButton color="inherit" onClick={handleStep(index, label)}>
               {label}
             </StepButton>
@@ -237,7 +260,7 @@ export default function FreetrialStepper({
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1, py: 1 }}>
+            <Typography sx={{ mt: 2, mb: 1, py: 1, fontWeight: "bolder" }}>
               Step {activeStep + 1}
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
@@ -254,19 +277,25 @@ export default function FreetrialStepper({
                 Next
               </Button> */}
               {activeStep !== steps.length &&
-                (completed[activeStep] ? (
+                (completedSlice[activeStep] ? (
                   <Typography
                     variant="caption"
-                    sx={{ display: "inline-block" }}
+                    sx={{
+                      display: "inline-block",
+                      color: "#5585FE",
+                      fontWeight: "bolder",
+                    }}
                   >
                     Step {activeStep + 1} already completed
                   </Typography>
                 ) : (
-                  <Button onClick={handleComplete}>
-                    {completedSteps() === totalSteps() - 1
-                      ? "Finish"
-                      : "Complete Step"}
-                  </Button>
+                  // <Button onClick={handleComplete}>
+                  //   {completedSteps() === totalSteps() - 1
+                  //     ? "Finish"
+                  //     : "Complete Step"}
+                  // </Button>
+
+                  ""
                 ))}
             </Box>
           </React.Fragment>

@@ -1,12 +1,30 @@
 import { Button, Card } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
+import {
+  selectCompleteSteps,
+  setCompletedSteps,
+  setRoleSelected,
+} from "../../statemanager/slices/SignupStepperSlice";
 // import playerImage from "../../assets/playerImage.png"
 
 const FreetrialCard = ({ name, roleImage, imageStyle }) => {
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
   const handleTrialNavigation = () => {
-    navigate("/subscribeTrial");
+    navigate("/create-account/subscribeTrial");
+  };
+
+  const completedStepsObject = useSelector(selectCompleteSteps);
+
+  const handleStepOneCompleted = () => {
+    dispatch(setCompletedSteps({ ...completedStepsObject, 0: true }));
+  };
+
+  const handleDispatchRoleSelectedToSlice = () => {
+    dispatch(setRoleSelected(name));
   };
 
   return (
@@ -45,7 +63,14 @@ const FreetrialCard = ({ name, roleImage, imageStyle }) => {
             alignItems: "center",
           }}
         >
-          <Button onClick={handleTrialNavigation} variant="outlined">
+          <Button
+            onClick={() => {
+              handleStepOneCompleted();
+              handleTrialNavigation();
+              handleDispatchRoleSelectedToSlice();
+            }}
+            variant="outlined"
+          >
             Start Trial
           </Button>
         </div>

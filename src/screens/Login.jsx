@@ -110,49 +110,6 @@ const Login = () => {
           </h5>
 
           {/* //First Name And Surname */}
-          <div
-            style={{
-              display: "flex",
-              // background: "white",
-              width: "80%",
-              // height: "10vh",
-              gap: "1vw",
-              marginBottom: "3vh",
-            }}
-          >
-            <Button
-              sx={{
-                width: "15vw",
-                height: "7vh",
-                background: "#5585FE",
-                color: "white",
-                borderRadius: "1vw",
-                fontWeight: "bold",
-              }}
-            >
-              <img
-                src={GoogleLogo}
-                style={{ width: "30px", marginRight: "1vw" }}
-              />{" "}
-              Google
-            </Button>
-            <Button
-              sx={{
-                width: "15vw",
-                height: "7vh",
-                background: "#5585FE",
-                color: "white",
-                borderRadius: "1vw",
-                fontWeight: "bold",
-              }}
-            >
-              <img
-                src={facebookLogo}
-                style={{ width: "30px", marginRight: "1vw" }}
-              />{" "}
-              Facebook
-            </Button>
-          </div>
 
           {/* Email */}
           <TextField

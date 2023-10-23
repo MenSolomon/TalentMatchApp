@@ -104,7 +104,7 @@ const MembershipPlanPage = () => {
               alignItems: "center",
               borderRadius: "1.5vw",
               padding: "0vh .6vw",
-              gap: "1.vw",
+              gap: "2vw",
             }}
           >
             <h6
@@ -112,6 +112,10 @@ const MembershipPlanPage = () => {
                 marginTop: "1.5vh",
                 alignSelf: "center",
                 color: "#5585FE",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                Navigate("/login");
               }}
             >
               Login
@@ -119,7 +123,7 @@ const MembershipPlanPage = () => {
 
             <Button
               onClick={() => {
-                Navigate("/freetrial");
+                Navigate("/create-account/freetrial");
               }}
               sx={{
                 background: "#5585FE",
