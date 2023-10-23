@@ -3,6 +3,7 @@ import FreeTrialMenu from "../components/Menu/FreeTrialMenu";
 import FreetrialStepper from "../components/Stepper/FreetrialStepper";
 import { Add } from "@mui/icons-material";
 import FreetrialCard from "../components/Cards/FreetrialCard";
+import logoImage from "../assets/images/AppLogoBlue.png";
 
 const FreeTrial = () => {
   return (
@@ -41,7 +42,7 @@ const FreeTrial = () => {
               justifyContent: "flex-start",
             }}
           >
-            <h5>TalentMatch</h5>
+            <img style={{ width: "120px" }} src={logoImage} />
           </div>
           <div
             style={{
@@ -52,7 +53,7 @@ const FreeTrial = () => {
               justifyContent: "flex-end",
             }}
           >
-            <FreeTrialMenu />
+            {/* <FreeTrialMenu /> */}
           </div>
         </div>
         {/* Stepper for free trial */}
@@ -66,7 +67,7 @@ const FreeTrial = () => {
             // padding: "20px",
           }}
         >
-          <FreetrialStepper />
+          <FreetrialStepper stepperValue={0} />
         </div>
         {/* free trial membership */}
         <div
@@ -95,10 +96,22 @@ const FreeTrial = () => {
             flexWrap: "wrap",
           }}
         >
-          <FreetrialCard btn={"Get a qoute"} name={"Coach"} />
-          <FreetrialCard btn={"Get a qoute"} name={"Player"} />
-          <FreetrialCard btn={"Get a qoute"} name={"Agent"} />
-          <FreetrialCard btn={"Get a qoute"} name={"Club"} />
+          <FreetrialCard name="Coach" roleImage="/public/coachImage.png" />
+          <FreetrialCard
+            name="Player"
+            roleImage="/public/playerImage.png"
+            imageStyle={{ maxWidth: "60px", height: "89px" }}
+          />
+          <FreetrialCard
+            name="Agent"
+            roleImage="/public/agentImage.png"
+            imageStyle={{ maxWidth: "95px", height: "89px" }}
+          />
+          <FreetrialCard
+            name="Scout"
+            roleImage="/public/scoutImage.png"
+            imageStyle={{ maxWidth: "75px", height: "89px" }}
+          />
         </div>
       </div>
     </div>

@@ -311,6 +311,13 @@ div::-webkit-scrollbar-thumb:hover {
 .css-6hp17o-MuiList-root-MuiMenu-list > li {
   font-size: 0.9em;
 }
+
+.chooseARoleCard:hover {
+  background-color: #e0fa55;
+  color: #09142d;
+  cursor: pointer;
+}
+
 /* //ACTIBE LINK */
 
 /* button.MuiButtinBase-root.MuiButtin-root.MuiButton-text.MuiButton-textPrimary */

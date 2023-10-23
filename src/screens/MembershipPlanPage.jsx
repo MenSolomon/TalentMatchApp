@@ -118,6 +118,9 @@ const MembershipPlanPage = () => {
             </h6>
 
             <Button
+              onClick={() => {
+                Navigate("/freetrial");
+              }}
               sx={{
                 background: "#5585FE",
                 width: "10vw",
