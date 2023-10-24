@@ -27,169 +27,17 @@ import {
   selectRoleSelected,
   setCompletedSteps,
 } from "../statemanager/slices/SignupStepperSlice";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import { useState } from "react";
+import BasicButton from "../components/Buttons/BasicButton";
 
 const SubscribeTrial = () => {
-  return (
-    <div
-      style={{
-        // background: "red",
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        // flexDirection: "column",
-      }}
-    >
-      <div
-        style={{
-          flex: "0.5",
-          //   background: "red",
-          display: "flex",
-          justifyContent: "flex-end",
-          paddingRight: "10px",
-        }}
-      >
-        <SubscribeTrialLeftPaper iconImage={iconImage} />
-      </div>
-      <div
-        style={{
-          flex: "0.5",
-          display: "flex",
-          justifyContent: "flex-start",
-          paddingLeft: "10px",
-        }}
-      >
-        <SubscribeTrialRightPaper />
-      </div>
-    </div>
-  );
-};
+  // RIGHT PAPER FUNCTIONS
 
-export default SubscribeTrial;
-
-const SubscribeTrialLeftPaper = ({ iconImage }) => {
-  const navigate = useNavigate();
-
-  const roleSelected = useSelector(selectRoleSelected);
-
-  const roles = ["Player", "Agent", "Scout", "Coach"];
-
-  return (
-    <>
-      <div
-        style={{
-          width: "70%",
-          height: "75%",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <div
-          style={{
-            flex: "0.5",
-            display: "flex",
-          }}
-        >
-          <div
-            style={{
-              flex: "0.3",
-
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-            }}
-          >
-            {/* 
-
- */}
-
-            {roleSelected === "Player" ? (
-              <img src="/public/playerImage.png" width="100px" />
-            ) : roleSelected === "Agent" ? (
-              <img src="/public/agentImage.png" width="100px" />
-            ) : roleSelected === "Coach" ? (
-              <img src="/public/coachImage.png" width="100px" />
-            ) : roleSelected === "Scout" ? (
-              <img src="/public/scoutImage.png" width="100px" />
-            ) : (
-              <img alt="No Role selected" width="100px" />
-            )}
-          </div>
-
-          <div
-            style={{
-              flex: "0.7",
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "center",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <div>
-                <h5 style={{ fontWeight: "bold" }}>
-                  Start your free trial for 90 <br /> days
-                </h5>
-                <h5 style={{ fontWeight: "bold" }}>{roleSelected}</h5>
-                <small>
-                  Doesn't suit you ?{" "}
-                  <span
-                    style={{ color: "#5585FE", cursor: "pointer" }}
-                    onClick={() => {
-                      navigate("/create-account/freetrial");
-                    }}
-                  >
-                    change your membership
-                  </span>
-                </small>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          style={{
-            flex: "0.1",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-start",
-          }}
-        >
-          <h6 style={{ fontWeight: "bold" }}>Packages</h6>
-        </div>
-        <div
-          style={{
-            flex: "0.4",
-            // padding: "10px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "5px",
-            // background: "red",
-          }}
-        >
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "30px" }}
-          >
-            <SubscribeTrialCardHeader
-              tittle={"Talent Video"}
-              amount={"200.00"}
-              text={"every"}
-            />
-            <SubscribeTrialCardHeader
-              tittle={"Talent Video"}
-              amount={"200.00"}
-              text={"every"}
-            />
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
-
-const SubscribeTrialRightPaper = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -204,196 +52,237 @@ const SubscribeTrialRightPaper = () => {
     dispatch(setCompletedSteps({ ...completedStepsObject, 1: true }));
   };
 
+  const [packageValue, setPackage] = useState("Starter Pack");
+
+  const roleSelected = useSelector(selectRoleSelected);
+
+  const ulStyle = {
+    fontSize: ".8em",
+  };
+
   return (
-    <>
-      <Card
-        sx={{
-          width: "60%",
-          height: "80%",
+    <div
+      style={{
+        // background: "red",
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        // gap: "5vw",
+        paddingLeft: "4%",
+        // flexDirection: "column",
+      }}
+    >
+      <div
+        style={{
+          flex: "0.55",
+          // background: "red",
           display: "flex",
-          flexDirection: "column",
-          //   background: "red",
-          borderRadius: "5px",
+          justifyContent: "flex-end",
+          paddingRight: "10px",
         }}
       >
+        {/* // LEFT PAPER  */}
+
         <div
           style={{
-            flex: "0.7",
+            width: "70%",
+            height: "75%",
             display: "flex",
             flexDirection: "column",
-            // background: "peru",
           }}
         >
-          {/* Header */}
-          <div style={{ flex: "0.2", fontWeight: "bold", padding: "5px" }}>
-            <h3>Summary</h3>
-          </div>
-          {/* list*/}
-
-          <div style={{ flex: "0.8", padding: "10px" }}>
+          <div
+            style={{
+              flex: "0.5",
+              display: "flex",
+            }}
+          >
             <div
               style={{
+                flex: "0.3",
+
                 display: "flex",
+                justifyContent: "flex-end",
                 alignItems: "center",
-                justifyContent: "space-between",
               }}
             >
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "10px",
-                  }}
-                >
-                  <div
-                    style={{ borderRadius: "50px", border: "1px solid blue" }}
-                  >
-                    icon
-                  </div>
-                  <div style={{ fontSize: "12px", fontWeight: "700" }}>
-                    {" "}
-                    Independent Coach Membership{" "}
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <div style={{ fontSize: "17px", fontWeight: "bold" }}>
-                    200.0 E
-                  </div>
-                  <div
-                    style={{
-                      marginLeft: "7px",
-                      fontSize: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    every
-                  </div>
-                </div>
-              </div>
+              {/* 
+
+ */}
+
+              {roleSelected === "Player" ? (
+                <img src="/public/playerImage.png" width="70px" height="80px" />
+              ) : roleSelected === "Agent" ? (
+                <img src="/public/agentImage.png" width="100px" />
+              ) : roleSelected === "Coach" ? (
+                <img src="/public/coachImage.png" width="100px" />
+              ) : roleSelected === "Scout" ? (
+                <img src="/public/scoutImage.png" width="100px" />
+              ) : (
+                <img alt="No Role selected" width="100px" />
+              )}
             </div>
-            <Divider style={{ background: "blue" }} />
+
             <div
               style={{
+                flex: "0.7",
                 display: "flex",
+                justifyContent: "flex-start",
                 alignItems: "center",
-                justifyContent: "space-between",
               }}
             >
               <div
                 style={{
                   display: "flex",
-                  flexDirection: "column",
+                  alignItems: "center",
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "10px",
-                  }}
-                >
-                  <div
-                    style={{ borderRadius: "50px", border: "1px solid blue" }}
-                  >
-                    1 x
-                  </div>
-                  <div style={{ fontSize: "12px", fontWeight: "700" }}>
-                    {" "}
-                    Copper Video Pack
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <div style={{ fontSize: "17px", fontWeight: "bold" }}>
-                    200.0 E
-                  </div>
-                  <div
-                    style={{
-                      marginLeft: "7px",
-                      fontSize: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    every
-                  </div>
+                <div>
+                  <h5 style={{ fontWeight: "bold" }}>
+                    Start your free trial for 90 <br /> days
+                  </h5>
+                  <h5 style={{ fontWeight: "bold" }}>{roleSelected}</h5>
+                  <small>
+                    Doesn't suit you ?{" "}
+                    <span
+                      style={{ color: "#5585FE", cursor: "pointer" }}
+                      onClick={() => {
+                        navigate("/create-account/freetrial");
+                      }}
+                    >
+                      change your membership
+                    </span>
+                  </small>
                 </div>
               </div>
             </div>
           </div>
-          {/* ================== */}
+
+          <div
+            style={{
+              flex: "0.4",
+              // padding: "10px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
+              // background: "red",
+            }}
+          >
+            <FormControl>
+              <FormLabel id="demo-radio-buttons-group-label">
+                {" "}
+                <h6 style={{ fontWeight: "bold" }}> Packages</h6>
+              </FormLabel>
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                defaultValue="Starter Pack"
+                name="radio-buttons-group"
+                onChange={(e) => {
+                  setPackage(e.target.value);
+                }}
+              >
+                <FormControlLabel
+                  value="Starter Pack"
+                  control={<Radio />}
+                  label={
+                    <div style={{ width: "100%" }}>
+                      Starter Pack{" "}
+                      <span
+                        style={{ marginLeft: "16vw", fontWeight: "bolder" }}
+                      >
+                        {" "}
+                        $40 per year{" "}
+                      </span>{" "}
+                    </div>
+                  }
+                />
+                <FormControlLabel
+                  value="Premium Pack"
+                  control={<Radio />}
+                  label={
+                    <div style={{ width: "100%" }}>
+                      Premium Pack{" "}
+                      <span
+                        style={{ marginLeft: "14vw", fontWeight: "bolder" }}
+                      >
+                        {" "}
+                        $100 per year{" "}
+                      </span>{" "}
+                    </div>
+                  }
+                />
+              </RadioGroup>
+            </FormControl>
+          </div>
         </div>
-        {/* SubHeader */}
-        <div style={{ flex: "0.1", fontWeight: "bold", padding: "5px" }}>
-          <h3>what's include</h3>
-        </div>
-        {/* BTN and list */}
-        <div
-          style={{
-            flex: "0.2",
-            display: "grid",
-            placeContent: "center",
-            padding: "10px",
-            // background: "green",
+      </div>
+      {/* //  RIGHT PAPER */}
+      <div
+        style={{
+          flex: "0.4",
+          display: "flex",
+          justifyContent: "flex-start",
+          // background: "red",
+          padding: "10px 10px",
+        }}
+      >
+        <Card
+          sx={{
+            width: "25vw",
+            height: "42vh",
+            borderRadius: "5px",
+            padding: ".5vw",
           }}
         >
-          <Button
+          <h5
+          // style={{ color: "#5585FE" }}
+          >
+            Package Summary
+          </h5>
+          <ul style={{ width: "90%", ...ulStyle }}>
+            {" "}
+            <li style={{ margin: 0 }}>
+              {roleSelected} Membership{" "}
+              <span style={{ float: "right", fontWeight: "bolder" }}>$0</span>{" "}
+            </li>
+            <li style={{ margin: 0 }}>
+              {packageValue}
+              <span style={{ float: "right", fontWeight: "bolder" }}>
+                ${packageValue === "Starter Pack" ? "40" : "100"}
+              </span>{" "}
+            </li>
+          </ul>
+          <h5
+          //  style={{ color: "#5585FE" }}
+          >
+            Whats Included
+          </h5>
+          <ul style={{ listStyleType: "disc", ...ulStyle }}>
+            <li style={{ margin: 0 }}>Get full database access</li>
+            <li style={{ margin: 0 }}>Get upload one player proile</li>
+            <li style={{ margin: 0 }}>Create up to 5 match profiles</li>
+          </ul>
+
+          <div
             onClick={() => {
               handleTrialNavigation();
               handleStepsCompleted();
             }}
-            variant="outlined"
           >
-            {" "}
-            start a free trail{" "}
-          </Button>
-          <small>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit
-            perferendis beatae officiis dolorem error sint. Sit quidem dolor
-            doloribus. Consectetur fugit ad illum! Consequatur ex impedit at
-            quasi. Ipsam, ut.
-          </small>
-        </div>
-      </Card>
-    </>
+            <BasicButton
+              style={{
+                width: "90%",
+                marginLeft: "5%",
+              }}
+              innerText="Start Trial"
+            >
+              {" "}
+            </BasicButton>
+          </div>
+        </Card>
+      </div>
+    </div>
   );
 };
 
-const SubscribeTrialCardHeader = ({ amount, text, tittle, style }) => {
-  return (
-    <>
-      <CardHeader
-        sx={{ borderRadius: "10px", height: "7vh" }}
-        avatar={<Checkbox />}
-        action={
-          <Typography>
-            {amount}
-            <p>
-              <small>{text}</small>
-            </p>
-          </Typography>
-        }
-        title={tittle}
-      />
-    </>
-  );
-};
+export default SubscribeTrial;

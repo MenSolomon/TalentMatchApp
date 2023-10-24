@@ -29,7 +29,7 @@ const SignupFormsMotherComponent = () => {
         <FreetrialStepper />
       </div>
 
-      <div style={{ flex: ".7" }}>
+      <div style={{ flex: ".73", overflowY: "scroll" }}>
         {" "}
         <Outlet />{" "}
       </div>

@@ -12,6 +12,8 @@ const BasicButton = ({ style, innerText }) => {
         ...style,
         background: "#5585FE",
         borderRadius: ".5vw",
+        color: "white",
+        textTransform: "none",
         // color: buttonColor,
       }}
     >
