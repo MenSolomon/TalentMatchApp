@@ -378,3 +378,80 @@ div::-webkit-scrollbar-thumb:hover {
   position: absolute;
   top: 41.5vh;
 } */
+
+/* Css for support page */
+.Body_Support {
+  width: 100%;
+  height: 100vh;
+  /* background: peru; */
+  display: grid;
+  grid-template-rows: 8% 42% 50%;
+  grid-template-columns: 100%;
+  grid-template-areas: "header" "main" "footer";
+  /* overflow-y: scroll; */
+}
+.Body_Support div:nth-child(1) {
+  grid-area: header;
+  /* background: red; */
+}
+.Body_Support div:nth-child(2) {
+  grid-area: main;
+  /* background: green; */
+}
+.Body_Support div:nth-child(3) {
+  grid-area: footer;
+  /* background: pink; */
+}
+
+/* ========================= */
+.tittle {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 10% 50% 40%;
+  grid-template-areas: "header main footer";
+  /* padding: 10px; */
+}
+.tittle div:nth-child(1) {
+  grid-area: header;
+  /* background: #555; */
+}
+.tittle div:nth-child(2) {
+  grid-area: main;
+  /* background: yellow; */
+}
+.tittle div:nth-child(3) {
+  grid-area: footer;
+  /* background: #141c3f; */
+}
+
+/* ==================== */
+.sEARCH_cARDS {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 90% 10%;
+  grid-template-areas: "header" "main";
+  /* background: blue; */
+}
+.sEARCH_cARDS div:nth-child(1) {
+  grid-area: header;
+  /* background: peru; */
+}
+.sEARCH_cARDS div:nth-child(2) {
+  grid-area: main;
+  /* background: cyan; */
+}
+/* ================================ */
+.Cards {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 100%;
+  grid-template-areas: "header";
+}
+.Cards div:nth-child(1) {
+  grid-area: header;
+  /* background: peru; */
+}
+
+/* ==================== */

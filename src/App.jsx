@@ -13,6 +13,7 @@ import FreeTrial from "./screens/FreeTrial";
 import SubscribeTrial from "./screens/SubscribeTrial";
 import ConfirmDetails from "./screens/ConfirmDetails";
 import SignupFormsMotherComponent from "./screens/SignupFormsMotherComponent";
+import Support from "./screens/Support";
 
 const App = () => {
   return (
@@ -46,6 +47,7 @@ const App = () => {
         <Route path="/freetrial" element={<FreeTrial />} />
         <Route path="/subscribeTrial" element={<SubscribeTrial />} />
         <Route path="/confirm-details" element={<ConfirmDetails />} />
+        <Route path="/talent-match" element={<Support />} />
       </Routes>
     </div>
   );
