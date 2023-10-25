@@ -167,6 +167,9 @@ export default function FreetrialStepper({ stepperValue }) {
       case "/create-account/subscribeTrial":
         setActiveStep(1);
         break;
+      case "/create-account/user-form":
+        setActiveStep(2);
+        break;
       case "/create-account/confirm-details":
         setActiveStep(3);
         break;
@@ -210,6 +213,8 @@ export default function FreetrialStepper({ stepperValue }) {
         navigate("/create-account/subscribeTrial");
         break;
       case "Create your account":
+        navigate("/create-account/user-form");
+
         // alert("You clicked on 'Create your account'");
         break;
       case "Confirm details":

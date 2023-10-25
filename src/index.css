@@ -318,6 +318,30 @@ div::-webkit-scrollbar-thumb:hover {
   cursor: pointer;
 }
 
+/* // PHONE NUMBER IN CREATE ACCOUNT FORM  */
+.react-international-phone-input-container,
+.react-international-phone-input {
+  background-color: transparent;
+  border: none;
+  width: 100%;
+}
+
+/* react-international-phone-input-container */
+
+.react-international-phone-input {
+  height: 100%;
+  background-color: red;
+  border: 1px solid;
+}
+
+div.react-international-phone-country-selector {
+  background-color: transparent;
+}
+
+.react-international-phone-country-selector-button {
+  background-color: red;
+}
+
 /* //ACTIBE LINK */
 
 /* button.MuiButtinBase-root.MuiButtin-root.MuiButton-text.MuiButton-textPrimary */

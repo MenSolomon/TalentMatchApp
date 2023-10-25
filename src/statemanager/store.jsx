@@ -7,12 +7,13 @@ import playerDetailsCardsCollapseReducer from "./slices/CollapsePlayerDisplayCar
 import ThemeProviderReducer from "./slices/ThemeProviderSlice";
 import PlayersInAgencyReducer from "./slices/PlayersInAgencySlice";
 import SignupStepperReducer from "./slices/SignupStepperSlice";
+import UserDaterReducer from "./slices/UserDataSlice";
 
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  blacklist: ["PlayersInAgencySlice", "FormStepper"],
+  blacklist: ["PlayersInAgencySlice", "FormStepper", "UserData"],
 };
 
 const reducer = combineReducers({
@@ -21,6 +22,7 @@ const reducer = combineReducers({
   ThemeProviderSlice: ThemeProviderReducer,
   PlayersInAgencySlice: PlayersInAgencyReducer,
   FormStepper: SignupStepperReducer,
+  UserData: UserDaterReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

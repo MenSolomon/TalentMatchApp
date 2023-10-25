@@ -3,6 +3,33 @@ import logoImage from "../assets/images/AppLogoBlue.png";
 import FreetrialStepper from "../components/Stepper/FreetrialStepper";
 
 const SignupFormsMotherComponent = () => {
+  const styles = `.react-international-phone-input {
+  height: 100%;
+  background-color: transparent;
+}
+
+.react-international-phone-country-selector {
+  background-color: transparent;
+}
+
+
+.react-international-phone-input-container .react-international-phone-input{
+  background-color: transparent ;
+height:100%
+}
+
+.react-international-phone-country-selector-dropdown{
+  z-index:100
+  }
+
+.react-international-phone-country-selector-button {
+  background-color: transparent ;
+height:100%
+
+
+
+}`;
+
   return (
     <div
       style={{
@@ -28,11 +55,11 @@ const SignupFormsMotherComponent = () => {
       >
         <FreetrialStepper />
       </div>
-
       <div style={{ flex: ".73", overflowY: "scroll" }}>
         {" "}
         <Outlet />{" "}
       </div>
+      <style dangerouslySetInnerHTML={{ __html: styles }} />;
     </div>
   );
 };

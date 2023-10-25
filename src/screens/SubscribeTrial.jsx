@@ -32,8 +32,12 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BasicButton from "../components/Buttons/BasicButton";
+import {
+  selectUserSignUpData,
+  setUserSignUpData,
+} from "../statemanager/slices/UserDataSlice";
 
 const SubscribeTrial = () => {
   // RIGHT PAPER FUNCTIONS
@@ -43,7 +47,7 @@ const SubscribeTrial = () => {
   const dispatch = useDispatch();
 
   const handleTrialNavigation = () => {
-    navigate("/create-account/confirm-details");
+    navigate("/create-account/user-form");
   };
 
   const completedStepsObject = useSelector(selectCompleteSteps);
@@ -55,6 +59,15 @@ const SubscribeTrial = () => {
   const [packageValue, setPackage] = useState("Starter Pack");
 
   const roleSelected = useSelector(selectRoleSelected);
+
+  // SETTING SUBSCRIPTION FOR USER ACCOUNT
+  const userData = useSelector(selectUserSignUpData);
+
+  useEffect(() => {
+    dispatch(
+      setUserSignUpData({ ...userData, subscriptionPackage: packageValue })
+    );
+  }, [packageValue]);
 
   const ulStyle = {
     fontSize: ".8em",
