@@ -27,6 +27,7 @@ import {
   selectRoleSelected,
   setCompletedSteps,
 } from "../statemanager/slices/SignupStepperSlice";
+import imageBackground from ".././assets/images/FootballLogo.jpg";
 
 const SubscribeTrial = () => {
   return (
@@ -213,7 +214,9 @@ const SubscribeTrialRightPaper = () => {
           display: "flex",
           flexDirection: "column",
           //   background: "red",
-          borderRadius: "5px",
+          // borderRadius: "5px",
+          backgroundImage: `linear-gradient(90deg, rgba(32,32,32,0.975210066936931) 0%, rgba(55,54,54,0.9780111873851103) 34%, rgba(23,21,21,1) 100%),url("${imageBackground}")`,
+          borderRadius: "10px",
         }}
       >
         <div
@@ -225,7 +228,14 @@ const SubscribeTrialRightPaper = () => {
           }}
         >
           {/* Header */}
-          <div style={{ flex: "0.2", fontWeight: "bold", padding: "5px" }}>
+          <div
+            style={{
+              flex: "0.2",
+              fontWeight: "bold",
+              padding: "5px",
+              color: "white",
+            }}
+          >
             <h3>Summary</h3>
           </div>
           {/* list*/}
@@ -248,11 +258,22 @@ const SubscribeTrialRightPaper = () => {
                   }}
                 >
                   <div
-                    style={{ borderRadius: "50px", border: "1px solid blue" }}
+                    style={{
+                      borderRadius: "10px",
+                      // border: "1px",
+                      background: "peru",
+                      fontSize: "10px",
+                    }}
                   >
-                    icon
+                    1x2
                   </div>
-                  <div style={{ fontSize: "12px", fontWeight: "700" }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      fontWeight: "700",
+                      color: "white",
+                    }}
+                  >
                     {" "}
                     Independent Coach Membership{" "}
                   </div>
@@ -267,7 +288,13 @@ const SubscribeTrialRightPaper = () => {
                     alignItems: "center",
                   }}
                 >
-                  <div style={{ fontSize: "17px", fontWeight: "bold" }}>
+                  <div
+                    style={{
+                      fontSize: "17px",
+                      fontWeight: "bold",
+                      color: "red",
+                    }}
+                  >
                     200.0 E
                   </div>
                   <div
@@ -275,9 +302,10 @@ const SubscribeTrialRightPaper = () => {
                       marginLeft: "7px",
                       fontSize: "10px",
                       fontWeight: "bold",
+                      color: "green",
                     }}
                   >
-                    every
+                    every Yr
                   </div>
                 </div>
               </div>
@@ -305,11 +333,22 @@ const SubscribeTrialRightPaper = () => {
                   }}
                 >
                   <div
-                    style={{ borderRadius: "50px", border: "1px solid blue" }}
+                    style={{
+                      borderRadius: "10px",
+                      // border: "1px",
+                      background: "peru",
+                      fontSize: "10px",
+                    }}
                   >
-                    1 x
+                    1x2
                   </div>
-                  <div style={{ fontSize: "12px", fontWeight: "700" }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      fontWeight: "700",
+                      color: "white",
+                    }}
+                  >
                     {" "}
                     Copper Video Pack
                   </div>
@@ -324,7 +363,13 @@ const SubscribeTrialRightPaper = () => {
                     alignItems: "center",
                   }}
                 >
-                  <div style={{ fontSize: "17px", fontWeight: "bold" }}>
+                  <div
+                    style={{
+                      fontSize: "17px",
+                      fontWeight: "bold",
+                      color: "red",
+                    }}
+                  >
                     200.0 E
                   </div>
                   <div
@@ -332,6 +377,7 @@ const SubscribeTrialRightPaper = () => {
                       marginLeft: "7px",
                       fontSize: "10px",
                       fontWeight: "bold",
+                      color: "green",
                     }}
                   >
                     every
@@ -343,7 +389,14 @@ const SubscribeTrialRightPaper = () => {
           {/* ================== */}
         </div>
         {/* SubHeader */}
-        <div style={{ flex: "0.1", fontWeight: "bold", padding: "5px" }}>
+        <div
+          style={{
+            flex: "0.1",
+            fontWeight: "bold",
+            padding: "5px",
+            color: "white",
+          }}
+        >
           <h3>what's include</h3>
         </div>
         {/* BTN and list */}
@@ -362,11 +415,12 @@ const SubscribeTrialRightPaper = () => {
               handleStepsCompleted();
             }}
             variant="outlined"
+            sx={{ color: "yellow" }}
           >
             {" "}
             start a free trail{" "}
           </Button>
-          <small>
+          <small style={{ color: "white" }}>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit
             perferendis beatae officiis dolorem error sint. Sit quidem dolor
             doloribus. Consectetur fugit ad illum! Consequatur ex impedit at

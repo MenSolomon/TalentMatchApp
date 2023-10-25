@@ -6,7 +6,7 @@ import {
   setCompletedSteps,
   setRoleSelected,
 } from "../../statemanager/slices/SignupStepperSlice";
-// import playerImage from "../../assets/playerImage.png"
+import imageBackground from "../../assets/images/FootballLogo.jpg";
 
 const FreetrialCard = ({ name, roleImage, imageStyle }) => {
   const navigate = useNavigate();
@@ -38,6 +38,8 @@ const FreetrialCard = ({ name, roleImage, imageStyle }) => {
           display: "flex",
           flexDirection: "column",
           paddingTop: "2vh",
+          // backgroundImage: `linear-gradient(90deg, rgba(32,32,32,0.975210066936931) 0%, rgba(55,54,54,0.9780111873851103) 34%, rgba(23,21,21,1) 100%),url("${imageBackground}")`,
+          borderRadius: "10px",
         }}
       >
         <div
@@ -50,9 +52,15 @@ const FreetrialCard = ({ name, roleImage, imageStyle }) => {
         >
           <img src={roleImage} style={{ ...imageStyle, width: "120px" }} />
         </div>
-        <div style={{ flex: "0.3", display: "grid", placeContent: "center" }}>
+        <div
+          style={{
+            flex: "0.3",
+            display: "grid",
+            placeContent: "center",
+            // color: "white",
+          }}
+        >
           <h4>{name}</h4>
-          {/* <h6>{subName}</h6> */}
         </div>
         <div
           style={{
@@ -70,6 +78,7 @@ const FreetrialCard = ({ name, roleImage, imageStyle }) => {
               handleDispatchRoleSelectedToSlice();
             }}
             variant="outlined"
+            // sx={{ color: "white" }}
           >
             Start Trial
           </Button>
