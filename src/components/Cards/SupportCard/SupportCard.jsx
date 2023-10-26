@@ -9,7 +9,7 @@ const SupportCard = ({ btn, g1, g2, g3, cardHeader, icon }) => {
       <Card
         style={{
           width: "25%",
-          height: "100%",
+          height: "60%",
           display: "flex",
           flexDirection: "column",
           // alignItems: "center",

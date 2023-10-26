@@ -1,349 +1,266 @@
 // ========================================
 
-import { Button, Card } from "@mui/material";
+import { Button, Card, InputAdornment, TextField } from "@mui/material";
 import logoImage from "../assets/images/AppLogoBlue.png";
 import BasicMenu from "../components/Menu/BasicMenu";
-import { ArrowRight, Settings } from "@mui/icons-material";
-import imageBackground from "../assets/images/kudus.webp";
+import {
+  ArrowRight,
+  Email,
+  Facebook,
+  Search,
+  Settings,
+  WhatsApp,
+} from "@mui/icons-material";
+
 import SupportCard from "../components/Cards/SupportCard/SupportCard";
 
 const Support = () => {
   const rolesMenu = ["Agent", "Player", "Coach", "Scout"];
   return (
-    <>
-      <div className="Body_Support">
-        {/* fIRST_DIV */}
-
-        <div className="tittle">
-          {/* lOGO */}
-          <div>
-            <img style={{ width: "120px" }} src={logoImage} />
-          </div>
-
-          {/* lIST */}
-          <div style={{ display: "flex" }}>
-            <BasicMenu menuTitle={"Roles"} menuItemsArray={rolesMenu} />
-            <BasicMenu menuTitle={"Support"} menuItemsArray={rolesMenu} />
-            <BasicMenu menuTitle={"Resources"} menuItemsArray={rolesMenu} />
-          </div>
-
-          {/* lOGIN */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
-          >
-            {/* BTN */}
-            <Button
-              onClick={() => {}}
-              sx={{
-                background: "#5585FE",
-                width: "10vw",
-                height: "7vh",
-                color: "white",
-                textTransform: "none",
-                borderRadius: "1.2vw",
-              }}
-            >
-              Start free trial
-            </Button>
-            {/* End_of bTN*/}
-          </div>
-        </div>
-
-        {/* eND_OF_DIV */}
-
-        {/* sECOND_DIV */}
-
-        <div className="sEARCH_cARDS">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundImage: ` linear-gradient(90deg, rgba(32,32,32,0.975210066936931) 0%, rgba(55,54,54,0.9780111873851103) 34%, rgba(23,21,21,1) 100%),url("${imageBackground}")`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          >
-            <h5 style={{ color: "white" }}>What can we help you with ?</h5>
-          </div>
-          <div>
-            <ul style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-              <li>support</li>
-              <li>
-                {" "}
-                <ArrowRight />{" "}
-              </li>
-              <li>talent</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* eND_OF_DIV */}
-
-        {/* tHIRD_DIV */}
-
-        <div className="Cards">
-          <div>
+    <div className="body_container">
+      <div className="container">
+        <div className="header_container">
+          {/* header */}
+          <div className="head">
             <div
               style={{
-                width: "90%",
-                height: "70%",
-                justifyContent: "center",
                 display: "flex",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: "20px",
+                // width: "100%",
+                // height: "100%",
+                background: "peru",
               }}
             >
-              <SupportCard
-                btn={"Go to settings"}
-                g1={"Activate your Account"}
-                g2={"Download your Invoice"}
-                g3={"Move from One Team to Another"}
-                cardHeader={"General settings"}
-                icon={<Settings sx={{ color: "white" }} />}
-              />
-              <SupportCard
-                btn={"Go to settings"}
-                g1={"Activate your Account"}
-                g2={"Download your Invoice"}
-                g3={"Move from One Team to Another"}
-                cardHeader={"General settings"}
-                icon={<Settings sx={{ color: "white" }} />}
-              />
-              <SupportCard
-                btn={"Go to settings"}
-                g1={"Activate your Account"}
-                g2={"Download your Invoice"}
-                g3={"Move from One Team to Another"}
-                cardHeader={"General settings"}
-                icon={<Settings sx={{ color: "white" }} />}
-              />
-              <SupportCard
-                btn={"Go to settings"}
-                g1={"Activate your Account"}
-                g2={"Download your Invoice"}
-                g3={"Move from One Team to Another"}
-                cardHeader={"General settings"}
-                icon={<Settings sx={{ color: "white" }} />}
-              />
+              {/* Logo */}
+              <div
+                style={{
+                  flex: "0.5",
+                  // background: "pink",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <img style={{ width: "120px" }} src={logoImage} />
+              </div>
+              {/* MENU ITEMS */}
+              <div
+                style={{
+                  flex: ".3",
+                  display: "flex",
+                  alignItems: "center",
+                  // background: "pink",
+                }}
+              >
+                {" "}
+                <BasicMenu
+                  menuTitle={"Roles"}
+                  menuItemsArray={rolesMenu}
+                />{" "}
+                <BasicMenu menuTitle={"Support"} menuItemsArray={rolesMenu} />{" "}
+                <BasicMenu menuTitle={"Resources"} menuItemsArray={rolesMenu} />{" "}
+              </div>
+              <div
+                style={{
+                  flex: "2",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  // background: "pink",
+                }}
+              >
+                <h3>Login</h3>
+              </div>
             </div>
           </div>
         </div>
+        <div className="main_container">
+          {/* title & search */}
+          <div className="title_search">
+            <div
+              style={{
+                display: "flex",
+                textAlign: "center",
+                justifyContent: "center",
+                paddingTop: "10%",
+              }}
+            >
+              <h5 style={{ color: "white" }}>What can we help you with ?</h5>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                textAlign: "center",
+                justifyContent: "center",
+                // borderRadius: "10%",
+              }}
+            >
+              <TextField
+                sx={{ width: "50%" }}
+                placeholder="search"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </div>
+          </div>
+          {/* cards content */}
+          <div className="cards">
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+                // background: "brown",
+                overflow: "hidden",
+              }}
+            >
+              <div style={{ flex: "0.2" }}>
+                <ul
+                  style={{ display: "flex", alignItems: "center", gap: "15px" }}
+                >
+                  <li>support</li>
+                  <li>
+                    {" "}
+                    <ArrowRight />{" "}
+                  </li>
+                  <li>talent</li>
+                </ul>
+              </div>
+              {/* Cards */}
+              <div
+                style={{
+                  flex: "0.8",
+                }}
+              >
+                {/* Talent Natch Tutorials */}
+                <div style={{ textAlign: "center" }}>
+                  <h1>Talent Match Tutorials</h1>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    paddingTop: "2%",
+                    // overflow: "hidden",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      gap: "10px",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <SupportCard
+                      btn={"Go to settings"}
+                      g1={"Activate your Account"}
+                      g2={"Download your Invoice"}
+                      g3={"Move from One Team to Another"}
+                      cardHeader={"General settings"}
+                      icon={<Settings sx={{ color: "white" }} />}
+                    />
+                    <SupportCard
+                      btn={"Go to settings"}
+                      g1={"Activate your Account"}
+                      g2={"Download your Invoice"}
+                      g3={"Move from One Team to Another"}
+                      cardHeader={"General settings"}
+                      icon={<Settings sx={{ color: "white" }} />}
+                    />
+                    <SupportCard
+                      btn={"Go to settings"}
+                      g1={"Activate your Account"}
+                      g2={"Download your Invoice"}
+                      g3={"Move from One Team to Another"}
+                      cardHeader={"General settings"}
+                      icon={<Settings sx={{ color: "white" }} />}
+                    />
+                    <SupportCard
+                      btn={"Go to settings"}
+                      g1={"Activate your Account"}
+                      g2={"Download your Invoice"}
+                      g3={"Move from One Team to Another"}
+                      cardHeader={"General settings"}
+                      icon={<Settings sx={{ color: "white" }} />}
+                    />
+                    <SupportCard
+                      btn={"Go to settings"}
+                      g1={"Activate your Account"}
+                      g2={"Download your Invoice"}
+                      g3={"Move from One Team to Another"}
+                      cardHeader={"General settings"}
+                      icon={<Settings sx={{ color: "white" }} />}
+                    />
+                    <SupportCard
+                      btn={"Go to settings"}
+                      g1={"Activate your Account"}
+                      g2={"Download your Invoice"}
+                      g3={"Move from One Team to Another"}
+                      cardHeader={"General settings"}
+                      icon={<Settings sx={{ color: "white" }} />}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* footer */}
+          <div className="footer">
+            <div className="email">
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "15%",
+                  textAlign: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                }}
+              >
+                <h1
+                  style={{
+                    marginLeft: "3%",
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                >
+                  Contact Us
+                </h1>
 
-        {/* eND_OF_DIV */}
+                <ul
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                  }}
+                >
+                  <l>
+                    {" "}
+                    <Email sx={{ fontSize: "40px" }} />{" "}
+                  </l>
+                  <l>
+                    {" "}
+                    <WhatsApp sx={{ fontSize: "40px" }} />{" "}
+                  </l>
+                  <l>
+                    {" "}
+                    <Facebook sx={{ fontSize: "40px" }} />{" "}
+                  </l>
+                </ul>
+              </div>
+            </div>
+            <div className="foot">
+              <h2 style={{ textAlign: "center" }}>The footer will be here</h2>
+            </div>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
 export default Support;
-
-// ======================================>>>>>>>>
-
-// import { Button, Card } from "@mui/material";
-// import logoImage from "../assets/images/AppLogoBlue.png";
-// import BasicMenu from "../components/Menu/BasicMenu";
-// import { ArrowRight, Settings } from "@mui/icons-material";
-// import imageBackground from "../assets/images/kudus.webp";
-// import SupportCard from "../components/Cards/SupportCard/SupportCard";
-
-// const Support = () => {
-//   const rolesMenu = ["Agent", "Player", "Coach", "Scout"];
-//   return (
-//     <div style={{ width: "100vw", height: "100vh", overflowY: "scroll" }}>
-//       <div
-//         style={{
-//           display: "flex",
-//           height: "100%",
-//         }}
-//       >
-//         {/* HEADER FOR SUPPORT PAGE */}
-//         <div
-//           style={{
-//             flex: "0.01",
-//             display: "flex",
-//             padding: "3vw",
-//             paddingTop: "1.5vh",
-//             // position: "fixed",
-//             background: "red",
-//           }}
-//         >
-//           {/* LOGO AREA */}
-//           <div style={{ flex: ".15", display: "flex" }}>
-//             {" "}
-//             <img style={{ width: "120px" }} src={logoImage} />
-//           </div>
-//           {/* MENU ITEMS */}
-//           {/* <div style={{ flex: ".55", display: "flex" }}>
-//             {" "}
-//             <BasicMenu menuTitle={"Roles"} menuItemsArray={rolesMenu} />{" "}
-//             <BasicMenu menuTitle={"Support"} menuItemsArray={rolesMenu} />{" "}
-//             <BasicMenu menuTitle={"Resources"} menuItemsArray={rolesMenu} />{" "}
-//           </div> */}
-
-//           {/* FREE TRIAL BUTTON */}
-//           {/* <div
-//             style={{
-//               flex: ".3",
-
-//               display: "flex",
-//               justifyContent: "flex-end",
-//               paddingTop: "1vh",
-//             }}
-//           >
-//             <div
-//               style={{
-//                 width: "17vw",
-//                 height: "8.4vh",
-//                 background: "white",
-//                 display: "flex",
-//                 justifyContent: "flex-end",
-//                 alignItems: "center",
-//                 borderRadius: "1.5vw",
-//                 padding: "0vh .6vw",
-//                 gap: "2vw",
-//               }}
-//             >
-//               <h6
-//                 style={{
-//                   marginTop: "1.5vh",
-//                   alignSelf: "center",
-//                   color: "#5585FE",
-//                   cursor: "pointer",
-//                 }}
-//               >
-//                 Login
-//               </h6>
-
-//               <Button
-//                 onClick={() => {}}
-//                 sx={{
-//                   background: "#5585FE",
-//                   width: "10vw",
-//                   height: "7vh",
-//                   color: "white",
-//                   textTransform: "none",
-//                   borderRadius: "1.2vw",
-//                 }}
-//               >
-//                 Start free trial
-//               </Button>
-//             </div>
-//           </div> */}
-//         </div>
-//         {/* SEARCH $ CARDS PLACEMENT */}
-//         <div style={{ flex: "0.89", display: "flex", flexDirection: "column" }}>
-//           <div
-//             style={{
-//               flex: "0.48",
-//               background: "pink",
-//               backgroundImage: ` linear-gradient(90deg, rgba(32,32,32,0.975210066936931) 0%, rgba(55,54,54,0.9780111873851103) 34%, rgba(23,21,21,1) 100%),url("${imageBackground}")`,
-//               backgroundSize: "cover",
-//               backgroundPosition: "center",
-//               display: "flex",
-//               justifyContent: "center",
-//               alignItems: "center",
-//             }}
-//           >
-//             <h5 style={{ color: "white" }}>What can we help you with ?</h5>
-//           </div>
-//           <div
-//             style={{
-//               flex: "0.01",
-//               marginLeft: "10%",
-//             }}
-//           >
-//             <ul style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-//               <li>support</li>
-//               <li>
-//                 {" "}
-//                 <ArrowRight />{" "}
-//               </li>
-//               <li>talent</li>
-//             </ul>
-//           </div>
-//           <div
-//             style={{
-//               flex: "0.6",
-//               // background: "red",
-//               display: "flex",
-//               // justifyContent: "center",
-//               flexDirection: "column",
-//               alignItems: "center",
-//             }}
-//           >
-//             <h1>Talent Match Tutorials</h1>
-//             <div
-//               style={{
-//                 width: "70%",
-//                 height: "40%",
-//                 display: "flex",
-//                 justifyContent: "center",
-//                 gap: "20px",
-//                 flexWrap: "wrap",
-//               }}
-//             >
-//               <SupportCard
-//                 btn={"Go to settings"}
-//                 g1={"Activate your Account"}
-//                 g2={"Download your Invoice"}
-//                 g3={"Move from One Team to Another"}
-//                 cardHeader={"General settings"}
-//                 icon={<Settings sx={{ color: "white" }} />}
-//               />
-//               <SupportCard
-//                 btn={"Go to settings"}
-//                 g1={"Activate your Account"}
-//                 g2={"Download your Invoice"}
-//                 g3={"Move from One Team to Another"}
-//                 cardHeader={"General settings"}
-//                 icon={<Settings sx={{ color: "white" }} />}
-//               />
-//               <SupportCard
-//                 btn={"Go to settings"}
-//                 g1={"Activate your Account"}
-//                 g2={"Download your Invoice"}
-//                 g3={"Move from One Team to Another"}
-//                 cardHeader={"General settings"}
-//                 icon={<Settings sx={{ color: "white" }} />}
-//               />
-//               <SupportCard
-//                 btn={"Go to settings"}
-//                 g1={"Activate your Account"}
-//                 g2={"Download your Invoice"}
-//                 g3={"Move from One Team to Another"}
-//                 cardHeader={"General settings"}
-//                 icon={<Settings sx={{ color: "white" }} />}
-//               />
-//               <SupportCard
-//                 btn={"Go to settings"}
-//                 g1={"Activate your Account"}
-//                 g2={"Download your Invoice"}
-//                 g3={"Move from One Team to Another"}
-//                 cardHeader={"General settings"}
-//                 icon={<Settings sx={{ color: "white" }} />}
-//               />
-//               <SupportCard
-//                 btn={"Go to settings"}
-//                 g1={"Activate your Account"}
-//                 g2={"Download your Invoice"}
-//                 g3={"Move from One Team to Another"}
-//                 cardHeader={"General settings"}
-//                 icon={<Settings sx={{ color: "white" }} />}
-//               />
-//             </div>
-//           </div>
-//         </div>
-//         {/* Email */}
-//         <div style={{ flex: "0.1" }} className="email"></div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Support;
