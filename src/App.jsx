@@ -13,6 +13,8 @@ import FreeTrial from "./screens/FreeTrial";
 import SubscribeTrial from "./screens/SubscribeTrial";
 import ConfirmDetails from "./screens/ConfirmDetails";
 import SignupFormsMotherComponent from "./screens/SignupFormsMotherComponent";
+import Support from "./screens/Support";
+import SupportSettings from "./screens/SupportSettings";
 import CreateAccount from "./screens/CreateAccount";
 import PlayerVersionMotherComponent from "./PlayerVersion/src/PlayerVersionMotherComponent";
 import PlayerVersionDashboard from "./PlayerVersion/src/screens/PlayerVersionDashboard";
@@ -126,7 +128,7 @@ const App = () => {
         </Route>
         {/* <Route path="/freetrial" element={<FreeTrial />} />
         <Route path="/subscribeTrial" element={<SubscribeTrial />} />
-        <Route path="/confirm-details" element={<ConfirmDetails />} /> */}
+        <Route path="/confirm-details" element={<ConfirmDetails />} />
       </Routes>
     </div>
   );

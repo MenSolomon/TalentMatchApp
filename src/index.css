@@ -111,6 +111,7 @@
 } */
 
 body {
+  width: 100vw;
   height: 100vh;
   font-size: clamp(1rem, 1.5vw, 1.2rem);
   overflow: hidden;
@@ -430,3 +431,71 @@ ul {
   position: absolute;
   top: 41.5vh;
 } */
+
+/* Css for support page */
+
+.body_container {
+  /* width: 100vw;
+  height: 100vh; */
+  overflow-x: hidden;
+  background: #141c3f;
+}
+.container {
+  /* width: 100vw; */
+  height: 100vh;
+  display: grid;
+  /* background: red; */
+  grid-template-rows: 10% 90%;
+  grid-template-columns: 100%;
+  grid-template-areas: "header" "body";
+}
+.header_container {
+  grid-area: header;
+  /* background: yellow; */
+}
+.main_container {
+  grid-area: body;
+  /* background: blue; */
+  height: 200vh;
+  display: grid;
+  grid-template-rows: 25% 55% 10%;
+  grid-template-columns: 100%;
+  grid-template-areas: "header" "cards" "footer";
+}
+.head {
+  width: 84.6%;
+  height: 15vh;
+  background: #141c3f;
+  position: fixed;
+  z-index: 50;
+}
+/* ============ */
+.title_search {
+  grid-area: header;
+  background: #141c3f;
+}
+.cards {
+  grid-area: cards;
+  /* background: yellow; */
+}
+/* ================== */
+.footer {
+  grid-area: footer;
+  /* background: green; */
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 70% 30%;
+  grid-template-columns: 100%;
+  grid-template-areas: "header" "cards";
+}
+.email {
+  grid-area: header;
+  /* background: pink; */
+}
+.foot {
+  grid-area: cards;
+  /* background: peru; */
+}
+/* ====================== */
+
+/* Support Settings */
