@@ -126,9 +126,6 @@ const App = () => {
 
           <Route path="/create-account/user-form" element={<CreateAccount />} />
         </Route>
-        {/* <Route path="/freetrial" element={<FreeTrial />} />
-        <Route path="/subscribeTrial" element={<SubscribeTrial />} />
-        <Route path="/confirm-details" element={<ConfirmDetails />} />
       </Routes>
     </div>
   );
