@@ -1,0 +1,49 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  --scrollbar-width: 4px;
+}
+/* SCROLL BAR SETTINGS */
+
+div::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+div::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+div:not(:hover)::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+div::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+.svgIcon {
+  fill: red;
+}
+
+.VideoComponent:hover {
+  background: grey;
+}
+
+tbody tr {
+  height: 6vh;
+}
+
+.messageCard:hover {
+  border-left: 3px solid #5585fe;
+}
+
+.messageCard {
+  border-left: 3px solid transparent;
+}
+
+ul {
+  list-style-type: none;
+}

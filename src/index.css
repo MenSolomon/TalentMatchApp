@@ -342,6 +342,34 @@ div.react-international-phone-country-selector {
   background-color: red;
 }
 
+/* CSS FROM COACH AGENT AND SCOUT VERSION */
+
+.VideoComponent:hover {
+  background: grey;
+}
+
+tbody tr {
+  height: 6vh;
+}
+
+.messageCard:hover {
+  border-left: 3px solid #5585fe;
+}
+
+.messageCard {
+  border-left: 3px solid transparent;
+}
+
+.uploadPlayerModalCard:hover {
+  background-color: #e0fa55;
+  color: #09142d;
+  cursor: pointer;
+}
+
+ul {
+  list-style-type: none;
+}
+
 /* //ACTIBE LINK */
 
 /* button.MuiButtinBase-root.MuiButtin-root.MuiButton-text.MuiButton-textPrimary */

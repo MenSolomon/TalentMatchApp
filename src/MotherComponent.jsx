@@ -14,6 +14,7 @@ import NavBarButton from "./components/NavBarButtons/NavBarButton";
 import { useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 import CreateProfileModal from "./components/Modals/CreateProfileModal";
+import UploadPlayer from "./components/Tooltips/UploadPlayer";
 
 const MotherComponent = () => {
   const menuButtonsArray = [
@@ -221,7 +222,7 @@ const MotherComponent = () => {
           {/* <h4 style={{ marginTop: "2vh" }}>Talent Match</h4> */}
         </div>
         {/* // Search Area? */}
-        <div style={{ flex: ".45", paddingTop: "1%", paddingLeft: "4vw" }}>
+        <div style={{ flex: ".4", paddingTop: "1%", paddingLeft: "4vw" }}>
           {/* "#3D2A2F */}
           {/* <SeachBarTextField label={"Search Player"} marginLeft="3vw" />{" "} */}
         </div>
@@ -229,7 +230,7 @@ const MotherComponent = () => {
         <div
           style={{
             // Should be 37
-            flex: ".34",
+            flex: ".39",
             // background: "yellow",
             paddingTop: "1%",
             paddingRight: "1.5%",
@@ -258,6 +259,12 @@ const MotherComponent = () => {
             }}
             src={avatarImage}
           ></Avatar>
+
+          <UploadPlayer
+            image={"duo"}
+            info="Upload profile"
+            studioUrl="/studio/dashboard"
+          />
 
           <LightAndDarkModeSwitch style={{ float: "right" }} />
         </div>

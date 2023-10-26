@@ -14,6 +14,21 @@ import SubscribeTrial from "./screens/SubscribeTrial";
 import ConfirmDetails from "./screens/ConfirmDetails";
 import SignupFormsMotherComponent from "./screens/SignupFormsMotherComponent";
 import CreateAccount from "./screens/CreateAccount";
+import PlayerVersionMotherComponent from "./PlayerVersion/src/PlayerVersionMotherComponent";
+import PlayerVersionDashboard from "./PlayerVersion/src/screens/PlayerVersionDashboard";
+import PlayerVersionVideos from "./PlayerVersion/src/screens/PlayerVersionVideos";
+import PlayerVersionStatistics from "./PlayerVersion/src/screens/PlayerVersionStatistics";
+import PlayerVersionFavorites from "./PlayerVersion/src/screens/PlayerVersionFavorites";
+import PlayerVersionAnalytics from "./PlayerVersion/src/screens/PlayerVersionAnalytics";
+import PlayerVersionInbox from "./PlayerVersion/src/screens/PlayerVersionInbox";
+import CoachAgentScoutVersionMotherComponent from "./CoachAgentScoutVersion/src/CoachAgentScoutVersionMotherComponent";
+import CoachAgentScoutVersionDashboard from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionDashboard";
+import CoachAgentScoutVersionPlayers from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionPlayers";
+import CoachAgentScoutVersionStatistics from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionStatistics";
+import CoachAgentScoutVersionFavorites from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionFavorites";
+import CoachAgentScoutVersionInbox from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionInbox";
+import CoachAgentScoutVersionAnalytics from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionAnalytics";
+import CoachAgentScoutVersionPlayerManagement from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionPlayerManagement";
 
 const App = () => {
   return (
@@ -27,6 +42,69 @@ const App = () => {
           <Route path="/player-conmpare" element={<PlayerComparison />} />
           <Route path="/news" element={<News />} />
         </Route>
+
+        {/* //PLayerVersion */}
+
+        <Route path="/studio" element={<PlayerVersionMotherComponent />}>
+          <Route
+            path="/studio/dashboard"
+            element={<PlayerVersionDashboard />}
+          />
+          <Route path="/studio/videos" element={<PlayerVersionVideos />} />
+          <Route
+            path="/studio/Statistics"
+            element={<PlayerVersionStatistics />}
+          />
+          <Route
+            path="/studio/favorites"
+            element={<PlayerVersionFavorites />}
+          />
+          <Route path="/studio/inbox" element={<PlayerVersionInbox />} />
+          <Route
+            path="/studio/analytics"
+            element={<PlayerVersionAnalytics />}
+          />
+        </Route>
+
+        {/* End of Player Version */}
+
+        {/* COACH AGENT AND SCOUT VERSION */}
+
+        <Route
+          path="/multiStudio"
+          element={<CoachAgentScoutVersionMotherComponent />}
+        >
+          <Route
+            path="/multiStudio/dashboard"
+            element={<CoachAgentScoutVersionDashboard />}
+          />
+          {/* <Route path="/videos" element={<Videos />} /> */}
+          <Route
+            path="/multiStudio/players"
+            element={<CoachAgentScoutVersionPlayers />}
+          />
+          <Route
+            path="/multiStudio/Statistics"
+            element={<CoachAgentScoutVersionStatistics />}
+          />
+          <Route
+            path="/multiStudio/favorites"
+            element={<CoachAgentScoutVersionFavorites />}
+          />
+          <Route
+            path="/multiStudio/inbox"
+            element={<CoachAgentScoutVersionInbox />}
+          />
+          <Route
+            path="/multiStudio/analytics"
+            element={<CoachAgentScoutVersionAnalytics />}
+          />
+          <Route
+            path="/multiStudio/players/:playerfullname"
+            element={<CoachAgentScoutVersionPlayerManagement />}
+          />
+        </Route>
+
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
