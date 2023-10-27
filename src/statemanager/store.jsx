@@ -8,12 +8,19 @@ import ThemeProviderReducer from "./slices/ThemeProviderSlice";
 import PlayersInAgencyReducer from "./slices/PlayersInAgencySlice";
 import SignupStepperReducer from "./slices/SignupStepperSlice";
 import UserDaterReducer from "./slices/UserDataSlice";
-
+import TempDatabaseReducer from "./slices/TempDatabaseSlice";
+import LoginUserDataSlice from "./slices/LoginUserDataSlice";
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  blacklist: ["PlayersInAgencySlice", "FormStepper", "UserData"],
+  blacklist: [
+    "PlayersInAgencySlice",
+    "FormStepper",
+    "UserData",
+    "UserLoginData",
+    // "TempDatabase",
+  ],
 };
 
 const reducer = combineReducers({
@@ -23,6 +30,8 @@ const reducer = combineReducers({
   PlayersInAgencySlice: PlayersInAgencyReducer,
   FormStepper: SignupStepperReducer,
   UserData: UserDaterReducer,
+  TempDatabase: TempDatabaseReducer,
+  UserLoginData: LoginUserDataSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

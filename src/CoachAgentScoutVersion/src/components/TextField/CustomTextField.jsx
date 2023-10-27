@@ -13,20 +13,22 @@ const CustomTextField = ({
   inputProps,
 }) => {
   return (
-    <div style={{ width: "20vw" }}>
-      <TextField
-        variant="outlined"
-        value={value}
-        onChange={onchange}
-        onFocus={onFocus}
-        placeholder={placeholder}
-        type={type}
-        autoFocus={autoFocus}
-        error={error}
-        helperText={helperText}
-        inputProps={inputProps}
-      />
-    </div>
+    // <div style={{ width: "30vw" }}>
+    <TextField
+      variant="outlined"
+      value={value}
+      onChange={onchange}
+      onFocus={onFocus}
+      placeholder={placeholder}
+      type={type}
+      autoFocus={autoFocus}
+      error={error}
+      helperText={helperText}
+      inputProps={inputProps}
+      fullWidth={true}
+      sx={{ width: "23vw" }}
+    />
+    // </div>
   );
 };
 

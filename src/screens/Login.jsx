@@ -23,8 +23,16 @@ import GoogleLogo from "../assets/images/google.svg";
 import { useNavigate } from "react-router-dom";
 import WorldMaps from "../components/WorldMap";
 import logoImage from "../assets/images/AppLogoBlue.png";
+import { useDispatch, useSelector } from "react-redux";
+import { selectTempUsersDatabase } from "../statemanager/slices/TempDatabaseSlice";
+import { useForm } from "react-hook-form";
+import {
+  setLoginStatus,
+  setUserDetailsObject,
+} from "../statemanager/slices/LoginUserDataSlice";
 
 const Login = () => {
+  const { register, handleSubmit } = useForm();
   // Settings for password input
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -37,6 +45,33 @@ const Login = () => {
   const iconColor = { color: "white" };
 
   const Navigate = useNavigate();
+  const dispatch = useDispatch();
+  const AllUsersDatabase = useSelector(selectTempUsersDatabase);
+
+  const onSubmit = (formData) => {
+    // alert(formData.email, formData.password);
+
+    const matchUserAccount = AllUsersDatabase.filter((data) => {
+      return data.email === formData.email;
+    });
+
+    // console.log("ax1x", matchUserAccount[0]);
+    if (matchUserAccount.length > 0) {
+      if (matchUserAccount[0].password === formData.password) {
+        dispatch(setLoginStatus(true));
+        dispatch(setUserDetailsObject(matchUserAccount[0]));
+        Navigate("/");
+      } else {
+        alert("Password doesnt match account");
+      }
+    } else {
+      alert("account doesnt exist");
+    }
+  };
+
+  // const handleLogin()=>{
+
+  // }
 
   return (
     <div
@@ -112,74 +147,77 @@ const Login = () => {
           {/* //First Name And Surname */}
 
           {/* Email */}
-          <TextField
-            focused
-            color="info"
-            id="outlined-basic"
-            label="Email"
-            variant="outlined"
-            type="email"
-            sx={{ width: "80%", marginBottom: "4vh" }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Mail style={iconColor} />
-                </InputAdornment>
-              ),
-            }}
-          />
-          {/* Password */}
-
-          <FormControl
-            sx={{ width: "80%", marginBottom: "3vh" }}
-            variant="outlined"
-            focused
-            color="info"
-          >
-            <InputLabel htmlFor="outlined-adornment-password">
-              Password
-            </InputLabel>
-            <OutlinedInput
-              style={{}}
-              id="outlined-adornment-password"
-              type={showPassword ? "text" : "password"}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? (
-                      <VisibilityOff style={iconColor} />
-                    ) : (
-                      <Visibility style={iconColor} />
-                    )}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Password"
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <TextField
+              focused
+              color="info"
+              id="outlined-basic"
+              label="Email"
+              variant="outlined"
+              type="email"
+              required
+              sx={{ width: "80%", marginBottom: "4vh" }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Mail style={iconColor} />
+                  </InputAdornment>
+                ),
+              }}
+              {...register("email", { required: true })}
             />
-          </FormControl>
+            {/* Password */}
 
-          {/* Login ACCOUNT */}
+            <FormControl
+              sx={{ width: "80%", marginBottom: "3vh" }}
+              variant="outlined"
+              focused
+              color="info"
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Password
+              </InputLabel>
+              <OutlinedInput
+                {...register("password", { required: true })}
+                required
+                id="outlined-adornment-password"
+                type={showPassword ? "text" : "password"}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? (
+                        <VisibilityOff style={iconColor} />
+                      ) : (
+                        <Visibility style={iconColor} />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+            </FormControl>
 
-          <Button
-            sx={{
-              width: "15vw",
-              height: "7vh",
-              background: "#5585FE",
-              color: "white",
-              borderRadius: "1vw",
-              fontWeight: "bold",
-            }}
-            onClick={() => {
-              Navigate("/");
-            }}
-          >
-            Login
-          </Button>
+            {/* Login ACCOUNT */}
+
+            <Button
+              type="submit"
+              sx={{
+                width: "15vw",
+                height: "7vh",
+                background: "#5585FE",
+                color: "white",
+                borderRadius: "1vw",
+                fontWeight: "bold",
+              }}
+            >
+              Login
+            </Button>
+          </form>
         </div>
         {/* SOCIAL MEDIA SECTIONS / EMPTY SECTIOn */}
         <div

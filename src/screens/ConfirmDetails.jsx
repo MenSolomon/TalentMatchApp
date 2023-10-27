@@ -10,13 +10,21 @@ import {
   setUserSignUpData,
 } from "../statemanager/slices/UserDataSlice";
 import { useEffect, useState } from "react";
+import {
+  selectTempUsersDatabase,
+  setTempUsersDatabase,
+} from "../statemanager/slices/TempDatabaseSlice";
 
 const ConfirmDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const roleSelected = useSelector(selectRoleSelected);
   const userData = useSelector(selectUserSignUpData);
+  const allUsers = useSelector(selectTempUsersDatabase);
   const today = moment();
+  //
+  const [agreement, setAgreement] = useState(false);
+  const [privacy, setPrivacy] = useState(false);
 
   const {
     firstName,
@@ -50,6 +58,77 @@ const ConfirmDetails = () => {
   // useEffect(() => {
   //   alert(pa);
   // }, [pa]);
+
+  const handleStartFreeTrial = () => {
+    if (roleSelected === "") {
+      alert("Please complete step 1 (Select your role before starting trial");
+    } else {
+      if (userData.subscriptionPackage === "") {
+        alert("Please complete step 2 (Choose a package before starting trial");
+      } else {
+        if (userData.firstname === "") {
+          alert("Please complete step 3 (Create account before starting trial");
+        } else {
+          if (userData.paymentType === "" || !userData.paymentType) {
+            alert("Please select a payment type");
+          } else {
+            if (agreement === false || privacy === false) {
+              alert(
+                "please read terms and condition as well as our privacy policy and tick the boxes to agree"
+              );
+            } else {
+              // CHECKING IF THE USER ALREADY EXISTS
+              if (allUsers.length > 0) {
+                const userExistence = allUsers.filter((data) => {
+                  return data.email === userData.email;
+                });
+
+                console.log(allUsers, "Existence", userExistence);
+
+                if (userExistence.length > 0) {
+                  alert("Account Exists");
+                } else {
+                  // THis is the part where you finally navigate to login page and accept data
+                  alert("sending data and setting up account for freetrial");
+
+                  dispatch(
+                    setTempUsersDatabase([
+                      ...allUsers,
+                      {
+                        ...userData,
+                        role: roleSelected,
+                        defaultProfile: [],
+                        otherProfiles: [],
+                      },
+                    ])
+                  );
+
+                  navigate("/login");
+                }
+              } else {
+                // THIS IS THE PART WHERE THAT HANDLES AN EMPTY DATABASE WHICH WILL BE USED PREFEREABLY ONLY ONCE
+                alert(
+                  "sending first user into our database and setting up account for freetrial"
+                );
+                dispatch(
+                  setTempUsersDatabase([
+                    {
+                      ...userData,
+                      role: roleSelected,
+                      defaultProfile: [],
+                      otherProfiles: [],
+                    },
+                  ])
+                );
+
+                navigate("/login");
+              }
+            }
+          }
+        }
+      }
+    }
+  };
 
   return (
     <div
@@ -192,8 +271,8 @@ const ConfirmDetails = () => {
                   Email: <span style={{ color: "black" }}> {email} </span>{" "}
                 </li>
                 <li>
-                  Phone number:{" "}
-                  <span style={{ color: "black" }}> {phoneNumber} </span>{" "}
+                  Phone number:
+                  <span style={{ color: "black" }}> {phoneNumber}</span>{" "}
                 </li>
                 <li>
                   Nationality:{" "}
@@ -223,7 +302,13 @@ const ConfirmDetails = () => {
 
         <FormControlLabel
           required
-          control={<Checkbox />}
+          control={
+            <Checkbox
+              onChange={(e) => {
+                setAgreement(e.target.checked);
+              }}
+            />
+          }
           label={
             <div style={{ fontSize: ".8em" }}>
               {" "}
@@ -236,7 +321,13 @@ const ConfirmDetails = () => {
         />
         <FormControlLabel
           required
-          control={<Checkbox />}
+          control={
+            <Checkbox
+              onChange={(e) => {
+                setPrivacy(e.target.checked);
+              }}
+            />
+          }
           label={
             <div style={{ fontSize: ".8em" }}>
               {" "}
@@ -302,11 +393,13 @@ const ConfirmDetails = () => {
             </li>{" "}
           </ul>
 
-          <BasicButton
-            style={{ width: "90%", marginLeft: "5%" }}
-            innerText="Start Trial"
-          ></BasicButton>
-
+          {/* div to handle Click of start free trial */}
+          <div onClick={handleStartFreeTrial}>
+            <BasicButton
+              style={{ width: "90%", marginLeft: "5%" }}
+              innerText="Start Trial"
+            ></BasicButton>
+          </div>
           <span
             style={{
               fontSize: ".7em",

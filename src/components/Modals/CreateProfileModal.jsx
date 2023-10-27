@@ -14,6 +14,17 @@ import BasicAutoComplete from "../Autocompletes/BasicAutoComplete";
 import GroupedRadio from "../Radio/GroupedRadio";
 import CheckboxesGroup from "../CheckBoxes/GroupedCheckBox";
 import AgeRangeSlider from "../Slider/AgeRangeSlider";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectUserDetailsObject,
+  setUserDetailsObject,
+} from "../../statemanager/slices/LoginUserDataSlice";
+import BasicButton from "../Buttons/BasicButton";
+import { useNavigate } from "react-router-dom";
+import {
+  selectTempUsersDatabase,
+  setTempUsersDatabase,
+} from "../../statemanager/slices/TempDatabaseSlice";
 
 const style = {
   position: "absolute",
@@ -40,6 +51,8 @@ export default function CreateProfileModal() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const soccerPositions = [
     "Any",
@@ -70,47 +83,99 @@ export default function CreateProfileModal() {
     "Contract Expiring less than 6 months",
     "Currently renewed contract",
   ];
+
+  const loginUserDetails = useSelector(selectUserDetailsObject);
+  const { defaultProfile, email } = loginUserDetails;
+  const allUsers = useSelector(selectTempUsersDatabase);
+
+  const handleSaveProfile = () => {
+    if (defaultProfile.length <= 0) {
+      // cont newProfile == log
+      // alert("less");
+
+      // This is the rest of users in the database devoid of the current user logged in
+      const unMacthedPlayerDatabase = allUsers.filter((data) => {
+        return data.email !== email;
+      });
+
+      console.log(unMacthedPlayerDatabase, "unmatched players");
+
+      dispatch(
+        setUserDetailsObject({
+          ...loginUserDetails,
+          defaultProfile: [{ profileName: "default" }],
+        })
+      );
+
+      dispatch(
+        setTempUsersDatabase([
+          ...unMacthedPlayerDatabase,
+          {
+            ...loginUserDetails,
+            defaultProfile: [{ profileName: "default" }],
+          },
+        ])
+      );
+    } else {
+      dispatch(
+        setUserDetailsObject({
+          ...loginUserDetails,
+          otherProfiles: [{ profileName: "other" }],
+        })
+      );
+    }
+  };
+
   return (
     <div>
-      <Card
-        onClick={handleOpen}
-        sx={{
-          width: 145,
-          height: 80,
-          marginLeft: "4.6vw",
-          paddingTop: "1vh",
-          paddingLeft: ".6vw",
-          paddingRight: ".6vw",
-          display: "flex",
-          // background:
-          //   "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
-          background: "#5585fe",
-          // background: "#1B1E2B",
-          color: "white",
-          cursor: "pointer",
-        }}
-      >
-        <div
-          style={{
-            flex: ".93",
-            fontSize: "1em",
-            display: "grid",
-            placeItems: "center",
-          }}
-        >
-          {" "}
-          Create new profile{" "}
+      {defaultProfile.length <= 0 ? (
+        <div onClick={handleOpen}>
+          <BasicButton
+            innerText="Get started"
+            style={{ width: "15vw", marginBottom: "3vh" }}
+          />{" "}
         </div>
-        <div
-          style={{
-            flex: ".07",
+      ) : (
+        <Card
+          onClick={handleOpen}
+          sx={{
+            width: 145,
+            height: 80,
+            marginLeft: "4.6vw",
+            paddingTop: "1vh",
+            paddingLeft: ".6vw",
+            paddingRight: ".6vw",
             display: "flex",
+            // background:
+            //   "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
+            background: "#5585fe",
+            // background: "#1B1E2B",
+            color: "white",
+            cursor: "pointer",
           }}
         >
-          {" "}
-          <Add sx={{ marginTop: "4.4vh", color: "gold" }} />{" "}
-        </div>
-      </Card>
+          <div
+            style={{
+              flex: ".93",
+              fontSize: "1em",
+              display: "grid",
+              placeItems: "center",
+            }}
+          >
+            {" "}
+            Create new profile{" "}
+          </div>
+          <div
+            style={{
+              flex: ".07",
+              display: "flex",
+            }}
+          >
+            {" "}
+            <Add sx={{ marginTop: "4.4vh", color: "gold" }} />{" "}
+          </div>
+        </Card>
+      )}
 
       <Modal
         aria-labelledby="transition-modal-title"
@@ -136,16 +201,25 @@ export default function CreateProfileModal() {
                 gap: "4vw",
               }}
             >
-              <h2 className="secondaryTextColor"> Create Profile </h2>{" "}
+              <h2 className="secondaryTextColor">
+                {" "}
+                {defaultProfile.length <= 0
+                  ? "Default Profile"
+                  : "Search Profile"}{" "}
+              </h2>{" "}
               <h6>Who are you looking for?</h6>{" "}
               <div style={{ justifySelf: "flex-end" }}>
                 {" "}
-                <TextField
-                  size="small"
-                  id="outlined-basic"
-                  label="Profile Name"
-                  variant="outlined"
-                />
+                {defaultProfile.length <= 0 ? (
+                  ""
+                ) : (
+                  <TextField
+                    size="small"
+                    id="outlined-basic"
+                    label="Profile Name"
+                    variant="outlined"
+                  />
+                )}
               </div>
             </div>
             <div style={{ flex: ".9", display: "flex" }}>
@@ -174,17 +248,11 @@ export default function CreateProfileModal() {
                 <CountrySelect selectLabel="Place of birth" />
                 {/* Nationality  */}
                 <CountrySelect selectLabel="Nationality" />
-                {/* Height */}
-                <TextField
-                  id="outlined-basic"
-                  label="Height"
-                  type="number"
-                  variant="outlined"
-                  sx={inputStyles}
-                />
-                <DatePickerTool style={inputStyles} label="Date of birth" />
+                {/* Height rANGE */}
+                <AgeRangeSlider rangeName={"Height range"} max={8} min={4} />
+                {/* <DatePickerTool style={inputStyles} label="Date of birth" /> */}
                 {/* Age */}
-                <AgeRangeSlider />
+                <AgeRangeSlider rangeName={"Age range"} max={50} min={10} />
                 <Button
                   sx={{
                     width: "23vw",
@@ -194,8 +262,9 @@ export default function CreateProfileModal() {
                     position: "absolute",
                     bottom: 50,
                   }}
+                  onClick={handleSaveProfile}
                 >
-                  Submit
+                  Save
                 </Button>{" "}
               </div>
               {/* Player Data */}
@@ -227,21 +296,12 @@ export default function CreateProfileModal() {
                   ListArray={soccerPositions}
                   label="Other Positions"
                 />
-                <h6>Market Value</h6>
-                <div style={{ width: "85%", display: "flex", gap: "1vw" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Min Value"
-                    type="number"
-                    variant="outlined"
-                  />
-                  <TextField
-                    id="outlined-basic"
-                    label="Max Value"
-                    type="number"
-                    variant="outlined"
-                  />
-                </div>
+                {/* MARKET VALUE RANGE */}
+                <AgeRangeSlider
+                  rangeName={"Market Value ($ 000,000)"}
+                  max={300}
+                  min={10}
+                />
                 {/* Captiain Selection */}
                 <GroupedRadio radioArray={captainArray} labelName="Captain" />
                 {/* // Preffered foot */}
@@ -270,6 +330,7 @@ export default function CreateProfileModal() {
                 </h4>
 
                 <CountrySelect selectLabel="Club Country" />
+                <CountrySelect selectLabel="Club Division" />
 
                 <CheckboxesGroup
                   CheckboxLabel="Contract Status"

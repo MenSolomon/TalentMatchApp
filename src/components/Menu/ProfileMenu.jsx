@@ -4,6 +4,12 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import { Navigate, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectUserDetailsObject,
+  setLoginStatus,
+  setUserDetailsObject,
+} from "../../statemanager/slices/LoginUserDataSlice";
 
 export default function ProfileMenu({ style, name }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -16,8 +22,10 @@ export default function ProfileMenu({ style, name }) {
   };
 
   let importStyle = style;
-
+  const dispatch = useDispatch();
   const Navigate = useNavigate();
+  const loginUserDetails = useSelector(selectUserDetailsObject);
+  const { firstName, surname } = loginUserDetails;
 
   return (
     <div style={importStyle}>
@@ -31,7 +39,7 @@ export default function ProfileMenu({ style, name }) {
         sx={{ color: "black", width: "15vw", fontWeight: "800" }}
         onClick={handleClick}
       >
-        {name && name.substring(0, 16)}
+        {firstName.substring(0, 10) + " " + surname.substring(0, 10)}
       </Button>
       <Menu
         id="basic-menu"
@@ -48,6 +56,8 @@ export default function ProfileMenu({ style, name }) {
           onClick={() => {
             handleClose();
             Navigate("/login");
+            dispatch(setLoginStatus(false));
+            dispatch(setUserDetailsObject({}));
           }}
         >
           Logout

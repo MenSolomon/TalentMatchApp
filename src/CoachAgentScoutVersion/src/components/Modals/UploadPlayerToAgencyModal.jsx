@@ -17,6 +17,7 @@ import { AddAPhoto, Search } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInAgencySlice";
 import PlayerViewCardFromPlayersScreen from "../Cards/PlayerViewCardFromPlayersScreen";
+import CountrySelect from "../../../../components/Autocompletes/CountrySelect";
 
 const style = {
   position: "absolute",
@@ -88,9 +89,6 @@ function CreateAPlayerProfileModal() {
           sx={{ ...style, width: 1000 }}
         >
           <h2 id="child-modal-title">Create a player profile</h2>
-          <p id="child-modal-description">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          </p>
           <Button
             sx={{ width: "10%", marginLeft: "80%" }}
             onClick={handleClose}
@@ -99,57 +97,85 @@ function CreateAPlayerProfileModal() {
           </Button>
           <div
             style={{
-              // background: "red",
               width: "100%",
               height: "80%",
               display: "flex",
-              padding: "10px",
             }}
           >
             {/* LEFT INPUT PLAYER DETAILS */}
             <div
               style={{
-                flex: ".5",
+                flex: ".35",
                 display: "flex",
                 flexDirection: "column",
-
-                // justifyContent: "flex-start",
-                // alignItems: "center",
-                // background: "peru",
               }}
             >
               <div
                 style={{
-                  flex: "0.8",
+                  flex: "0.9",
                   display: "flex",
-                  gap: "30px",
+                  gap: "20px",
                   alignItems: "center",
                   flexDirection: "column",
                 }}
               >
                 <CustomTextField placeholder={"Name"} />
-                <CustomTextField placeholder={"Date of birth"} />
-                <CustomTextField placeholder={"Nationality"} />
-                <CustomTextField placeholder={"Profile, image, etc"} />
+                <CountrySelect selectLabel="Date of birth" />
+                <CountrySelect selectLabel="Nationality" />
+                <CountrySelect selectLabel="Preffered foot" />
+                <TextField
+                  id="outlined-basic"
+                  label="Height"
+                  type="number"
+                  variant="outlined"
+                  fullWidth={true}
+                  sx={{ width: "23vw" }}
+                />
               </div>
-              <div style={{ flex: "0.2" }}>
-                {/* ========== */}
+              <div style={{ flex: "0.1" }}>
                 {/* BTN */}
-
                 <Button
                   sx={{
-                    marginLeft: "80px",
+                    width: "23vw",
+                    background: "blue",
+                    color: "white",
+                    border: ".5vw",
+                    position: "absolute",
+                    bottom: 50,
                   }}
                   variant="contained"
                 >
                   submit
                 </Button>
-                {/* ========== */}
               </div>
             </div>
+            {/* MIDDLE INPUT PLAYER DETAILS */}
+            <div
+              style={{
+                flex: ".35",
+                display: "flex",
+                gap: "20px",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              <CountrySelect selectLabel="Club Name" />
+              <CountrySelect selectLabel="Contract status" />
+              <CountrySelect selectLabel="Position" />
+
+              {/* <CustomTextField placeholder={"Market value(optional)"} /> */}
+              {/* MARKET VALUE RANGE */}
+              <TextField
+                id="outlined-basic"
+                label="Market value(optional)"
+                type="number"
+                variant="outlined"
+                fullWidth={true}
+                sx={{ width: "23vw" }}
+              />
+            </div>
             {/* RIGHT SELECT IMAGES FROM FILES */}
-            <div style={{ flex: ".5", paddingLeft: "5%" }}>
-              {/* ============================== */}
+            <div style={{ flex: ".3" }}>
               <div
                 style={{
                   border: "2px dotted",
@@ -173,7 +199,7 @@ function CreateAPlayerProfileModal() {
                 >
                   <AddAPhoto />
                   <Typography sx={{ fontWeight: "600" }}>
-                    Select or drag Images here
+                    Select or drag profile Image
                   </Typography>
                 </div>
 
@@ -187,7 +213,6 @@ function CreateAPlayerProfileModal() {
                   />
                 </div>
               </div>
-              {/* =============================== */}
             </div>
           </div>
         </Box>
@@ -196,7 +221,7 @@ function CreateAPlayerProfileModal() {
   );
 }
 
-// MODAL TO ADD EXISTING PLAYER TO AGENCY
+// MODAL TO ADD EXISTING PLAYER TO AGENCY   , paddingLeft: "5%"
 
 function AddPlayerFromDatabaseModal() {
   const [open, setOpen] = React.useState(false);
@@ -246,9 +271,6 @@ function AddPlayerFromDatabaseModal() {
           sx={{ ...style, width: 1000 }}
         >
           <h2 id="child-modal-title">Add existing player</h2>
-          <p id="child-modal-description">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          </p>
           <Button
             onClick={handleClose}
             sx={{ width: "10%", marginLeft: "80%" }}

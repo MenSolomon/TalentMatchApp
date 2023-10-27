@@ -21,6 +21,12 @@ import DatePickerTool from "../components/DatePicker/DatePicker";
 const CreateAccount = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
 
+  const userFormDataWithOnlySubscriptionPackage =
+    useSelector(selectUserSignUpData);
+
+  const { subscriptionPackage, paymentType } =
+    userFormDataWithOnlySubscriptionPackage;
+
   const handlePhoneNumberChange = (value) => {
     setPhoneNumber(value);
     alert(value);
@@ -52,7 +58,8 @@ const CreateAccount = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (formData) => {
+  const onSubmit = (formData, e) => {
+    e.preventDefault();
     console.log(formData);
     const {
       firstName,
@@ -86,7 +93,9 @@ const CreateAccount = () => {
           setPasswordMatch("False");
         } else {
           alert("Form Taken");
-          dispatch(setUserSignUpData(userData));
+          dispatch(
+            setUserSignUpData({ paymentType, subscriptionPackage, ...userData })
+          );
           setNationality("");
           setDOB("");
           setPhoneNumber("");
@@ -101,10 +110,10 @@ const CreateAccount = () => {
 
   const userData = useSelector(selectUserSignUpData);
 
-  const handleValueExtract = (e) => {
-    alert(e);
-    setPhoneNumber(e);
-  };
+  // const handleValueExtract = (e) => {
+  //   alert(e);
+  //   setPhoneNumber(e);
+  // };
 
   useEffect(() => {
     console.log(phoneNumber, "PH");

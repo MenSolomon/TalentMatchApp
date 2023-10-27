@@ -95,17 +95,20 @@ export default function PaymentModeSelect({ paymentType }) {
   const dispatch = useDispatch();
 
   const [cardDetails, setCardDetails] = React.useState(
-    userData.paymentType === "Cards"
-      ? {
-          CardType: userData.paymentDetails.CardType,
-          FirstName: userData.paymentDetails.FirstName,
-          Surname: userData.paymentDetails.Surname,
-          CardNumber: userData.paymentDetails.CardNumber,
-          ExpiryMonth: userData.paymentDetails.ExpiryMonth,
-          CVV: userData.paymentDetails.CVV,
-        }
-      : userData.paymentType !== ""
-      ? { phoneNumber: userData.paymentDetails.phoneNumber }
+    userData?.paymentType !== undefined &&
+      userData?.paymentDetails !== undefined
+      ? userData.paymentType === "Cards"
+        ? {
+            CardType: userData.paymentDetails.CardType,
+            FirstName: userData.paymentDetails.FirstName,
+            Surname: userData.paymentDetails.Surname,
+            CardNumber: userData.paymentDetails.CardNumber,
+            ExpiryMonth: userData.paymentDetails.ExpiryMonth,
+            CVV: userData.paymentDetails.CVV,
+          }
+        : userData.paymentType !== ""
+        ? { phoneNumber: userData.paymentDetails.phoneNumber }
+        : ""
       : ""
   );
 
@@ -364,8 +367,11 @@ function PhoneInputComponent() {
   const [phoneNumber, setPhoneNumber] = React.useState("");
 
   React.useEffect(() => {
-    paymentType !== "Cards" || paymentType !== ""
-      ? setPhoneNumber(userData.paymentDetails.phoneNumber)
+    userData?.paymentType !== undefined &&
+    userData?.paymentDetails !== undefined
+      ? paymentType !== "Cards" || paymentType !== ""
+        ? setPhoneNumber(userData.paymentDetails.phoneNumber)
+        : ""
       : "";
   }, [userData.cardDetails]);
   const handlePhoneNumberChange = (value) => {

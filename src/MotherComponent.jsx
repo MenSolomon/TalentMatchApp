@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 import CreateProfileModal from "./components/Modals/CreateProfileModal";
 import UploadPlayer from "./components/Tooltips/UploadPlayer";
+import WelcomeMessageModal from "./components/Modals/WelcomeMessageModal";
 
 const MotherComponent = () => {
   const menuButtonsArray = [
@@ -267,6 +268,7 @@ const MotherComponent = () => {
           />
 
           <LightAndDarkModeSwitch style={{ float: "right" }} />
+          <WelcomeMessageModal />
         </div>
       </div>
       {/* // ======  PAGE CONTENT ===== \\ */}
