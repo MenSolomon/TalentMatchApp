@@ -7,7 +7,7 @@ function valuetext(value) {
   return `${value}yrs`;
 }
 
-export default function AgeRangeSlider({ style }) {
+export default function AgeRangeSlider({ style, rangeName, max, min }) {
   const [value, setValue] = React.useState([20, 37]);
 
   const handleChange = (event, newValue) => {
@@ -17,7 +17,7 @@ export default function AgeRangeSlider({ style }) {
   return (
     <Box className="primaryTextColor" sx={{ ...style, width: 300 }}>
       <Typography sx={{ textAlign: "center", fontWeight: "700" }}>
-        Age range
+        {rangeName}
       </Typography>
       <Slider
         getAriaLabel={() => "Age Range"}
@@ -25,8 +25,8 @@ export default function AgeRangeSlider({ style }) {
         onChange={handleChange}
         valueLabelDisplay="on"
         getAriaValueText={valuetext}
-        max={50}
-        min={10}
+        max={max}
+        min={min}
       />
     </Box>
   );

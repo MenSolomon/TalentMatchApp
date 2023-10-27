@@ -174,17 +174,11 @@ export default function CreateProfileModal() {
                 <CountrySelect selectLabel="Place of birth" />
                 {/* Nationality  */}
                 <CountrySelect selectLabel="Nationality" />
-                {/* Height */}
-                <TextField
-                  id="outlined-basic"
-                  label="Height"
-                  type="number"
-                  variant="outlined"
-                  sx={inputStyles}
-                />
-                <DatePickerTool style={inputStyles} label="Date of birth" />
+                {/* Height rANGE */}
+                <AgeRangeSlider rangeName={"Height range"} max={2} min={0.4} />
+                {/* <DatePickerTool style={inputStyles} label="Date of birth" /> */}
                 {/* Age */}
-                <AgeRangeSlider />
+                <AgeRangeSlider rangeName={"Age range"} max={50} min={10} />
                 <Button
                   sx={{
                     width: "23vw",
@@ -227,21 +221,12 @@ export default function CreateProfileModal() {
                   ListArray={soccerPositions}
                   label="Other Positions"
                 />
-                <h6>Market Value</h6>
-                <div style={{ width: "85%", display: "flex", gap: "1vw" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Min Value"
-                    type="number"
-                    variant="outlined"
-                  />
-                  <TextField
-                    id="outlined-basic"
-                    label="Max Value"
-                    type="number"
-                    variant="outlined"
-                  />
-                </div>
+                {/* MARKET VALUE RANGE */}
+                <AgeRangeSlider
+                  rangeName={"Market Value ($ 000,000)"}
+                  max={300}
+                  min={10}
+                />
                 {/* Captiain Selection */}
                 <GroupedRadio radioArray={captainArray} labelName="Captain" />
                 {/* // Preffered foot */}
@@ -270,6 +255,7 @@ export default function CreateProfileModal() {
                 </h4>
 
                 <CountrySelect selectLabel="Club Country" />
+                <CountrySelect selectLabel="Club Division" />
 
                 <CheckboxesGroup
                   CheckboxLabel="Contract Status"
