@@ -318,7 +318,12 @@ div::-webkit-scrollbar-thumb:hover {
   color: #09142d;
   cursor: pointer;
 }
-
+/* ================== */
+.lang:hover {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
 /* //ACTIBE LINK */
 
 /* button.MuiButtinBase-root.MuiButtin-root.MuiButton-text.MuiButton-textPrimary */
