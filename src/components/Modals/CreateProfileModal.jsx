@@ -175,7 +175,7 @@ export default function CreateProfileModal() {
                 {/* Nationality  */}
                 <CountrySelect selectLabel="Nationality" />
                 {/* Height rANGE */}
-                <AgeRangeSlider rangeName={"Height range"} max={2} min={0.4} />
+                <AgeRangeSlider rangeName={"Height range"} max={8} min={4} />
                 {/* <DatePickerTool style={inputStyles} label="Date of birth" /> */}
                 {/* Age */}
                 <AgeRangeSlider rangeName={"Age range"} max={50} min={10} />
