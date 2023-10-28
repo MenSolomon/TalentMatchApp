@@ -430,3 +430,37 @@ ul {
   position: absolute;
   top: 41.5vh;
 } */
+/* ================================= */
+.body_container {
+  margin: 0 auto;
+  width: 90%;
+  height: 100vh;
+  overflow-x: hidden;
+  background: #5585fe;
+}
+.body {
+  display: grid;
+  width: 100%;
+  height: 250vh;
+  /* background: #09142d; */
+  grid-template-rows: 7% 80% 13%;
+  grid-template-columns: 100%;
+  grid-template-areas: "head" "main" "foot";
+}
+.header {
+  grid-area: head;
+  background: black;
+  overflow: scroll;
+  position: fixed;
+  width: 89.5%;
+}
+.main {
+  grid-area: main;
+  /* background: green; */
+  overflow: scroll;
+}
+.foot {
+  grid-area: foot;
+  /* background: pink; */
+  overflow: scroll;
+}

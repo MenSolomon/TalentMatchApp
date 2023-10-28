@@ -29,6 +29,7 @@ import CoachAgentScoutVersionFavorites from "./CoachAgentScoutVersion/src/screen
 import CoachAgentScoutVersionInbox from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionInbox";
 import CoachAgentScoutVersionAnalytics from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionAnalytics";
 import CoachAgentScoutVersionPlayerManagement from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionPlayerManagement";
+import Support from "./screens/Support";
 
 const App = () => {
   return (
@@ -124,6 +125,7 @@ const App = () => {
 
           <Route path="/create-account/user-form" element={<CreateAccount />} />
         </Route>
+        <Route path="/support" element={<Support />} />
         {/* <Route path="/freetrial" element={<FreeTrial />} />
         <Route path="/subscribeTrial" element={<SubscribeTrial />} />
         <Route path="/confirm-details" element={<ConfirmDetails />} /> */}
