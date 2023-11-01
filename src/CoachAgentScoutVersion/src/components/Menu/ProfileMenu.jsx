@@ -4,6 +4,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import { Navigate, useNavigate } from "react-router-dom";
+import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
+import { useSelector } from "react-redux";
 
 export default function ProfileMenu({ style, name }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -18,6 +20,8 @@ export default function ProfileMenu({ style, name }) {
   let importStyle = style;
 
   const Navigate = useNavigate();
+  const loginUserDetails = useSelector(selectUserDetailsObject);
+  const { firstName, surname } = loginUserDetails;
 
   return (
     <div style={importStyle}>
@@ -31,7 +35,7 @@ export default function ProfileMenu({ style, name }) {
         sx={{ color: "black", width: "15vw", fontWeight: "800" }}
         onClick={handleClick}
       >
-        {name && name.substring(0, 16)}
+        {firstName.substring(0, 10) + " " + surname.substring(0, 10)}
       </Button>
       <Menu
         id="basic-menu"

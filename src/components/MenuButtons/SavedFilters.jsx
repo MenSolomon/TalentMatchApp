@@ -19,7 +19,7 @@ const SavedFilters = () => {
 
   return (
     <SideBarAccordion
-      categoryLabel="Saved Filters"
+      categoryLabel="Saved Profiles"
       categoryIcon={"star"}
       categoryOptionsList={dataSet}
     />

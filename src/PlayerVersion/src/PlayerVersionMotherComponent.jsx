@@ -5,12 +5,12 @@ import { Outlet } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import logoImage from "./assets/images/AppLogoBlue.png";
 import avatarImage from "./assets/images/avatar.jpg";
-import ProfileMenu from "./components/Menu/ProfileMenu";
 import LightAndDarkModeSwitch from "./components/Switch/LightAndDarkModeSwitch";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavBarButton from "./components/NavBarButtons/NavBarButton";
 import { useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
+import ProfileMenu from "../../components/Menu/ProfileMenu";
 
 const PlayerVersionMotherComponent = () => {
   const menuButtonsArray = [

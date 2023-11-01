@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import logoImage from "../assets/images/AppLogoBlue.png";
 import FreetrialStepper from "../components/Stepper/FreetrialStepper";
 
@@ -30,6 +30,8 @@ height:100%
 
 }`;
 
+  const navigate = useNavigate();
+
   return (
     <div
       style={{
@@ -41,7 +43,13 @@ height:100%
       }}
     >
       <div style={{ flex: ".12", paddingTop: "1.5vh", paddingLeft: "1vw" }}>
-        <img style={{ width: "120px" }} src={logoImage} />
+        <img
+          onClick={() => {
+            navigate("/login");
+          }}
+          style={{ width: "120px" }}
+          src={logoImage}
+        />
       </div>
       <div
         style={{

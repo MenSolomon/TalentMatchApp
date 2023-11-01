@@ -20,14 +20,14 @@ export default function PaymentModeSelect({ paymentType }) {
   const [Month, setMonth] = React.useState("");
   const [Year, setYear] = React.useState("");
 
-  React.useEffect(() => {
-    if (userData.paymentType === "Cards") {
-      const { paymentDetails } = userData;
-      setMonth(paymentDetails.ExpiryMonth);
-      setCardType(paymentDetails.CardType);
-      setYear(paymentDetails.ExpiryYear);
-    }
-  }, [userData.paymentType]);
+  // React.useEffect(() => {
+  //   if (userData.paymentType === "Cards") {
+  //     const { paymentDetails } = userData;
+  //     setMonth(paymentDetails.ExpiryMonth);
+  //     setCardType(paymentDetails.CardType);
+  //     setYear(paymentDetails.ExpiryYear);
+  //   }
+  // }, [userData.paymentType]);
 
   const handleChange = (event) => {
     setPaymentMode(event.target.value);

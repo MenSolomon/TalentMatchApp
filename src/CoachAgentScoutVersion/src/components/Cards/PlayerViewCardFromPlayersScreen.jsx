@@ -13,7 +13,7 @@ const PlayerViewCardFromPlayersScreen = ({
   const navigate = useNavigate();
 
   const handlePlayerManagementNavigation = () => {
-    navigate(`/players/${firstName}${surName}`);
+    navigate(`/multiStudio/players/${firstName}${surName}`);
   };
 
   return (

@@ -10,6 +10,7 @@ import SignupStepperReducer from "./slices/SignupStepperSlice";
 import UserDaterReducer from "./slices/UserDataSlice";
 import TempDatabaseReducer from "./slices/TempDatabaseSlice";
 import LoginUserDataSlice from "./slices/LoginUserDataSlice";
+import SavedProfilesReducer from "./slices/SavedProfileSlice";
 const persistConfig = {
   key: "root",
   version: 1,
@@ -19,6 +20,7 @@ const persistConfig = {
     "FormStepper",
     "UserData",
     "UserLoginData",
+    // "SavedProfiles",
     // "TempDatabase",
   ],
 };
@@ -32,6 +34,7 @@ const reducer = combineReducers({
   UserData: UserDaterReducer,
   TempDatabase: TempDatabaseReducer,
   UserLoginData: LoginUserDataSlice,
+  SavedProfiles: SavedProfilesReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

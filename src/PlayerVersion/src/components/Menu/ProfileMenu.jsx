@@ -19,6 +19,12 @@ export default function ProfileMenu({ style, name }) {
 
   const Navigate = useNavigate();
 
+  const loginUserDetails = useSelector(selectUserDetailsObject);
+  const { firstName, surname } = loginUserDetails;
+  {
+    firstName.substring(0, 10) + " " + surname.substring(0, 10);
+  }
+
   return (
     <div style={importStyle}>
       <Button

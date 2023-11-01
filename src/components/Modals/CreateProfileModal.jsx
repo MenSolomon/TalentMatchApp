@@ -106,6 +106,7 @@ export default function CreateProfileModal() {
           defaultProfile: [{ profileName: "default" }],
         })
       );
+      // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
 
       dispatch(
         setTempUsersDatabase([
