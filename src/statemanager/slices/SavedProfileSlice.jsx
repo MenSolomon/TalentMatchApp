@@ -3,18 +3,18 @@ import { createSlice } from "@reduxjs/toolkit";
 export const SavedProfileSlice = createSlice({
   name: "SavedProfiles",
   initialState: {
-    savedProfilesArray: [],
+    currentProfile: "Default",
   },
 
   reducers: {
-    setSavedProfiles: (state, action) => {
-      state.savedProfilesArray = action.payload;
+    setCurrentProfile: (state, action) => {
+      state.currentProfile = action.payload;
     },
   },
 });
 
-export const selectUserSignUpData = (state) =>
-  state.SavedProfiles.savedProfilesArray;
+export const selectCurrentProfile = (state) =>
+  state.SavedProfiles.currentProfile;
 
-export const { setSavedProfiles } = SavedProfileSlice.actions;
+export const { setCurrentProfile } = SavedProfileSlice.actions;
 export default SavedProfileSlice.reducer;

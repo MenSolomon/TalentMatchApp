@@ -97,8 +97,7 @@ const ConfirmDetails = () => {
                       {
                         ...userData,
                         role: roleSelected,
-                        defaultProfile: [],
-                        otherProfiles: [],
+                        savedProfile: [],
                       },
                     ])
                   );
@@ -115,8 +114,7 @@ const ConfirmDetails = () => {
                     {
                       ...userData,
                       role: roleSelected,
-                      defaultProfile: [],
-                      otherProfiles: [],
+                      savedProfile: [],
                     },
                   ])
                 );

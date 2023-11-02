@@ -2,9 +2,19 @@ import { useSelector } from "react-redux";
 import { selectPlayersInAgencyArray } from "../statemanager/slices/PlayersInAgencySlice";
 import ViewPlayerCard from "../components/Cards/ViewPlayerCard";
 import { Pagination } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { selectCurrentProfile } from "../statemanager/slices/SavedProfileSlice";
+import ProfileEditTooltipToTrigerCreateProfileModal from "../components/Tooltips/ProfileEditTooltipToTrigerCreateProfileModal";
+import CreateProfileModal from "../components/Modals/CreateProfileModal";
 
 const Players = () => {
   const PlayerArray = useSelector(selectPlayersInAgencyArray);
+  const { profileName } = useParams();
+
+  // alert(profileName);
+
+  const currentProfile = useSelector(selectCurrentProfile);
+
   return (
     <div
       style={{
@@ -14,8 +24,10 @@ const Players = () => {
         width: "100%",
       }}
     >
-      <div style={{ flex: ".1" }}>
-        <h3 style={{ margin: 0, float: "left" }}>Default Profile</h3>{" "}
+      <div style={{ flex: ".1", display: "flex" }}>
+        <h3 style={{ margin: 0, float: "left" }}>{currentProfile} Profile</h3>
+
+        <CreateProfileModal ProfileType="Edit" />
       </div>
 
       <div style={{ flex: ".8", flexWrap: "wrap", display: "flex" }}>

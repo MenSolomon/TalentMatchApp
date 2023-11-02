@@ -1,27 +1,17 @@
 import React from "react";
 import SideBarAccordion from "../Accordions/SideBarAccordion";
+import { useSelector } from "react-redux";
+import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserDataSlice";
 
 const SavedFilters = () => {
-  const dataSet = [
-    { label: "Left-Back" },
-    {
-      label: "Strikers",
+  const loginUserDetails = useSelector(selectUserDetailsObject);
 
-      // path: "/view-all",
-    },
-    { label: "Center-Back" },
-    {
-      label: "Right Winger",
-      // path: "/view-all",
-    },
-    { label: "Goal Kepper" },
-  ];
-
+  const { savedProfile } = loginUserDetails;
   return (
     <SideBarAccordion
       categoryLabel="Saved Profiles"
       categoryIcon={"star"}
-      categoryOptionsList={dataSet}
+      categoryOptionsList={savedProfile}
     />
   );
 };

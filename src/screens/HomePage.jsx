@@ -269,7 +269,7 @@ const HomePage = () => {
               cursor: "pointer",
             }}
             onClick={() => {
-              navigate("/view-all");
+              navigate("/profile");
             }}
           >
             {" "}

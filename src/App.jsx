@@ -42,7 +42,8 @@ const App = () => {
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<MotherComponent />}>
             <Route path="/" element={<HomePage />} />
-            <Route path="view-all" element={<ViewAllScreen />} />
+            <Route path="/profile/:profileName" element={<ViewAllScreen />} />
+
             <Route
               path="player-details/:playerId"
               element={<PlayerDetails />}

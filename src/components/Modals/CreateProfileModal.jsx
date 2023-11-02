@@ -4,9 +4,9 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
-import { Add } from "@mui/icons-material";
-import { Card, Divider, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Add, Settings } from "@mui/icons-material";
+import { Card, Divider, TextField, IconButton, Tooltip } from "@mui/material";
 import CountrySelect from "../Autocompletes/CountrySelect";
 import IconTooltip from "../Tooltips/IconToolTip";
 import DatePickerTool from "../DatePicker/DatePicker";
@@ -25,6 +25,10 @@ import {
   selectTempUsersDatabase,
   setTempUsersDatabase,
 } from "../../statemanager/slices/TempDatabaseSlice";
+import {
+  selectCurrentProfile,
+  setCurrentProfile,
+} from "../../statemanager/slices/SavedProfileSlice";
 
 const style = {
   position: "absolute",
@@ -47,7 +51,7 @@ const inputStyles = {
   width: "85%",
 };
 
-export default function CreateProfileModal() {
+export default function CreateProfileModal({ ProfileType }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -85,25 +89,31 @@ export default function CreateProfileModal() {
   ];
 
   const loginUserDetails = useSelector(selectUserDetailsObject);
-  const { defaultProfile, email } = loginUserDetails;
+  const { savedProfile, email } = loginUserDetails;
   const allUsers = useSelector(selectTempUsersDatabase);
+  const currentProfileClicked = useSelector(selectCurrentProfile);
+  //
+  const [profileName, setProfileName] = useState("");
+  const [editedProfileName, setEditedProfileName] = useState("");
 
-  const handleSaveProfile = () => {
-    if (defaultProfile.length <= 0) {
+  // FUNCTION FOR CREATING PROFILE
+  const handleCreateProfile = () => {
+    const unMacthedPlayerDatabase = allUsers.filter((data) => {
+      return data.email !== email;
+    });
+
+    if (savedProfile.length <= 0) {
       // cont newProfile == log
       // alert("less");
 
       // This is the rest of users in the database devoid of the current user logged in
-      const unMacthedPlayerDatabase = allUsers.filter((data) => {
-        return data.email !== email;
-      });
 
       console.log(unMacthedPlayerDatabase, "unmatched players");
 
       dispatch(
         setUserDetailsObject({
           ...loginUserDetails,
-          defaultProfile: [{ profileName: "default" }],
+          savedProfile: [{ label: "Default", filter: {} }],
         })
       );
       // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
@@ -113,24 +123,100 @@ export default function CreateProfileModal() {
           ...unMacthedPlayerDatabase,
           {
             ...loginUserDetails,
-            defaultProfile: [{ profileName: "default" }],
+            savedProfile: [{ label: "Default", filter: {} }],
           },
         ])
       );
     } else {
+      // loginUserDetails
+      // allUsers
+      const { savedProfile } = loginUserDetails;
+
       dispatch(
         setUserDetailsObject({
           ...loginUserDetails,
-          otherProfiles: [{ profileName: "other" }],
+          savedProfile: [...savedProfile, { label: profileName, filter: {} }],
         })
       );
+
+      dispatch(
+        setTempUsersDatabase([
+          ...unMacthedPlayerDatabase,
+          {
+            ...loginUserDetails,
+            savedProfile: [...savedProfile, { label: profileName, filter: {} }],
+          },
+        ])
+      );
     }
+    // changing the click current clicked value to the edited name
+
+    handleClose();
+
+    // reset the textfields after save
   };
+
+  // FUNCTION FOR CREATING PROFILE
+  const handleSaveProfile = () => {
+    // alert("Save");
+
+    const unMacthedPlayerDatabase = allUsers.filter((data) => {
+      return data.email !== email;
+    });
+
+    const tempSavedProfile = [...savedProfile];
+    let indexOfCurrentProfile = savedProfile.findIndex(
+      (item) => currentProfileClicked === item.label
+    );
+    if (indexOfCurrentProfile !== -1) {
+      tempSavedProfile[indexOfCurrentProfile] = {
+        label: editedProfileName,
+        filter: {},
+      };
+
+      dispatch(
+        setUserDetailsObject({
+          ...loginUserDetails,
+          savedProfile: tempSavedProfile,
+        })
+      );
+
+      dispatch(
+        setTempUsersDatabase([
+          ...unMacthedPlayerDatabase,
+          {
+            ...loginUserDetails,
+            savedProfile: tempSavedProfile,
+          },
+        ])
+      );
+
+      console.log(tempSavedProfile);
+    }
+
+    dispatch(setCurrentProfile(editedProfileName));
+
+    console.log(currentProfileClicked);
+
+    handleClose();
+  };
+
+  // REview this
+  useEffect(() => {
+    setEditedProfileName(currentProfileClicked);
+  }, [currentProfileClicked]);
 
   return (
     <div>
-      {defaultProfile.length <= 0 ? (
+      {ProfileType === "Edit" ? (
+        <Tooltip title={"Edit Profile"}>
+          <IconButton onClick={handleOpen}>
+            <Settings />
+          </IconButton>
+        </Tooltip>
+      ) : savedProfile.length <= 0 ? (
         <div onClick={handleOpen}>
+          {/* // CHANING THE MODAL ENTRY ICON / CARD */}
           <BasicButton
             innerText="Get started"
             style={{ width: "15vw", marginBottom: "3vh" }}
@@ -204,14 +290,18 @@ export default function CreateProfileModal() {
             >
               <h2 className="secondaryTextColor">
                 {" "}
-                {defaultProfile.length <= 0
+                {ProfileType === "Edit"
+                  ? "Edit Profile"
+                  : savedProfile.length <= 0
                   ? "Default Profile"
                   : "Search Profile"}{" "}
               </h2>{" "}
               <h6>Who are you looking for?</h6>{" "}
               <div style={{ justifySelf: "flex-end" }}>
                 {" "}
-                {defaultProfile.length <= 0 ? (
+                {savedProfile.length <= 0 ? (
+                  ""
+                ) : currentProfileClicked.toLowerCase() === "default" ? (
                   ""
                 ) : (
                   <TextField
@@ -219,6 +309,13 @@ export default function CreateProfileModal() {
                     id="outlined-basic"
                     label="Profile Name"
                     variant="outlined"
+                    defaultValue={
+                      ProfileType === "Edit" ? currentProfileClicked : ""
+                    }
+                    onChange={(e) => {
+                      setProfileName(e.target.value);
+                      setEditedProfileName(e.target.value);
+                    }}
                   />
                 )}
               </div>
@@ -263,9 +360,13 @@ export default function CreateProfileModal() {
                     position: "absolute",
                     bottom: 50,
                   }}
-                  onClick={handleSaveProfile}
+                  onClick={
+                    ProfileType === "Edit"
+                      ? handleSaveProfile
+                      : handleCreateProfile
+                  }
                 >
-                  Save
+                  {ProfileType === "Edit" ? "Save" : "Create"}
                 </Button>{" "}
               </div>
               {/* Player Data */}

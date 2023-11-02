@@ -33,13 +33,13 @@ export default function WelcomeMessageModal() {
   //   const handleOpen = () => setOpen(true);
   //   const handleClose = () => setOpen(false);
 
-  const { defaultProfile } = LoginUserDetails;
+  const { savedProfile } = LoginUserDetails;
   const [open, setOpen] = React.useState(
-    defaultProfile.length > 0 ? false : true
+    savedProfile.length > 0 ? false : true
   );
 
   React.useEffect(() => {
-    if (defaultProfile.length > 0) {
+    if (savedProfile.length > 0) {
       setOpen(false);
     }
   }, [LoginUserDetails]);
