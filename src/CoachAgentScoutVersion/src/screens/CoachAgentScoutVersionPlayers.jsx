@@ -21,7 +21,7 @@ const CoachAgentScoutVersionPlayers = () => {
       </div>
 
       <div style={{ flex: ".8", flexWrap: "wrap", display: "flex" }}>
-        {PlayerArray.map((data) => {
+        {PlayerArray.slice(0, 9).map((data, index) => {
           const {
             firstName,
             surName,
@@ -34,6 +34,7 @@ const CoachAgentScoutVersionPlayers = () => {
 
           return (
             <PlayerViewCardFromPlayersScreen
+              key={index}
               image={image}
               surName={surName}
               age={Age}

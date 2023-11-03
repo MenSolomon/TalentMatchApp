@@ -13,11 +13,15 @@ import {
 } from "@mui/material";
 import { Card } from "react-bootstrap";
 import CustomTextField from "../TextField/CustomTextField";
-import { AddAPhoto, Search } from "@mui/icons-material";
+import { AddAPhoto, Facebook, Instagram, Search } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInAgencySlice";
 import PlayerViewCardFromPlayersScreen from "../Cards/PlayerViewCardFromPlayersScreen";
 import CountrySelect from "../../../../components/Autocompletes/CountrySelect";
+import DatePickerTool from "../../../../components/DatePicker/DatePicker";
+import GroupedRadio from "../../../../components/Radio/GroupedRadio";
+import BasicAutoComplete from "../../../../components/Autocompletes/BasicAutoComplete";
+import BasicSelect from "../../../../components/Selects/BasicSelect";
 
 const style = {
   position: "absolute",
@@ -30,22 +34,58 @@ const style = {
   border: "transparent",
   boxShadow: 24,
   borderRadius: "1vw",
-  padding: "2vw",
+  padding: "0vw 1vw",
   display: "flex",
   flexDirection: "column",
   paddingTop: "3vh",
+};
+
+const inputStyles = {
+  width: "85%",
 };
 
 // MODAL TO CREATE A new profile
 
 function CreateAPlayerProfileModal() {
   const [open, setOpen] = React.useState(false);
+
+  const [DOB, setDOB] = React.useState("");
+
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
+
+  const preferredFootArray = ["Left", "Right", "Both"];
+  const soccerPositions = [
+    "Any",
+    "Goalkeeper (GK)",
+    "Defender (D)",
+    "Center Back (CB)",
+    "Full-back (FB)",
+    "Wing-back (WB)",
+    "Midfielder (MF)",
+    "Central Midfielder (CM)",
+    "Defensive Midfielder (CDM)",
+    "Attacking Midfielder (CAM)",
+    "Wide Midfielder (WM)",
+    "Forward (F)",
+    "Striker (ST)",
+    "Center Forward (CF)",
+    "Winger (W)",
+  ];
+  const contractStatusArray = [
+    "Transfer Listed",
+    "Loan Listed",
+    "Free Agent",
+    "Youth Player",
+    "Contract Expiring less than 6 months",
+    "Currently renewed contract",
+  ];
+
+  const clubSelected = "";
 
   return (
     <React.Fragment>
@@ -90,7 +130,7 @@ function CreateAPlayerProfileModal() {
         >
           <h2 id="child-modal-title">Create a player profile</h2>
           <Button
-            sx={{ width: "10%", marginLeft: "80%" }}
+            sx={{ width: "10%", marginLeft: "80%", marginBottom: "1vh" }}
             onClick={handleClose}
           >
             Back
@@ -100,6 +140,7 @@ function CreateAPlayerProfileModal() {
               width: "100%",
               height: "80%",
               display: "flex",
+              gap: "1vw",
             }}
           >
             {/* LEFT INPUT PLAYER DETAILS */}
@@ -119,10 +160,27 @@ function CreateAPlayerProfileModal() {
                   flexDirection: "column",
                 }}
               >
-                <CustomTextField placeholder={"Name"} />
-                <CountrySelect selectLabel="Date of birth" />
-                <CountrySelect selectLabel="Nationality" />
-                <CountrySelect selectLabel="Preffered foot" />
+                <CustomTextField placeholder={"First Name"} />
+                <CustomTextField placeholder={"Surname"} />
+
+                <DatePickerTool
+                  style={{ width: "23vw" }}
+                  containerStyle={{ marginTop: "-1vh" }}
+                  label="Date of birth"
+                  // defaultValue={userData.DOB}
+                  dateValue={(e) => {
+                    setDOB(e);
+                  }}
+                />
+                <CountrySelect
+                  selectLabel="Nationality"
+                  styles={{
+                    minWidth: "23vw",
+                    marginLeft: "-0.5vw",
+                    marginTop: "1vh",
+                  }}
+                />
+
                 <TextField
                   id="outlined-basic"
                   label="Height"
@@ -145,7 +203,7 @@ function CreateAPlayerProfileModal() {
                   }}
                   variant="contained"
                 >
-                  submit
+                  Create
                 </Button>
               </div>
             </div>
@@ -159,11 +217,62 @@ function CreateAPlayerProfileModal() {
                 flexDirection: "column",
               }}
             >
-              <CountrySelect selectLabel="Club Name" />
-              <CountrySelect selectLabel="Contract status" />
-              <CountrySelect selectLabel="Position" />
-
+              <CountrySelect
+                styles={{
+                  minWidth: "23vw",
+                  marginLeft: "-0.5vw",
+                }}
+                selectLabel="Club Name"
+              />
+              {clubSelected !== "" ? (
+                <BasicSelect
+                  label="Contract status"
+                  itemsArray={contractStatusArray}
+                  inputStyle={{ width: "23vw" }}
+                />
+              ) : (
+                ""
+              )}
+              <BasicAutoComplete
+                style={{ width: "23vw" }}
+                ListArray={soccerPositions}
+                label="Main Position"
+              />{" "}
               {/* <CustomTextField placeholder={"Market value(optional)"} /> */}
+              <GroupedRadio
+                radioArray={preferredFootArray}
+                labelName="Preferred foot"
+              />
+              {/* SOCIAL MEDIAL HANDLES*/}
+              <TextField
+                id="outlined-basic"
+                label="Instagram Handle"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Instagram />
+                    </InputAdornment>
+                  ),
+                }}
+                variant="outlined"
+                sx={{ width: "23vw" }}
+              />
+              <TextField
+                id="outlined-basic"
+                label="Facebook Username"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Facebook />
+                    </InputAdornment>
+                  ),
+                }}
+                variant="outlined"
+                sx={{ width: "23vw" }}
+              />
+            </div>
+            {/* RIGHT SELECT IMAGES FROM FILES */}
+            <div style={{ flex: ".3" }}>
               {/* MARKET VALUE RANGE */}
               <TextField
                 id="outlined-basic"
@@ -173,20 +282,17 @@ function CreateAPlayerProfileModal() {
                 fullWidth={true}
                 sx={{ width: "23vw" }}
               />
-            </div>
-            {/* RIGHT SELECT IMAGES FROM FILES */}
-            <div style={{ flex: ".3" }}>
               <div
                 style={{
                   border: "2px dotted",
-
-                  width: "20dvw",
-                  height: "10dvh",
+                  borderRadius: "1vw",
+                  width: "23vw",
+                  height: "20vh",
                   display: "flex",
                   justifyContent: "center",
                   alignSelf: "center",
                   alignItems: "center",
-                  marginBottom: "3%",
+                  marginTop: "3vh",
                 }}
               >
                 <div
@@ -389,62 +495,65 @@ export default function UploadPlayerToAgencyModal() {
               Upload a player
             </h2>
             <Typography>
-              Create a new player's profile or select an existing player from
-              our database
+              Create a new player's profile into our database
             </Typography>
           </div>
 
           {/* // Create a new player profile or upload a player from database */}
           <div style={{ flex: ".7", display: "flex" }}>
             {/* Create a new player profile Area */}
-            <div style={{ flex: ".5", display: "flex" }}>
+            <div style={{ flex: ".45", display: "flex" }}>
               {/* IMAGE AREA   */}
               <div style={{ flex: ".4" }}>
-                <img
+                {/* <img
                   style={{
                     width: "150px",
                     height: "300px",
                     marginTop: "30%",
                   }}
                   src={youngerPlayerShadowImage}
-                />
+                /> */}
               </div>
 
               {/* Card AREA */}
               <div
                 style={{
                   flex: ".6",
+                  padding: "1vw",
+                  display: "grid",
+                  placeContent: "center",
+                  paddingLeft: "3vw",
+                }}
+              >
+                <img
+                  style={{ width: "200px", height: "400px" }}
+                  src={playerShadowImage}
+                />
+              </div>
+            </div>
+
+            {/* upload a player from database  */}
+
+            <div style={{ flex: ".4", display: "flex" }}>
+              <div
+                style={{
+                  flex: ".6",
+
                   padding: ".4vw",
                   display: "grid",
                   placeContent: "center",
                 }}
               >
                 <CreateAPlayerProfileModal />
-              </div>
-            </div>
 
-            {/* upload a player from database  */}
-
-            <div style={{ flex: ".5", display: "flex" }}>
-              {/* Card AREA */}
-              <div
-                style={{
-                  flex: ".6",
-
-                  padding: ".4vw",
-                  display: "grid",
-                  placeContent: "center",
-                }}
-              >
-                <AddPlayerFromDatabaseModal />
+                {/* <AddPlayerFromDatabaseModal /> */}
               </div>
 
-              {/* IMAGE AREA   */}
               <div style={{ flex: ".4" }}>
-                <img
+                {/* <img
                   style={{ width: "200px", height: "400px" }}
                   src={playerShadowImage}
-                />
+                /> */}
               </div>
             </div>
           </div>

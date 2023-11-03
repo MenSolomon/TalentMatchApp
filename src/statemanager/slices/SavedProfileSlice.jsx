@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const SavedProfileSlice = createSlice({
   name: "SavedProfiles",
   initialState: {
-    currentProfile: "Default",
+    currentProfile: "",
   },
 
   reducers: {

@@ -29,6 +29,11 @@ import {
   selectCurrentProfile,
   setCurrentProfile,
 } from "../../statemanager/slices/SavedProfileSlice";
+import {
+  selectAutoCompletePlayerPosition,
+  setAutoCompletePlayerPosition,
+} from "../../statemanager/slices/OtherComponentStatesSlice";
+import BasicSelect from "../Selects/BasicSelect";
 
 const style = {
   position: "absolute",
@@ -51,12 +56,34 @@ const inputStyles = {
   width: "85%",
 };
 
+// const selectFieldStyle ={
+//   width:130
+// } ;
+
 export default function CreateProfileModal({ ProfileType }) {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    dispatch(setAutoCompletePlayerPosition(""));
+    dispatch(setCurrentProfile(""));
+  };
+
+  const leagueDivisions = [
+    "Top-Flight Division",
+    "Women's league",
+    "Second Division",
+    "Third Division",
+    "Regional Leagues",
+    "Semi-Professional Leagues",
+    "University and College Leagues",
+    "Recreational and Social Leagues",
+    "Youth Leagues",
+    "Grassroots and Mini Leagues",
+    "Juvenile league",
+  ];
 
   const soccerPositions = [
     "Any",
@@ -75,6 +102,44 @@ export default function CreateProfileModal({ ProfileType }) {
     "Center Forward (CF)",
     "Winger (W)",
   ];
+
+  const GKTextFieldArray = [
+    "Clean sheets",
+    "Saves",
+    " long pass accuracy ",
+    "Bloccked shots ",
+    "Aerial duels",
+    "penalty stop success",
+  ];
+
+  const DefendersTextFieldArray = [
+    "Clearance",
+    "Interception",
+    "Blocks",
+    "Clean sheets per season",
+    "Successful tackles rate %",
+  ];
+  const MidfieldersTextFieldArray = [
+    "pass success",
+    "total passes",
+    "assists",
+    "key passes per game",
+    "interceptions",
+    "successful tackles rate",
+    "successful crosses",
+  ];
+  const AttackerTextFieldArray = [
+    "Goals",
+    "Goal/match played ratio",
+    "Assists",
+    "Shots per game",
+    "Goal conversion rate %",
+    "Offside range",
+  ];
+
+  const autocompletePositionSelected = useSelector(
+    selectAutoCompletePlayerPosition
+  );
 
   const preferredFootArray = ["Left", "Right", "Both", "Any"];
   const captainArray = ["Yes", "No", "Any"];
@@ -347,10 +412,14 @@ export default function CreateProfileModal({ ProfileType }) {
                 {/* Nationality  */}
                 <CountrySelect selectLabel="Nationality" />
                 {/* Height rANGE */}
-                <AgeRangeSlider rangeName={"Height range"} max={8} min={4} />
+                <AgeRangeSlider
+                  rangeName={"Height range (m)"}
+                  max={2.5}
+                  min={0.5}
+                />
                 {/* <DatePickerTool style={inputStyles} label="Date of birth" /> */}
                 {/* Age */}
-                <AgeRangeSlider rangeName={"Age range"} max={50} min={10} />
+                <AgeRangeSlider rangeName={"Age range"} max={40} min={10} />
                 <Button
                   sx={{
                     width: "23vw",
@@ -373,44 +442,125 @@ export default function CreateProfileModal({ ProfileType }) {
               <div
                 style={{
                   flex: ".34",
-                  paddingRight: "1.5vw",
                   display: "flex",
-                  gap: "2vh",
                   flexDirection: "column",
                 }}
               >
-                <h4 className="secondaryTextColor">
-                  Player Information{" "}
-                  <IconTooltip
-                    info={
-                      "MEssaes from perspnmnali information m as dsam,d  io asdsaoi lasd;sakd sad"
-                    }
-                    image="help"
+                <div
+                  style={{
+                    flex: ".1",
+                  }}
+                >
+                  {" "}
+                  <h4 className="secondaryTextColor">
+                    Player Information{" "}
+                    <IconTooltip
+                      info={
+                        "MEssaes from perspnmnali information m as dsam,d  io asdsaoi lasd;sakd sad"
+                      }
+                      image="help"
+                    />{" "}
+                  </h4>
+                </div>
+
+                {/* // Player stats information area */}
+                <div
+                  style={{
+                    // flex: ".9",
+                    height: "68vh",
+                    // overflowY: "scroll",
+                    paddingLeft: "1vw",
+                    paddingTop: "3vh",
+                    overflowY: "scroll",
+                  }}
+                >
+                  <BasicAutoComplete
+                    style={{ ...inputStyles, marginBottom: "2.5vh" }}
+                    ListArray={soccerPositions}
+                    label="Main Position"
                   />{" "}
-                </h4>
-                <BasicAutoComplete
-                  style={inputStyles}
-                  ListArray={soccerPositions}
-                  label="Main Position"
-                />{" "}
-                <BasicAutoComplete
-                  style={inputStyles}
-                  ListArray={soccerPositions}
-                  label="Other Positions"
-                />
-                {/* MARKET VALUE RANGE */}
-                <AgeRangeSlider
-                  rangeName={"Market Value ($ 000,000)"}
-                  max={300}
-                  min={10}
-                />
-                {/* Captiain Selection */}
-                <GroupedRadio radioArray={captainArray} labelName="Captain" />
-                {/* // Preffered foot */}
-                <GroupedRadio
-                  radioArray={preferredFootArray}
-                  labelName="Preferred foot"
-                />
+                  {/* <BasicAutoComplete
+                    style={inputStyles}
+                    ListArray={soccerPositions}
+                    label="Other Positions"
+                  /> */}
+                  {autocompletePositionSelected === ""
+                    ? ""
+                    : //Goalkeeper
+                    autocompletePositionSelected === "Goalkeeper (GK)"
+                    ? GKTextFieldArray.map((data, index) => {
+                        return (
+                          <AgeRangeSlider
+                            key={index}
+                            rangeName={data}
+                            max={50}
+                            min={1}
+                          />
+                        );
+                      })
+                    : // DEFEMDERS
+                    autocompletePositionSelected === "Defender (D)" ||
+                      autocompletePositionSelected === "Center Back (CB)" ||
+                      autocompletePositionSelected === "Full-back (FB)" ||
+                      autocompletePositionSelected === "Wing-back (WB)"
+                    ? DefendersTextFieldArray.map((data, index) => {
+                        return (
+                          <AgeRangeSlider
+                            key={index}
+                            rangeName={data}
+                            max={50}
+                            min={1}
+                          />
+                        );
+                      })
+                    : // MIDFIELDERS
+                    autocompletePositionSelected === "Midfielder (MF)" ||
+                      autocompletePositionSelected ===
+                        "Central Midfielder (CM)" ||
+                      autocompletePositionSelected ===
+                        "Defensive Midfielder (CDM)" ||
+                      autocompletePositionSelected ===
+                        "Attacking Midfielder (CAM)" ||
+                      autocompletePositionSelected === "Wide Midfielder (WM)"
+                    ? MidfieldersTextFieldArray.map((data, index) => {
+                        return (
+                          <AgeRangeSlider
+                            key={index}
+                            rangeName={data}
+                            max={50}
+                            min={1}
+                          />
+                        );
+                      }) // Attackers
+                    : autocompletePositionSelected === "Forward (F)" ||
+                      autocompletePositionSelected === "Striker (ST)" ||
+                      autocompletePositionSelected === "Center Forward (CF)" ||
+                      autocompletePositionSelected === "Winger (W)"
+                    ? AttackerTextFieldArray.map((data, index) => {
+                        return (
+                          <AgeRangeSlider
+                            key={index}
+                            rangeName={data}
+                            max={50}
+                            min={1}
+                          />
+                        );
+                      })
+                    : ""}
+                  {/* MARKET VALUE RANGE */}
+                  <AgeRangeSlider
+                    rangeName={"Market Value ($ 000,000)"}
+                    max={50}
+                    min={1}
+                  />
+                  {/* Captiain Selection */}
+                  <GroupedRadio radioArray={captainArray} labelName="Captain" />
+                  {/* // Preffered foot */}
+                  <GroupedRadio
+                    radioArray={preferredFootArray}
+                    labelName="Preferred foot"
+                  />
+                </div>
               </div>
               {/* Extra Info Data */}
               <div
@@ -432,7 +582,12 @@ export default function CreateProfileModal({ ProfileType }) {
                 </h4>
 
                 <CountrySelect selectLabel="Club Country" />
-                <CountrySelect selectLabel="Club Division" />
+
+                <BasicSelect
+                  label={"Division"}
+                  inputStyle={{ width: 300 }}
+                  itemsArray={leagueDivisions}
+                />
 
                 <CheckboxesGroup
                   CheckboxLabel="Contract Status"

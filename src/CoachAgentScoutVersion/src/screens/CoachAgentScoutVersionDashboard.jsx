@@ -62,8 +62,9 @@ const CoachAgentScoutVersionDashboard = () => {
               />
 
               <span style={{ textAlign: "center" }}>
-                Want to add a player to your club/agency? Create new player
-                profile or add existing player from our database
+                Want to add a player to your talent match's databse? Create new
+                player profile and groom player with to become the next big name
+                in football
               </span>
               <UploadPlayerToAgencyModal />
             </div>
