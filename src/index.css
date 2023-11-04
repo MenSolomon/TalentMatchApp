@@ -367,7 +367,6 @@ tbody tr {
   cursor: pointer;
 }
 
-
 ul {
   list-style-type: none;
 }
@@ -500,3 +499,22 @@ ul {
 /* ====================== */
 
 /* Support Settings */
+video {
+  border-radius: 10px; /* Adjust the value to your desired border radius */
+}
+
+/* carousel-control-next-icon, .carousel-control-prev-icon */
+.carousel-control-next-icon {
+  margin-left: 4.5vw;
+  /* background-color: red; */
+}
+
+.carousel-control-prev-icon {
+  margin-right: 4.5vw;
+  /* background-color: red; */
+}
+
+/* // turn of the squared dashes for all bootstrap carousels */
+.carousel-indicators{
+  display:none
+}

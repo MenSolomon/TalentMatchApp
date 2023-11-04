@@ -1,6 +1,10 @@
-import { Avatar, Card } from "@mui/material";
+import { Avatar, Card, Checkbox, FormControlLabel } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import BasicButton from "../Buttons/BasicButton";
+import { Star, StarBorder } from "@mui/icons-material";
+import { useSelector } from "react-redux";
+import { selectThemeProviderObject } from "../../statemanager/slices/ThemeProviderSlice";
 
 // Chose to add a margin right to the cards here instead of the calling it when
 
@@ -20,23 +24,26 @@ const MatchedPlayerCard = ({
     navigate(`/player-details/${PlayerFirstName}${PlayerSurName}`);
   };
 
+  const themeProviderObject = useSelector(selectThemeProviderObject);
+  const { primaryTextColor } = themeProviderObject;
+
   return (
-    <div onClick={handleNavigate}>
-      <Card
-        className="cardBackground primaryColor cardBorder"
+    <div>
+      <div
+        className="primaryColor"
         // className="concave"
-        sx={{
-          position: "relative",
-          width: "10vw",
-          height: "30vh",
+        style={{
+          // position: "relative",
+          width: "100%",
+          height: "43vh",
           // background:
           //   "linear-gradient(133deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
           // background: "#1B1E2B",
 
-          borderBottomLeftRadius: "0px",
-          borderBottomRightRadius: "6%",
-          borderTopRightRadius: "6%",
-          borderTopLeftRadius: "6%",
+          // borderBottomLeftRadius: "0px",
+          // borderBottomRightRadius: "6%",
+          // borderTopRightRadius: "6%",
+          // borderTopLeftRadius: "6%",
           display: "flex",
           flexDirection: "column",
           padding: "1vh .7vw",
@@ -49,7 +56,7 @@ const MatchedPlayerCard = ({
         {/* Player Image And Club */}
         <div
           style={{
-            flex: ".5",
+            flex: ".4",
             //   background: "white",
             display: "flex",
             gap: ".5vw",
@@ -97,7 +104,7 @@ const MatchedPlayerCard = ({
             >
               <Avatar
                 src={PlayerClub}
-                style={{ width: "23px", height: "23px", borderRadius: "50%" }}
+                style={{ width: "35px", height: "35px", borderRadius: "50%" }}
               />
             </div>
           </div>
@@ -122,14 +129,53 @@ const MatchedPlayerCard = ({
             placeContent: "center",
           }}
         >
+          {PlayerFirstName} <br />
           {PlayerSurName}
         </div>
         {/* Player Stats && Value */}
-        <div style={{ flex: ".3", fontSize: ".7em" }}>
-          Defense : {MarketValue} <br />
-          <span>Goal Ratio : 0.61</span>
+        <div style={{ flex: ".4", fontSize: ".8em" }}>
+          {/* Age : {MarketValue} <br />
+          <span>Height: 1.5cm</span> */}
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                icon={
+                  <StarBorder
+                    style={{ color: primaryTextColor, zIndex: "1000" }}
+                  />
+                }
+                checkedIcon={<Star style={{ zIndex: "1000" }} />}
+              />
+            }
+            label={
+              <span
+                className="primaryTextColor"
+                style={{
+                  fontSize: "0.8em",
+                  color: primaryTextColor,
+                  zIndex: "1000",
+                }}
+              >
+                farvorite
+              </span>
+            }
+            sx={{ fontSize: ".8em" }}
+          />
+          {/* // BUTTON CLICK DIV */}
+          <div onClick={handleNavigate}>
+            <BasicButton
+              style={{
+                textTransform: "none",
+                color: "white",
+                fontWeight: "bold",
+                zIndex: "1000",
+              }}
+              innerText={"View profile"}
+            />
+          </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

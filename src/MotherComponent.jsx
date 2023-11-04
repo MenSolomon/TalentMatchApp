@@ -295,9 +295,7 @@ const MotherComponent = () => {
                     return (
                       <li key={index}>
                         {" "}
-                        <NavLink to="/profile/default">
-                          <SavedFilters />{" "}
-                        </NavLink>
+                        <SavedFilters />
                       </li>
                     );
                   } else {

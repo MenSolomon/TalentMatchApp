@@ -260,7 +260,7 @@ const HomePage = () => {
       >
         {/* // Headers */}
         <div style={{ flex: ".12", background: "transparent" }}>
-          <h6 style={{ float: "left", fontWeight: "800" }}>Matched Players</h6>
+          <h6 style={{ float: "left", fontWeight: "800" }}>Flicks for you</h6>
           <h6
             style={{
               float: "right",

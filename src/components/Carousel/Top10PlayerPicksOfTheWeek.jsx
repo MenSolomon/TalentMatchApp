@@ -37,6 +37,18 @@ const Top10PlayerPicksOfTheWeek = ({
           }}
         >
           <div
+            className="newsGradient"
+            style={{
+              position: "absolute",
+              top: "0",
+              left: "0",
+              width: "100%",
+              height: "100%",
+              borderRadius: "1vw",
+              // background: "rgba(0, 0, 0, 0.2)",
+            }}
+          ></div>
+          <div
             style={{
               // flex: "1",
               display: "flex",

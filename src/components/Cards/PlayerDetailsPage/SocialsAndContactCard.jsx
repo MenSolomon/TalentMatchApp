@@ -63,6 +63,7 @@ const SocialAndContactAreaCard = ({ instagram, facebook }) => {
         }
         sx={{ fontSize: ".8em" }}
       />
+
       <BasicButton
         style={{
           textTransform: "none",

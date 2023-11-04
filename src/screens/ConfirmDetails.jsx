@@ -14,8 +14,12 @@ import {
   selectTempUsersDatabase,
   setTempUsersDatabase,
 } from "../statemanager/slices/TempDatabaseSlice";
+import { serverTimestamp, collection, doc, setDoc } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
+import { db } from "../Firebase/Firebase";
 
 const ConfirmDetails = () => {
+  //
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const roleSelected = useSelector(selectRoleSelected);
@@ -60,6 +64,7 @@ const ConfirmDetails = () => {
   // }, [pa]);
 
   const handleStartFreeTrial = () => {
+    const uuid = uuidv4();
     if (roleSelected === "") {
       alert("Please complete step 1 (Select your role before starting trial");
     } else {
@@ -102,6 +107,14 @@ const ConfirmDetails = () => {
                     ])
                   );
 
+                  // db function
+                  setDoc(doc(db, `users_db`, uuid), {
+                    ...userData,
+                    role: roleSelected,
+                    savedProfile: [],
+                  });
+                  //
+
                   navigate("/login");
                 }
               } else {
@@ -119,6 +132,11 @@ const ConfirmDetails = () => {
                   ])
                 );
 
+                setDoc(doc(db, `users_db`, uuid), {
+                  ...userData,
+                  role: roleSelected,
+                  savedProfile: [],
+                });
                 navigate("/login");
               }
             }
@@ -127,6 +145,8 @@ const ConfirmDetails = () => {
       }
     }
   };
+
+  //
 
   return (
     <div

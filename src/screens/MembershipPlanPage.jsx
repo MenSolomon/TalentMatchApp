@@ -254,6 +254,12 @@ const MembershipPlanPage = () => {
             }}
           >
             <SubscriptionCard
+              title="Freemium"
+              description="For personal use and exploration of technology "
+              price="0"
+              featuresHighlightArray={BasicFeaturesArray}
+            />
+            <SubscriptionCard
               title="Starter"
               description={`For personal use and exploration of technology with variety of access `}
               price="40"
@@ -263,12 +269,6 @@ const MembershipPlanPage = () => {
               title="Premium"
               description="Perfect for professional players with a good variety of football videos and stats "
               price="100"
-              featuresHighlightArray={BasicFeaturesArray}
-            />
-            <SubscriptionCard
-              title="Freemium"
-              description="For personal use and exploration of technology "
-              price="40"
               featuresHighlightArray={BasicFeaturesArray}
             />
           </div>
