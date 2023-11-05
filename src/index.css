@@ -515,6 +515,10 @@ video {
 }
 
 /* // turn of the squared dashes for all bootstrap carousels */
-.carousel-indicators{
-  display:none
+.carousel-indicators {
+  display: none;
+}
+
+div .carousel-indicators {
+  display: none;
 }

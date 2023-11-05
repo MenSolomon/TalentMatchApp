@@ -5,6 +5,7 @@ import ghana from "../../assets/images/ghana.png";
 import nigeria from "../../assets/images/nigeria.jpg";
 import senegal from "../../assets/images/senegal.png";
 import { Avatar } from "@mui/material";
+import { useState } from "react";
 
 const MatchedPlayersCarousel = ({ ReelsArray }) => {
   // using the
@@ -96,6 +97,8 @@ const MatchedPlayersCarousel = ({ ReelsArray }) => {
                   sx={{
                     width: 30,
                     height: 30,
+                    border: "1px solid #5585FE",
+
                     // right: "1vw",
                   }}
                 />

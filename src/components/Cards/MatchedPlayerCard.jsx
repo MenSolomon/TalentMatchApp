@@ -116,6 +116,7 @@ const MatchedPlayerCard = ({
               backgroundImage: `url(${PlayerImage.replace(/ /g, "%20")})`,
               backgroundSize: "cover",
               borderRadius: "15%",
+              backgroundPosition: "center",
             }}
           ></div>
         </div>

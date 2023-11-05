@@ -2,13 +2,11 @@ import { Button, Icon } from "@mui/material";
 import { useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../../statemanager/slices/ThemeProviderSlice";
 
-const BasicButton = ({ style, innerText, type, endIcon }) => {
-  // const themeProviderObject = useSelector(selectThemeProviderObject);
-  // const { buttonColor } = themeProviderObject;
-
+const BasicButtonWithEndIcon = ({ style, innerText, type, endIcon }) => {
   return (
     <Button
       type={type}
+      endIcon={<Icon>{endIcon}</Icon>}
       sx={{
         ...style,
         background: "#5585FE",
@@ -25,4 +23,4 @@ const BasicButton = ({ style, innerText, type, endIcon }) => {
   );
 };
 
-export default BasicButton;
+export default BasicButtonWithEndIcon;
