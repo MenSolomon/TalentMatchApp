@@ -254,7 +254,7 @@ const CoachAgentScoutVersionMotherComponent = () => {
           <IconButton sx={{ float: "right", marginLeft: ".5vw" }}>
             <NotificationAdd className="primaryColor" />
           </IconButton>
-          <Avatar
+          {/* <Avatar
             sx={{
               // marginLeft: "2vw",
               width: 55,
@@ -265,7 +265,7 @@ const CoachAgentScoutVersionMotherComponent = () => {
               float: "right",
             }}
             src={avatarImage}
-          ></Avatar>
+          ></Avatar> */}
 
           <LightAndDarkModeSwitch style={{ float: "right" }} />
         </div>

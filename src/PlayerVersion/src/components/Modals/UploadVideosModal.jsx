@@ -1,6 +1,7 @@
 import {
   CheckCircle,
   Close,
+  CloudCircleOutlined,
   ContentCopy,
   Download,
   Feedback,
@@ -88,205 +89,112 @@ export default function UploadVideoModal() {
       >
         <Fade in={open}>
           <div className="cardBackground primaryTextColor" style={style}>
+            {/* Upload Videos */}
             <div style={{ flex: "0.1", display: "flex" }}>
               <div
                 style={{
-                  flex: "0.8",
-                  // background: "yellow",
-                  display: "flex",
+                  flex: "0.9",
+                  // background: "red",
                   alignItems: "center",
+                  display: "flex",
                 }}
               >
-                <h3>Category</h3>
+                <h2>Upload Videos</h2>
               </div>
               <div
                 style={{
-                  flex: "0.2",
-                  // background: "blue",
-                  display: "flex",
+                  flex: "0.1",
+                  // background: "peru",
                   alignItems: "center",
-                  justifyContent: "space-between",
+                  display: "flex",
+                  gap: "10%",
                 }}
               >
-                <div>saving..</div>
                 <Feedback />
                 <Close />
               </div>
             </div>
-            <Divider style={{ background: "black" }} />
+            {/* End of Upload Videos */}
+
+            {/* Drag and Drop Files */}
             <div
               style={{
                 flex: "0.8",
-                // background: "peru",
+                // background: "yellow",
                 display: "flex",
-                // flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center ",
               }}
             >
-              {/* Details */}
+              {/* Selected files in column*/}
               <div
                 style={{
-                  flex: "0.6",
-                  // background: "red",
+                  // background: "peru",
                   display: "flex",
                   flexDirection: "column",
                 }}
               >
+                {/* column Top style  */}
+                <div style={{ flex: "0.2" }}></div>
+                {/* End of column Top style  */}
+
+                {/* CloudCircleOutlined  */}
                 <div
                   style={{
-                    flex: "0.2",
-                    // background: "green",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <h3>Details</h3>
-                </div>
-                <div
-                  style={{
-                    flex: "0.8",
+                    flex: "0.5",
                     // background: "yellow",
                     display: "flex",
-                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
+                  <CloudCircleOutlined sx={{ fontSize: "10em" }} />
+                </div>
+                {/* End of CloudCircleOutlined  */}
+
+                {/* Select_files */}
+                <div style={{ flex: "0.3" }}>
                   <div
                     style={{
                       display: "flex",
                       flexDirection: "column",
-                      gap: 20,
+                      alignItems: "center",
+                      // gap: "5px",
+                      // background: "green",
                     }}
                   >
-                    <BasicSelect
-                      label={"Category"}
-                      MenuItemArray={CategorySelectArray}
-                      widthSize={400}
-                    />
-                    <TextField
-                      // id="outlined-multiline-flexible"
-                      multiline
-                      rows={8}
-                      label="Description"
-                      size="medium"
-                      sx={{ width: "80%" }}
-                    />
-                  </div>
-                </div>
-              </div>
-              {/* End of Details */}
-
-              {/* Watch Videos */}
-              <div
-                style={{
-                  flex: "0.4",
-                  // background: "pink",
-                  display: "flex",
-                  flexDirection: "column",
-                  padding: "10px",
-                }}
-              >
-                {/* Display Video here */}
-                <div
-                  style={{
-                    flex: "0.5",
-                    background: "black",
-                  }}
-                ></div>
-                {/* End of Display Video here */}
-                <div
-                  style={{
-                    flex: "0.5",
-                    // background: "blue",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <div
-                    style={{
-                      flex: "0.5",
-                      // background: "yellow",
-                      display: "flex",
-                    }}
-                  >
-                    <div style={{ flex: "0.8" }}>
-                      <div style={{ padding: "10px" }}>
-                        <h6>Video Link</h6>
-                        <h6>https://youtu.be/any</h6>
-                      </div>
+                    <div>
+                      <h5>Drag and drop video files to Upload</h5>
+                      <small>
+                        Your videos will be private until you publish them
+                      </small>
                     </div>
-                    <div
-                      style={{
-                        flex: "0.2",
-                        // background: "yellow",
-                        alignItems: "center",
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <ContentCopy />
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      flex: "0.5",
-                      // background: "peru",
-                      display: "flex",
-                    }}
-                  >
-                    <div style={{ flex: "0.8" }}>
-                      <div style={{ padding: "10px" }}>
-                        <h6>Video Link</h6>
-                        <h6>https://youtu.be/any</h6>
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        flex: "0.2",
-                        // background: "yellow",
-                        alignItems: "center",
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <ContentCopy />
+                    <div>
+                      <Button variant="contained">select Files</Button>
                     </div>
                   </div>
                 </div>
+                {/* End of Select_files */}
               </div>
+            </div>
+            {/* End of Drag and Drop Files */}
 
-              {/* End of Watch Videos */}
+            {/* Terms and services guidelines */}
+            <div style={{ flex: "0.1", textAlign: "center" }}>
+              <small>
+                By submitting your video to TalentMatch, you acknowledge that
+                you agree to TalentMatch{" "}
+                <span style={{ color: "blue" }}>Terms of Service</span> and
+                <span style={{ color: "blue" }}>
+                  {" "}
+                  Community Guidelines.
+                </span>{" "}
+                Please be sure not to violate others copyright or privacy
+                rights.
+                <span style={{ color: "blue" }}>Learn more</span>
+              </small>
             </div>
-            {/* Footer */}
-            <Divider style={{ background: "black" }} />
-            <div
-              style={{
-                flex: "0.1",
-                // background: "green",
-                display: "flex",
-                // alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  flex: "0.8",
-                  // background: "pink",
-                  alignItems: "center",
-                  display: "flex",
-                  // justifyContent: "center",
-                }}
-              >
-                <h5>Checks complete. No issues found.</h5>
-              </div>
-              <div
-                style={{
-                  flex: "0.2",
-                  alignItems: "center",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <Button variant="contained">next</Button>
-              </div>
-            </div>
+            {/* End of Terms and services guidelines */}
           </div>
         </Fade>
       </Modal>

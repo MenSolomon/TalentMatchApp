@@ -1,14 +1,29 @@
-import { Carousel } from "react-bootstrap";
-import MatchedPlayerCard from "../Cards/MatchedPlayerCard";
-import manutd from "../../assets/images/manutd.png";
-import ghana from "../../assets/images/ghana.png";
-import nigeria from "../../assets/images/nigeria.jpg";
-import senegal from "../../assets/images/senegal.png";
 import { Avatar } from "@mui/material";
 import { useState } from "react";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
-const MatchedPlayersCarousel = ({ ReelsArray }) => {
-  // using the
+const MatchedPlayersCarousel = () => {
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 3000 },
+      items: 6,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 6,
+      slidesToSlide: 4,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
 
   const reelArray = [
     {
@@ -53,138 +68,123 @@ const MatchedPlayersCarousel = ({ ReelsArray }) => {
     },
   ];
 
-  return (
-    <Carousel
-      interval={100000}
-      //   controls={false}
-      touch={true}
-      style={{
-        // background: "black",
-        height: "100%",
-        width: "100%",
-        borderRadius: "1vw",
-        // paddingLeft: "5.5vw",
+  const [currentPlayingVideoIndex, setCurrentPlayingVideoIndex] = useState("");
 
-        gap: "1vw",
+  const handleVideoClick = (index) => {
+    // alert(`vida ${index}`);
+    // `video-${vidIndex}`
+
+    const alreadyPlayingvideoElement = document.getElementById(
+      `carouselVideo-${currentPlayingVideoIndex}`
+    );
+    const currentVideoToPlay = document.getElementById(
+      `carouselVideo-${index}`
+    );
+
+    if (currentPlayingVideoIndex === "") {
+      setCurrentPlayingVideoIndex(index);
+    } else {
+      if (alreadyPlayingvideoElement && !alreadyPlayingvideoElement.paused) {
+        // alert("old video pause new ply");
+        currentVideoToPlay.play();
+
+        if (currentVideoToPlay && !currentVideoToPlay.paused) {
+          alreadyPlayingvideoElement.pause();
+        }
+      }
+    }
+  };
+
+  return (
+    <div
+      style={{
+        position: "relative",
+        height: "100%",
+        width: "77vw",
+        // background: "red",
       }}
     >
-      <Carousel.Item style={{ display: "flex" }}>
-        {reelArray.slice(0, 6).map((data, index) => {
+      <Carousel responsive={responsive}>
+        {reelArray.map((data, index) => {
           const { publisherImg, video } = data;
 
           return (
             <div
+              // onClick={() => {
+              //   handleVideoClick(index);
+              // }}
               key={index}
-              style={{
-                borderRadius: "1vw",
-                position: "relative",
-                paddingTop: "1vh",
-                width: "13vw",
-              }}
             >
-              <div
-                style={{
-                  position: "absolute",
-                  zIndex: "3",
-                  top: "2vh",
-                  left: ".5vw",
-                  display: "flex",
-                }}
-              >
-                <Avatar
-                  className="cardBackground"
-                  src={publisherImg}
-                  sx={{
-                    width: 30,
-                    height: 30,
-                    border: "1px solid #5585FE",
-
-                    // right: "1vw",
-                  }}
-                />
-
-                <h6
-                  style={{
-                    color: "black",
-                    position: "relative",
-                    top: "1vh",
-                    fontSize: ".75em",
-                    fontWeight: "bolder",
-                  }}
-                >
-                  {" "}
-                  {/* &nbsp; Okachi */}
-                </h6>
-              </div>
-              <video
-                src={video}
-                width="160vw"
-                style={{ height: "33vh" }}
-                controls
-              ></video>{" "}
+              <VideoCard
+                publisherImg={publisherImg}
+                video={video}
+                vidIndex={index}
+              />{" "}
             </div>
           );
-        })}{" "}
-      </Carousel.Item>
-
-      {/* <Carousel.Item style={{ display: "flex", gap: ".5vw" }}>
-        {reelArray.slice(6, 12).map((data, index) => {
-          const { publisherImg, video } = data;
-
-          return (
-            <div
-              key={index}
-              style={{
-                borderRadius: "1vw",
-                position: "relative",
-                paddingTop: "1vh",
-                width: "13vw",
-              }}
-            >
-              <div
-                style={{
-                  position: "absolute",
-                  zIndex: "10000",
-                  top: "2vh",
-                  left: ".5vw",
-                  display: "flex",
-                }}
-              >
-                <Avatar
-                  className="cardBackground"
-                  src={publisherImg}
-                  sx={{
-                    width: 30,
-                    height: 30,
-                    // right: "1vw",
-                  }}
-                />
-
-                <h6
-                  style={{
-                    color: "black",
-                    position: "relative",
-                    top: "1vh",
-                    fontSize: ".75em",
-                    fontWeight: "bolder",
-                  }}
-                >
-                  {" "}
-                  &nbsp; Okachi{" "}
-                </h6>
-              </div>
-              <video
-                src={video}
-                width="160vw"
-                style={{ height: "33vh" }}
-                controls
-              ></video>{" "}
-            </div>
-          );
-        })}{" "}
-      </Carousel.Item> */}
-    </Carousel>
+        })}
+      </Carousel>
+    </div>
   );
 };
 
 export default MatchedPlayersCarousel;
+
+const VideoCard = ({ publisherImg, video, vidIndex }) => {
+  return (
+    <div
+      style={{
+        borderRadius: "1vw",
+        position: "relative",
+        paddingTop: "1vh",
+        width: "13vw",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          zIndex: "3",
+          top: "2vh",
+          left: ".5vw",
+          display: "flex",
+        }}
+      >
+        <Avatar
+          className="cardBackground"
+          src={publisherImg}
+          sx={{
+            width: 30,
+            height: 30,
+            border: "1px solid #5585FE",
+            cursor: "pointer",
+            // right: "1vw",
+          }}
+        />
+
+        <h6
+          style={{
+            color: "black",
+            position: "relative",
+            top: "1vh",
+            fontSize: ".75em",
+            fontWeight: "bolder",
+          }}
+        >
+          {" "}
+          {/* &nbsp; Okachi */}
+        </h6>
+      </div>
+      {/* <div onClick={() => handleVideoClick(index)}> */}
+      <video
+        id={`carouselVideo-${vidIndex}`}
+        width="160vw"
+        style={{ height: "33vh" }}
+        controls
+      >
+        {" "}
+        <source src={video} type="video/mp4" />
+      </video>{" "}
+      {/* </div> */}
+    </div>
+  );
+};

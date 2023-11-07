@@ -37,20 +37,20 @@ const FreeTrial = () => {
           flexWrap: "wrap",
         }}
       >
-        <FreetrialCard name="Coach" roleImage="/public/coachImage.png" />
+        <FreetrialCard name="Coach" roleImage="/public/CoachBlue.png" />
         <FreetrialCard
           name="Player"
-          roleImage="/public/playerImage.png"
+          roleImage="/public/PlayerBlue.png"
           imageStyle={{ maxWidth: "60px", height: "89px" }}
         />
         <FreetrialCard
           name="Agent"
-          roleImage="/public/agentImage.png"
+          roleImage="/public/AgentBlue.png"
           imageStyle={{ maxWidth: "95px", height: "89px" }}
         />
         <FreetrialCard
           name="Scout"
-          roleImage="/public/scoutImage.png"
+          roleImage="/public/ScoutBlue.png"
           imageStyle={{ maxWidth: "75px", height: "89px" }}
         />
       </div>

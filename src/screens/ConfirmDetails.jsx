@@ -34,7 +34,7 @@ const ConfirmDetails = () => {
     firstName,
     surname,
     DateOfBirth,
-    organization,
+
     phoneNumber,
     email,
     Nationality,
@@ -94,7 +94,7 @@ const ConfirmDetails = () => {
                   alert("Account Exists");
                 } else {
                   // THis is the part where you finally navigate to login page and accept data
-                  alert("sending data and setting up account for freetrial");
+                  // alert("sending data and setting up account for freetrial");
 
                   dispatch(
                     setTempUsersDatabase([
@@ -114,14 +114,17 @@ const ConfirmDetails = () => {
                     savedProfile: [],
                   });
                   //
+                  // dispatch(setLoginStatus(true));
+                  // dispatch(setUserDetailsObject(userData));
+                  // navigate("/");
 
                   navigate("/login");
                 }
               } else {
                 // THIS IS THE PART WHERE THAT HANDLES AN EMPTY DATABASE WHICH WILL BE USED PREFEREABLY ONLY ONCE
-                alert(
-                  "sending first user into our database and setting up account for freetrial"
-                );
+                // alert(
+                //   "sending first user into our database and setting up account for freetrial"
+                // );
                 dispatch(
                   setTempUsersDatabase([
                     {
@@ -190,13 +193,13 @@ const ConfirmDetails = () => {
  */}
 
             {roleSelected === "Player" ? (
-              <img src="/public/playerImage.png" width="70px" height="80px" />
+              <img src="/public/PlayerBlue.png" width="70px" height="80px" />
             ) : roleSelected === "Agent" ? (
-              <img src="/public/agentImage.png" width="100px" />
+              <img src="/public/AgentBlue.png" width="100px" />
             ) : roleSelected === "Coach" ? (
-              <img src="/public/coachImage.png" width="100px" />
+              <img src="/public/CoachBlue.png" width="100px" />
             ) : roleSelected === "Scout" ? (
-              <img src="/public/scoutImage.png" width="100px" />
+              <img src="/public/ScoutBlue.png" width="100px" />
             ) : (
               <img alt="No Role selected" width="100px" />
             )}
@@ -297,8 +300,13 @@ const ConfirmDetails = () => {
                   <span style={{ color: "black" }}> {Nationality} </span>{" "}
                 </li>
                 <li>
-                  Organization/club name:{" "}
-                  <span style={{ color: "black" }}> {organization} </span>{" "}
+                  {roleSelected === "Player" ? "Club Name" : "Organisation"}
+                  <span style={{ color: "black" }}>
+                    {" "}
+                    {roleSelected === "Player"
+                      ? userData?.club
+                      : userData?.organization}{" "}
+                  </span>{" "}
                 </li>
               </ul>
             </div>

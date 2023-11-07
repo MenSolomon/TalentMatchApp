@@ -248,18 +248,6 @@ const MotherComponent = () => {
           <IconButton sx={{ float: "right", marginLeft: ".5vw" }}>
             <NotificationAdd className="primaryColor" />
           </IconButton>
-          <Avatar
-            sx={{
-              // marginLeft: "2vw",
-              width: 55,
-              height: 55,
-              border: "4px solid blue",
-              marginLeft: ".4vw",
-              marginRight: ".4vw",
-              float: "right",
-            }}
-            src={avatarImage}
-          ></Avatar>
 
           <UploadPlayer
             image={"duo"}
@@ -280,6 +268,7 @@ const MotherComponent = () => {
             display: "flex",
             flexDirection: "column",
             paddingTop: "5vh",
+            // background: "yellow",
           }}
         >
           {/* // USE A MAP FOR THIS */}

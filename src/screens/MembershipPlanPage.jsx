@@ -280,7 +280,7 @@ const MembershipPlanPage = () => {
           style={{
             width: "100%",
             height: "55vh",
-            background: "red",
+            // background: "red",
             paddingTop: "30vh",
           }}
         >

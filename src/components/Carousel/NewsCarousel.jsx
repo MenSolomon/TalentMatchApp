@@ -5,14 +5,52 @@ import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInA
 import ghana from "../../assets/images/ghana.png";
 import MatchedPlayerCard from "../Cards/MatchedPlayerCard";
 import PlayerComparisonAccordion from "../Accordions/PlayerComparisonAccordion/PlayerComparisonAccordion";
+import { useEffect, useState } from "react";
 
 const NewsCarousel = ({ NewsArray }) => {
   const MatchedPlayersArray = useSelector(selectPlayersInAgencyArray);
 
+  // const [activeIndex, setActiveIndex] = useState(0);
+  // const [prevIndex, setPrevIndex] = useState(0);
+
+  // const handleSelect = (selectedIndex, e) => {
+  //   setPrevIndex(activeIndex);
+  //   setActiveIndex(selectedIndex);
+  // };
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleSelect = (selectedIndex) => {
+    setActiveIndex(selectedIndex);
+  };
+
+  // Store the index of the previously active item
+  const [prevActiveIndex, setPrevActiveIndex] = useState(0);
+
+  useEffect(() => {
+    // Pause the video of the previously active item when a new item becomes active
+    const videoElement = document.getElementById(`video-${prevActiveIndex}`);
+    if (videoElement) {
+      videoElement.pause();
+    }
+    setPrevActiveIndex(activeIndex);
+  }, [activeIndex]);
+
   return (
     <Carousel
+      activeIndex={activeIndex}
+      onSelect={handleSelect}
       //   controls={false}
       //   interval={1000}
+      onSlide={() => {
+        // Additional code to pause videos that are leaving the view
+        const videoElement = document.getElementById(
+          `video-${prevActiveIndex}`
+        );
+        if (videoElement) {
+          videoElement.pause();
+        }
+      }}
       style={{
         // background: "black",
         height: "100%",
@@ -97,6 +135,7 @@ const NewsCarousel = ({ NewsArray }) => {
                     }}
                   >
                     <video
+                      id={`video-${index}`}
                       src="../../../public/believerJuggling.mp4"
                       width="100%"
                       style={{ position: "absolute" }}
@@ -116,32 +155,3 @@ const NewsCarousel = ({ NewsArray }) => {
 };
 
 export default NewsCarousel;
-
-// import { Carousel } from "antd";
-// const contentStyle = {
-//   height: "44.5vh",
-//   color: "#fff",
-//   lineHeight: "160px",
-//   textAlign: "center",
-//   background: "#364d79",
-// };
-// const NewsCarousel = () => (
-//   <Carousel
-//     autoplay
-//     style={{ width: "100%", height: "10vh", position: "absolute" }}
-//   >
-//     <div>
-//       <h3 style={contentStyle}>1</h3>
-//     </div>
-//     <div>
-//       <h3 style={contentStyle}>2</h3>
-//     </div>
-//     <div>
-//       <h3 style={contentStyle}>3</h3>
-//     </div>
-//     <div>
-//       <h3 style={contentStyle}>4</h3>
-//     </div>
-//   </Carousel>
-// );
-// export default NewsCarousel;

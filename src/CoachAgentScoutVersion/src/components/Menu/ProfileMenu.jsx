@@ -6,6 +6,8 @@ import { KeyboardArrowDown } from "@mui/icons-material";
 import { Navigate, useNavigate } from "react-router-dom";
 import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
 import { useSelector } from "react-redux";
+import { Avatar } from "@mui/material";
+import avatarImage from "../../assets/images/avatar.jpg";
 
 export default function ProfileMenu({ style, name }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -25,7 +27,7 @@ export default function ProfileMenu({ style, name }) {
 
   return (
     <div style={importStyle}>
-      <Button
+      {/* <Button
         className="primaryColor"
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
@@ -36,7 +38,22 @@ export default function ProfileMenu({ style, name }) {
         onClick={handleClick}
       >
         {firstName.substring(0, 10) + " " + surname.substring(0, 10)}
-      </Button>
+      </Button> */}
+
+      <Avatar
+        onClick={handleClick}
+        sx={{
+          // marginLeft: "2vw",
+          width: 55,
+          height: 55,
+          border: "4px solid blue",
+          marginLeft: ".4vw",
+          marginRight: ".4vw",
+          float: "right",
+        }}
+        src={avatarImage}
+      ></Avatar>
+
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}

@@ -124,13 +124,13 @@ const SubscribeTrial = () => {
  */}
 
               {roleSelected === "Player" ? (
-                <img src="/public/playerImage.png" width="70px" height="80px" />
+                <img src="/public/PlayerBlue.png" width="70px" height="80px" />
               ) : roleSelected === "Agent" ? (
-                <img src="/public/agentImage.png" width="100px" />
+                <img src="/public/AgentBlue.png" width="100px" />
               ) : roleSelected === "Coach" ? (
-                <img src="/public/coachImage.png" width="100px" />
+                <img src="/public/CoachBlue.png" width="100px" />
               ) : roleSelected === "Scout" ? (
-                <img src="/public/scoutImage.png" width="100px" />
+                <img src="/public/ScoutBlue.png" width="100px" />
               ) : (
                 <img alt="No Role selected" width="100px" />
               )}
