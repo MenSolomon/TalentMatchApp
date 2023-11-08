@@ -16,7 +16,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "97.5%",
+  width: "92.5%",
   height: "97%",
   bgcolor: "background.paper",
   border: "transparent",
@@ -109,7 +109,11 @@ export default function WelcomeMessageModal() {
                 // backgroundSize: "cover",
               }}
             >
-              <img src={welcomMessageImage} width="550px" />
+              <img
+                //  src={welcomMessageImage}
+                src="https://img.freepik.com/free-vector/sports-games-abstract-concept-illustration_335657-3748.jpg?w=740&t=st=1699350181~exp=1699350781~hmac=f6d2e24718cbb074e2d045449df6b748f1ca15ab8978f571dab6db342f17b2ef"
+                width="550px"
+              />
             </div>
           </div>
         </div>

@@ -16,8 +16,12 @@ import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSl
 import CreateProfileModal from "./components/Modals/CreateProfileModal";
 import UploadPlayer from "./components/Tooltips/UploadPlayer";
 import WelcomeMessageModal from "./components/Modals/WelcomeMessageModal";
+import { selectUserDetailsObject } from "./statemanager/slices/LoginUserDataSlice";
 
 const MotherComponent = () => {
+  const LoginUserDetails = useSelector(selectUserDetailsObject);
+  const { savedProfile } = LoginUserDetails;
+
   const menuButtonsArray = [
     { name: "Home", icon: "home", path: "/" },
     // The none values are for the savedFilters which is an accordion and not a button.. skipped over it in the map
@@ -198,7 +202,9 @@ const MotherComponent = () => {
   return (
     <div
       style={{
+        visibility: savedProfile.length > 0 ? "visible" : "hidden",
         display: "flex",
+
         flexDirection: "column",
         height: "100vh",
         width: "100vw",
@@ -266,6 +272,7 @@ const MotherComponent = () => {
           style={{
             flex: ".18",
             display: "flex",
+
             flexDirection: "column",
             paddingTop: "5vh",
             // background: "yellow",

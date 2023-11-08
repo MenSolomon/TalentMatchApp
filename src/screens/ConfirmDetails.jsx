@@ -17,6 +17,7 @@ import {
 import { serverTimestamp, collection, doc, setDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../Firebase/Firebase";
+import { selectUsersDatabase } from "../statemanager/slices/DatabaseSlice";
 
 const ConfirmDetails = () => {
   //
@@ -24,23 +25,16 @@ const ConfirmDetails = () => {
   const dispatch = useDispatch();
   const roleSelected = useSelector(selectRoleSelected);
   const userData = useSelector(selectUserSignUpData);
-  const allUsers = useSelector(selectTempUsersDatabase);
+  const allUsers = useSelector(selectUsersDatabase);
   const today = moment();
   //
   const [agreement, setAgreement] = useState(false);
   const [privacy, setPrivacy] = useState(false);
 
-  const {
-    firstName,
-    surname,
-    DateOfBirth,
-
-    phoneNumber,
-    email,
-    Nationality,
-  } = userData;
+  const { firstName, surname, DateOfBirth, phoneNumber, email, Nationality } =
+    userData;
   // Add one month to the current date
-  const oneMonthLater = today.add(3, "months");
+  const oneMonthLater = today.add(1, "months");
 
   // Now, 'oneMonthLater' contains the date one month from today
   console.log(oneMonthLater.format("MMMM Do YYYY, h:mm a"));
@@ -103,6 +97,9 @@ const ConfirmDetails = () => {
                         ...userData,
                         role: roleSelected,
                         savedProfile: [],
+                        accountId: uuid,
+
+                        // dateCreated: serverTimestamp(),
                       },
                     ])
                   );
@@ -112,6 +109,8 @@ const ConfirmDetails = () => {
                     ...userData,
                     role: roleSelected,
                     savedProfile: [],
+                    dateCreated: serverTimestamp(),
+                    accountId: uuid,
                   });
                   //
                   // dispatch(setLoginStatus(true));
@@ -131,6 +130,7 @@ const ConfirmDetails = () => {
                       ...userData,
                       role: roleSelected,
                       savedProfile: [],
+                      accountId: uuid,
                     },
                   ])
                 );
@@ -139,6 +139,8 @@ const ConfirmDetails = () => {
                   ...userData,
                   role: roleSelected,
                   savedProfile: [],
+                  dateCreated: serverTimestamp(),
+                  accountId: uuid,
                 });
                 navigate("/login");
               }

@@ -30,6 +30,7 @@ import {
   setLoginStatus,
   setUserDetailsObject,
 } from "../statemanager/slices/LoginUserDataSlice";
+import { selectUsersDatabase } from "../statemanager/slices/DatabaseSlice";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -46,7 +47,7 @@ const Login = () => {
 
   const Navigate = useNavigate();
   const dispatch = useDispatch();
-  const AllUsersDatabase = useSelector(selectTempUsersDatabase);
+  const AllUsersDatabase = useSelector(selectUsersDatabase);
 
   const onSubmit = (formData) => {
     // alert(formData.email, formData.password);

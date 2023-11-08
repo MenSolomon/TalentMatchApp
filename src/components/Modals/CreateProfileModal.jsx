@@ -34,6 +34,8 @@ import {
   setAutoCompletePlayerPosition,
 } from "../../statemanager/slices/OtherComponentStatesSlice";
 import BasicSelect from "../Selects/BasicSelect";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { db } from "../../Firebase/Firebase";
 
 const style = {
   position: "absolute",
@@ -167,6 +169,8 @@ export default function CreateProfileModal({ ProfileType }) {
       return data.email !== email;
     });
 
+    const { savedProfile, accountId } = loginUserDetails;
+
     if (savedProfile.length <= 0) {
       // cont newProfile == log
       // alert("less");
@@ -183,6 +187,14 @@ export default function CreateProfileModal({ ProfileType }) {
       );
       // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
 
+      // alert(accountId);
+      ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
+
+      const collectionRef = doc(db, `users_db`, accountId);
+      updateDoc(collectionRef, {
+        savedProfile: arrayUnion({ label: "Default", filter: {} }),
+      });
+
       dispatch(
         setTempUsersDatabase([
           ...unMacthedPlayerDatabase,
@@ -192,31 +204,48 @@ export default function CreateProfileModal({ ProfileType }) {
           },
         ])
       );
+
+      handleClose();
     } else {
       // loginUserDetails
       // allUsers
-      const { savedProfile } = loginUserDetails;
 
-      dispatch(
-        setUserDetailsObject({
-          ...loginUserDetails,
-          savedProfile: [...savedProfile, { label: profileName, filter: {} }],
-        })
-      );
+      // Updating the current userdatabase in the state manageer for performance enhancing
+      // dispatch(
+      //   setUserDetailsObject({
+      //     ...loginUserDetails,
+      //     savedProfile: [...savedProfile, { label: profileName, filter: {} }],
+      //   })
+      // );
 
-      dispatch(
-        setTempUsersDatabase([
-          ...unMacthedPlayerDatabase,
-          {
-            ...loginUserDetails,
-            savedProfile: [...savedProfile, { label: profileName, filter: {} }],
-          },
-        ])
-      );
+      // alert(accountId);
+
+      if (profileName !== "" && profileName.toLowerCase() !== "") {
+        ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
+        const collectionRef = doc(db, `users_db`, accountId);
+        updateDoc(collectionRef, {
+          savedProfile: arrayUnion({ label: profileName, filter: {} }),
+        });
+
+        dispatch(
+          setTempUsersDatabase([
+            ...unMacthedPlayerDatabase,
+            {
+              ...loginUserDetails,
+              savedProfile: [
+                ...savedProfile,
+                { label: profileName, filter: {} },
+              ],
+            },
+          ])
+        );
+
+        handleClose();
+      } else {
+        alert("Please enter a profile name (cannot be name default)");
+      }
     }
     // changing the click current clicked value to the edited name
-
-    handleClose();
 
     // reset the textfields after save
   };

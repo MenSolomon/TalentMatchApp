@@ -12,7 +12,7 @@ import TempDatabaseReducer from "./slices/TempDatabaseSlice";
 import LoginUserDataSlice from "./slices/LoginUserDataSlice";
 import SavedProfilesReducer from "./slices/SavedProfileSlice";
 import OtherComponentStatesReducer from "./slices/OtherComponentStatesSlice";
-
+import DatabaseReducer from "./slices/DatabaseSlice";
 const persistConfig = {
   key: "root",
   version: 1,
@@ -39,6 +39,7 @@ const reducer = combineReducers({
   UserLoginData: LoginUserDataSlice,
   SavedProfiles: SavedProfilesReducer,
   OtherComponentStates: OtherComponentStatesReducer,
+  Database: DatabaseReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);
