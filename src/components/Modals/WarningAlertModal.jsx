@@ -50,7 +50,7 @@ export default function WarningAlertModal() {
 
   return (
     <div>
-      {/* <Button onClick={handleOpen}>Open modal</Button> */}
+      <Button>Open modal</Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

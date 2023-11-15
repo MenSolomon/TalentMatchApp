@@ -62,9 +62,9 @@ const CoachAgentScoutVersionDashboard = () => {
               />
 
               <span style={{ textAlign: "center" }}>
-                Want to add a player to your talent meets's databse? Create new
-                player profile and groom player with to become the next big name
-                in football
+                Want to add a player to talent meet's database? Create new
+                player profile and groom player to become the next big name in
+                football
               </span>
               <UploadPlayerToAgencyModal />
             </div>

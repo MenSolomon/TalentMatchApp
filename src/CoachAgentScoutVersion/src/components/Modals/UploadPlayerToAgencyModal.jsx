@@ -187,6 +187,7 @@ function CreateAPlayerProfileModal() {
                   type="number"
                   variant="outlined"
                   fullWidth={true}
+                  className="primaryTextColor"
                   sx={{ width: "23vw" }}
                 />
               </div>

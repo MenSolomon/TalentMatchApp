@@ -245,7 +245,9 @@ const PlayerVersionMotherComponent = () => {
             name="Active user name"
           />
 
-          <IconButton sx={{ float: "right", marginLeft: ".5vw" }}>
+          <IconButton
+            sx={{ float: "right", marginLeft: ".5vw", marginTop: "1vh" }}
+          >
             <NotificationAdd className="primaryColor" />
           </IconButton>
           {/* <Avatar

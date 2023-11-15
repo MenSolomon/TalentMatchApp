@@ -29,7 +29,7 @@ const BackEndDataCatalog = ({ children }) => {
   const currentCreatedSearchProfileName = useSelector(selectCurrentProfile);
   const loginUserObject = useSelector(selectUserDetailsObject);
 
-  const { accountId } = loginUserObject;
+  // const { accountId } = loginUserObject;
 
   // dispatch(setUserDetailsObject(matchUserAccount[0]));
 
@@ -66,10 +66,11 @@ const BackEndDataCatalog = ({ children }) => {
       dispatch(setUsersDatabase(items));
 
       const updatedLoginUserDetails = items.filter((data) => {
-        return data.accountId === accountId;
+        return data.accountId ===  loginUserObject?.accountId;
       });
 
-      if (accountId) {
+      if (loginUserObject?.accountId
+        ) {
         dispatch(setUserDetailsObject(updatedLoginUserDetails[0]));
         console.log("UdatedLoginUserDetails", updatedLoginUserDetails);
       }

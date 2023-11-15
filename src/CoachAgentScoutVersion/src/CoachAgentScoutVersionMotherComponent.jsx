@@ -180,6 +180,10 @@ const CoachAgentScoutVersionMotherComponent = () => {
   color:${primaryTextColor}
 }
 
+.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input,.css-17at8t4-MuiFormLabel-root-MuiInputLabel-root,.css-1o9s3wi-MuiInputBase-input-MuiOutlinedInput-input{
+  color:${primaryTextColor}
+
+}
 
 
   `;
@@ -253,11 +257,11 @@ const CoachAgentScoutVersionMotherComponent = () => {
           }}
         >
           <ProfileMenu
-            style={{ float: "right", marginLeft: "1vw", borderBottom: "none" }}
+            style={{ float: "right", borderBottom: "none" }}
             name="Active user name"
           />
 
-          <IconButton sx={{ float: "right", marginLeft: ".5vw" }}>
+          <IconButton sx={{ float: "right", marginTop: "1vh" }}>
             <NotificationAdd className="primaryColor" />
           </IconButton>
           {/* <Avatar

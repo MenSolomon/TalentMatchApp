@@ -96,7 +96,7 @@ const NewsCard = ({ title, image, url, source }) => {
                   gap: "20px",
                 }}
               >
-                <div>
+                {/* <div>
                   <IconButton>
                     <ThumbUp sx={{ fontSize: "15px", color: "white" }} />
                   </IconButton>
@@ -109,7 +109,7 @@ const NewsCard = ({ title, image, url, source }) => {
                   </IconButton>
 
                   <small>0</small>
-                </div>
+                </div> */}
               </div>
             </div>
 

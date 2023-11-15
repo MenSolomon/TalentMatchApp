@@ -222,7 +222,6 @@ const App = () => {
         <Route path="*" element={<ErrorPageNotFound />} />
       </Routes>
       {/* //// Alert Modal to display error messages */}
-
       <WarningAlertModal />
     </ThemeProvider>
   );

@@ -31,23 +31,38 @@ const style = {
 
 export default function WelcomeMessageModal() {
   const LoginUserDetails = useSelector(selectUserDetailsObject);
-  //   const handleOpen = () => setOpen(true);
+  // const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+
   //   const handleClose = () => setOpen(false);
 
-  const { savedProfile } = LoginUserDetails;
+  // const { savedProfile } = LoginUserDetails;
   const [open, setOpen] = React.useState(
-    savedProfile.length > 0 ? false : true
+    LoginUserDetails?.savedProfile.length > 0 ? false : true
   );
 
   React.useEffect(() => {
-    if (savedProfile.length > 0) {
+    if (LoginUserDetails?.savedProfile.length > 0) {
       setOpen(false);
     }
   }, [LoginUserDetails]);
 
   return (
     <div>
-      {/* <Button onClick={handleOpen}>Open modal</Button> */}
+      {/* <Button
+        sx={{
+          textTransform: "none",
+
+          fontWeight: "900",
+          marginRight: "1vw",
+          color: "white",
+          background: "#5585FE",
+        }}
+        onClick={handleOpen}
+      >
+        {" "}
+        Show Interest{" "}
+      </Button> */}
       <Modal
         open={open}
         // onClose={handleClose}

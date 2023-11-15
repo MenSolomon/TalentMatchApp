@@ -12,6 +12,9 @@ import {
   selectPlayersInAgencyArray,
 } from "../statemanager/slices/PlayersInAgencySlice";
 import { useSelector } from "react-redux";
+import WarningAlertModal from "../components/Modals/WarningAlertModal";
+import CreateProfileModal from "../components/Modals/CreateProfileModal";
+import WelcomeMessageModal from "../components/Modals/WelcomeMessageModal";
 
 const HomePage = () => {
   // const NewsData = [
@@ -213,9 +216,9 @@ const HomePage = () => {
           >
             <div style={{ flex: ".2", background: "transparent" }}>
               {" "}
+              {/* <CreateProfileModal /> */}
               <h4 style={{ fontWeight: "900" }}>
-                {" "}
-                Player Picks of the Week{" "}
+                Player Picks of the Week
               </h4>{" "}
             </div>
             {/* // Player Pick Card */}
@@ -260,6 +263,8 @@ const HomePage = () => {
       >
         {/* // Headers */}
         <div style={{ flex: ".1", background: "transparent" }}>
+          <WelcomeMessageModal />
+
           <h6 style={{ float: "left", fontWeight: "800" }}>Flicks for you</h6>
           {/* <h6
             style={{

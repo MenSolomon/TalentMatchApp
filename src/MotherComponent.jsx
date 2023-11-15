@@ -279,7 +279,8 @@ const MotherComponent = () => {
   return (
     <div
       style={{
-        visibility: savedProfile.length > 0 ? "visible" : "hidden",
+        visibility:
+          savedProfile && savedProfile?.length > 0 ? "visible" : "hidden",
         display: "flex",
 
         flexDirection: "column",
@@ -328,7 +329,7 @@ const MotherComponent = () => {
             name="Active user name"
           />
 
-          <IconButton sx={{ float: "right" }}>
+          <IconButton sx={{ float: "right", marginTop: "1vh" }}>
             <NotificationAdd className="primaryColor" />
           </IconButton>
 
