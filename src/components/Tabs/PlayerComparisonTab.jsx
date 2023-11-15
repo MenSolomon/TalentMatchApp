@@ -4,6 +4,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import { CircularProgress } from "@mui/material";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -18,7 +19,7 @@ function CustomTabPanel(props) {
       style={{ height: "92%" }}
     >
       {value === index && (
-        <Box sx={{ p: 1  }}>
+        <Box sx={{ p: 1 }}>
           <Typography sx={{ fontWeight: "bolder", color: "white" }}>
             {children}
           </Typography>
@@ -71,9 +72,10 @@ export default function PlayerComparisonDrawerTab({
 
           {/* ======  The propertyDetails tabs are created with an array (PropertyTabItemsArray) a prop,  which is called when we use this component is used in the propertyDetails table .. This is for dynamic rendering of the NavBars in anyCase where we want to change or edit the menu items   */}
 
-          {PlayerComparisonTabItemsArray.map((data, key) => {
+          {PlayerComparisonTabItemsArray.map((data, index) => {
             return (
               <Tab
+                key={index}
                 className="primaryColor"
                 label={data}
                 sx={{
@@ -81,7 +83,7 @@ export default function PlayerComparisonDrawerTab({
                   // marginRight: "2vw",
                   fontWeight: "bold",
                 }}
-                {...a11yProps(key)}
+                {...a11yProps(index)}
               />
             );
           })}
@@ -103,7 +105,19 @@ export default function PlayerComparisonDrawerTab({
             <CustomTabPanel value={value} index={index} key={index}>
               {/* {data} */}
 
-              <Suspense fallback={<div> ...Loading </div>}>
+              <Suspense
+                fallback={
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <CircularProgress />
+                  </div>
+                }
+              >
                 <TaskBarComponent />
               </Suspense>
             </CustomTabPanel>

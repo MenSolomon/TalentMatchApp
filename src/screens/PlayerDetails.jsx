@@ -95,7 +95,7 @@ const PlayerDetails = () => {
     <div
       style={{
         width: "100%",
-        height: "100%",
+        height: "95%",
         // background: "blue",
         display: "grid",
         gridTemplateRows:
@@ -109,10 +109,10 @@ const PlayerDetails = () => {
     >
       <div style={{ gridArea: "collapse" }}>
         {" "}
-        <Button onClick={handleSetCollapseCards}>
+        {/* <Button onClick={handleSetCollapseCards}>
           {isCardsCollapsedVariable == false ? "Collapse" : "expand"}{" "}
         </Button>{" "}
-        {isCardsCollapsedVariable.toString()}
+        {isCardsCollapsedVariable.toString()} */}
       </div>
       {/* // Card Display Area */}
       <div

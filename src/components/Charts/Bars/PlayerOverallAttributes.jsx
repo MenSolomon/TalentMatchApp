@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Chart as ChartJS,
   LineElement,
@@ -33,21 +32,43 @@ const PlayerOverallAttributes = () => {
       {
         label: "Player Attributes",
         data: [13, 16, 19, 3, 8, 10, 3, 5],
-        backgroundColor: "aqua",
-        borderColor: "white",
+        backgroundColor: "red", // Set the background color here
+        borderColor: "#5585FE",
         borderWidth: 2,
+        pointBackgroundColor: "#5585FE", // Set the dot color
+        pointBorderColor: "white", // Set the dot border color
+        fill: "origin", // Connect dots with filled area
       },
-      //   {
-      //     label: "Defending",
-      //     data: [3, 2, 19],
-      //     backgroundColor: "red",
-      //     borderColor: "black",
-      //   },
     ],
   };
 
-  const options = {};
-
+  const options = {
+    scales: {
+      r: {
+        beginAtZero: true,
+        min: 0,
+        max: 20,
+        ticks: {
+          stepSize: 1,
+          callback: (value, tick, values) => {
+            console.log(value);
+          },
+        },
+        pointLabels: {
+          display: true,
+          font: 0,
+        },
+      },
+    },
+    plugins: {
+      tooltip: {
+        enabled: false,
+      },
+      legend: {
+        display: false,
+      },
+    },
+  };
   return (
     <div>
       <Radar data={data} options={options} style={{ width: "80%" }}></Radar>

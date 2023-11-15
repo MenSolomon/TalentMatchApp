@@ -31,11 +31,13 @@ import {
   setUserDetailsObject,
 } from "../statemanager/slices/LoginUserDataSlice";
 import { selectUsersDatabase } from "../statemanager/slices/DatabaseSlice";
+import WarningAlertModal from "../components/Modals/WarningAlertModal";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
   // Settings for password input
   const [showPassword, setShowPassword] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -49,6 +51,10 @@ const Login = () => {
   const dispatch = useDispatch();
   const AllUsersDatabase = useSelector(selectUsersDatabase);
 
+  const resetErrorMessage = () => {
+    setErrorMessage("");
+  };
+
   const onSubmit = (formData) => {
     // alert(formData.email, formData.password);
 
@@ -61,12 +67,15 @@ const Login = () => {
       if (matchUserAccount[0].password === formData.password) {
         dispatch(setLoginStatus(true));
         dispatch(setUserDetailsObject(matchUserAccount[0]));
+        setErrorMessage("");
+
         Navigate("/");
       } else {
-        alert("Password doesnt match account");
+        setErrorMessage("Password doesnt match account");
+        // alert();
       }
     } else {
-      alert("account doesnt exist");
+      setErrorMessage("Account doesn't exist");
     }
   };
 
@@ -150,6 +159,7 @@ const Login = () => {
           {/* Email */}
           <form onSubmit={handleSubmit(onSubmit)}>
             <TextField
+              onClick={resetErrorMessage}
               focused
               color="info"
               id="outlined-basic"
@@ -179,6 +189,7 @@ const Login = () => {
                 Password
               </InputLabel>
               <OutlinedInput
+                onClick={resetErrorMessage}
                 {...register("password", { required: true })}
                 required
                 id="outlined-adornment-password"
@@ -201,6 +212,8 @@ const Login = () => {
                 }
                 label="Password"
               />
+
+              <div style={{ color: "red" }}>{errorMessage}</div>
             </FormControl>
 
             {/* Login ACCOUNT */}

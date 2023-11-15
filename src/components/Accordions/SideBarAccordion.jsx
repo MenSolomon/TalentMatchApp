@@ -55,7 +55,9 @@ export default function SideBarAccordion({
         </MuiAccordionSummary>
         <MuiAccordionDetails>
           {categoryOptionsList.map((data, key) => {
-            const { label, startIcon, path } = data;
+            const { label, dateCreated, startIcon, path } = data;
+
+            console.log(dateCreated, "dae");
             return (
               <SideBarNavButtons
                 key={key}

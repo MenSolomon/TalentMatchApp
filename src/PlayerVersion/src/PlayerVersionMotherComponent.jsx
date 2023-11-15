@@ -8,11 +8,17 @@ import avatarImage from "./assets/images/avatar.jpg";
 import LightAndDarkModeSwitch from "./components/Switch/LightAndDarkModeSwitch";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavBarButton from "./components/NavBarButtons/NavBarButton";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 import ProfileMenu from "../../components/Menu/ProfileMenu";
+import {
+  setLoginStatus,
+  setUserDetailsObject,
+} from "../../statemanager/slices/LoginUserDataSlice";
 
 const PlayerVersionMotherComponent = () => {
+  const dispatch = useDispatch();
+
   const menuButtonsArray = [
     { name: "Home", icon: "home", path: "/" },
     { name: "Dashboard", icon: "dashboard", path: "/studio/dashboard" },
@@ -30,9 +36,9 @@ const PlayerVersionMotherComponent = () => {
 
   const menuButtonsArrayTWO2 = [
     // { name: "Add Agency", icon: "follow_the_signs", path: "none" },
-    { name: "Help", icon: "help", path: "none" },
-    { name: "Settings", icon: "settings", path: "none" },
-    { name: "Logout", icon: "door_back", path: "none" },
+    { name: "Help", icon: "help", path: "/studio/help" },
+    { name: "Settings", icon: "settings", path: "/studio/settings" },
+    { name: "Logout", icon: "door_back", path: "/login" },
   ];
 
   // const navigate = useNavigate();
@@ -223,19 +229,19 @@ const PlayerVersionMotherComponent = () => {
         </div>
         {/* // Search Area? */}
         <div
-          style={{ flex: ".45", paddingTop: "1%", paddingLeft: "4vw" }}
+          style={{ flex: ".635", paddingTop: "1%", paddingLeft: "4vw" }}
         ></div>
         {/* // profile details Area */}
         <div
           style={{
             // Should be 37
-            flex: ".34",
+            flex: ".155",
             paddingTop: "1%",
             paddingRight: "1.5%",
           }}
         >
           <ProfileMenu
-            style={{ float: "right", marginLeft: "1vw", borderBottom: "none" }}
+            style={{ float: "right", borderBottom: "none" }}
             name="Active user name"
           />
 
@@ -299,6 +305,26 @@ const PlayerVersionMotherComponent = () => {
               {menuButtonsArrayTWO2 &&
                 menuButtonsArrayTWO2.map((data, index) => {
                   const { name, icon, path } = data;
+
+                  if (name === "Logout") {
+                    return (
+                      <li
+                        key={index}
+                        onClick={() => {
+                          dispatch(setLoginStatus(false));
+                          dispatch(setUserDetailsObject({}));
+                        }}
+                      >
+                        <NavBarButton
+                          ButtonName={name}
+                          ButtonImage={icon}
+                          path={path}
+                          // buttonStyle={{ color: "#E4E8F9" }}
+                        />
+                      </li>
+                    );
+                  }
+
                   return (
                     <li key={index}>
                       <NavBarButton

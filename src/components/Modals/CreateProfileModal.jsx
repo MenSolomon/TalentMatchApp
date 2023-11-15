@@ -13,7 +13,7 @@ import DatePickerTool from "../DatePicker/DatePicker";
 import BasicAutoComplete from "../Autocompletes/BasicAutoComplete";
 import GroupedRadio from "../Radio/GroupedRadio";
 import CheckboxesGroup from "../CheckBoxes/GroupedCheckBox";
-import AgeRangeSlider from "../Slider/AgeRangeSlider";
+import RangeSlider from "../Slider/RangeSlider";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectUserDetailsObject,
@@ -27,15 +27,29 @@ import {
 } from "../../statemanager/slices/TempDatabaseSlice";
 import {
   selectCurrentProfile,
+  selectCurrentProfileFilterObject,
+  selectPreviousProfile,
   setCurrentProfile,
+  setCurrentProfileFilterObject,
+  setPreviousProfile,
 } from "../../statemanager/slices/SavedProfileSlice";
 import {
   selectAutoCompletePlayerPosition,
+  selectEditFilterModalButtonClicked,
+  selectFilterModalType,
+  selectSnackbarMessage,
   setAutoCompletePlayerPosition,
+  setEditFilterModalButtonClicked,
+  setFilterModalType,
+  setSnackbarMessage,
+  setSnackbarTriggerCounter,
+  setWarningAlertModalCounter,
+  setWarningAlertModalMessage,
 } from "../../statemanager/slices/OtherComponentStatesSlice";
 import BasicSelect from "../Selects/BasicSelect";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../Firebase/Firebase";
+import moment from "moment";
 
 const style = {
   position: "absolute",
@@ -61,19 +75,42 @@ const inputStyles = {
 // const selectFieldStyle ={
 //   width:130
 // } ;
-
+// currentProfileClicked
 export default function CreateProfileModal({ ProfileType }) {
   const dispatch = useDispatch();
+  const currentProfileClicked = useSelector(selectCurrentProfile);
+  const previousProfileClicked = useSelector(selectPreviousProfile);
+
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
+
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     dispatch(setAutoCompletePlayerPosition(""));
+
+    // This is set to empty "" to make sure textfield displays if profile is not default and dispappears when default
+    // if not in an instance where  user is on the default profile and decides to click on the create new profile card the textfield will not show
     dispatch(setCurrentProfile(""));
+    // This stores the profile clicked in order to store the current profile in case the user doesnt navigate to another profile and decides to edit again
+
+    ////////
+    // Previos should only be set if the string is not empty .. to ensure the prvios profile clicked doesnt to empty string after closing the modal for createing a filter
+
+    if (currentProfileClicked.length > 0) {
+      dispatch(setPreviousProfile(currentProfileClicked));
+    }
+    // THis is to fix the bug of clicking the textfield not displaying after editing in the default profile
+    // if (currentProfileClicked.toLowerCase() === "default")
+    //   dispatch(setCurrentProfile(""));
   };
 
   const leagueDivisions = [
+    "Any",
     "Top-Flight Division",
     "Women's league",
     "Second Division",
@@ -106,12 +143,13 @@ export default function CreateProfileModal({ ProfileType }) {
   ];
 
   const GKTextFieldArray = [
-    "Clean sheets",
+    "Clean sheet",
     "Saves",
-    " long pass accuracy ",
-    "Bloccked shots ",
+    "Long pass accuracy ",
+    "Blocked shots ",
     "Aerial duels",
-    "penalty stop success",
+    "Penalty stop success",
+    "Sweeping success",
   ];
 
   const DefendersTextFieldArray = [
@@ -122,22 +160,24 @@ export default function CreateProfileModal({ ProfileType }) {
     "Successful tackles rate %",
   ];
   const MidfieldersTextFieldArray = [
-    "pass success",
-    "total passes",
+    "Pass success",
+    "Total passes",
     "assists",
-    "key passes per game",
-    "interceptions",
-    "successful tackles rate",
-    "successful crosses",
+    "Key passes per game",
+    "Interceptions",
+    "Successful tackles rate",
+    "Successful crosses",
   ];
   const AttackerTextFieldArray = [
     "Goals",
     "Goal/match played ratio",
     "Assists",
     "Shots per game",
-    "Goal conversion rate %",
+    "Goal conversion rate",
     "Offside range",
   ];
+
+  const AnyTextFieldArray = [];
 
   const autocompletePositionSelected = useSelector(
     selectAutoCompletePlayerPosition
@@ -154,14 +194,169 @@ export default function CreateProfileModal({ ProfileType }) {
     "Contract Expiring less than 6 months",
     "Currently renewed contract",
   ];
-
+  const editFilterModalButtonClicked = useSelector(
+    selectEditFilterModalButtonClicked
+  );
   const loginUserDetails = useSelector(selectUserDetailsObject);
   const { savedProfile, email } = loginUserDetails;
   const allUsers = useSelector(selectTempUsersDatabase);
-  const currentProfileClicked = useSelector(selectCurrentProfile);
-  //
+  const currentProfileFilterObject = useSelector(
+    selectCurrentProfileFilterObject
+  );
+  selectAutoCompletePlayerPosition;
+  const filterModalType = useSelector(selectFilterModalType);
+  const {
+    PlaceOfBirth,
+    NationalityValue,
+    AgeRangeValue,
+    HeightRangeValue,
+    PlayerPositionAutoCompleteValue,
+    MarketValue,
+    ClubCountryValue,
+    CaptainRadioValue,
+    PrefferedFootRadioValue,
+    PlayerDivisionValue,
+    ContractStatusCheckBoxes,
+    positionRangeSliderValues,
+  } = currentProfileFilterObject;
+
   const [profileName, setProfileName] = useState("");
   const [editedProfileName, setEditedProfileName] = useState("");
+
+  /// RETREIVING VALUES FOR RANGE SLIDERs  \\\\\\\\\\
+
+  // retriving a default object value each bosition which takes a range of 0 to 100% of all stats if the user doesnt select any range
+  const anyOrNullObject = {};
+  AnyTextFieldArray.forEach((value) => {
+    anyOrNullObject[value] = [0, 100];
+  });
+
+  const defaultGkObject = {};
+  GKTextFieldArray.forEach((value) => {
+    defaultGkObject[value] = [0, 100];
+  });
+
+  const defaultDefendersObject = {};
+  DefendersTextFieldArray.forEach((value) => {
+    defaultDefendersObject[value] = [0, 100];
+  });
+
+  const defaultMidfieldersObject = {};
+  MidfieldersTextFieldArray.forEach((value) => {
+    defaultMidfieldersObject[value] = [0, 100];
+  });
+  const defaultAttackersObject = {};
+  AttackerTextFieldArray.forEach((value) => {
+    defaultAttackersObject[value] = [0, 100];
+  });
+
+  const [posRngVals, setPosRngVals] = useState(positionRangeSliderValues);
+  // This is responsible for setting the object  ith current values of the range Sliders
+  const handleRangeChange = (rangeName, newValue) => {
+    // Update the positionRangeSliderValues object with the new value
+    setPosRngVals((prevValues) => ({
+      ...prevValues,
+      [rangeName]: newValue,
+    }));
+  };
+
+  // Useeffect to dispatch the positionalRangeValues in RealTIme (prevent lag of data on slide change)
+  useEffect(() => {
+    console.log(posRngVals, "posRngVals");
+
+    dispatch(
+      setCurrentProfileFilterObject({
+        ...currentProfileFilterObject,
+        positionRangeSliderValues: posRngVals,
+      })
+    );
+  }, [posRngVals]);
+
+  // use effect for setting stats range values to defalut based on position selected
+  // this sets the positionRangeSliderValues object in the redux slice to a default  object based on positionSelected and also sets the useState responsible for handing the stats change of the varios statistics in each object created based on the player selection
+  useEffect(() => {
+    // const { positionRangeSliderValues } = currentProfileFilterObject;
+
+    PlayerPositionAutoCompleteValue === "Goalkeeper (GK)"
+      ? (dispatch(
+          setCurrentProfileFilterObject({
+            ...currentProfileFilterObject,
+            positionRangeSliderValues: defaultGkObject,
+          })
+        ),
+        setPosRngVals(defaultGkObject))
+      : PlayerPositionAutoCompleteValue === "Defender (D)" ||
+        PlayerPositionAutoCompleteValue === "Center Back (CB)" ||
+        PlayerPositionAutoCompleteValue === "Full-back (FB)" ||
+        PlayerPositionAutoCompleteValue === "Wing-back (WB)"
+      ? (dispatch(
+          setCurrentProfileFilterObject({
+            ...currentProfileFilterObject,
+            positionRangeSliderValues: defaultDefendersObject,
+          })
+        ),
+        setPosRngVals(defaultDefendersObject))
+      : PlayerPositionAutoCompleteValue === "Midfielder (MF)" ||
+        PlayerPositionAutoCompleteValue === "Central Midfielder (CM)" ||
+        PlayerPositionAutoCompleteValue === "Defensive Midfielder (CDM)" ||
+        PlayerPositionAutoCompleteValue === "Attacking Midfielder (CAM)" ||
+        PlayerPositionAutoCompleteValue === "Wide Midfielder (WM)"
+      ? (dispatch(
+          setCurrentProfileFilterObject({
+            ...currentProfileFilterObject,
+            positionRangeSliderValues: defaultMidfieldersObject,
+          })
+        ),
+        setPosRngVals(defaultMidfieldersObject))
+      : PlayerPositionAutoCompleteValue === "Forward (F)" ||
+        PlayerPositionAutoCompleteValue === "Striker (ST)" ||
+        PlayerPositionAutoCompleteValue === "Center Forward (CF)" ||
+        PlayerPositionAutoCompleteValue === "Winger (W)"
+      ? (dispatch(
+          setCurrentProfileFilterObject({
+            ...currentProfileFilterObject,
+            positionRangeSliderValues: defaultAttackersObject,
+          })
+        ),
+        setPosRngVals(defaultAttackersObject))
+      : PlayerPositionAutoCompleteValue === "" ||
+        PlayerPositionAutoCompleteValue === null ||
+        PlayerPositionAutoCompleteValue === "Any"
+      ? dispatch(
+          setCurrentProfileFilterObject({
+            ...currentProfileFilterObject,
+            positionRangeSliderValues: {
+              "Clean sheet": [0, 100],
+              Saves: [0, 100],
+              "Long pass accuracy": [0, 100],
+              "Blocked shots": [0, 100],
+              "Aerial duels": [0, 100],
+              "Penalty stop success": [0, 100],
+              "Sweeping success": [0, 100],
+              Clearance: [0, 100],
+
+              Interception: [0, 100],
+              Blocks: [0, 100],
+              "Clean sheets per season": [0, 100],
+              "Successful tackles rate %": [0, 100],
+              "pass success": [0, 100],
+              "total passes": [0, 100],
+              assists: [0, 100],
+              "key passes per game": [0, 100],
+              interceptions: [0, 100],
+              "successful tackles rate": [0, 100],
+              "successful crosses": [0, 100],
+              Goals: [0, 100],
+              "Goal/match played ratio": [0, 100],
+              Assists: [0, 100],
+              "Shots per game": [0, 100],
+              "Goal conversion rate %": [0, 100],
+              "Offside range": [0, 100],
+            },
+          })
+        )
+      : "";
+  }, [PlayerPositionAutoCompleteValue, currentProfileClicked]);
 
   // FUNCTION FOR CREATING PROFILE
   const handleCreateProfile = () => {
@@ -182,7 +377,13 @@ export default function CreateProfileModal({ ProfileType }) {
       dispatch(
         setUserDetailsObject({
           ...loginUserDetails,
-          savedProfile: [{ label: "Default", filter: {} }],
+          savedProfile: [
+            {
+              label: "Default",
+              dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+              filter: currentProfileFilterObject,
+            },
+          ],
         })
       );
       // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
@@ -192,7 +393,11 @@ export default function CreateProfileModal({ ProfileType }) {
 
       const collectionRef = doc(db, `users_db`, accountId);
       updateDoc(collectionRef, {
-        savedProfile: arrayUnion({ label: "Default", filter: {} }),
+        savedProfile: arrayUnion({
+          label: "Default",
+          dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+          filter: currentProfileFilterObject,
+        }),
       });
 
       dispatch(
@@ -200,12 +405,72 @@ export default function CreateProfileModal({ ProfileType }) {
           ...unMacthedPlayerDatabase,
           {
             ...loginUserDetails,
-            savedProfile: [{ label: "Default", filter: {} }],
+            savedProfile: [
+              {
+                label: "Default",
+                dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+                filter: currentProfileFilterObject,
+              },
+            ],
           },
         ])
       );
 
       handleClose();
+
+      /// REset the filter object after createion
+      dispatch(
+        setCurrentProfileFilterObject({
+          PlaceOfBirth: "Any",
+          NationalityValue: "Any",
+          AgeRangeValue: [0, 40],
+          HeightRangeValue: [0, 2.5],
+          positionRangeSliderValues: {
+            "Clean sheet": [0, 100],
+            Saves: [0, 100],
+            "Long pass accuracy": [0, 100],
+            "Blocked shots": [0, 100],
+            "Aerial duels": [0, 100],
+            "Penalty stop success": [0, 100],
+            "Sweeping success": [0, 100],
+            Clearance: [0, 100],
+            Interception: [0, 100],
+            Blocks: [0, 100],
+            "Clean sheets per season": [0, 100],
+            "Successful tackles rate %": [0, 100],
+            "Pass success": [0, 100],
+            "Total passes": [0, 100],
+            Assists: [0, 100],
+            "Key passes per game": [0, 100],
+            Interceptions: [0, 100],
+            "Successful tackles rate": [0, 100],
+            "Successful crosses": [0, 100],
+            Goals: [0, 100],
+            "Goal/match played ratio": [0, 100],
+            assists: [0, 100],
+            "Shots per game": [0, 100],
+            "Goal conversion rate %": [0, 100],
+            "Offside range": [0, 100],
+          },
+          MarketValue: [0, 40],
+          ClubCountryValue: "Any",
+          CaptainRadioValue: "Any",
+          PrefferedFootRadioValue: "Any",
+          PlayerDivisionValue: "Any",
+          ContractStatusCheckBoxes: [
+            "Free Agent",
+            "Loan Listed",
+            "Youth Player",
+            "Transfer Listed",
+            "Contract Expiring less than 6 months",
+            "Currently renewed contract",
+          ],
+          // REview below
+          PlayerPositionAutoCompleteValue: "Any",
+
+          previousProfile: "",
+        })
+      );
     } else {
       // loginUserDetails
       // allUsers
@@ -224,7 +489,11 @@ export default function CreateProfileModal({ ProfileType }) {
         ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
         const collectionRef = doc(db, `users_db`, accountId);
         updateDoc(collectionRef, {
-          savedProfile: arrayUnion({ label: profileName, filter: {} }),
+          savedProfile: arrayUnion({
+            label: profileName,
+            dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+            filter: currentProfileFilterObject,
+          }),
         });
 
         dispatch(
@@ -234,15 +503,76 @@ export default function CreateProfileModal({ ProfileType }) {
               ...loginUserDetails,
               savedProfile: [
                 ...savedProfile,
-                { label: profileName, filter: {} },
+                {
+                  label: profileName,
+                  dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+                  filter: currentProfileFilterObject,
+                },
               ],
             },
           ])
         );
 
         handleClose();
+        dispatch(
+          setCurrentProfileFilterObject({
+            PlaceOfBirth: "Any",
+            NationalityValue: "Any",
+            AgeRangeValue: [0, 40],
+            HeightRangeValue: [0, 2.5],
+            positionRangeSliderValues: {
+              "Clean sheet": [0, 100],
+              Saves: [0, 100],
+              "Long pass accuracy": [0, 100],
+              "Blocked shots": [0, 100],
+              "Aerial duels": [0, 100],
+              "Penalty stop success": [0, 100],
+              "Sweeping success": [0, 100],
+              Clearance: [0, 100],
+              Interception: [0, 100],
+              Blocks: [0, 100],
+              "Clean sheets per season": [0, 100],
+              "Successful tackles rate %": [0, 100],
+              "Pass success": [0, 100],
+              "Total passes": [0, 100],
+              Assists: [0, 100],
+              "Key passes per game": [0, 100],
+              Interceptions: [0, 100],
+              "Successful tackles rate": [0, 100],
+              "Successful crosses": [0, 100],
+              Goals: [0, 100],
+              "Goal/match played ratio": [0, 100],
+              assists: [0, 100],
+              "Shots per game": [0, 100],
+              "Goal conversion rate %": [0, 100],
+              "Offside range": [0, 100],
+            },
+            MarketValue: [0, 40],
+            ClubCountryValue: "Any",
+            CaptainRadioValue: "Any",
+            PrefferedFootRadioValue: "Any",
+            PlayerDivisionValue: "Any",
+            ContractStatusCheckBoxes: [
+              "Free Agent",
+              "Loan Listed",
+              "Youth Player",
+              "Transfer Listed",
+              "Contract Expiring less than 6 months",
+              "Currently renewed contract",
+            ],
+            // REview below
+            PlayerPositionAutoCompleteValue: "Any",
+
+            previousProfile: "",
+          })
+        );
+        /// Snackbar show
+        dispatch(setSnackbarMessage(`"${profileName}" filter created`));
+        dispatch(setSnackbarTriggerCounter());
       } else {
-        alert("Please enter a profile name (cannot be name default)");
+        triggerWarningAlertModal(
+          "Please enter a profile name (cannot be name default)"
+        );
       }
     }
     // changing the click current clicked value to the edited name
@@ -252,59 +582,354 @@ export default function CreateProfileModal({ ProfileType }) {
 
   // FUNCTION FOR CREATING PROFILE
   const handleSaveProfile = () => {
-    // alert("Save");
+    const {
+      PlaceOfBirth,
+      NationalityValue,
+      AgeRangeValue,
+      HeightRangeValue,
+      PlayerPositionAutoCompleteValue,
+      ClubCountryValue,
+      MarketValue,
+      CaptainRadioValue,
+      PrefferedFootRadioValue,
+      PlayerDivisionValue,
+      ContractStatusCheckBoxes,
+      positionRangeSliderValues,
+    } = currentProfileFilterObject;
 
-    const unMacthedPlayerDatabase = allUsers.filter((data) => {
-      return data.email !== email;
+    const { savedProfile, accountId } = loginUserDetails;
+
+    const unMacthedProflie = savedProfile.filter((data) => {
+      return data.label !== currentProfileClicked;
     });
 
-    const tempSavedProfile = [...savedProfile];
-    let indexOfCurrentProfile = savedProfile.findIndex(
-      (item) => currentProfileClicked === item.label
+    const MacthedProfile = savedProfile.filter((data) => {
+      return data.label === currentProfileClicked;
+    });
+
+    const nameExists = savedProfile.filter(
+      (data) => data.label.toLowerCase() === profileName.toLowerCase()
     );
-    if (indexOfCurrentProfile !== -1) {
-      tempSavedProfile[indexOfCurrentProfile] = {
-        label: editedProfileName,
-        filter: {},
-      };
+    const { dateCreated } = MacthedProfile[0];
+    const collectionRef = doc(db, `users_db`, accountId);
 
-      dispatch(
-        setUserDetailsObject({
-          ...loginUserDetails,
-          savedProfile: tempSavedProfile,
-        })
-      );
-
-      dispatch(
-        setTempUsersDatabase([
-          ...unMacthedPlayerDatabase,
+    console.log(dateCreated, " Date Created");
+    console.log("Unmatched Profile", unMacthedProflie);
+    console.log(profileName, currentProfileFilterObject, "TO BE EDITED");
+    if (profileName === "") {
+      triggerWarningAlertModal("name cannot be empty ");
+    } else {
+      if (nameExists.length <= 0) {
+        const sortedProfile = [
+          ...unMacthedProflie,
           {
-            ...loginUserDetails,
-            savedProfile: tempSavedProfile,
+            label: profileName,
+            dateCreated,
+            filter: {
+              PlaceOfBirth,
+              NationalityValue,
+              AgeRangeValue,
+              HeightRangeValue,
+              PlayerPositionAutoCompleteValue: PlayerPositionAutoCompleteValue,
+              ClubCountryValue,
+              MarketValue,
+              CaptainRadioValue,
+              PrefferedFootRadioValue,
+              PlayerDivisionValue,
+              ContractStatusCheckBoxes,
+              positionRangeSliderValues: positionRangeSliderValues,
+            },
           },
-        ])
-      );
+        ]
+          .slice()
+          .sort((a, b) => {
+            // Convert date strings to Moment.js objects
+            const dateA = moment(a.dateCreated, "YYYY-MM-DD HH:mm:ss");
+            const dateB = moment(b.dateCreated, "YYYY-MM-DD HH:mm:ss");
 
-      console.log(tempSavedProfile);
+            // Compare the Moment.js objects in descending order
+            // return dateB.diff(dateA);
+            return dateA.diff(dateB);
+          });
+
+        // Update the document in Firestore
+        updateDoc(collectionRef, { savedProfile: sortedProfile });
+        dispatch(setPreviousProfile(profileName));
+
+        navigate(`/profile/${profileName}`);
+        setOpen(false);
+        dispatch(setSnackbarMessage(`"${profileName}" filter saved`));
+        dispatch(setSnackbarTriggerCounter());
+      } else {
+        triggerWarningAlertModal("Profile Name already exists");
+      }
     }
-
-    dispatch(setCurrentProfile(editedProfileName));
-
-    console.log(currentProfileClicked);
-
-    handleClose();
   };
 
   // REview this
   useEffect(() => {
     setEditedProfileName(currentProfileClicked);
+    setProfileName(currentProfileClicked);
   }, [currentProfileClicked]);
+
+  const handelePlaceOfBirth = (value) => {
+    console.log(value, "place of birth select");
+    dispatch(
+      setCurrentProfileFilterObject({
+        ...currentProfileFilterObject,
+        PlaceOfBirth: value,
+      })
+    );
+    // setPlaceOfBirth(value);
+  };
+
+  const handelNationalityValue = (value) => {
+    console.log(value, "Nationality");
+    dispatch(
+      setCurrentProfileFilterObject({
+        ...currentProfileFilterObject,
+        NationalityValue: value,
+      })
+    );
+    // setNationalityValue(value);
+  };
+
+  const handleAgeRangeValue = (value) => {
+    console.log(value, "Age Range values");
+    dispatch(
+      setCurrentProfileFilterObject({
+        ...currentProfileFilterObject,
+        AgeRangeValue: value,
+      })
+    );
+
+    // setAgeRangeValue(value);
+  };
+
+  const handleHeightRangeValue = (value) => {
+    // setHeightRangeValue(value);
+    console.log(value, "Height Range values");
+    dispatch(
+      setCurrentProfileFilterObject({
+        ...currentProfileFilterObject,
+        HeightRangeValue: value,
+      })
+    );
+  };
+  const handlePlayerPositionAutoCompleteValue = (value) => {
+    // setPlayerPositionAutoCompleteValue(value);
+
+    if (value === null) {
+      dispatch(
+        setCurrentProfileFilterObject({
+          ...currentProfileFilterObject,
+          PlayerPositionAutoCompleteValue: "Any",
+        })
+      );
+    }
+    {
+      dispatch(
+        setCurrentProfileFilterObject({
+          ...currentProfileFilterObject,
+          PlayerPositionAutoCompleteValue: value,
+        })
+      );
+    }
+
+    // PlayerPositionAutoCompleteValue,
+
+    console.log(value, "Player Position auto complete value");
+  };
+
+  // useEffect(() => {
+  //   if (positionRangeSliderValues === null) {
+  //     dispatch(
+  //       setCurrentProfileFilterObject({
+  //         ...currentProfileFilterObject,
+  //         PlayerPositionAutoCompleteValue: "Any",
+  //       })
+  //     );
+  //   }
+  // }, [positionRangeSliderValues]);
+
+  const handleMarketValue = (value) => {
+    console.log(value, "Market price values");
+    // setMarketValue(value);
+    dispatch(
+      setCurrentProfileFilterObject({
+        ...currentProfileFilterObject,
+        MarketValue: value,
+      })
+    );
+  };
+
+  const handelClubCountryValue = (value) => {
+    console.log(value, "Club COuntryb");
+    dispatch(
+      setCurrentProfileFilterObject({
+        ...currentProfileFilterObject,
+        ClubCountryValue: value,
+      })
+    );
+
+    // setClubCountryValue(value);
+  };
+
+  const handleCaptainRadioValue = (value) => {
+    // setCaptainRadioValue(value);
+    console.log(value, "Captain Radio Value");
+    dispatch(
+      setCurrentProfileFilterObject({
+        ...currentProfileFilterObject,
+        CaptainRadioValue: value,
+      })
+    );
+  };
+
+  const handlePrefferedFootRadioValue = (value) => {
+    // setPrefferedFootRadioValue(value);
+    dispatch(
+      setCurrentProfileFilterObject({
+        ...currentProfileFilterObject,
+        PrefferedFootRadioValue: value,
+      })
+    );
+
+    console.log(value, "Preffered Foot Value");
+  };
+
+  const handlePlayerDivisionValue = (value) => {
+    // setPlayerDivisionValue(value);
+    dispatch(
+      setCurrentProfileFilterObject({
+        ...currentProfileFilterObject,
+        PlayerDivisionValue: value,
+      })
+    );
+    console.log(value, "Player Division value");
+  };
+
+  const handleContractStatusCheckBoxes = (value) => {
+    // setContractStatusCheckBoxes(value);
+    console.log("CONTRRACT", value);
+    dispatch(
+      setCurrentProfileFilterObject({
+        ...currentProfileFilterObject,
+        ContractStatusCheckBoxes: value,
+      })
+    );
+    // console.log(value, "Contract Check boxes array");
+  };
+
+  // Useeffect to handle setting all the fields to the values that were stored in the particular profile clidcked to be edited
+
+  useEffect(() => {
+    // currentProfileClicked
+    const { savedProfile } = loginUserDetails;
+
+    const filteredObject = savedProfile.filter((data) => {
+      return data.label === previousProfileClicked;
+    });
+
+    console.log(filteredObject, "FILTERED ARRAY SAVED");
+
+    if (filteredObject.length > 0 && filterModalType === "Edit") {
+      const { filter } = filteredObject[0];
+
+      dispatch(
+        setCurrentProfileFilterObject({
+          PlaceOfBirth: filter.PlaceOfBirth,
+          NationalityValue: filter.NationalityValue,
+          AgeRangeValue: filter.AgeRangeValue,
+          HeightRangeValue: filter.HeightRangeValue,
+          PlayerPositionAutoCompleteValue:
+            filter.PlayerPositionAutoCompleteValue,
+          MarketValue: filter.MarketValue,
+          ClubCountryValue: filter.ClubCountryValue,
+          CaptainRadioValue: filter.CaptainRadioValue,
+          PrefferedFootRadioValue: filter.PrefferedFootRadioValue,
+          PlayerDivisionValue: filter.PlayerDivisionValue,
+          ContractStatusCheckBoxes: filter.ContractStatusCheckBoxes,
+          positionRangeSliderValues: filter.positionRangeSliderValues,
+        })
+      );
+
+      console.log(currentProfileFilterObject, "DONT YOU WORRY FILTER");
+    } else if (filterModalType === "Create") {
+      dispatch(
+        setCurrentProfileFilterObject({
+          PlaceOfBirth: "Any",
+          NationalityValue: "Any",
+          AgeRangeValue: [0, 40],
+          HeightRangeValue: [0, 2.5],
+          PlayerPositionAutoCompleteValue: "Any",
+          MarketValue: [0, 40],
+          ClubCountryValue: "Any",
+          CaptainRadioValue: "Any",
+          PrefferedFootRadioValue: "Any",
+          PlayerDivisionValue: "Any",
+          ContractStatusCheckBoxes: [
+            "Free Agent",
+            "Loan Listed",
+            "Youth Player",
+            "Transfer Listed",
+            "Contract Expiring less than 6 months",
+            "Currently renewed contract",
+          ],
+          // REview below
+          positionRangeSliderValues: {
+            "Clean sheet": [0, 100],
+            Saves: [0, 100],
+            "Long pass accuracy": [0, 100],
+            "Blocked shots": [0, 100],
+            "Aerial duels": [0, 100],
+            "Penalty stop success": [0, 100],
+            "Sweeping success": [0, 100],
+            Clearance: [0, 100],
+            Interception: [0, 100],
+            Blocks: [0, 100],
+            "Clean sheets per season": [0, 100],
+            "Successful tackles rate %": [0, 100],
+            "pass success": [0, 100],
+            "total passes": [0, 100],
+            assists: [0, 100],
+            "key passes per game": [0, 100],
+            interceptions: [0, 100],
+            "successful tackles rate": [0, 100],
+            "successful crosses": [0, 100],
+            Goals: [0, 100],
+            "Goal/match played ratio": [0, 100],
+            Assists: [0, 100],
+            "Shots per game": [0, 100],
+            "Goal conversion rate %": [0, 100],
+            "Offside range": [0, 100],
+          },
+        })
+      );
+    }
+
+    console.log(positionRangeSliderValues?.Goals, "GALS");
+  }, [
+    currentProfileClicked,
+    filterModalType,
+    previousProfileClicked,
+    editFilterModalButtonClicked,
+  ]);
 
   return (
     <div>
       {ProfileType === "Edit" ? (
         <Tooltip title={"Edit Profile"}>
-          <IconButton onClick={handleOpen}>
+          <IconButton
+            onClick={() => {
+              handleOpen();
+              dispatch(setFilterModalType("Edit"));
+              // if (previousProfileClicked !== "") {
+              dispatch(setCurrentProfile(previousProfileClicked));
+              dispatch(setEditFilterModalButtonClicked());
+              // }
+            }}
+          >
             <Settings />
           </IconButton>
         </Tooltip>
@@ -318,7 +943,10 @@ export default function CreateProfileModal({ ProfileType }) {
         </div>
       ) : (
         <Card
-          onClick={handleOpen}
+          onClick={() => {
+            handleOpen();
+            dispatch(setFilterModalType("Create"));
+          }}
           sx={{
             width: 145,
             height: 80,
@@ -390,7 +1018,7 @@ export default function CreateProfileModal({ ProfileType }) {
                   ? "Default Profile"
                   : "Search Profile"}{" "}
               </h2>{" "}
-              <h6>Who are you looking for?</h6>{" "}
+              <h6>Who are you looking for? </h6>{" "}
               <div style={{ justifySelf: "flex-end" }}>
                 {" "}
                 {savedProfile.length <= 0 ? (
@@ -431,24 +1059,40 @@ export default function CreateProfileModal({ ProfileType }) {
                   Personal Information{" "}
                   <IconTooltip
                     info={
-                      "MEssaes from perspnmnali information m as dsam,d  io asdsaoi lasd;sakd sad"
+                      "Personal information includes essential details about an individual, such as their name, contact information, and other relevant identifiers necessary for identification and communication."
                     }
                     image="help"
                   />{" "}
                 </h4>{" "}
                 {/* Place of birth */}
-                <CountrySelect selectLabel="Place of birth" />
+                <CountrySelect
+                  selectValue={handelePlaceOfBirth}
+                  selectLabel="Place of birth"
+                  defaultValue={PlaceOfBirth}
+                />
                 {/* Nationality  */}
-                <CountrySelect selectLabel="Nationality" />
+                <CountrySelect
+                  selectValue={handelNationalityValue}
+                  selectLabel="Nationality"
+                  defaultValue={NationalityValue}
+                />
                 {/* Height rANGE */}
-                <AgeRangeSlider
+                <RangeSlider
                   rangeName={"Height range (m)"}
                   max={2.5}
                   min={0.5}
+                  editDefaultValue={HeightRangeValue}
+                  rangeValue={handleHeightRangeValue}
                 />
                 {/* <DatePickerTool style={inputStyles} label="Date of birth" /> */}
                 {/* Age */}
-                <AgeRangeSlider rangeName={"Age range"} max={40} min={10} />
+                <RangeSlider
+                  rangeValue={handleAgeRangeValue}
+                  rangeName={"Age range"}
+                  max={40}
+                  min={0}
+                  editDefaultValue={AgeRangeValue}
+                />
                 <Button
                   sx={{
                     width: "23vw",
@@ -485,7 +1129,7 @@ export default function CreateProfileModal({ ProfileType }) {
                     Player Information{" "}
                     <IconTooltip
                       info={
-                        "MEssaes from perspnmnali information m as dsam,d  io asdsaoi lasd;sakd sad"
+                        "Player information includes statistical parameters and player technical arrtibutes such as position, preferred foot and other relevant identifiers necessary for identification and communication."
                       }
                       image="help"
                     />{" "}
@@ -507,85 +1151,129 @@ export default function CreateProfileModal({ ProfileType }) {
                     style={{ ...inputStyles, marginBottom: "2.5vh" }}
                     ListArray={soccerPositions}
                     label="Main Position"
+                    AutoCompleteValue={handlePlayerPositionAutoCompleteValue}
+                    defaultValue={PlayerPositionAutoCompleteValue}
                   />{" "}
                   {/* <BasicAutoComplete
                     style={inputStyles}
                     ListArray={soccerPositions}
                     label="Other Positions"
                   /> */}
-                  {autocompletePositionSelected === ""
+                  {PlayerPositionAutoCompleteValue === ""
                     ? ""
                     : //Goalkeeper
-                    autocompletePositionSelected === "Goalkeeper (GK)"
+                    PlayerPositionAutoCompleteValue === "Goalkeeper (GK)"
                     ? GKTextFieldArray.map((data, index) => {
                         return (
-                          <AgeRangeSlider
+                          <RangeSlider
                             key={index}
-                            rangeName={data}
-                            max={50}
-                            min={1}
+                            rangeName={`${data}`}
+                            max={100}
+                            min={0}
+                            rangeValue={(newValue) =>
+                              handleRangeChange(data, newValue)
+                            }
+                            editDefaultValue={positionRangeSliderValues[data]}
                           />
                         );
                       })
                     : // DEFEMDERS
-                    autocompletePositionSelected === "Defender (D)" ||
-                      autocompletePositionSelected === "Center Back (CB)" ||
-                      autocompletePositionSelected === "Full-back (FB)" ||
-                      autocompletePositionSelected === "Wing-back (WB)"
+                    PlayerPositionAutoCompleteValue === "Defender (D)" ||
+                      PlayerPositionAutoCompleteValue === "Center Back (CB)" ||
+                      PlayerPositionAutoCompleteValue === "Full-back (FB)" ||
+                      PlayerPositionAutoCompleteValue === "Wing-back (WB)"
                     ? DefendersTextFieldArray.map((data, index) => {
                         return (
-                          <AgeRangeSlider
+                          <RangeSlider
                             key={index}
                             rangeName={data}
-                            max={50}
-                            min={1}
+                            max={100}
+                            min={0}
+                            rangeValue={(newValue) =>
+                              handleRangeChange(data, newValue)
+                            }
+                            editDefaultValue={positionRangeSliderValues[data]}
                           />
                         );
                       })
                     : // MIDFIELDERS
-                    autocompletePositionSelected === "Midfielder (MF)" ||
-                      autocompletePositionSelected ===
+                    PlayerPositionAutoCompleteValue === "Midfielder (MF)" ||
+                      PlayerPositionAutoCompleteValue ===
                         "Central Midfielder (CM)" ||
-                      autocompletePositionSelected ===
+                      PlayerPositionAutoCompleteValue ===
                         "Defensive Midfielder (CDM)" ||
-                      autocompletePositionSelected ===
+                      PlayerPositionAutoCompleteValue ===
                         "Attacking Midfielder (CAM)" ||
-                      autocompletePositionSelected === "Wide Midfielder (WM)"
+                      PlayerPositionAutoCompleteValue === "Wide Midfielder (WM)"
                     ? MidfieldersTextFieldArray.map((data, index) => {
                         return (
-                          <AgeRangeSlider
+                          <RangeSlider
                             key={index}
                             rangeName={data}
-                            max={50}
-                            min={1}
+                            max={100}
+                            min={0}
+                            rangeValue={(newValue) =>
+                              handleRangeChange(data, newValue)
+                            }
+                            editDefaultValue={[0, 100]}
                           />
                         );
                       }) // Attackers
-                    : autocompletePositionSelected === "Forward (F)" ||
-                      autocompletePositionSelected === "Striker (ST)" ||
-                      autocompletePositionSelected === "Center Forward (CF)" ||
-                      autocompletePositionSelected === "Winger (W)"
+                    : PlayerPositionAutoCompleteValue === "Forward (F)" ||
+                      PlayerPositionAutoCompleteValue === "Striker (ST)" ||
+                      PlayerPositionAutoCompleteValue ===
+                        "Center Forward (CF)" ||
+                      PlayerPositionAutoCompleteValue === "Winger (W)"
                     ? AttackerTextFieldArray.map((data, index) => {
                         return (
-                          <AgeRangeSlider
+                          <RangeSlider
                             key={index}
                             rangeName={data}
-                            max={50}
-                            min={1}
+                            max={100}
+                            min={0}
+                            rangeValue={(newValue) =>
+                              handleRangeChange(data, newValue)
+                            }
+                            editDefaultValue={positionRangeSliderValues[data]}
                           />
                         );
                       })
-                    : ""}
+                    : // : PlayerPositionAutoCompleteValue === "Any" ||
+                      //   PlayerPositionAutoCompleteValue === null
+                      // ? AnyTextFieldArray.map((data, index) => {
+                      //     return (
+                      //       <RangeSlider
+                      //         key={index}
+                      //         rangeName={data}
+                      //         max={100}
+                      //         min={0}
+                      //         // rangeValue={(newValue) =>
+                      //         //   handleRangeChange(data, newValue)
+                      //         // }
+                      //         // editDefaultValue={positionRangeSliderValues[data]}
+                      //       />
+                      //     );
+                      //   })
+                      ""}
                   {/* MARKET VALUE RANGE */}
-                  <AgeRangeSlider
+                  <RangeSlider
                     rangeName={"Market Value ($ 000,000)"}
                     max={50}
-                    min={1}
+                    min={0}
+                    rangeValue={handleMarketValue}
+                    editDefaultValue={MarketValue}
                   />
                   {/* Captiain Selection */}
-                  <GroupedRadio radioArray={captainArray} labelName="Captain" />
+                  <GroupedRadio
+                    radioDefault={CaptainRadioValue}
+                    selectedValue={handleCaptainRadioValue}
+                    radioArray={captainArray}
+                    labelName="Captain"
+                  />
                   {/* // Preffered foot */}
                   <GroupedRadio
+                    radioDefault={PrefferedFootRadioValue}
+                    selectedValue={handlePrefferedFootRadioValue}
                     radioArray={preferredFootArray}
                     labelName="Preferred foot"
                   />
@@ -604,21 +1292,28 @@ export default function CreateProfileModal({ ProfileType }) {
                   Other Information{" "}
                   <IconTooltip
                     info={
-                      "MEssaes from perspnmnali information m as dsam,d  io asdsaoi lasd;sakd sad"
+                      "Other information includes non-technical details such as club country, club division and other relevant identifiers necessary for identification and communication."
                     }
                     image="help"
                   />{" "}
                 </h4>
 
-                <CountrySelect selectLabel="Club Country" />
+                <CountrySelect
+                  selectValue={handelClubCountryValue}
+                  selectLabel="Club Country"
+                  defaultValue={ClubCountryValue}
+                />
 
                 <BasicSelect
                   label={"Division"}
                   inputStyle={{ width: 300 }}
                   itemsArray={leagueDivisions}
+                  selectedValue={handlePlayerDivisionValue}
+                  defaultSelect={PlayerDivisionValue}
                 />
 
                 <CheckboxesGroup
+                  checkBoxesSelected={handleContractStatusCheckBoxes}
                   CheckboxLabel="Contract Status"
                   checkboxArray={contractStatusArray}
                 />

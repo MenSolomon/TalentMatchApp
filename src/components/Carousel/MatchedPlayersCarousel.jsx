@@ -27,44 +27,44 @@ const MatchedPlayersCarousel = () => {
 
   const reelArray = [
     {
-      publisherImg: "../../../public/Solomon safo-taylor.jpg",
-      video: "../../../public/shaibuJuggling.mp4",
+      publisherImg: "/Solomon safo-taylor.jpg",
+      video: "/shaibuJuggling.mp4",
     },
     {
-      publisherImg: "../../../public/opare.jpg",
-      video: "../../../public/believerJuggling.mp4",
+      publisherImg: "/opare.jpg",
+      video: "/believerJuggling.mp4",
     },
     {
-      publisherImg: "../../../public/solomon agbasi.jpeg",
-      video: "../../../shaibuJuggling.mp4",
+      publisherImg: "/solomon agbasi.jpeg",
+      video: "./shaibuJuggling.mp4",
     },
     {
-      publisherImg: "../../../public/Pa_Ebou_Dampha.jpeg",
-      video: "../../../public/believerJuggling.mp4",
+      publisherImg: "/Pa_Ebou_Dampha.jpeg",
+      video: "/believerJuggling.mp4",
     },
     {
-      publisherImg: "../../../public/richard attah.jpeg",
-      video: "../../../public/believerJuggling.mp4",
+      publisherImg: "/richard attah.jpeg",
+      video: "/believerJuggling.mp4",
     },
     {
-      publisherImg: "../../../public/sowah.jpeg",
-      video: "../../../public/believerJuggling.mp4",
+      publisherImg: "/sowah.jpeg",
+      video: "/believerJuggling.mp4",
     },
     {
-      publisherImg: "../../../public/Solomon safo-taylor.jpg",
-      video: "../../../public/shaibuJuggling.mp4",
+      publisherImg: "/Solomon safo-taylor.jpg",
+      video: "/shaibuJuggling.mp4",
     },
     {
-      publisherImg: "../../../public/richard attah.jpeg",
-      video: "../../../public/believerJuggling.mp4",
+      publisherImg: "/richard attah.jpeg",
+      video: "/believerJuggling.mp4",
     },
     {
-      publisherImg: "../../../public/solomon agbasi.jpeg",
-      video: "../../../public/shaibuJuggling.mp4",
+      publisherImg: "/solomon agbasi.jpeg",
+      video: "/shaibuJuggling.mp4",
     },
     {
-      publisherImg: "../../../public/stephen owusu.webp",
-      video: "../../../public/believerJuggling.mp4",
+      publisherImg: "/stephen owusu.webp",
+      video: "/believerJuggling.mp4",
     },
   ];
 

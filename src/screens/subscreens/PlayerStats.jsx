@@ -1,4 +1,4 @@
-import { MenuItem, TextField } from "@mui/material";
+import { CircularProgress, MenuItem, TextField } from "@mui/material";
 import React, { Suspense, lazy, useEffect, useState } from "react";
 // import ClubStatisticsTable from "./2ndDegreeSubScreens/PlayerStats/ClubStatisticsTable";
 
@@ -132,7 +132,19 @@ const PlayerStats = () => {
           </Suspense>
         } */}
         {
-          <Suspense fallback={<div> ...Loading </div>}>
+          <Suspense
+            fallback={
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <CircularProgress />
+              </div>
+            }
+          >
             <TaskBarComponent />
           </Suspense>
         }

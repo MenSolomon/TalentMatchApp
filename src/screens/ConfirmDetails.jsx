@@ -18,6 +18,10 @@ import { serverTimestamp, collection, doc, setDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../Firebase/Firebase";
 import { selectUsersDatabase } from "../statemanager/slices/DatabaseSlice";
+import {
+  setWarningAlertModalCounter,
+  setWarningAlertModalMessage,
+} from "../statemanager/slices/OtherComponentStatesSlice";
 
 const ConfirmDetails = () => {
   //
@@ -53,26 +57,37 @@ const ConfirmDetails = () => {
     }
   }, [userData.paymentType]);
 
-  // useEffect(() => {
-  //   alert(pa);
-  // }, [pa]);
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
 
   const handleStartFreeTrial = () => {
     const uuid = uuidv4();
     if (roleSelected === "") {
-      alert("Please complete step 1 (Select your role before starting trial");
+      triggerWarningAlertModal(
+        "Please complete step 1 (Select your role before starting trial)"
+      );
     } else {
       if (userData.subscriptionPackage === "") {
-        alert("Please complete step 2 (Choose a package before starting trial");
+        triggerWarningAlertModal(
+          "Please complete step 2 (Choose a package before starting trial)"
+        );
       } else {
         if (userData.firstname === "") {
-          alert("Please complete step 3 (Create account before starting trial");
+          triggerWarningAlertModal(
+            "Please complete step 3 (Create account before starting trial)"
+          );
         } else {
           if (userData.paymentType === "" || !userData.paymentType) {
-            alert("Please select a payment type");
+            triggerWarningAlertModal("Please select a payment type");
           } else {
             if (agreement === false || privacy === false) {
-              alert(
+              // alert(
+              //   "please read terms and condition as well as our privacy policy and tick the boxes to agree"
+              // );
+
+              triggerWarningAlertModal(
                 "please read terms and condition as well as our privacy policy and tick the boxes to agree"
               );
             } else {
@@ -85,7 +100,7 @@ const ConfirmDetails = () => {
                 console.log(allUsers, "Existence", userExistence);
 
                 if (userExistence.length > 0) {
-                  alert("Account Exists");
+                  triggerWarningAlertModal("Account Exists");
                 } else {
                   // THis is the part where you finally navigate to login page and accept data
                   // alert("sending data and setting up account for freetrial");

@@ -6,6 +6,7 @@ import { selectThemeProviderObject } from "../../statemanager/slices/ThemeProvid
 import {
   selectCurrentProfile,
   setCurrentProfile,
+  setPreviousProfile,
 } from "../../statemanager/slices/SavedProfileSlice";
 
 export const SideBarNavButtons = ({
@@ -37,6 +38,7 @@ export const SideBarNavButtons = ({
     // location.pathname = `/profile/${label}`;
 
     dispatch(setCurrentProfile(label));
+    dispatch(setPreviousProfile(label));
   };
 
   return (
@@ -46,7 +48,7 @@ export const SideBarNavButtons = ({
         className="styleTextColor NavBarBtns"
         sx={{
           position: "relative",
-          right: "17%",
+          right: "12%",
           // fontSize: ".75em",
           fontWeight: "700",
           paddingRight: "2vw",

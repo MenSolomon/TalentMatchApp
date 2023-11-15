@@ -18,7 +18,7 @@ export default function CountrySelect({
       id="country-select-demo"
       sx={{ width: 300 }}
       options={countries}
-      defaultValue={defaultValue}
+      value={countries.find((country) => country.label === defaultValue)}
       autoHighlight
       onChange={handleAutoSelect}
       getOptionLabel={(option) => option.label}
@@ -59,6 +59,7 @@ export default function CountrySelect({
 
 // From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js
 const countries = [
+  { code: "AN", label: "Any", phone: "000" },
   { code: "AD", label: "Andorra", phone: "376" },
   {
     code: "AE",

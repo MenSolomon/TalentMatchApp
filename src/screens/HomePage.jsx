@@ -259,9 +259,9 @@ const HomePage = () => {
         }}
       >
         {/* // Headers */}
-        <div style={{ flex: ".12", background: "transparent" }}>
+        <div style={{ flex: ".1", background: "transparent" }}>
           <h6 style={{ float: "left", fontWeight: "800" }}>Flicks for you</h6>
-          <h6
+          {/* <h6
             style={{
               float: "right",
               fontSize: ".95em",
@@ -290,14 +290,14 @@ const HomePage = () => {
               height: 20,
               marginRight: "1vw",
             }}
-          />
+          /> */}
         </div>
 
         {/* // Suggested Cards */}
         <div
           style={{
             flex: ".88",
-            padding: ".5vh .3vw",
+            padding: "0vh .3vw",
           }}
         >
           <MatchedPlayersCarousel MatchedPlayersArray={playersInAgencyArray} />

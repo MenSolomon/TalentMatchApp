@@ -23,7 +23,7 @@ export const MainAccordionNavButton = ({
         className="NavBarBtns"
         sx={{
           position: "relative",
-          right: "17%",
+          right: "13%",
           fontSize: ".7em",
           fontWeight: "700",
           // color: buttonColor,

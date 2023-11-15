@@ -182,8 +182,8 @@ export default function UploadVideoModal() {
             {/* Terms and services guidelines */}
             <div style={{ flex: "0.1", textAlign: "center" }}>
               <small>
-                By submitting your video to TalentMatch, you acknowledge that
-                you agree to TalentMatch{" "}
+                By submitting your video to Talent Meet, you acknowledge that
+                you agree to Talent Meet{" "}
                 <span style={{ color: "blue" }}>Terms of Service</span> and
                 <span style={{ color: "blue" }}>
                   {" "}

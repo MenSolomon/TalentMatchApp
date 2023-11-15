@@ -1,4 +1,4 @@
-import { MenuItem, TextField } from "@mui/material";
+import { CircularProgress, MenuItem, TextField } from "@mui/material";
 import { Suspense, lazy, useEffect, useState } from "react";
 import IconTooltip from "../../components/Tooltip/IconToolTip";
 const StatisticsCurrentOverview = () => {
@@ -84,7 +84,19 @@ const StatisticsCurrentOverview = () => {
       </div>
       <div style={{ flex: ".9", paddingTop: "1.5vh" }}>
         {
-          <Suspense fallback={<div> ...Loading </div>}>
+          <Suspense
+            fallback={
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <CircularProgress />
+              </div>
+            }
+          >
             <TaskBarComponent />
           </Suspense>
         }{" "}

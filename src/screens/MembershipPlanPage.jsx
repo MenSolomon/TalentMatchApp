@@ -104,8 +104,38 @@ const MembershipPlanPage = () => {
         <div style={{ flex: ".55", display: "flex" }}>
           {" "}
           <BasicMenu menuTitle={"Roles"} menuItemsArray={rolesMenu} />{" "}
-          <BasicMenu menuTitle={"Support"} menuItemsArray={rolesMenu} />{" "}
-          <BasicMenu menuTitle={"Resources"} menuItemsArray={rolesMenu} />{" "}
+          <Button
+            id="basic-button"
+            sx={{
+              color: "white",
+              textTransform: "none",
+              fontWeight: "bolder",
+              fontSize: "1.1em",
+              marginRight: 3,
+              height: "7vh",
+            }}
+            onClick={() => {
+              Navigate("/support");
+            }}
+          >
+            Support
+          </Button>
+          <Button
+            id="basic-button"
+            sx={{
+              color: "white",
+              textTransform: "none",
+              fontWeight: "bolder",
+              fontSize: "1.1em",
+              marginRight: 3,
+              height: "7vh",
+            }}
+            onClick={() => {
+              Navigate("/resources");
+            }}
+          >
+            Resources
+          </Button>
         </div>
 
         {/* FREE TRIAL BUTTON */}
@@ -208,7 +238,7 @@ const MembershipPlanPage = () => {
               <h4 style={{ fontWeight: "lighter" }}>
                 {" "}
                 Our pricing is designed to help you get the most of your talent
-                match experience.
+                meet experience.
               </h4>
             </div>
           </div>
@@ -254,7 +284,7 @@ const MembershipPlanPage = () => {
             }}
           >
             <SubscriptionCard
-              title="Freemium"
+              title="Free trial"
               description="For personal use and exploration of technology "
               price="0"
               featuresHighlightArray={BasicFeaturesArray}

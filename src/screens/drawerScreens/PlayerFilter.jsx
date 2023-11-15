@@ -1,10 +1,10 @@
 import { IconButton } from "@mui/material";
 import BasicAutoComplete from "../../components/Autocompletes/BasicAutoComplete";
 import CountrySelect from "../../components/Autocompletes/CountrySelect";
-import AgeRangeSlider from "../../components/Slider/AgeRangeSlider";
 import PlayerCompareDisplayCard from "../../components/Cards/PlayerComparisonFilterPageCards/PlayerCompareDisplayCard";
 import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInAgencySlice";
 import { useSelector } from "react-redux";
+import RangeSlider from "../../components/Slider/RangeSlider";
 
 const PlayerFilter = () => {
   const soccerPositions = [
@@ -43,7 +43,14 @@ const PlayerFilter = () => {
           label="Position"
         />{" "}
         <CountrySelect selectLabel="Club Country" />
-        <AgeRangeSlider style={{ marginTop: "3vh", marginLeft: "0vw" }} />
+        <br />
+        <RangeSlider
+          // rangeValue={handleAgeRangeValue}
+          rangeName={"Age range"}
+          max={40}
+          min={0}
+          // editDefaultValue={AgeRangeValue}
+        />
       </div>
 
       {/* // FILTERED PLAYER SECTION */}

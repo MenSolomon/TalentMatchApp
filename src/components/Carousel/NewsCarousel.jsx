@@ -73,7 +73,7 @@ const NewsCarousel = ({ NewsArray }) => {
           return (
             <Carousel.Item
               key={index}
-              // className="newsGradient"
+              className="matchedPlayersCarousel"
               style={{
                 backgroundSize: "cover",
                 //   background: "white",
@@ -136,7 +136,7 @@ const NewsCarousel = ({ NewsArray }) => {
                   >
                     <video
                       id={`video-${index}`}
-                      src="../../../public/believerJuggling.mp4"
+                      src="/believerJuggling.mp4"
                       width="100%"
                       style={{ position: "absolute" }}
                       // autoPlay={true}

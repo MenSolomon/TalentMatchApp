@@ -9,10 +9,16 @@ import ProfileMenu from "./components/Menu/ProfileMenu";
 import LightAndDarkModeSwitch from "./components/Switch/LightAndDarkModeSwitch";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavBarButton from "./components/NavBarButtons/NavBarButton";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
+import {
+  setLoginStatus,
+  setUserDetailsObject,
+} from "../../statemanager/slices/LoginUserDataSlice";
 
 const CoachAgentScoutVersionMotherComponent = () => {
+  const dispatch = useDispatch();
+
   const menuButtonsArray = [
     { name: "Home", icon: "home", path: "/" },
 
@@ -27,9 +33,9 @@ const CoachAgentScoutVersionMotherComponent = () => {
 
   const menuButtonsArrayTWO2 = [
     // { name: "Add Agency", icon: "follow_the_signs", path: "none" },
-    { name: "Help", icon: "help", path: "none" },
-    { name: "Settings", icon: "settings", path: "none" },
-    { name: "Logout", icon: "door_back", path: "none" },
+    { name: "Help", icon: "help", path: "/multiStudio/help" },
+    { name: "Settings", icon: "settings", path: "/multiStudio/settings" },
+    { name: "Logout", icon: "door_back", path: "/login" },
   ];
 
   // const navigate = useNavigate();
@@ -235,13 +241,13 @@ const CoachAgentScoutVersionMotherComponent = () => {
         </div>
         {/* // Search Area? */}
         <div
-          style={{ flex: ".45", paddingTop: "1%", paddingLeft: "4vw" }}
+          style={{ flex: ".635", paddingTop: "1%", paddingLeft: "4vw" }}
         ></div>
         {/* // profile details Area */}
         <div
           style={{
             // Should be 37
-            flex: ".34",
+            flex: ".155",
             paddingTop: "1%",
             paddingRight: "1.5%",
           }}
@@ -311,6 +317,26 @@ const CoachAgentScoutVersionMotherComponent = () => {
               {menuButtonsArrayTWO2 &&
                 menuButtonsArrayTWO2.map((data, index) => {
                   const { name, icon, path } = data;
+
+                  if (name === "Logout") {
+                    return (
+                      <li
+                        key={index}
+                        onClick={() => {
+                          dispatch(setLoginStatus(false));
+                          dispatch(setUserDetailsObject({}));
+                        }}
+                      >
+                        <NavBarButton
+                          ButtonName={name}
+                          ButtonImage={icon}
+                          path={path}
+                          // buttonStyle={{ color: "#E4E8F9" }}
+                        />
+                      </li>
+                    );
+                  }
+
                   return (
                     <li key={index}>
                       <NavBarButton

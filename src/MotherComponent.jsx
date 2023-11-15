@@ -11,12 +11,18 @@ import SavedFilters from "./components/MenuButtons/SavedFilters";
 import LightAndDarkModeSwitch from "./components/Switch/LightAndDarkModeSwitch";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavBarButton from "./components/NavBarButtons/NavBarButton";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 import CreateProfileModal from "./components/Modals/CreateProfileModal";
 import UploadPlayer from "./components/Tooltips/UploadPlayer";
 import WelcomeMessageModal from "./components/Modals/WelcomeMessageModal";
-import { selectUserDetailsObject } from "./statemanager/slices/LoginUserDataSlice";
+import {
+  selectUserDetailsObject,
+  setLoginStatus,
+  setUserDetailsObject,
+} from "./statemanager/slices/LoginUserDataSlice";
+import BasicSnackBar from "./components/Snackbars/BasicSnackbar";
+import WarningAlertModal from "./components/Modals/WarningAlertModal";
 
 const MotherComponent = () => {
   const LoginUserDetails = useSelector(selectUserDetailsObject);
@@ -26,7 +32,7 @@ const MotherComponent = () => {
     { name: "Home", icon: "home", path: "/" },
     // The none values are for the savedFilters which is an accordion and not a button.. skipped over it in the map
     { name: "none", icon: "none" },
-    { name: "Favourite", icon: "favorite", path: "/none" },
+    { name: "Favourite", icon: "favorite", path: "/favorite" },
     // { name: "Community", icon: "people", path: "/community" },
     { name: "News", icon: "comment", path: "/news" },
     {
@@ -37,12 +43,12 @@ const MotherComponent = () => {
   ];
 
   const menuButtonsArrayTWO2 = [
-    { name: "Help", icon: "help", path: "none" },
-    { name: "Settings", icon: "settings", path: "none" },
-    { name: "Logout", icon: "door_back", path: "none" },
+    { name: "Help", icon: "help", path: "/help" },
+    { name: "Settings", icon: "settings", path: "/settings" },
+    { name: "Logout", icon: "door_back", path: "/login" },
   ];
 
-  // const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // const [themePallette, setThemePallette] = useState({us});
 
@@ -186,6 +192,77 @@ const MotherComponent = () => {
   color:${primaryTextColor}
 }
 
+.css-1hxdtko-MuiFormLabel-root-MuiInputLabel-root{
+  color:${primaryTextColor}
+}
+
+
+.css-1wuilmg-MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-input{
+  color:${primaryTextColor}
+}
+
+.css-1xrtpas-MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-input{
+  color:${primaryTextColor}
+
+}
+
+
+.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
+  color:${primaryTextColor}
+
+}
+
+.css-1jfokfp-MuiFormLabel-root{
+  color:${primaryTextColor}
+
+}
+
+.css-114y07-MuiFormLabel-root-MuiInputLabel-root,.css-1hxdtko-MuiFormLabel-root-MuiInputLabel-root.Mui-focused{
+  color:${primaryTextColor}
+
+}
+
+.css-13bx8ye-MuiTableCell-root{
+  borderBottom:none 
+}
+
+.css-18mmw2g-MuiTableCell-root{
+  border-bottom:none
+}
+
+.css-13bx8ye-MuiTableCell-root{
+  border-bottom:none
+}
+
+.css-trft4d-MuiTableCell-root{
+  color:${primaryTextColor}
+}
+
+.css-18mmw2g-MuiTableCell-root{
+  color:${primaryTextColor}
+
+}
+.css-15cg2ol-MuiTableCell-root{
+  color:${primaryTextColor}
+
+}
+.css-1cjzt9h-MuiTableCell-root{
+  color:${primaryTextColor}
+}
+
+.css-1hsflyn-MuiTableCell-root,
+.css-1arwt0a-MuiTableCell-root ,.css-1v0znwy-MuiTableCell-root  {
+  color:${primaryTextColor}
+}
+
+
+.css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input{
+  color:${primaryTextColor}
+}
+
+.css-17at8t4-MuiFormLabel-root-MuiInputLabel-root{
+  color:${primaryTextColor}
+}
 
   `;
 
@@ -229,7 +306,7 @@ const MotherComponent = () => {
           {/* <h4 style={{ marginTop: "2vh" }}>Talent Match</h4> */}
         </div>
         {/* // Search Area? */}
-        <div style={{ flex: ".4", paddingTop: "1%", paddingLeft: "4vw" }}>
+        <div style={{ flex: ".60", paddingTop: "1%", paddingLeft: "4vw" }}>
           {/* "#3D2A2F */}
           {/* <SeachBarTextField label={"Search Player"} marginLeft="3vw" />{" "} */}
         </div>
@@ -237,7 +314,7 @@ const MotherComponent = () => {
         <div
           style={{
             // Should be 37
-            flex: ".39",
+            flex: ".19",
             // background: "yellow",
             paddingTop: "1%",
             paddingRight: "1.5%",
@@ -247,11 +324,11 @@ const MotherComponent = () => {
           {/* sx={{ float: "right", marginLeft: "1vw", borderBottom: "none" }} */}
 
           <ProfileMenu
-            style={{ float: "right", marginLeft: "1vw", borderBottom: "none" }}
+            style={{ float: "right", borderBottom: "none" }}
             name="Active user name"
           />
 
-          <IconButton sx={{ float: "right", marginLeft: ".5vw" }}>
+          <IconButton sx={{ float: "right" }}>
             <NotificationAdd className="primaryColor" />
           </IconButton>
 
@@ -262,7 +339,6 @@ const MotherComponent = () => {
           />
 
           <LightAndDarkModeSwitch style={{ float: "right" }} />
-          <WelcomeMessageModal />
         </div>
       </div>
       {/* // ======  PAGE CONTENT ===== \\ */}
@@ -316,6 +392,26 @@ const MotherComponent = () => {
               {menuButtonsArrayTWO2 &&
                 menuButtonsArrayTWO2.map((data, index) => {
                   const { name, icon, path } = data;
+
+                  if (name === "Logout") {
+                    return (
+                      <li
+                        key={index}
+                        onClick={() => {
+                          dispatch(setLoginStatus(false));
+                          dispatch(setUserDetailsObject({}));
+                        }}
+                      >
+                        <NavBarButton
+                          ButtonName={name}
+                          ButtonImage={icon}
+                          path={path}
+                          // buttonStyle={{ color: "#E4E8F9" }}
+                        />
+                      </li>
+                    );
+                  }
+
                   return (
                     <li key={index}>
                       <NavBarButton
@@ -344,7 +440,8 @@ const MotherComponent = () => {
           <Outlet />
         </div>
       </div>
-      <style dangerouslySetInnerHTML={{ __html: styles }} />;
+      <style dangerouslySetInnerHTML={{ __html: styles }} />
+      <BasicSnackBar />
     </div>
   );
 };

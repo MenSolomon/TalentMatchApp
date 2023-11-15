@@ -32,15 +32,86 @@ import CoachAgentScoutVersionPlayerManagement from "./CoachAgentScoutVersion/src
 import PrivateRoutes from "./utilities/PrivateRoute";
 import Support from "./screens/Support";
 import SupportSettings from "./screens/SupportSettings";
+import WarningAlertModal from "./components/Modals/WarningAlertModal";
+import { createTheme, ThemeProvider, Button } from "@mui/material";
+import Error404 from "./screens/Error404";
+import ErrorPageNotFound from "./screens/ErrorPageNotFound";
+
+// // Create a theme with the desired font-family
+// MuiOutlinedInput: {
+//   root: {
+//     '&:hover:not($disabled):not($focused):not($error) $notchedOutline': {
+//       borderColor: 'your-hover-color',
+//       // Add other styles as needed
+//     },
+//     '&$focused $notchedOutline': {
+//       borderColor: 'your-focused-color',
+//       // Add other styles as needed
+//     },
+//   },
+//   notchedOutline: {
+//     borderColor: 'your-default-color',
+//     // Add other styles as needed
+//   },
+// },
+
+const theme = createTheme({
+  typography: {
+    fontFamily: "Nunito, sans-serif",
+  },
+  overrides: {
+    MuiAutocomplete: {
+      root: {
+        "& .MuiOutlinedInput-notchedOutline": {
+          borderColor: "red",
+          // Add other styles as needed
+        },
+        "&:hover .MuiOutlinedInput-notchedOutline": {
+          borderColor: "red",
+          // Add other styles as needed
+        },
+        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+          borderColor: "red",
+          // Add other styles as needed
+        },
+      },
+    },
+    MuiSelect: {
+      outlined: {
+        "&:hover:not($disabled):not($focused):not($error) $notchedOutline": {
+          borderColor: "green",
+          // Add other styles as needed
+        },
+        "&$focused $notchedOutline": {
+          borderColor: "blue",
+          // Add other styles as needed
+        },
+      },
+      notchedOutline: {
+        borderColor: "yellow",
+        // Add other styles as needed
+      },
+    },
+    MuiTable: {
+      root: {
+        color: "green", // Set your desired text color
+      },
+    },
+  },
+});
 
 const App = () => {
   return (
-    <div>
+    <ThemeProvider theme={theme}>
       <Routes>
         {/* PROTECTED ROUTES  */}
 
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<MotherComponent />}>
+            <Route path="/favorite" element={<Error404 />} />
+            <Route path="/help" element={<Error404 />} />
+            <Route path="/settings" element={<Error404 />} />
+
             <Route path="/" element={<HomePage />} />
             <Route path="/profile/:profileName" element={<ViewAllScreen />} />
 
@@ -56,6 +127,10 @@ const App = () => {
           {/* //PLayerVersion */}
 
           <Route path="/studio" element={<PlayerVersionMotherComponent />}>
+            <Route path="/studio/favorite" element={<Error404 />} />
+            <Route path="/studio/help" element={<Error404 />} />
+            <Route path="/studio/settings" element={<Error404 />} />
+
             <Route
               path="/studio/dashboard"
               element={<PlayerVersionDashboard />}
@@ -70,6 +145,7 @@ const App = () => {
               element={<PlayerVersionFavorites />}
             />
             <Route path="/studio/inbox" element={<PlayerVersionInbox />} />
+
             <Route
               path="/studio/analytics"
               element={<PlayerVersionAnalytics />}
@@ -82,6 +158,10 @@ const App = () => {
             path="/multiStudio"
             element={<CoachAgentScoutVersionMotherComponent />}
           >
+            <Route path="/multiStudio/favorite" element={<Error404 />} />
+            <Route path="/multiStudio/help" element={<Error404 />} />
+            <Route path="/multiStudio/settings" element={<Error404 />} />
+
             <Route
               path="/multiStudio/dashboard"
               element={<CoachAgentScoutVersionDashboard />}
@@ -120,8 +200,8 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
 
         <Route path="/membership-plans" element={<MembershipPlanPage />} />
-        <Route path="/spt" element={<Support />} />
-        <Route path="/sptss" element={<SupportSettings />} />
+        {/* <Route path="/spt" element={<Support />} />
+        <Route path="/sptss" element={<SupportSettings />} /> */}
 
         {/* // CREATE ACCOUNT STEPPER URLS */}
         <Route path="/create-account" element={<SignupFormsMotherComponent />}>
@@ -138,8 +218,13 @@ const App = () => {
 
           <Route path="/create-account/user-form" element={<CreateAccount />} />
         </Route>
+
+        <Route path="*" element={<ErrorPageNotFound />} />
       </Routes>
-    </div>
+      {/* //// Alert Modal to display error messages */}
+
+      <WarningAlertModal />
+    </ThemeProvider>
   );
 };
 

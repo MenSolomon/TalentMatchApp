@@ -45,7 +45,7 @@ const BackEndDataCatalog = ({ children }) => {
       });
 
       items.forEach((item) => {
-        if (item.dateCreated != "") {
+        if (item.dateCreated !== "" && item.dateCreated !== null) {
           const firestoreTimestamp = item.dateCreated;
           const date = firestoreTimestamp.toDate();
           const options = {
@@ -62,15 +62,17 @@ const BackEndDataCatalog = ({ children }) => {
         }
       });
 
-      console.log(items, "User array");
+      console.log(items, "All Users array");
       dispatch(setUsersDatabase(items));
 
       const updatedLoginUserDetails = items.filter((data) => {
         return data.accountId === accountId;
       });
 
-      dispatch(setUserDetailsObject(updatedLoginUserDetails[0]));
-      console.log("UdatedLoginUserDetails", updatedLoginUserDetails);
+      if (accountId) {
+        dispatch(setUserDetailsObject(updatedLoginUserDetails[0]));
+        console.log("UdatedLoginUserDetails", updatedLoginUserDetails);
+      }
     });
     return () => {
       alldata();
