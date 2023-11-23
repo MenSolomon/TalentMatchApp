@@ -98,7 +98,7 @@ export default function StatisticsScreenTab({ StatisticsTabItemsArray }) {
       <Box sx={{ flex: ".9" }}>
         {StatisticsTabItemsArray.map((data, index) => {
           let TaskBarComponent = lazy(() =>
-            import(`../../screens/subscreens/Statistics${data}`)
+            import(`../../screens/subscreens/Statistics${data}.jsx`)
           );
 
           return (

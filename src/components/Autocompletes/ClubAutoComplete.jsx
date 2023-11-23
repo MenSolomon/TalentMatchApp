@@ -44,7 +44,11 @@ export default function ClubAutoComplete({
         <TextField
           {...params}
           label={label}
-          helperText="Type club name if not found"
+          helperText={
+            <span className="primaryTextColor">
+              Type club name if not found{" "}
+            </span>
+          }
         />
       )}
       renderOption={renderOption}

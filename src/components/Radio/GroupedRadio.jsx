@@ -22,7 +22,12 @@ export default function GroupedRadio({
 
   return (
     <FormControl>
-      <FormLabel id="demo-row-radio-buttons-group-label">{labelName}</FormLabel>
+      <FormLabel
+        id="demo-row-radio-buttons-group-label"
+        className="primaryTextColor"
+      >
+        {labelName}
+      </FormLabel>
       <RadioGroup
         row
         aria-labelledby="demo-row-radio-buttons-group-label"

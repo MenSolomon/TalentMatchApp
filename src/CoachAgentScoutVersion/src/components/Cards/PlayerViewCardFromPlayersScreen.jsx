@@ -9,11 +9,12 @@ const PlayerViewCardFromPlayersScreen = ({
   nationality,
   position,
   jerseyNumber,
+  id,
 }) => {
   const navigate = useNavigate();
 
   const handlePlayerManagementNavigation = () => {
-    navigate(`/multiStudio/players/${firstName}${surName}`);
+    navigate(`/multiStudio/players/${id}`);
   };
 
   return (

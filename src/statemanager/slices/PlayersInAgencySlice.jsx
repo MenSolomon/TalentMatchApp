@@ -5,6 +5,7 @@ export const PlayersInAgencySlice = createSlice({
   initialState: {
     playersInAgencyArray: [
       {
+        id: "ddc92652-a3e4-4518-b374-5cf589ec1e7c",
         firstName: "Richard",
         surName: "Attah",
         Age: "28",
@@ -21,6 +22,7 @@ export const PlayersInAgencySlice = createSlice({
         contractExpiryDate: "2024/11/13",
       },
       {
+        id: "4efaea39-3cfa-409a-929c-03fe6074aad9",
         firstName: "Benjamin",
         surName: "Bature",
         Age: "26",
@@ -37,6 +39,7 @@ export const PlayersInAgencySlice = createSlice({
         contractExpiryDate: "2024/11/13",
       },
       {
+        id: "a9ef4628-8eb5-426c-aa09-e8ed67d50c97",
         firstName: "Ishak",
         surName: "Shaibu",
         CountryCode: "GH",
@@ -51,7 +54,6 @@ export const PlayersInAgencySlice = createSlice({
         height: "1.3",
         marketValue: "4K",
         contractExpiryDate: "2024/07/13",
-
         videos: [
           {
             src: "/shaibuJuggling.mp4",
@@ -61,6 +63,7 @@ export const PlayersInAgencySlice = createSlice({
         ],
       },
       {
+        id: "6fdf6a14-79f0-4531-a198-b61df87865f9",
         firstName: "Amos",
         surName: "Acheampong",
         Age: "30",
@@ -77,6 +80,7 @@ export const PlayersInAgencySlice = createSlice({
         contractExpiryDate: "2024/11/13",
       },
       {
+        id: "9428749f-f0bd-4271-bc89-8e43c9e2ae01",
         firstName: "Anthony",
         surName: "Okachi",
         Age: "23",
@@ -93,6 +97,7 @@ export const PlayersInAgencySlice = createSlice({
         contractExpiryDate: "2024/11/13",
       },
       {
+        id: "26c2bb7a-ff7d-483d-967e-574d1763ccda",
         firstName: "Believer",
         surName: "Yeboah",
         Age: "12",
@@ -107,7 +112,6 @@ export const PlayersInAgencySlice = createSlice({
         height: "1.5",
         marketValue: "2K",
         contractExpiryDate: "",
-
         videos: [
           {
             src: "/believerJuggling.mp4",
@@ -117,6 +121,7 @@ export const PlayersInAgencySlice = createSlice({
         ],
       },
       {
+        id: "dfda1364-2eb2-4562-a9c2-e7997b676eb7",
         firstName: "Stephen",
         surName: "Owusu",
         Age: "26",
@@ -133,6 +138,7 @@ export const PlayersInAgencySlice = createSlice({
         contractExpiryDate: "2026/11/13",
       },
       {
+        id: "fddb7f11-3152-459f-8dca-b153102829a2",
         firstName: "Solomon",
         surName: "Safo-Taylor",
         Age: "25",
@@ -149,6 +155,7 @@ export const PlayersInAgencySlice = createSlice({
         contractExpiryDate: "2024/11/13",
       },
       {
+        id: "6ff1258b-e0a8-467b-845f-454c62533af5",
         firstName: "Solomon",
         surName: "Agbasi",
         Age: "23",
@@ -165,6 +172,7 @@ export const PlayersInAgencySlice = createSlice({
         contractExpiryDate: "2024/11/13",
       },
       {
+        id: "1bb0af8a-8a1c-4e92-8d91-a548e613b9a7",
         firstName: "Pa Ebou",
         surName: "Dampha",
         Age: "20",
@@ -181,6 +189,7 @@ export const PlayersInAgencySlice = createSlice({
         contractExpiryDate: "2024/11/13",
       },
       {
+        id: "d06d1473-83a9-497c-9c66-9acee4d7e4fb",
         firstName: "Daniel",
         surName: "Opare",
         Age: "33",
@@ -198,6 +207,7 @@ export const PlayersInAgencySlice = createSlice({
       },
     ],
     selectedPlayerToCompareArray: [],
+    playerSelectedByClubOrScoutInPlayerManagement: {},
   },
 
   reducers: {
@@ -208,6 +218,9 @@ export const PlayersInAgencySlice = createSlice({
     setSelectedPlayerToCompareArray: (state, action) => {
       state.selectedPlayerToCompareArray = action.payload;
     },
+    setPlayerSelectedByClubOrScoutInPlayerManagement: (state, action) => {
+      state.playerSelectedByClubOrScoutInPlayerManagement = action.payload;
+    },
   },
 });
 
@@ -217,6 +230,12 @@ export const selectPlayersInAgencyArray = (state) =>
 export const selectPlayerToCompareArray = (state) =>
   state.PlayersInAgencySlice.selectedPlayerToCompareArray;
 
-export const { setPlayersInAgencyArray, setSelectedPlayerToCompareArray } =
-  PlayersInAgencySlice.actions;
+export const selectPlayerSelectedByClubOrScoutInPlayerManagement = (state) =>
+  state.PlayersInAgencySlice.playerSelectedByClubOrScoutInPlayerManagement;
+
+export const {
+  setPlayersInAgencyArray,
+  setSelectedPlayerToCompareArray,
+  setPlayerSelectedByClubOrScoutInPlayerManagement,
+} = PlayersInAgencySlice.actions;
 export default PlayersInAgencySlice.reducer;

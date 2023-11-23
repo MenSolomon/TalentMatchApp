@@ -45,7 +45,7 @@ export default function BasicAutoComplete({
       onChange={handlePositionChange}
       // onClose={handleAutocompleteClose}
       value={ListArray.find((item) => item === defaultValue)}
-      sx={{ ...style }}
+      sx={{ ...style, color: "black" }}
       renderInput={(params) => <TextField {...params} label={label} />}
       clearIcon={<Clear style={{ display: "none" }} />}
       clearOnBlur={false} // Prevent clearing on blur

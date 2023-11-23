@@ -1,14 +1,51 @@
-import { Button, IconButton } from "@mui/material";
+import { Avatar, Button, IconButton } from "@mui/material";
 import BoxIcon from "../components/Icons/BoxIcon";
 import VideoImage from "../assets/images/videoImage.svg";
 import { useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../statemanager/slices/ThemeProviderSlice";
 import UploadVideoModal from "../components/Modals/UploadVideosModal";
+import NewsCard from "../../../components/Cards/NewsCard/NewsCard";
 
 const PlayerVersionDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
 
   const { primaryTextColor } = ThemeProvider;
+
+  const newData = [
+    {
+      title:
+        "India vs Kuwait: Chhetri and co. aim to regain form in tricky World Cup qualifier",
+      url: "https://www.espn.in/football/story/_/id/38902184/india-vs-kuwait-preview-sunil-chhetri-igor-stimac-regain-form-tricky-fifa-world-cup-qualifier",
+      img: "https://a.espncdn.com/photo/2023/1115/r1253445_1296x729_16-9.jpg",
+    },
+  ];
+
+  const dummyRecentMessages = [
+    {
+      message: "Sample message for display",
+      userAvatar: "/richard attah.jpeg",
+      date: "10:02 AM",
+      userName: "Richard Attah",
+    },
+    {
+      message: "Sample message for display",
+      userAvatar: "/bature.jpg",
+      date: "11/21/2023",
+      userName: "Benjamin Bature",
+    },
+    {
+      message: "Sample message for display",
+      userAvatar: "/OlderPlayer.jpg",
+      date: "Yesterday",
+      userName: "Ishak Shaibu",
+    },
+    {
+      message: "Sample message for display",
+      userAvatar: "/acheampong.webp",
+      date: "3:25 PM",
+      userName: "Amos Acheampong",
+    },
+  ];
 
   return (
     <div
@@ -132,15 +169,45 @@ const PlayerVersionDashboard = () => {
             className="cardBackground"
             style={{
               flex: ".5",
-
               borderRadius: "1vw",
               paddingLeft: "2vw",
               paddingRight: "2vw",
               paddingTop: "3vh",
               paddingBottom: "2vh",
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <h5>Recent messages</h5>
+            <div style={{ flex: ".2" }}>
+              <h5>Recent messages</h5>
+            </div>
+
+            <div
+              style={{
+                // background: "teal",
+                overflowY: "scroll",
+                flex: ".8",
+                maxHeight: "26vh",
+              }}
+            >
+              {dummyRecentMessages.map((data, index) => {
+                const { message, userAvatar, date, userName } = data;
+
+                return (
+                  <div key={index}>
+                    <RecentMessageCard
+                      message={message}
+                      userAvatar={userAvatar}
+                      date={date}
+                      userName={userName}
+                    />
+                    {/* <br /> */}
+                  </div>
+                );
+              })}
+              <br />
+            </div>
           </div>
           <div
             className="cardBackground"
@@ -154,7 +221,20 @@ const PlayerVersionDashboard = () => {
               paddingBottom: "2vh",
             }}
           >
-            <h5>News</h5>
+            <h5>Latest news</h5>
+
+            {newData.map((data, index) => {
+              const { title, img, url } = data;
+              return (
+                <NewsCard
+                  key={index}
+                  title={title}
+                  image={img}
+                  url={url}
+                  style={{ minWidth: "20.5vw", minHeight: "27vh" }}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
@@ -163,3 +243,33 @@ const PlayerVersionDashboard = () => {
 };
 
 export default PlayerVersionDashboard;
+
+const RecentMessageCard = ({ message, userAvatar, date, userName }) => {
+  return (
+    <div
+      style={{
+        // position: "absolute",
+        width: "20vw",
+        height: "10vh",
+        // background: "yellow",
+        display: "flex",
+        padding: ".3vw",
+        cursor: "pointer",
+      }}
+    >
+      <div style={{ flex: ".22" }}>
+        <Avatar src={userAvatar} sx={{ width: 50, height: 50 }} />
+      </div>
+      <div style={{ flex: ".78", fontSize: ".85em" }}>
+        {" "}
+        <div>
+          {" "}
+          <span style={{ fontWeight: "bolder" }}> {userName} </span>{" "}
+          <span style={{ float: "right" }}>{date} </span>
+        </div>
+        <p>{message?.length === 20 ? `${message}...` : message}</p>{" "}
+      </div>
+      {/* <div style={{ flex: ".2", background: "red" }}></div> */}
+    </div>
+  );
+};

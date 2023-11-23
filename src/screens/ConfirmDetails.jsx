@@ -22,6 +22,7 @@ import {
   setWarningAlertModalCounter,
   setWarningAlertModalMessage,
 } from "../statemanager/slices/OtherComponentStatesSlice";
+import { setThemeProviderToLightMode } from "../statemanager/slices/ThemeProviderSlice";
 
 const ConfirmDetails = () => {
   //
@@ -166,7 +167,10 @@ const ConfirmDetails = () => {
     }
   };
 
-  //
+  /// RESETTING THE THEME WHEN YOU  Navigate to this  page -- this is a temporal solution to the text field label color chnage
+  useEffect(() => {
+    dispatch(setThemeProviderToLightMode());
+  }, []);
 
   return (
     <div
@@ -210,13 +214,15 @@ const ConfirmDetails = () => {
  */}
 
             {roleSelected === "Player" ? (
-              <img src="/public/PlayerBlue.png" width="70px" height="80px" />
+              <img src="/PlayerBlue.png" width="70px" height="80px" />
             ) : roleSelected === "Agent" ? (
-              <img src="/public/AgentBlue.png" width="100px" />
+              <img src="/AgentBlue.png" width="100px" />
             ) : roleSelected === "Coach" ? (
-              <img src="/public/CoachBlue.png" width="100px" />
+              <img src="/CoachBlue.png" width="100px" />
             ) : roleSelected === "Scout" ? (
-              <img src="/public/ScoutBlue.png" width="100px" />
+              <img src="/ScoutBlue.png" width="100px" />
+            ) : roleSelected === "Club" ? (
+              <img src="/ClubIconBlue.png" width="100px" />
             ) : (
               <img alt="No Role selected" width="100px" />
             )}
@@ -317,10 +323,12 @@ const ConfirmDetails = () => {
                   <span style={{ color: "black" }}> {Nationality} </span>{" "}
                 </li>
                 <li>
-                  {roleSelected === "Player" ? "Club Name" : "Organisation"}
+                  {roleSelected === "Player" || roleSelected === "Club"
+                    ? "Club Name"
+                    : "Organisation"}
                   <span style={{ color: "black" }}>
                     {" "}
-                    {roleSelected === "Player"
+                    {roleSelected === "Player" || roleSelected === "Club"
                       ? userData?.club
                       : userData?.organization}{" "}
                   </span>{" "}

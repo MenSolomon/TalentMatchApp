@@ -248,13 +248,13 @@ const Login = () => {
             <div style={{ float: "right" }}>
               <ul>
                 <li>
-                  <Instagram />
+                  <Instagram sx={{ color: "white" }} />
                 </li>
                 <li>
-                  <Facebook />
+                  <Facebook sx={{ color: "white" }} />
                 </li>
                 <li>
-                  <Twitter />
+                  <Twitter sx={{ color: "white" }} />
                 </li>
               </ul>{" "}
             </div>{" "}

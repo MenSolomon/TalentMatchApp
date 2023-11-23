@@ -33,9 +33,15 @@ export default function FreeTrialMenu() {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem sx={{ color: "black" }} onClick={handleClose}>
+          Profile
+        </MenuItem>
+        <MenuItem sx={{ color: "black" }} onClick={handleClose}>
+          My account
+        </MenuItem>
+        <MenuItem sx={{ color: "black" }} onClick={handleClose}>
+          Logout
+        </MenuItem>
       </Menu>
     </div>
   );

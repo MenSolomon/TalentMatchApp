@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
-import { persistReducer } from "redux-persist";
+import { createTransform, persistReducer } from "redux-persist";
 import { combineReducers } from "@reduxjs/toolkit";
 // import incomeReducer from "./slices/incomeSlice";
 import playerDetailsCardsCollapseReducer from "./slices/CollapsePlayerDisplayCards";
@@ -13,19 +13,34 @@ import LoginUserDataSlice from "./slices/LoginUserDataSlice";
 import SavedProfilesReducer from "./slices/SavedProfileSlice";
 import OtherComponentStatesReducer from "./slices/OtherComponentStatesSlice";
 import DatabaseReducer from "./slices/DatabaseSlice";
+import ClubsInDatabaseReducer from "./slices/ClubsInDatabaseSlice";
+
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
   blacklist: [
-    "PlayersInAgencySlice",
+    // selectedPlayerToCompareArray make selected player in the playersInAgenySlice not persisted
+    // "PlayersInAgencySlice",
     "FormStepper",
     "UserData",
     // "UserLoginData",
     "SavedProfiles",
     "OtherComponentStates",
     // "Database",
+    // "ThemeProviderSlice",
     // "TempDatabase",
+  ],
+};
+
+const PlayersInAgencySlicePersistConfig = {
+  key: "PlayersInAgencySlice",
+  version: 1,
+  storage,
+  blacklist: ["selectedPlayerToCompareArray"],
+  whitelist: [
+    "playersInAgencyArray",
+    "playerSelectedByClubOrScoutInPlayerManagement",
   ],
 };
 
@@ -33,7 +48,10 @@ const reducer = combineReducers({
   //   files: incomeReducer,
   CollapsePlayerCards: playerDetailsCardsCollapseReducer,
   ThemeProviderSlice: ThemeProviderReducer,
-  PlayersInAgencySlice: PlayersInAgencyReducer,
+  PlayersInAgencySlice: persistReducer(
+    PlayersInAgencySlicePersistConfig,
+    PlayersInAgencyReducer
+  ),
   FormStepper: SignupStepperReducer,
   UserData: UserDaterReducer,
   TempDatabase: TempDatabaseReducer,
@@ -41,6 +59,7 @@ const reducer = combineReducers({
   SavedProfiles: SavedProfilesReducer,
   OtherComponentStates: OtherComponentStatesReducer,
   Database: DatabaseReducer,
+  clubsInTalentMeetDatabase: ClubsInDatabaseReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

@@ -94,7 +94,7 @@ export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
 
       {PlayerTabItemsArray.map((data, index) => {
         let TaskBarComponent = lazy(() =>
-          import(`../../screens/subscreens/Player${data}`)
+          import(`../../screens/subscreens/Player${data}.jsx`)
         );
 
         return (

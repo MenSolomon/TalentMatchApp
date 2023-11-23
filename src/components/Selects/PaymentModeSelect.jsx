@@ -123,34 +123,38 @@ export default function PaymentModeSelect({ paymentType }) {
           label="PaymentModeSelect"
           onChange={handleChange}
         >
-          <MenuItem value={"Cards"} style={{ display: "flex" }}>
+          <MenuItem
+            sx={{ color: "black" }}
+            value={"Cards"}
+            style={{ display: "flex" }}
+          >
             Credit Card{" "}
             <img
-              src="/public/VisaCardMasterCard.png"
+              src="/VisaCardMasterCard.png"
               width="50px"
               style={{ marginLeft: "1vw" }}
             />{" "}
           </MenuItem>
-          <MenuItem value={"MTN Mobile Money"}>
+          <MenuItem sx={{ color: "black" }} value={"MTN Mobile Money"}>
             MTN Mobile Money{" "}
             <img
-              src="/public/MTNMobileMoney.png"
+              src="/MTNMobileMoney.png"
               width="30px"
               style={{ marginLeft: "1vw" }}
             />{" "}
           </MenuItem>
-          <MenuItem value={"Vodafone Cash"}>
+          <MenuItem sx={{ color: "black" }} value={"Vodafone Cash"}>
             Vodafone Cash{" "}
             <img
-              src="/public/VodafoneCash.png"
+              src="/VodafoneCash.png"
               width="30px"
               style={{ marginLeft: "1vw" }}
             />{" "}
           </MenuItem>
-          <MenuItem value={"AirtelTigo Money"}>
+          <MenuItem sx={{ color: "black" }} value={"AirtelTigo Money"}>
             AirtelTigo Money{" "}
             <img
-              src="/public/AirtelTigoCash.png"
+              src="/AirtelTigoCash.png"
               width="30px"
               style={{ marginLeft: "1vw" }}
             />{" "}
@@ -177,10 +181,18 @@ export default function PaymentModeSelect({ paymentType }) {
                 label="PaymentModeSelect"
                 onChange={handleCardTypeChange}
               >
-                <MenuItem value={"Visa Card"} style={{ display: "flex" }}>
+                <MenuItem
+                  sx={{ color: "black" }}
+                  value={"Visa Card"}
+                  style={{ display: "flex" }}
+                >
                   Visa Card{" "}
                 </MenuItem>
-                <MenuItem value={"Master Card"} style={{ display: "flex" }}>
+                <MenuItem
+                  sx={{ color: "black" }}
+                  value={"Master Card"}
+                  style={{ display: "flex" }}
+                >
                   Master Card{" "}
                 </MenuItem>
               </Select>
@@ -272,6 +284,7 @@ export default function PaymentModeSelect({ paymentType }) {
               >
                 {month.map((data, index) => (
                   <MenuItem
+                    sx={{ color: "black" }}
                     key={index}
                     value={data}
                     style={{ display: "flex" }}
@@ -295,6 +308,7 @@ export default function PaymentModeSelect({ paymentType }) {
                 {Years.map((data, index) => {
                   return (
                     <MenuItem
+                      sx={{ color: "black" }}
                       key={index}
                       value={data}
                       style={{ display: "flex" }}

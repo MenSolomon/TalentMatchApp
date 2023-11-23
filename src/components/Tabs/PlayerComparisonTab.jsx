@@ -1,10 +1,12 @@
-import React, { Suspense, lazy, useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { CircularProgress } from "@mui/material";
+// import dreat from "../../../src/screens/drawerScreens/Player"
+// import(`../../screens/drawerScreens/Player${data}`)
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -97,7 +99,7 @@ export default function PlayerComparisonDrawerTab({
 
       {PlayerComparisonTabItemsArray.map((data, index) => {
         let TaskBarComponent = lazy(() =>
-          import(`../../screens/drawerScreens/Player${data}`)
+          import(`../../../src/screens/drawerScreens/Player${data}.jsx`)
         );
 
         return (

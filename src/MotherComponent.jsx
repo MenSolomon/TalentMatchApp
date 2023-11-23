@@ -1,5 +1,5 @@
 import { NotificationAdd } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import { useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
@@ -23,6 +23,8 @@ import {
 } from "./statemanager/slices/LoginUserDataSlice";
 import BasicSnackBar from "./components/Snackbars/BasicSnackbar";
 import WarningAlertModal from "./components/Modals/WarningAlertModal";
+import Marquee from "react-fast-marquee";
+import { selectClubsInDatabase } from "./statemanager/slices/ClubsInDatabaseSlice";
 
 const MotherComponent = () => {
   const LoginUserDetails = useSelector(selectUserDetailsObject);
@@ -38,7 +40,7 @@ const MotherComponent = () => {
     {
       name: "Comparison",
       icon: "compare_arrows",
-      path: "/player-conmpare",
+      path: "/player-compare",
     },
   ];
 
@@ -49,6 +51,7 @@ const MotherComponent = () => {
   ];
 
   const dispatch = useDispatch();
+  const clubsInDatabase = useSelector(selectClubsInDatabase);
 
   // const [themePallette, setThemePallette] = useState({us});
 
@@ -151,7 +154,7 @@ const MotherComponent = () => {
   
 .css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root {
 
-  color: ${primaryTextColor}
+  color: ${primaryTextColor} !important
 }
 
 .nav-link.active {
@@ -173,98 +176,120 @@ const MotherComponent = () => {
 }
 
 .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root{
-  color:${primaryTextColor};
-  background: ${cardBackground}
+  color:${primaryTextColor} !important ;
+  background: ${cardBackground} !important
 }
 
 
 
 .css-7cyndw-MuiFormControl-root-MuiTextField-root {
-  border: 1px solid ${primaryTextColor} ;
-  border-radius: .3vw
+  border: 1px solid ${primaryTextColor} !important ;
+  border-radius: .3vw !important
 }
 
 
 .css-i4bv87-MuiSvgIcon-root{
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 }
 .css-1ua80n0-MuiInputBase-input-MuiOutlinedInput-input{
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 }
 
 .css-1hxdtko-MuiFormLabel-root-MuiInputLabel-root{
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 }
 
 
 .css-1wuilmg-MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-input{
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 }
 
 .css-1xrtpas-MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-input{
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 
 }
 
 
 .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 
 }
 
 .css-1jfokfp-MuiFormLabel-root{
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 
 }
 
 .css-114y07-MuiFormLabel-root-MuiInputLabel-root,.css-1hxdtko-MuiFormLabel-root-MuiInputLabel-root.Mui-focused{
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 
 }
 
 .css-13bx8ye-MuiTableCell-root{
-  borderBottom:none 
+  borderBottom:none  !important
 }
 
 .css-18mmw2g-MuiTableCell-root{
-  border-bottom:none
+  border-bottom:none !important
 }
 
 .css-13bx8ye-MuiTableCell-root{
-  border-bottom:none
+  border-bottom:none !important
 }
 
 .css-trft4d-MuiTableCell-root{
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 }
 
 .css-18mmw2g-MuiTableCell-root{
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 
 }
 .css-15cg2ol-MuiTableCell-root{
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 
 }
 .css-1cjzt9h-MuiTableCell-root{
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 }
 
 .css-1hsflyn-MuiTableCell-root,
 .css-1arwt0a-MuiTableCell-root ,.css-1v0znwy-MuiTableCell-root  {
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 }
 
 
 .css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input{
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 }
 
 .css-17at8t4-MuiFormLabel-root-MuiInputLabel-root{
-  color:${primaryTextColor}
+  color:${primaryTextColor} !important
 }
 
   `;
+
+  useEffect(() => {
+    // Update CSS variables when themeProviderObject changes
+    const root = document.documentElement;
+
+    if (themeProviderObject) {
+      root.style.setProperty("--background", themeProviderObject.background);
+      root.style.setProperty(
+        "--cardBackground",
+        themeProviderObject.cardBackground
+      );
+      root.style.setProperty(
+        "--primaryTextColor",
+        themeProviderObject.primaryTextColor
+      );
+      root.style.setProperty("--buttonColor", themeProviderObject.buttonColor);
+      root.style.setProperty(
+        "--secondaryTextColor",
+        themeProviderObject.secondaryTextColor
+      );
+    }
+  }, [themeProviderObject]);
 
   useEffect(() => {
     const { background } = themeProviderObject;
@@ -307,7 +332,37 @@ const MotherComponent = () => {
           {/* <h4 style={{ marginTop: "2vh" }}>Talent Match</h4> */}
         </div>
         {/* // Search Area? */}
-        <div style={{ flex: ".60", paddingTop: "1%", paddingLeft: "4vw" }}>
+        <div
+          style={{
+            flex: ".60",
+            paddingTop: "1%",
+            // paddingLeft: "4vw",
+            // background: "red",
+            position: "relative",
+          }}
+        >
+          <Marquee
+            speed={35}
+            pauseOnClick={true}
+            play
+            loop={0}
+            style={{ width: "100%", position: "absolute" }}
+          >
+            {/* I can be a React component, multiple React components, or just some
+            text. */}
+            {clubsInDatabase.map((data, index) => {
+              const { clubImage, clubName } = data;
+              return (
+                <Tooltip key={index} title={clubName}>
+                  <Avatar
+                    src={clubImage}
+                    sx={{ width: 38, height: 38, marginRight: 1.6 }}
+                  />
+                </Tooltip>
+              );
+            })}
+          </Marquee>
+
           {/* "#3D2A2F */}
           {/* <SeachBarTextField label={"Search Player"} marginLeft="3vw" />{" "} */}
         </div>
@@ -318,20 +373,11 @@ const MotherComponent = () => {
             flex: ".19",
             // background: "yellow",
             paddingTop: "1%",
-            paddingRight: "1.5%",
-            // display: "flex",
+            paddingLeft: "1.2vw",
+            display: "flex",
           }}
         >
-          {/* sx={{ float: "right", marginLeft: "1vw", borderBottom: "none" }} */}
-
-          <ProfileMenu
-            style={{ float: "right", borderBottom: "none" }}
-            name="Active user name"
-          />
-
-          <IconButton sx={{ float: "right", marginTop: "1vh" }}>
-            <NotificationAdd className="primaryColor" />
-          </IconButton>
+          {/* sx={{ , marginLeft: "1vw", borderBottom: "none" }} */}
 
           <UploadPlayer
             image={"duo"}
@@ -339,7 +385,16 @@ const MotherComponent = () => {
             studioUrl="/studio/dashboard"
           />
 
-          <LightAndDarkModeSwitch style={{ float: "right" }} />
+          <LightAndDarkModeSwitch />
+
+          <IconButton sx={{ marginTop: "1vh" }}>
+            <NotificationAdd className="primaryColor" />
+          </IconButton>
+
+          <ProfileMenu
+            style={{ borderBottom: "none" }}
+            name="Active user name"
+          />
         </div>
       </div>
       {/* // ======  PAGE CONTENT ===== \\ */}

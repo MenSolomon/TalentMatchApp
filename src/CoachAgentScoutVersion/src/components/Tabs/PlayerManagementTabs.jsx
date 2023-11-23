@@ -99,7 +99,7 @@ export default function PlayerManagementTabs({
             import(
               `../../screens/playerManagementScreen/PlayerManagement${data
                 .split(" ")
-                .join("")}`
+                .join("")}.jsx`
             )
           );
 

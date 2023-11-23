@@ -1,4 +1,3 @@
-import { IconButton } from "@mui/material";
 import BasicAutoComplete from "../../components/Autocompletes/BasicAutoComplete";
 import CountrySelect from "../../components/Autocompletes/CountrySelect";
 import PlayerCompareDisplayCard from "../../components/Cards/PlayerComparisonFilterPageCards/PlayerCompareDisplayCard";

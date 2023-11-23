@@ -99,10 +99,10 @@ export default function LightAndDarkModeSwitch({ style }) {
 
   return (
     <FormControlLabel
-      sx={{ SwitchStyle }}
+      sx={{ style }}
       control={
         <MaterialUISwitch
-          sx={{ m: 1 }}
+          sx={{ m: 1, ...style }}
           defaultChecked={background === "#09142D" ? true : false}
           // defaultChecked
           onChange={handleChangeSwithValue}

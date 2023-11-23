@@ -3,7 +3,7 @@ import { Card, IconButton } from "@mui/material";
 import sourceLogo from "../../../assets/images/espn.svg";
 import { useNavigate } from "react-router-dom";
 
-const NewsCard = ({ title, image, url, source }) => {
+const NewsCard = ({ title, image, url, source, style }) => {
   const handNavigateUrl = (url) => {
     window.open(url, "_blank");
   };
@@ -13,6 +13,7 @@ const NewsCard = ({ title, image, url, source }) => {
       <Card
         className="newsCard"
         sx={{
+          ...style,
           width: "30%",
           height: "45%",
           background: `url(${image})`,

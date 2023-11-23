@@ -8,6 +8,7 @@ const FreeTrial = () => {
         height: "100%",
         display: "flex",
         flexDirection: "column",
+        color: "black",
       }}
     >
       {/* free trial membership */}
@@ -37,21 +38,26 @@ const FreeTrial = () => {
           flexWrap: "wrap",
         }}
       >
-        <FreetrialCard name="Coach" roleImage="/public/CoachBlue.png" />
+        <FreetrialCard name="Coach" roleImage="/CoachBlue.png" />
         <FreetrialCard
           name="Player"
-          roleImage="/public/PlayerBlue.png"
+          roleImage="/PlayerBlue.png"
           imageStyle={{ maxWidth: "60px", height: "89px" }}
         />
         <FreetrialCard
           name="Agent"
-          roleImage="/public/AgentBlue.png"
+          roleImage="/AgentBlue.png"
           imageStyle={{ maxWidth: "95px", height: "89px" }}
         />
         <FreetrialCard
           name="Scout"
-          roleImage="/public/ScoutBlue.png"
+          roleImage="/ScoutBlue.png"
           imageStyle={{ maxWidth: "75px", height: "89px" }}
+        />
+        <FreetrialCard
+          name="Club"
+          roleImage="/ClubIconBlue.png"
+          imageStyle={{ maxWidth: "95px", height: "89px" }}
         />
       </div>
     </div>

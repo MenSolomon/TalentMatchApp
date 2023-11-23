@@ -39,7 +39,7 @@ const StatisticsHistory = () => {
 
     if (statsCategory === value) {
       TaskBarComponent = lazy(() =>
-        import(`./2ndDegreeSubScreens/HistoryScreen/${value}`)
+        import(`./2ndDegreeSubScreens/HistoryScreen/${value}.jsx`)
       );
       break;
     }

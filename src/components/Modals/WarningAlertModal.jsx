@@ -50,7 +50,7 @@ export default function WarningAlertModal() {
 
   return (
     <div>
-      <Button>Open modal</Button>
+      {/* <Button>Open modal</Button> */}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -89,6 +89,7 @@ export default function WarningAlertModal() {
                 // background: "blue",
                 paddingTop: "2vh",
                 textAlign: "center",
+                color: "black",
               }}
             >
               <h4>Oh snap!</h4>

@@ -1,5 +1,5 @@
 import { NotificationAdd } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
@@ -15,6 +15,8 @@ import {
   setLoginStatus,
   setUserDetailsObject,
 } from "../../statemanager/slices/LoginUserDataSlice";
+import Marquee from "react-fast-marquee";
+import { selectClubsInDatabase } from "../../statemanager/slices/ClubsInDatabaseSlice";
 
 const PlayerVersionMotherComponent = () => {
   const dispatch = useDispatch();
@@ -40,6 +42,8 @@ const PlayerVersionMotherComponent = () => {
     { name: "Settings", icon: "settings", path: "/studio/settings" },
     { name: "Logout", icon: "door_back", path: "/login" },
   ];
+
+  const clubsInDatabase = useSelector(selectClubsInDatabase);
 
   // const navigate = useNavigate();
 
@@ -229,41 +233,58 @@ const PlayerVersionMotherComponent = () => {
         </div>
         {/* // Search Area? */}
         <div
-          style={{ flex: ".635", paddingTop: "1%", paddingLeft: "4vw" }}
-        ></div>
+          style={{
+            flex: ".635",
+            paddingTop: "1%",
+
+            position: "relative",
+            // background: "red",
+          }}
+        >
+          <Marquee
+            speed={35}
+            pauseOnClick={true}
+            play
+            loop={0}
+            style={{ width: "100%", position: "absolute" }}
+          >
+            {/* I can be a React component, multiple React components, or just some
+            text. */}
+            {clubsInDatabase.map((data, index) => {
+              const { clubImage, clubName } = data;
+              return (
+                <Tooltip key={index} title={clubName}>
+                  <Avatar
+                    src={clubImage}
+                    sx={{ width: 38, height: 38, marginRight: 1.6 }}
+                  />
+                </Tooltip>
+              );
+            })}
+          </Marquee>
+        </div>
         {/* // profile details Area */}
+
         <div
           style={{
             // Should be 37
-            flex: ".155",
+            paddingLeft: "1.2vw",
+            flex: ".135",
             paddingTop: "1%",
-            paddingRight: "1.5%",
+            display: "flex",
+            // background: "red",
+            // paddingLeft: "5vw",
           }}
         >
-          <ProfileMenu
-            style={{ float: "right", borderBottom: "none" }}
-            name="Active user name"
-          />
+          <LightAndDarkModeSwitch />
 
-          <IconButton
-            sx={{ float: "right", marginLeft: ".5vw", marginTop: "1vh" }}
-          >
+          <IconButton sx={{ marginTop: "1vh" }}>
             <NotificationAdd className="primaryColor" />
           </IconButton>
-          {/* <Avatar
-            sx={{
-              // marginLeft: "2vw",
-              width: 55,
-              height: 55,
-              border: "4px solid blue",
-              marginLeft: ".4vw",
-              marginRight: ".4vw",
-              float: "right",
-            }}
-            src={avatarImage}
-          ></Avatar> */}
-
-          <LightAndDarkModeSwitch style={{ float: "right" }} />
+          <ProfileMenu
+            style={{ borderBottom: "none" }}
+            name="Active user name"
+          />
         </div>
       </div>
       {/* // ======  PAGE CONTENT ===== \\ */}

@@ -6,12 +6,14 @@ export const ThemeProviderSlice = createSlice({
     ThemeProviderObject: {
       background: "#f7f7f9",
       buttonColor: "#5585FE",
-      cardBackground: "white",
-      primaryTextColor: "black",
-      secondaryTextColor: "black",
+      cardBackground: "#FFFFFF",
+      primaryTextColor: "#000000",
+      secondaryTextColor: "#000000",
     },
   },
   // #152558
+  // background: "#060B10",
+  // cardBackground: "#12181F",
   reducers: {
     setThemeProviderToDarkMode: (state) => {
       state.ThemeProviderObject = {
@@ -26,9 +28,9 @@ export const ThemeProviderSlice = createSlice({
       state.ThemeProviderObject = {
         background: "#f7f7f9",
         buttonColor: "#5585FE",
-        cardBackground: "white",
-        primaryTextColor: "black",
-        secondaryTextColor: "black",
+        cardBackground: "#FFFFFF",
+        primaryTextColor: "#000000",
+        secondaryTextColor: "#000000",
       };
     },
   },

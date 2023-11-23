@@ -472,103 +472,110 @@ export default function CreateProfileModal({ ProfileType }) {
         })
       );
     } else {
-      // loginUserDetails
-      // allUsers
-
-      // Updating the current userdatabase in the state manageer for performance enhancing
-      // dispatch(
-      //   setUserDetailsObject({
-      //     ...loginUserDetails,
-      //     savedProfile: [...savedProfile, { label: profileName, filter: {} }],
-      //   })
-      // );
-
-      // alert(accountId);
-
       if (profileName !== "" && profileName.toLowerCase() !== "") {
         ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
-        const collectionRef = doc(db, `users_db`, accountId);
-        updateDoc(collectionRef, {
-          savedProfile: arrayUnion({
-            label: profileName,
-            dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-            filter: currentProfileFilterObject,
-          }),
+
+        const profileNameMatch = savedProfile.filter((data) => {
+          const { label } = data;
+          return (
+            label.replace(/\s/g, "").toLowerCase() ===
+            profileName.replace(/\s/g, "").toLowerCase()
+          );
         });
 
-        dispatch(
-          setTempUsersDatabase([
-            ...unMacthedPlayerDatabase,
-            {
-              ...loginUserDetails,
-              savedProfile: [
-                ...savedProfile,
-                {
-                  label: profileName,
-                  dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-                  filter: currentProfileFilterObject,
-                },
+        console.log("ProfileLabelMatxh", profileNameMatch);
+        // This it to make sure that we dont create a profile with the same name
+
+        if (profileNameMatch.length <= 0) {
+          const collectionRef = doc(db, `users_db`, accountId);
+          updateDoc(collectionRef, {
+            savedProfile: arrayUnion({
+              label: profileName,
+              dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+              filter: currentProfileFilterObject,
+            }),
+          });
+
+          dispatch(
+            setTempUsersDatabase([
+              ...unMacthedPlayerDatabase,
+              {
+                ...loginUserDetails,
+                savedProfile: [
+                  ...savedProfile,
+                  {
+                    label: profileName,
+                    dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+                    filter: currentProfileFilterObject,
+                  },
+                ],
+              },
+            ])
+          );
+
+          handleClose();
+          dispatch(
+            setCurrentProfileFilterObject({
+              PlaceOfBirth: "Any",
+              NationalityValue: "Any",
+              AgeRangeValue: [0, 40],
+              HeightRangeValue: [0, 2.5],
+              positionRangeSliderValues: {
+                "Clean sheet": [0, 100],
+                Saves: [0, 100],
+                "Long pass accuracy": [0, 100],
+                "Blocked shots": [0, 100],
+                "Aerial duels": [0, 100],
+                "Penalty stop success": [0, 100],
+                "Sweeping success": [0, 100],
+                Clearance: [0, 100],
+                Interception: [0, 100],
+                Blocks: [0, 100],
+                "Clean sheets per season": [0, 100],
+                "Successful tackles rate %": [0, 100],
+                "Pass success": [0, 100],
+                "Total passes": [0, 100],
+                Assists: [0, 100],
+                "Key passes per game": [0, 100],
+                Interceptions: [0, 100],
+                "Successful tackles rate": [0, 100],
+                "Successful crosses": [0, 100],
+                Goals: [0, 100],
+                "Goal/match played ratio": [0, 100],
+                assists: [0, 100],
+                "Shots per game": [0, 100],
+                "Goal conversion rate %": [0, 100],
+                "Offside range": [0, 100],
+              },
+              MarketValue: [0, 40],
+              ClubCountryValue: "Any",
+              CaptainRadioValue: "Any",
+              PrefferedFootRadioValue: "Any",
+              PlayerDivisionValue: "Any",
+              ContractStatusCheckBoxes: [
+                "Free Agent",
+                "Loan Listed",
+                "Youth Player",
+                "Transfer Listed",
+                "Contract Expiring less than 6 months",
+                "Currently renewed contract",
               ],
-            },
-          ])
-        );
+              // REview below
+              PlayerPositionAutoCompleteValue: "Any",
 
-        handleClose();
-        dispatch(
-          setCurrentProfileFilterObject({
-            PlaceOfBirth: "Any",
-            NationalityValue: "Any",
-            AgeRangeValue: [0, 40],
-            HeightRangeValue: [0, 2.5],
-            positionRangeSliderValues: {
-              "Clean sheet": [0, 100],
-              Saves: [0, 100],
-              "Long pass accuracy": [0, 100],
-              "Blocked shots": [0, 100],
-              "Aerial duels": [0, 100],
-              "Penalty stop success": [0, 100],
-              "Sweeping success": [0, 100],
-              Clearance: [0, 100],
-              Interception: [0, 100],
-              Blocks: [0, 100],
-              "Clean sheets per season": [0, 100],
-              "Successful tackles rate %": [0, 100],
-              "Pass success": [0, 100],
-              "Total passes": [0, 100],
-              Assists: [0, 100],
-              "Key passes per game": [0, 100],
-              Interceptions: [0, 100],
-              "Successful tackles rate": [0, 100],
-              "Successful crosses": [0, 100],
-              Goals: [0, 100],
-              "Goal/match played ratio": [0, 100],
-              assists: [0, 100],
-              "Shots per game": [0, 100],
-              "Goal conversion rate %": [0, 100],
-              "Offside range": [0, 100],
-            },
-            MarketValue: [0, 40],
-            ClubCountryValue: "Any",
-            CaptainRadioValue: "Any",
-            PrefferedFootRadioValue: "Any",
-            PlayerDivisionValue: "Any",
-            ContractStatusCheckBoxes: [
-              "Free Agent",
-              "Loan Listed",
-              "Youth Player",
-              "Transfer Listed",
-              "Contract Expiring less than 6 months",
-              "Currently renewed contract",
-            ],
-            // REview below
-            PlayerPositionAutoCompleteValue: "Any",
+              previousProfile: "",
+            })
+          );
+          /// Snackbar show
+          dispatch(setSnackbarMessage(`"${profileName}" filter created`));
+          dispatch(setSnackbarTriggerCounter());
 
-            previousProfile: "",
-          })
-        );
-        /// Snackbar show
-        dispatch(setSnackbarMessage(`"${profileName}" filter created`));
-        dispatch(setSnackbarTriggerCounter());
+          setProfileName("");
+        } else {
+          triggerWarningAlertModal(
+            "Please change your profile name a similar name already exists"
+          );
+        }
       } else {
         triggerWarningAlertModal(
           "Please enter a profile name (cannot be name default)"
@@ -619,7 +626,8 @@ export default function CreateProfileModal({ ProfileType }) {
     if (profileName === "") {
       triggerWarningAlertModal("name cannot be empty ");
     } else {
-      if (nameExists.length <= 0) {
+      // This if statement makes prevents saved name from being the same as a existing profile name
+      if (nameExists.length <= 0 || profileName === currentProfileClicked) {
         const sortedProfile = [
           ...unMacthedProflie,
           {
@@ -946,6 +954,8 @@ export default function CreateProfileModal({ ProfileType }) {
           onClick={() => {
             handleOpen();
             dispatch(setFilterModalType("Create"));
+            // reset the cureent profile to an empty string
+            dispatch(setCurrentProfile(""));
           }}
           sx={{
             width: 145,
@@ -1023,7 +1033,8 @@ export default function CreateProfileModal({ ProfileType }) {
                 {" "}
                 {savedProfile.length <= 0 ? (
                   ""
-                ) : currentProfileClicked.toLowerCase() === "default" ? (
+                ) : currentProfileClicked.toLowerCase() === "default" &&
+                  ProfileType === "Edit" ? (
                   ""
                 ) : (
                   <TextField
@@ -1148,7 +1159,11 @@ export default function CreateProfileModal({ ProfileType }) {
                   }}
                 >
                   <BasicAutoComplete
-                    style={{ ...inputStyles, marginBottom: "2.5vh" }}
+                    style={{
+                      ...inputStyles,
+                      marginBottom: "2.5vh",
+                      color: "black",
+                    }}
                     ListArray={soccerPositions}
                     label="Main Position"
                     AutoCompleteValue={handlePlayerPositionAutoCompleteValue}

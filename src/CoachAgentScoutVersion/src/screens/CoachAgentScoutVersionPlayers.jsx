@@ -2,8 +2,9 @@
 
 import { useSelector } from "react-redux";
 import PlayerViewCardFromPlayersScreen from "../components/Cards/PlayerViewCardFromPlayersScreen";
-import { selectPlayersInAgencyArray } from "../statemanager/slices/PlayersInAgencySlice";
+
 import { Pagination } from "@mui/material";
+import { selectPlayersInAgencyArray } from "../../../statemanager/slices/PlayersInAgencySlice";
 
 const CoachAgentScoutVersionPlayers = () => {
   const PlayerArray = useSelector(selectPlayersInAgencyArray);
@@ -30,6 +31,7 @@ const CoachAgentScoutVersionPlayers = () => {
             Nationality,
             jerseyNumber,
             image,
+            id,
           } = data;
 
           return (
@@ -42,6 +44,7 @@ const CoachAgentScoutVersionPlayers = () => {
               jerseyNumber={jerseyNumber}
               firstName={firstName}
               nationality={Nationality}
+              id={id}
             />
           );
         })}

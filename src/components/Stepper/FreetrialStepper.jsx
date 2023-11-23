@@ -242,11 +242,18 @@ export default function FreetrialStepper({ stepperValue }) {
   };
 
   return (
-    <Box sx={{ width: "70%" }}>
-      <Stepper nonLinear activeStep={activeStep}>
+    <Box sx={{ width: "70%", color: "black" }}>
+      <Stepper sx={{ color: "black" }} nonLinear activeStep={activeStep}>
         {steps.map((label, index) => (
-          <Step key={label} completed={completedSlice[index]}>
-            <StepButton color="inherit" onClick={handleStep(index, label)}>
+          <Step
+            key={label}
+            sx={{ color: "black" }}
+            completed={completedSlice[index]}
+          >
+            <StepButton
+              style={{ color: "black" }}
+              onClick={handleStep(index, label)}
+            >
               {label}
             </StepButton>
           </Step>

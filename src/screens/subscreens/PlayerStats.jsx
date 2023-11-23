@@ -70,7 +70,7 @@ const PlayerStats = () => {
 
     if (statsCategory === value) {
       TaskBarComponent = lazy(() =>
-        import(`./2ndDegreeSubScreens/PlayerStats/${value}`)
+        import(`./2ndDegreeSubScreens/PlayerStats/${value}.jsx`)
       );
       break;
     }

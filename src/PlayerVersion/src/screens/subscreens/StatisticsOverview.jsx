@@ -39,7 +39,7 @@ const StatisticsCurrentOverview = () => {
 
     if (statsCategory === value) {
       TaskBarComponent = lazy(() =>
-        import(`./2ndDegreeSubScreens/OverviewScreen/${value}`)
+        import(`./2ndDegreeSubScreens/OverviewScreen/${value}.jsx`)
       );
       break;
     }

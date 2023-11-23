@@ -84,8 +84,10 @@ function Row(props) {
 
   const navigate = useNavigate();
 
+  const playerNameWithoutSpaces = row.name.replace(/\s/g, "");
+
   const handleProfileView = () => {
-    navigate(`/player-details/${row.name}`);
+    navigate(`/player-details/${playerNameWithoutSpaces}`);
   };
 
   return (

@@ -10,6 +10,8 @@ import {
   selectSnackbarMessage,
   selectSnackbarTriggerCounter,
   setSnackbarMessage,
+  setSnackbarTriggerCounter,
+  setSnackbarTriggerCounterToZero,
 } from "../../statemanager/slices/OtherComponentStatesSlice";
 
 function TransitionLeft(props) {
@@ -32,6 +34,17 @@ export default function BasicSnackBar() {
     setTransition(() => Transition);
     setOpen(true);
   };
+  // useEffect(() => {
+  //   if (warningAlertTrigger > 0) {
+  //     setMessage(warningAlertMessage);
+  //     setOpen(true);
+  //   }
+  // }, [warningAlertTrigger]);
+
+  // const handleClose = () => {
+  //   setOpen(false);
+  //   dispatch(setWarningAlertModalMessage(""));
+  // };
 
   useEffect(() => {
     if (snackbarTriggered > 0) {
@@ -43,6 +56,7 @@ export default function BasicSnackBar() {
   const handleClose = () => {
     setOpen(false);
     dispatch(setSnackbarMessage(""));
+    dispatch(setSnackbarTriggerCounterToZero());
   };
 
   return (

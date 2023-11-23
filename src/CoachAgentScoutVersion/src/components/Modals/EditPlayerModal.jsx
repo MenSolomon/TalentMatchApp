@@ -24,6 +24,7 @@ import BasicAutoComplete from "../../../../components/Autocompletes/BasicAutoCom
 import BasicSelect from "../../../../components/Selects/BasicSelect";
 import ClubAutoComplete from "../../../../components/Autocompletes/ClubAutoComplete";
 import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
+import BasicButtonWithEndIcon from "../../../../components/Buttons/BasicButtonWithEndIcon";
 
 const style = {
   position: "absolute",
@@ -48,7 +49,7 @@ const inputStyles = {
 
 // MODAL TO CREATE A new profile
 
-function CreateAPlayerProfileModal() {
+const EditPlayerProfileModal = () => {
   const [open, setOpen] = React.useState(false);
 
   const userLoginObject = useSelector(selectUserDetailsObject);
@@ -182,35 +183,13 @@ function CreateAPlayerProfileModal() {
 
   return (
     <React.Fragment>
-      <Card
-        onClick={handleOpen}
-        className="background primaryTextColor uploadPlayerModalCard"
-        style={{
-          // background: "#E0FA55",
-          height: "45vh",
-          width: "20vw",
-          display: "flex",
-          flexDirection: "column",
-          padding: ".4vw",
-        }}
-      >
-        {/* CARD HEADER */}
-
-        <div style={{ flex: ".2" }}>
-          <h4>Create a player profile</h4>
-        </div>
-
-        {/* Card CONTENT */}
-        <div style={{ flex: ".4" }}>
-          Profile will include the following: <br />
-          <ol>
-            <li>Name</li>
-            <li>Date of birth</li>
-            <li>Nationality</li>
-            <li>Profile image , etc</li>
-          </ol>
-        </div>
-      </Card>
+      <div onClick={handleOpen}>
+        <BasicButtonWithEndIcon
+          innerText="Edit Profile"
+          style={{ width: "9vw", height: "6vh", marginBottom: "1.5vh" }}
+          endIcon={"edit"}
+        />
+      </div>
       <Modal
         open={open}
         onClose={handleClose}
@@ -221,7 +200,7 @@ function CreateAPlayerProfileModal() {
           className="cardBackground primaryTextColor"
           sx={{ ...style, width: 1000 }}
         >
-          <h2 id="child-modal-title">Create a player profile</h2>
+          <h2 id="child-modal-title">Edit a player profile</h2>
           <Button
             sx={{ width: "10%", marginLeft: "80%", marginBottom: "1vh" }}
             onClick={handleClose}
@@ -311,7 +290,7 @@ function CreateAPlayerProfileModal() {
                   }}
                   variant="contained"
                 >
-                  Create
+                  Edit
                 </Button>
               </div>
             </div>
@@ -437,7 +416,7 @@ function CreateAPlayerProfileModal() {
               </div>
 
               {/* // Start Date`` */}
-              <h6 style={{ marginTop: "9.5vh" }}>Contract period</h6>
+              <h6 style={{ marginTop: "9.4vh" }}>Contract period</h6>
               <DatePickerTool
                 style={{ width: "23vw" }}
                 containerStyle={{ marginTop: "-1vh", marginBottom: "3vh" }}
@@ -467,299 +446,7 @@ function CreateAPlayerProfileModal() {
       </Modal>
     </React.Fragment>
   );
-}
+};
 
+export default EditPlayerProfileModal;
 // MODAL TO ADD EXISTING PLAYER TO AGENCY   , paddingLeft: "5%"
-
-function AddPlayerFromDatabaseModal() {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const PlayerArray = useSelector(selectPlayersInAgencyArray);
-
-  return (
-    <React.Fragment>
-      <Card
-        className="background primaryTextColor uploadPlayerModalCard"
-        onClick={handleOpen}
-        style={{
-          // background: "#E0FA55",
-          height: "45vh",
-          width: "20vw",
-          display: "flex",
-          flexDirection: "column",
-          padding: ".4vw",
-        }}
-      >
-        {/* CARD HEADER */}
-
-        <div style={{ flex: ".2" }}>
-          <h4>Add existing player</h4>
-        </div>
-
-        {/* Card CONTENT */}
-        <div style={{ flex: ".4" }}>
-          Add any player(s) from our existing databases across our the world:{" "}
-          <br />
-        </div>
-      </Card>
-
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="child-modal-title"
-        aria-describedby="child-modal-description"
-      >
-        <Box
-          className="cardBackground primaryTextColor"
-          sx={{ ...style, width: 1000 }}
-        >
-          <h2 id="child-modal-title">Add existing player</h2>
-          <Button
-            onClick={handleClose}
-            sx={{ width: "10%", marginLeft: "80%" }}
-          >
-            Back
-          </Button>
-          <div
-            style={{
-              // background: "red",
-              width: "100%",
-              height: "80%",
-              display: "flex",
-              // padding: "10px",
-              flexDirection: "column",
-            }}
-          >
-            {/* Search Bar */}
-            <div style={{ flex: "0.1" }}>
-              <TextField
-                id="input-with-icon-textfield"
-                label="Search"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                }}
-                variant="outlined"
-                size="small"
-              />
-            </div>
-            {/* Player View Cards */}
-            <div
-              style={{
-                flex: "0.8",
-                // background: "peru",
-                display: "flex",
-                flexWrap: "wrap",
-                overflowY: "scroll",
-              }}
-            >
-              {PlayerArray.map((data, index) => {
-                const {
-                  firstName,
-                  surName,
-                  Age,
-                  position,
-                  Nationality,
-                  jerseyNumber,
-                  image,
-                } = data;
-
-                return (
-                  <PlayerViewCardFromPlayersScreen
-                    key={index}
-                    image={image}
-                    surName={surName}
-                    age={Age}
-                    position={position}
-                    jerseyNumber={jerseyNumber}
-                    firstName={firstName}
-                    nationality={Nationality}
-                  />
-                );
-              })}
-            </div>
-            <div
-              style={{
-                flex: "0.1",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Pagination count={10} color="secondary" />
-            </div>
-          </div>
-        </Box>
-      </Modal>
-    </React.Fragment>
-  );
-}
-
-export default function UploadPlayerToAgencyModal() {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <div>
-      <Button onClick={handleOpen}>Upload player</Button>
-
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-      >
-        <Box
-          sx={{
-            ...style,
-            width: 1000,
-            display: "flex",
-            flexDirection: "column",
-          }}
-          className="cardBackground primaryTextColor"
-        >
-          {/* // UPLOAD A PLAYER HEADER */}
-
-          <div style={{ flex: ".2", textAlign: "center" }}>
-            <h2 style={{ margin: 0 }} id="parent-modal-title">
-              Upload a player
-            </h2>
-            <Typography>
-              Create a new player's profile into our database
-            </Typography>
-          </div>
-
-          {/* // Create a new player profile or upload a player from database */}
-          <div style={{ flex: ".7", display: "flex" }}>
-            {/* Create a new player profile Area */}
-            <div style={{ flex: ".45", display: "flex" }}>
-              {/* IMAGE AREA   */}
-              <div style={{ flex: ".4" }}>
-                {/* <img
-                  style={{
-                    width: "150px",
-                    height: "300px",
-                    marginTop: "30%",
-                  }}
-                  src={youngerPlayerShadowImage}
-                /> */}
-              </div>
-
-              {/* Card AREA */}
-              <div
-                style={{
-                  flex: ".6",
-                  padding: "1vw",
-                  display: "grid",
-                  placeContent: "center",
-                  paddingLeft: "3vw",
-                }}
-              >
-                <img
-                  style={{ width: "200px", height: "400px" }}
-                  src={playerShadowImage}
-                />
-              </div>
-            </div>
-
-            {/* upload a player from database  */}
-
-            <div style={{ flex: ".4", display: "flex" }}>
-              <div
-                style={{
-                  flex: ".6",
-
-                  padding: ".4vw",
-                  display: "grid",
-                  placeContent: "center",
-                }}
-              >
-                <CreateAPlayerProfileModal />
-
-                {/* <AddPlayerFromDatabaseModal /> */}
-              </div>
-
-              <div style={{ flex: ".4" }}>
-                {/* <img
-                  style={{ width: "200px", height: "400px" }}
-                  src={playerShadowImage}
-                /> */}
-              </div>
-            </div>
-          </div>
-
-          {/* <ChildModal /> */}
-        </Box>
-      </Modal>
-    </div>
-  );
-}
-
-// const PlayerShadowAndCardComponent =()=>{
-
-// return(
-//   <div style={{ flex: ".5", display: "flex" }}>
-//               {/* IMAGE AREA   */}
-//               <div style={{ flex: ".4" }}>
-//                 <img
-//                   style={{ width: "200px", height: "400px" }}
-//                   src={playerShadowImage}
-//                 />
-//               </div>
-
-//               {/* Card AREA */}
-//               <div
-//                 style={{
-//                   flex: ".6",
-
-//                   padding: ".4vw",
-//                   display: "grid",
-//                   placeContent: "center",
-//                 }}
-//               >
-//                 <Card
-//                   style={{
-//                     background: "#E0FA55",
-//                     height: "45vh",
-//                     width: "20vw",
-//                     display: "flex",
-//                     flexDirection: "column",
-//                     padding: ".4vw",
-//                   }}
-//                 >
-//                   {/* CARD HEADER */}
-
-//                   <div style={{ flex: ".2" }}>
-//                     <h4>Create a player profile</h4>
-//                   </div>
-
-//                   {/* Card CONTENT */}
-//                   <div style={{ flex: ".4" }}>
-//                     Profile will include the following: <br />
-//                     <ul>
-//                       <li>Name</li>
-//                       <li>Date of birth</li>
-//                       <li>Nationality</li>
-//                       <li>Profile image , etc</li>
-//                     </ul>
-//                   </div>
-//                 </Card>
-//               </div>
-//             </div>
-
-// )
-
-// }

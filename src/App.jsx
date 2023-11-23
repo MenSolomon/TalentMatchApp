@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import HomePage from "./screens/HomePage";
 import PlayerDetails from "./screens/PlayerDetails";
 import ViewAllScreen from "./screens/ViewAllScreen";
@@ -33,76 +33,194 @@ import PrivateRoutes from "./utilities/PrivateRoute";
 import Support from "./screens/Support";
 import SupportSettings from "./screens/SupportSettings";
 import WarningAlertModal from "./components/Modals/WarningAlertModal";
-import { createTheme, ThemeProvider, Button } from "@mui/material";
+import { createTheme, ThemeProvider, Button, CssBaseline } from "@mui/material";
 import Error404 from "./screens/Error404";
 import ErrorPageNotFound from "./screens/ErrorPageNotFound";
+import { useSelector } from "react-redux";
+import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
+import { selectUserDetailsObject } from "./statemanager/slices/LoginUserDataSlice";
+import { useEffect } from "react";
 
-// // Create a theme with the desired font-family
-// MuiOutlinedInput: {
-//   root: {
-//     '&:hover:not($disabled):not($focused):not($error) $notchedOutline': {
-//       borderColor: 'your-hover-color',
-//       // Add other styles as needed
-//     },
-//     '&$focused $notchedOutline': {
-//       borderColor: 'your-focused-color',
-//       // Add other styles as needed
-//     },
-//   },
-//   notchedOutline: {
-//     borderColor: 'your-default-color',
-//     // Add other styles as needed
-//   },
-// },
+const App = () => {
+  const themeProviderObject = useSelector(selectThemeProviderObject);
 
-const theme = createTheme({
-  typography: {
-    fontFamily: "Nunito, sans-serif",
-  },
-  overrides: {
-    MuiAutocomplete: {
-      root: {
-        "& .MuiOutlinedInput-notchedOutline": {
-          borderColor: "red",
-          // Add other styles as needed
-        },
-        "&:hover .MuiOutlinedInput-notchedOutline": {
-          borderColor: "red",
-          // Add other styles as needed
-        },
-        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-          borderColor: "red",
-          // Add other styles as needed
-        },
+  const { primaryTextColor } = themeProviderObject;
+
+  const theme = createTheme({
+    palette: {
+      text: {
+        // primary: "#000000",
+        // alternate : `${primaryTextColor}`, // Set your desired text color
+        // secondary: "#000000",
       },
     },
-    MuiSelect: {
-      outlined: {
-        "&:hover:not($disabled):not($focused):not($error) $notchedOutline": {
-          borderColor: "green",
-          // Add other styles as needed
+    typography: {
+      fontFamily: "Nunito, sans-serif",
+    },
+
+    overrides: {
+      MuiStepLabel: {
+        label: {
+          "&.Mui-completed": {
+            color: "black", // Set the color for completed StepLabel to black
+          },
         },
-        "&$focused $notchedOutline": {
-          borderColor: "blue",
+      },
+      MuiFormControl: {
+        root: {
+          "&.MuiTextField-root": {
+            color: "black", // Set your desired text color for MuiTextField
+            // Add other styles as needed
+          },
+        },
+      },
+      MuiSvgIcon: {
+        root: {
+          color: "black", // Set your desired color for MuiSvgIcon
           // Add other styles as needed
         },
       },
-      notchedOutline: {
-        borderColor: "yellow",
+      MuiInputBase: {
+        input: {
+          "&.MuiOutlinedInput-input": {
+            color: "black", // Set your desired text color for MuiInputBase input
+            // Add other styles as needed
+          },
+        },
+      },
+      MuiFormLabel: {
+        root: {
+          "& .MuiFormLabel-root-MuiInputLabel-root": {
+            color: "black", // Set your desired text color for MuiFormLabel
+            background: "black",
+          },
+        },
+      },
+      MuiInputLabel: {
+        root: {
+          "&.Mui-focused": {
+            color: "black", // Set your desired text color for focused MuiInputLabel
+            // Add other styles as needed
+          },
+          color: "black",
+        },
+      },
+      MuiAutocomplete: {
+        root: {
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "black",
+            // Add other styles as needed
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "black",
+            // Add other styles as needed
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "black",
+            // Add other styles as needed
+          },
+          "& .MuiOutlinedInput-root .MuiAutocomplete-input": {
+            color: "black", // Set your desired text color for MuiAutocomplete input
+            // Add other styles as needed
+          },
+        },
+      },
+      MuiSelect: {
+        select: {
+          "& .MuiInputBase-input.MuiOutlinedInput-input": {
+            color: "black", // Set your desired text color for MuiSelect input
+            // Add other styles as needed
+          },
+        },
+        outlined: {
+          "&:hover:not($disabled):not($focused):not($error) $notchedOutline": {
+            borderColor: "black",
+            // Add other styles as needed
+          },
+          "&$focused $notchedOutline": {
+            borderColor: "blue",
+            // Add other styles as needed
+          },
+        },
+        notchedOutline: {
+          borderColor: "yellow",
+          // Add other styles as needed
+        },
+      },
+      MuiTable: {
+        root: {
+          color: "black", // Set your desired text color
+        },
+      },
+      MuiTableCell: {
+        root: {
+          color: "black", // Set your desired text color for MuiTableCell
+          // Add other styles as needed
+        },
+      },
+      "-MuiFormLabel-root-MuiInputLabel-root.Mui-focused": {
+        color: "purple", // Set your desired text color for focused MuiFormLabel with MuiInputLabel
         // Add other styles as needed
       },
     },
-    MuiTable: {
-      root: {
-        color: "green", // Set your desired text color
+    components: {
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            "&:hover $notchedOutline": {
+              borderColor: "green",
+              // Set your desired color for hover
+            },
+            "& .MuiInputBase-input.MuiOutlinedInput-input:focus": {
+              background: "white",
+              color: "black",
+            },
+            "&.Mui-focused $notchedOutline": {
+              background: "white", // Set your desired color for focus
+              color: "black",
+            },
+          },
+        },
+      },
+      MuiInputLabel: {
+        styleOverrides: {
+          root: {
+            color: `${primaryTextColor}`, // Set your desired label color
+          },
+        },
       },
     },
-  },
-});
+  });
 
-const App = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { pathname, search, hash } = location;
+  const userLoginObject = useSelector(selectUserDetailsObject);
+
+  // const { role } = userLoginObject;
+
+  useEffect(() => {
+    if (
+      userLoginObject?.role === "Player" &&
+      pathname.includes("multiStudio") === true
+    ) {
+      navigate("/studio/dashboard");
+    } else if (
+      userLoginObject?.role === "Club" ||
+      userLoginObject?.role === "Scout" ||
+      userLoginObject?.role === "Agent" ||
+      userLoginObject?.role === "Coach"
+    ) {
+      if (pathname.includes("/studio/") === true) {
+        navigate("/multiStudio/dashboard");
+      }
+    }
+  }, [userLoginObject]);
+
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Routes>
         {/* PROTECTED ROUTES  */}
 
@@ -120,7 +238,7 @@ const App = () => {
               element={<PlayerDetails />}
             />
             <Route path="/community" element={<Community />} />
-            <Route path="/player-conmpare" element={<PlayerComparison />} />
+            <Route path="/player-compare" element={<PlayerComparison />} />
             <Route path="/news" element={<News />} />
           </Route>
 
@@ -188,7 +306,7 @@ const App = () => {
               element={<CoachAgentScoutVersionAnalytics />}
             />
             <Route
-              path="/multiStudio/players/:playerfullname"
+              path="/multiStudio/players/:playerId"
               element={<CoachAgentScoutVersionPlayerManagement />}
             />
           </Route>

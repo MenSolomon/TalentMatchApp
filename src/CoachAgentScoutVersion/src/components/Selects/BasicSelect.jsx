@@ -28,7 +28,7 @@ export default function BasicSelect({ widthSize, label, MenuItemArray }) {
             const { Label, Value } = data;
 
             return (
-              <MenuItem key={index} value={Value}>
+              <MenuItem key={index} sx={{ color: "black" }} value={Value}>
                 {Label}
               </MenuItem>
             );

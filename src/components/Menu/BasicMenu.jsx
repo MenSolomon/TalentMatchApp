@@ -35,6 +35,7 @@ export default function BasicMenu({ menuTitle, menuItemsArray }) {
         {menuTitle} &nbsp; <KeyboardArrowDown />
       </Button>
       <Menu
+        color="secondary"
         id="basic-menu"
         style={{ background: "none", width: "8vw" }}
         anchorEl={anchorEl}
@@ -47,7 +48,11 @@ export default function BasicMenu({ menuTitle, menuItemsArray }) {
         {menuItemsArray &&
           menuItemsArray.map((data, index) => {
             return (
-              <MenuItem key={index} onClick={handleClose}>
+              <MenuItem
+                key={index}
+                sx={{ color: "black" }}
+                onClick={handleClose}
+              >
                 {data}
               </MenuItem>
             );

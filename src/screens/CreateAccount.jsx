@@ -19,6 +19,7 @@ import {
 } from "../statemanager/slices/UserDataSlice";
 import DatePickerTool from "../components/DatePicker/DatePicker";
 import ClubAutoComplete from "../components/Autocompletes/ClubAutoComplete";
+import { setThemeProviderToLightMode } from "../statemanager/slices/ThemeProviderSlice";
 
 const CreateAccount = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -61,77 +62,6 @@ const CreateAccount = () => {
     setSelectedClubName(selectedClubName);
     // console.log("Selected club:", selectedClubName);
   };
-
-  // hook form
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  const onSubmit = (formData, e) => {
-    e.preventDefault();
-    console.log(formData);
-    const {
-      firstName,
-      surname,
-      organization,
-      // phoneNumber,
-      email,
-      password,
-      confirmPassword,
-    } = formData;
-
-    const userData = {
-      firstName,
-      surname,
-      DateOfBirth: DOB.toString(),
-      // DOB,
-      ...(roleSelected === "Player"
-        ? { club: selectedClubName }
-        : { organization }),
-      phoneNumber: "",
-      email,
-      Nationality,
-      password,
-    };
-
-    if (Nationality === "" || Nationality === "False") {
-      setNationality("False");
-    } else {
-      if (DOB === "" || DOB === "False") {
-        setDOB("False");
-      } else {
-        if (password !== confirmPassword) {
-          setPasswordMatch("False");
-        } else {
-          // alert("Form Taken");
-          dispatch(
-            setUserSignUpData({ paymentType, subscriptionPackage, ...userData })
-          );
-          setNationality("");
-          setDOB("");
-          setPhoneNumber("");
-          handleTrialNavigation();
-          handleStepsCompleted();
-        }
-      }
-    }
-
-    // addEmail(selectedValue, formData.subject, formData.message, "no");
-  };
-
-  const userData = useSelector(selectUserSignUpData);
-
-  // const handleValueExtract = (e) => {
-  //   alert(e);
-  //   setPhoneNumber(e);
-  // };
-
-  useEffect(() => {
-    console.log(phoneNumber, "PH");
-  }, [phoneNumber]);
-
   const clubImageLinks = [
     {
       clubName: "Asante Kotoko SC",
@@ -214,6 +144,82 @@ const CreateAccount = () => {
         "https://upload.wikimedia.org/wikipedia/en/6/61/New_Edubiase_United.gif",
     },
   ];
+
+  // hook form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (formData, e) => {
+    e.preventDefault();
+    console.log(formData);
+    const {
+      firstName,
+      surname,
+      organization,
+      // phoneNumber,
+      email,
+      password,
+      confirmPassword,
+    } = formData;
+
+    const userData = {
+      firstName,
+      surname,
+      DateOfBirth: DOB.toString(),
+      // DOB,
+      ...(roleSelected === "Player" || roleSelected === "Club"
+        ? { club: selectedClubName }
+        : { organization }),
+      phoneNumber: "",
+      email,
+      Nationality,
+      password,
+    };
+
+    if (Nationality === "" || Nationality === "False") {
+      setNationality("False");
+    } else {
+      if (DOB === "" || DOB === "False") {
+        setDOB("False");
+      } else {
+        if (password !== confirmPassword) {
+          setPasswordMatch("False");
+        } else {
+          // alert("Form Taken");
+          dispatch(
+            setUserSignUpData({ paymentType, subscriptionPackage, ...userData })
+          );
+          setNationality("");
+          setDOB("");
+          setPhoneNumber("");
+          handleTrialNavigation();
+          handleStepsCompleted();
+        }
+      }
+    }
+
+    // addEmail(selectedValue, formData.subject, formData.message, "no");
+  };
+
+  const userData = useSelector(selectUserSignUpData);
+
+  // const handleValueExtract = (e) => {
+  //   alert(e);
+  //   setPhoneNumber(e);
+  // };
+
+  useEffect(() => {
+    console.log(phoneNumber, "PH");
+  }, [phoneNumber]);
+
+  /// RESETTING THE THEME WHEN YOU  Navigate to this  page -- this is a temporal solution to the text field label color chnage
+  useEffect(() => {
+    dispatch(setThemeProviderToLightMode());
+  }, []);
+
   return (
     <div
       style={{
@@ -273,6 +279,7 @@ const CreateAccount = () => {
             <div>
               <TextField
                 sx={{ width: "15vw" }}
+                color="primary"
                 id="outlined-basic"
                 label="First Name"
                 variant="outlined"
@@ -383,7 +390,7 @@ const CreateAccount = () => {
 
           {/*ORGANIZATION/CLUB NAME AND PASSWORDS*/}
           <div style={{ display: "flex", gap: "2vw", marginBottom: "3vh" }}>
-            {roleSelected === "Player" ? (
+            {roleSelected === "Player" || roleSelected === "Club" ? (
               <ClubAutoComplete
                 ListArray={clubImageLinks}
                 label="Select a club"

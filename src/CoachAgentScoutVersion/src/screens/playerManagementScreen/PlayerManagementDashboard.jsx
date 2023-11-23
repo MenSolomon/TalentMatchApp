@@ -1,15 +1,41 @@
-import { Button, IconButton } from "@mui/material";
+import { Avatar, Button, IconButton } from "@mui/material";
 
 import { useSelector } from "react-redux";
 import VideoImage from "../../assets/images/videoImage.svg";
 import { selectThemeProviderObject } from "../../statemanager/slices/ThemeProviderSlice";
-import UploadVideoModal from "../../components/Modals/UploadVideosModal";
-import BoxIcon from "../../components/Icons/BoxIcon";
+import UploadVideoModal from "../../../../PlayerVersion/src/components/Modals/UploadVideosModal";
 
 const PlayerManagementDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
 
   const { primaryTextColor } = ThemeProvider;
+
+  const dummyRecentMessages = [
+    {
+      message: "Sample message for display",
+      userAvatar: "/richard attah.jpeg",
+      date: "10:02 AM",
+      userName: "Richard Attah",
+    },
+    {
+      message: "Sample message for display",
+      userAvatar: "/bature.jpg",
+      date: "11/21/2023",
+      userName: "Benjamin Bature",
+    },
+    {
+      message: "Sample message for display",
+      userAvatar: "/OlderPlayer.jpg",
+      date: "Yesterday",
+      userName: "Ishak Shaibu",
+    },
+    {
+      message: "Sample message for display",
+      userAvatar: "/acheampong.webp",
+      date: "3:25 PM",
+      userName: "Amos Acheampong",
+    },
+  ];
 
   return (
     <div
@@ -18,12 +44,13 @@ const PlayerManagementDashboard = () => {
         flexDirection: "column",
         height: "100%",
         width: "100%",
+        fontSize: ".8em",
       }}
     >
       {/* // Heading Area */}
 
       {/* // Cards  (upload video card , analytics summary card and other information card) */}
-      <div style={{ flex: ".5", display: "flex", gap: "2.5vw" }}>
+      <div style={{ flex: ".5", display: "flex", gap: "1.5vw" }}>
         <div style={{ flex: ".33" }}>
           {/* // DRAG AND DROP VIDEO CARD*/}
           <div
@@ -69,7 +96,7 @@ const PlayerManagementDashboard = () => {
               borderRadius: "1vw",
               display: "flex",
               flexDirection: "column",
-              gap: "1vh",
+              gap: ".5vh",
               paddingLeft: "2vw",
               paddingRight: "2vw",
               paddingTop: "3vh",
@@ -127,16 +154,46 @@ const PlayerManagementDashboard = () => {
           <div
             className="cardBackground"
             style={{
-              flex: "1",
-
+              // flex: ".5",
               borderRadius: "1vw",
-              paddingLeft: "2vw",
-              paddingRight: "2vw",
+              paddingLeft: "1vw",
+              paddingRight: "1vw",
               paddingTop: "3vh",
               paddingBottom: "2vh",
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <h5>Recent messages</h5>
+            <div style={{ flex: ".2" }}>
+              <h5>Recent messages</h5>
+            </div>
+
+            <div
+              style={{
+                // background: "teal",
+                overflowY: "scroll",
+                flex: "1",
+                maxHeight: "30vh",
+              }}
+            >
+              {dummyRecentMessages.map((data, index) => {
+                const { message, userAvatar, date, userName } = data;
+
+                return (
+                  <div key={index}>
+                    <RecentMessageCard
+                      message={message}
+                      userAvatar={userAvatar}
+                      date={date}
+                      userName={userName}
+                    />
+                    {/* <br /> */}
+                  </div>
+                );
+              })}
+              <br />
+            </div>
           </div>
         </div>
       </div>
@@ -145,3 +202,33 @@ const PlayerManagementDashboard = () => {
 };
 
 export default PlayerManagementDashboard;
+
+const RecentMessageCard = ({ message, userAvatar, date, userName }) => {
+  return (
+    <div
+      style={{
+        // position: "absolute",
+        width: "17vw",
+        height: "10vh",
+        // background: "yellow",
+        display: "flex",
+        padding: ".3vw",
+        cursor: "pointer",
+      }}
+    >
+      <div style={{ flex: ".22" }}>
+        <Avatar src={userAvatar} sx={{ width: 50, height: 50 }} />
+      </div>
+      <div style={{ flex: ".78", fontSize: ".85em" }}>
+        {" "}
+        <div>
+          {" "}
+          <span style={{ fontWeight: "bolder" }}> {userName} </span>{" "}
+          <span style={{ float: "right" }}>{date} </span>
+        </div>
+        <p>{message?.length === 20 ? `${message}...` : message}</p>{" "}
+      </div>
+      {/* <div style={{ flex: ".2", background: "red" }}></div> */}
+    </div>
+  );
+};

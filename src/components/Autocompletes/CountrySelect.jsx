@@ -16,7 +16,7 @@ export default function CountrySelect({
   return (
     <Autocomplete
       id="country-select-demo"
-      sx={{ width: 300 }}
+      sx={{ width: 300, color: "black" }}
       options={countries}
       value={countries.find((country) => country.label === defaultValue)}
       autoHighlight
@@ -25,7 +25,7 @@ export default function CountrySelect({
       renderOption={(props, option) => (
         <Box
           component="li"
-          sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
+          sx={{ "& > img": { mr: 2, flexShrink: 0 }, color: "black" }}
           {...props}
         >
           <img

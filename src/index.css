@@ -20,6 +20,11 @@
   --border-width: 1px;
   --border-radius: 5px;
   --scrollbar-width: 8px;
+  --background: #f7f7f9; /* Replace 'initial' with the default value or leave it as is */
+  --cardBackground: white;
+  --primaryTextColor: black;
+  --buttonColor: #5585fe;
+  --secondaryTextColor: black;
 }
 
 * {
@@ -575,3 +580,223 @@ tbody {
   background-color: #5585fe;
   opacity: 0.5;
 }
+
+video {
+  border-radius: 10px; /* Adjust the value to your desired border radius */
+  height: 40vh;
+  object-fit: cover;
+}
+
+.tableVideo video {
+  border-radius: 10px; /* Adjust the value to your desired border radius */
+  height: 28vh;
+  object-fit: cover;
+}
+
+/* /// Mother Container CSS STYLES */
+.playerCard,
+.field {
+  border: 1px solid transparent;
+
+  background: linear-gradient(var(--cardBackground), var(--cardBackground))
+      padding-box,
+    linear-gradient(
+        90deg,
+        hsla(280, 81%, 58%, 1) 0%,
+        hsla(279, 81%, 59%, 1) 3%,
+        hsla(276, 79%, 60%, 1) 9%,
+        hsla(274, 79%, 60%, 1) 15%,
+        hsla(269, 76%, 61%, 1) 15%,
+        hsla(271, 77%, 61%, 1) 23%,
+        hsla(259, 72%, 62%, 1) 32%,
+        hsla(246, 68%, 64%, 1) 49%,
+        hsla(226, 67%, 60%, 1) 56%,
+        hsla(194, 96%, 42%, 1) 74%,
+        hsla(196, 80%, 79%, 1) 100%
+      )
+      border-box;
+}
+
+.playerCard {
+  color: var(--primaryTextColor);
+}
+
+.primaryColor {
+  color: var(--primaryTextColor);
+}
+
+.primaryTextColor {
+  color: var(--primaryTextColor);
+}
+.secondaryTextColor {
+  color: var(--secondaryTextColor);
+}
+.styleTextColor {
+  color: var(--buttonColor);
+}
+
+.background {
+  background-color: var(--background);
+}
+
+.cardBackground {
+  background-color: var(--cardBackground);
+}
+
+/* .cardBorder{
+  border-right:  .2px solid ${
+    primaryTextColor !== "black"
+      ? "rgba(19, 19, 19, 0.849)"
+      : "rgba(54, 54, 54, 0.671)"
+  }  ;
+  border-bottom: .2px solid ${
+    primaryTextColor !== "black"
+      ? "rgba(19, 19, 19, 0.849)"
+      : "rgba(54, 54, 54, 0.671)"
+  }  ;
+ 
+} */
+
+.cardBorder {
+  border-right: 0.2px solid rgba(19, 19, 19, 0.849);
+  border-bottom: 0.2px solid rgba(19, 19, 19, 0.849);
+}
+
+.newsGradient {
+  background: linear-gradient(
+    270deg,
+    hsla(280, 81%, 58%, 1) 0%,
+    hsla(279, 81%, 59%, 1) 3%,
+    hsla(276, 79%, 60%, 1) 9%,
+    hsla(274, 79%, 60%, 1) 15%,
+    hsla(269, 76%, 61%, 1) 15%,
+    hsla(271, 77%, 61%, 1) 23%,
+    hsla(259, 72%, 62%, 1) 32%,
+    hsla(246, 68%, 64%, 1) 49%,
+    hsla(226, 67%, 60%, 1) 56%,
+    hsla(194, 96%, 42%, 1) 74%,
+    hsla(196, 80%, 79%, 1) 100%
+  );
+
+  opacity: 0.5;
+}
+
+.css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root {
+  color: var(--primaryTextColor);
+}
+
+.nav-link.active {
+  color: red;
+  font-weight: bold;
+}
+
+.NavBarBtns {
+  color: var(--buttonColor);
+}
+
+.active .NavBarBtns {
+  color: white;
+  border-radius: 0.5vw;
+  background: #5585fe;
+}
+
+ul li {
+  color: black;
+}
+
+ol {
+  list-style-type: none;
+}
+
+/* ol */
+
+/* 
+.css-sh22l5-MuiButtonBase-root-MuiAccordionSummary-root {
+  background-color: red;
+}
+
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+  color: var(--primaryTextColor);
+  background: var(--cardBackground);
+}
+
+.css-7cyndw-MuiFormControl-root-MuiTextField-root {
+  border: 1px solidvar(--primaryTextColor);
+  border-radius: 0.3vw;
+}
+
+.css-i4bv87-MuiSvgIcon-root {
+  color: var(--primaryTextColor);
+}
+.css-1ua80n0-MuiInputBase-input-MuiOutlinedInput-input {
+  color: var(--primaryTextColor);
+}
+
+.css-1hxdtko-MuiFormLabel-root-MuiInputLabel-root {
+  color: var(--primaryTextColor);
+}
+
+.css-1wuilmg-MuiAutocomplete-root
+  .MuiOutlinedInput-root
+  .MuiAutocomplete-input {
+  color: var(--primaryTextColor);
+}
+
+.css-1xrtpas-MuiAutocomplete-root
+  .MuiOutlinedInput-root
+  .MuiAutocomplete-input {
+  color: var(--primaryTextColor);
+}
+
+.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  color: var(--primaryTextColor);
+}
+
+.css-1jfokfp-MuiFormLabel-root {
+  color: var(--primaryTextColor);
+}
+
+.css-114y07-MuiFormLabel-root-MuiInputLabel-root,
+.css-1hxdtko-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+  color: var(--primaryTextColor);
+}
+
+.css-13bx8ye-MuiTableCell-root {
+  border-bottom: none;
+}
+
+.css-18mmw2g-MuiTableCell-root {
+  border-bottom: none;
+}
+
+.css-13bx8ye-MuiTableCell-root {
+  border-bottom: none;
+}
+
+.css-trft4d-MuiTableCell-root {
+  color: var(--primaryTextColor);
+}
+
+.css-18mmw2g-MuiTableCell-root {
+  color: var(--primaryTextColor);
+}
+.css-15cg2ol-MuiTableCell-root {
+  color: var(--primaryTextColor);
+}
+.css-1cjzt9h-MuiTableCell-root {
+  color: var(--primaryTextColor);
+}
+
+.css-1hsflyn-MuiTableCell-root,
+.css-1arwt0a-MuiTableCell-root,
+.css-1v0znwy-MuiTableCell-root {
+  color: var(--primaryTextColor);
+}
+
+.css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input {
+  color: var(--primaryTextColor);
+}
+
+.css-17at8t4-MuiFormLabel-root-MuiInputLabel-root {
+  color: var(--primaryTextColor);
+} */

@@ -63,9 +63,14 @@ export default function ProfileMenu({ style, name }) {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem sx={{ color: "black" }} onClick={handleClose}>
+          Profile
+        </MenuItem>
+        <MenuItem sx={{ color: "black" }} onClick={handleClose}>
+          My account
+        </MenuItem>
         <MenuItem
+          sx={{ color: "black" }}
           onClick={() => {
             handleClose();
             Navigate("/login");

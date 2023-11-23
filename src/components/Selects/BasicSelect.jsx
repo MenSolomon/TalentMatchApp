@@ -35,7 +35,7 @@ export default function BasicSelect({
           {itemsArray &&
             itemsArray?.map((data, index) => {
               return (
-                <MenuItem key={index} value={data}>
+                <MenuItem sx={{ color: "black" }} key={index} value={data}>
                   {data}
                 </MenuItem>
               );

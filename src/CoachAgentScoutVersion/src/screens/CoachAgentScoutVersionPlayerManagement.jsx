@@ -3,11 +3,20 @@ import PlayerManagementTabs from "../components/Tabs/PlayerManagementTabs";
 import { selectPlayersInAgencyArray } from "../statemanager/slices/PlayersInAgencySlice";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Instagram, Twitter } from "@mui/icons-material";
+import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
+import BasicButton from "../../../components/Buttons/BasicButton";
+import BasicButtonWithEndIcon from "../../../components/Buttons/BasicButtonWithEndIcon";
+import EditPlayerProfileModal from "../components/Modals/EditPlayerModal";
+import TransferPlayerModal from "../components/Modals/TransferPlayerModal";
+import { setPlayerSelectedByClubOrScoutInPlayerManagement } from "../../../statemanager/slices/PlayersInAgencySlice";
+import ConfirmClubExitModal from "../components/Modals/ConfirmClubExitModal";
 
 const CoachAgentScoutVersionPlayerManagement = () => {
-  const { playerfullname } = useParams();
+  const { playerId } = useParams();
+  const dispatch = useDispatch();
+  const userLoginObject = useSelector(selectUserDetailsObject);
   const [filteredPlayerArray, setFilteredPlayerArray] = useState([]);
   const [playerData, setPlayerData] = useState({
     firstName: "",
@@ -17,7 +26,6 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     position: "",
     jerseyNumber: "",
     clubName: "",
-    position: "",
   });
   // const history = useHistory();
 
@@ -26,7 +34,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   //   history.push(`/user/${newUsername}`);
   // };
 
-  const subscreensTabArray = [
+  const subscreensTabArrayEmpty = [];
+  const subscreensTabArrayScoutAndCoach = [
     "Dashboard",
     "Videos",
     "Inbox",
@@ -35,16 +44,29 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     // "Settings",
   ];
 
+  const subscreensTabArrayClubVersion = [
+    "Dashboard",
+    "Videos",
+    "Inbox",
+    "Interested Scouts",
+    "Analytics",
+    "Statistics",
+    // "Settings",
+  ];
+
   const PlayerArray = useSelector(selectPlayersInAgencyArray);
 
   useEffect(() => {
     const selectedArray = PlayerArray.filter((data) => {
-      const { firstName, surName } = data;
-      return playerfullname === `${firstName}${surName}`;
+      const { id } = data;
+      return playerId === id;
     });
 
+    dispatch(
+      setPlayerSelectedByClubOrScoutInPlayerManagement(selectedArray[0])
+    );
     setFilteredPlayerArray(selectedArray);
-  }, [playerfullname]);
+  }, [playerId]);
 
   useEffect(() => {
     console.log(filteredPlayerArray);
@@ -178,7 +200,16 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             <div style={{ flex: ".08", display: "flex" }}>
               {/* // CLUB name  Area */}
               <h6 style={{ width: "100%", fontWeight: "bolder" }}>
-                Club : <span style={{ float: "right" }}>{clubName}</span>{" "}
+                Club :{" "}
+                <span style={{ float: "right" }}>
+                  {" "}
+                  {userLoginObject?.role === "Club"
+                    ? userLoginObject?.club
+                    : userLoginObject?.role === "Scout" ||
+                      userLoginObject?.role === "Coach"
+                    ? clubName
+                    : ""}{" "}
+                </span>{" "}
               </h6>
             </div>
             {/* Postion Area */}
@@ -203,12 +234,20 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             <div
               style={{
                 flex: ".70",
-                display: "flex",
+                // display: "flex",
                 fontWeight: "bolder",
                 paddingTop: "1.5vh",
               }}
             >
-              <h5>Honors & Awards</h5>
+              {/* <h5>Honors & Awards</h5> */}
+
+              {/* // Edit Profile button */}
+              {/*  */}
+              <EditPlayerProfileModal />
+
+              {userLoginObject?.role === "Club" ? <TransferPlayerModal /> : ""}
+
+              {userLoginObject?.role === "Club" ? <ConfirmClubExitModal /> : ""}
             </div>
           </Card>
         </div>
@@ -216,7 +255,14 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         {/* // TABS AND SUBSCREEMS SECTION */}
         <div style={{ flex: ".78" }}>
           <PlayerManagementTabs
-            PlayerManagementTabItemsArray={subscreensTabArray}
+            PlayerManagementTabItemsArray={
+              userLoginObject?.role === "Club"
+                ? subscreensTabArrayClubVersion
+                : userLoginObject?.role === "Coach" ||
+                  userLoginObject?.role === "Scout"
+                ? subscreensTabArrayScoutAndCoach
+                : subscreensTabArrayEmpty
+            }
           />
         </div>
       </div>

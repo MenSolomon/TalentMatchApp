@@ -10,6 +10,7 @@ export const OtherComponentStatesSlice = createSlice({
     snackbarMessage: "",
     warningAlertModalCounter: 0,
     warningAlertModalMessage: "",
+    videoBelow15mbSelected: false,
   },
 
   reducers: {
@@ -25,6 +26,9 @@ export const OtherComponentStatesSlice = createSlice({
     setSnackbarTriggerCounter: (state) => {
       state.snackbarTriggerCounter += 1;
     },
+    setSnackbarTriggerCounterToZero: (state) => {
+      state.snackbarTriggerCounter = 0;
+    },
     setSnackbarMessage: (state, action) => {
       state.snackbarMessage = action.payload;
     },
@@ -33,6 +37,9 @@ export const OtherComponentStatesSlice = createSlice({
     },
     setWarningAlertModalMessage: (state, action) => {
       state.warningAlertModalMessage = action.payload;
+    },
+    setVideoBelow15mbSelected: (state, action) => {
+      state.videoBelow15mbSelected = action.payload;
     },
   },
 });
@@ -51,14 +58,18 @@ export const selectWarningAlertModalCounter = (state) =>
   state.OtherComponentStates.warningAlertModalCounter;
 export const selectWarningAlertModalMessage = (state) =>
   state.OtherComponentStates.warningAlertModalMessage;
+export const selectVideoBelow15mbSelected = (state) =>
+  state.OtherComponentStates.videoBelow15mbSelected;
 
 export const {
   setAutoCompletePlayerPosition,
   setFilterModalType,
   setEditFilterModalButtonClicked,
   setSnackbarTriggerCounter,
+  setSnackbarTriggerCounterToZero,
   setSnackbarMessage,
   setWarningAlertModalMessage,
   setWarningAlertModalCounter,
+  setVideoBelow15mbSelected,
 } = OtherComponentStatesSlice.actions;
 export default OtherComponentStatesSlice.reducer;
