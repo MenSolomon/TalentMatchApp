@@ -97,12 +97,15 @@ const MatchedPlayersCarousel = () => {
 
   return (
     <div
-      style={{
-        position: "relative",
-        height: "100%",
-        width: "77vw",
-        // background: "red",
-      }}
+      className="md:relative md:h-[100%] md:w-[77vw]  sm:relative sm:h-[100%] sm:w-[100%]"
+      style={
+        {
+          // position: "relative",
+          // height: "100%",
+          // width: "77vw",
+          // background: "red",
+        }
+      }
     >
       <Carousel responsive={responsive}>
         {reelArray.map((data, index) => {
@@ -133,11 +136,13 @@ export default MatchedPlayersCarousel;
 const VideoCard = ({ publisherImg, video, vidIndex }) => {
   return (
     <div
+      className="md:w-[13vw] md:relative md:pt-[1vh]  sm:w-[100%]  sm:relative sm:pt-[1vh]"
       style={{
         borderRadius: "1vw",
-        position: "relative",
-        paddingTop: "1vh",
-        width: "13vw",
+        // position: "relative",
+        // paddingTop: "1vh",
+        // width: "13vw",
+        // background: "blue",
       }}
     >
       <div
@@ -176,9 +181,10 @@ const VideoCard = ({ publisherImg, video, vidIndex }) => {
       </div>
       {/* <div onClick={() => handleVideoClick(index)}> */}
       <video
+        className="md:h-[33vh] md:w-[90%]  sm:h-[33vh] sm:w-[100%]"
         id={`carouselVideo-${vidIndex}`}
-        width="160vw"
-        style={{ height: "33vh" }}
+        // width="160vw"
+        // style={{ height: "33vh" }}
         controls
       >
         {" "}

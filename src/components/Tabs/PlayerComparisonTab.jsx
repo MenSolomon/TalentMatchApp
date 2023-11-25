@@ -18,7 +18,7 @@ function CustomTabPanel(props) {
       style={{ height: "92%" }}
     >
       {value === index && (
-        <Box sx={{ p: 1  }}>
+        <Box sx={{ p: 1 }}>
           <Typography sx={{ fontWeight: "bolder", color: "white" }}>
             {children}
           </Typography>
@@ -74,7 +74,7 @@ export default function PlayerComparisonDrawerTab({
           {PlayerComparisonTabItemsArray.map((data, key) => {
             return (
               <Tab
-                className="primaryColor"
+                // className="primaryColor"
                 label={data}
                 sx={{
                   width: "10vw",

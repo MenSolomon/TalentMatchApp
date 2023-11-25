@@ -135,36 +135,43 @@ const News = () => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        width: "100%",
-        height: "100%",
-        // background: "peru",
-        flexDirection: "column",
-      }}
+      className="md:w-[100%] md:h-[100%] md:flex md:flex-col  sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
+      style={
+        {
+          // display: "flex",
+          // width: "100%",
+          // height: "100%",
+          // background: "peru",
+          // flexDirection: "column",
+        }
+      }
     >
       <div
-        style={{
-          flex: ".1",
-          //   background: "red",
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-        }}
+        className="md:basis-[10%] md:flex md:justify-start md:items-center   sm:basis-[10%] sm:flex sm:justify-start sm:items-center"
+        style={
+          {
+            // flex: ".1",
+            //   background: "red",
+            // display: "flex",
+            // justifyContent: "flex-start",
+            // alignItems: "center",
+          }
+        }
       >
         <h4>Latest News</h4>
       </div>
       <div
+        className="md:basis-[90%] md:flex md:flex-wrap md:gap-[10px] md:p-[20px] md:justify-start md:items-center md:overflow-y-scroll   sm:basis-[90%] sm:flex sm:flex-wrap sm:gap-[15px] sm:p-[20px] sm:justify-center sm:items-center sm:overflow-y-scroll"
         style={{
-          flex: ".9",
+          // flex: ".9",
           //   background: "yellow",
-          flexWrap: "wrap",
-          display: "flex",
-          overflowY: "scroll",
-          gap: "10px",
-          padding: "20px",
-          justifyContent: "flex-start",
-          alignItems: "center",
+          // flexWrap: "wrap",
+          // display: "flex",
+          // overflowY: "scroll",
+          // gap: "10px",
+          // padding: "20px",
+          // justifyContent: "flex-start",
+          // alignItems: "center",
           borderRadius: "20px",
         }}
       >

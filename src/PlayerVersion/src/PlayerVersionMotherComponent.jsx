@@ -197,74 +197,74 @@ const PlayerVersionMotherComponent = () => {
 
   return (
     <div
+      className="md:w-[100vw] md:h-[100vh] md:flex md:flex-col  sm:w-[100%] sm:h-[100vh] sm:flex sm:flex-col"
       style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        width: "100vw",
+        // display: "flex",
+        // flexDirection: "column",
+        // height: "100vh",
+        // width: "100vw",
         // background: background,
         color: primaryTextColor,
         // zIndex: "-3",
+        // background: "yellow",
       }}
     >
       {/* //=====  NAVBAR ======= \\ */}
-      <div style={{ flex: ".11", display: "flex" }}>
+      <div className="md:basis-[11%] md:flex md:flex-shrink-0  sm:basis-[11%] sm:flex sm:flex-shrink-0">
         {/* // Logo Area */}
 
         <div
-          style={{
-            flex: ".18",
-            paddingTop: "1%",
-            display: "grid",
-            placeContent: "center",
-          }}
+          className="md:w-[18%] md:flex-shrink-0 md:pt-[1%] md:grid md:place-content-center  sm:w-[18%] sm:flex-shrink-0 sm:pt-[1%] sm:grid sm:place-content-center"
+          style={{ background: "red" }}
         >
-          <img style={{ width: "110px" }} src={logoImage} />
+          <img
+            className="md:w-[110px] sm:w-[80px] md:block sm:hidden"
+            src={logoImage}
+          />
+          <div className="md:hidden sm:flex">
+            {/* <BasicDrawer drawerIcon="menu" /> */}
+          </div>
         </div>
         {/* // Search Area? */}
         <div
-          style={{ flex: ".45", paddingTop: "1%", paddingLeft: "4vw" }}
+          className="md:w-[43%] md:flex-shrink-0 md:pt-[1%] md:pl-[4vw]  sm:w-[32%] sm:flex-shrink-0 sm:pt-[1%] sm:pl-[4vw]"
+          style={{ background: "yellow" }}
         ></div>
         {/* // profile details Area */}
         <div
+          className="md:w-[39%] md:flex-shrink-0 md:pt-[1%] md:pr-[5%] md:flex-row-reverse md:flex md:items-center sm:w-[50%] sm:flex-shrink-0 sm:pt-[1%] sm:pr-[5%] sm:flex-row-reverse sm:flex sm:items-center "
           style={{
-            // Should be 37
-            flex: ".34",
-            paddingTop: "1%",
-            paddingRight: "1.5%",
+            background: "red",
           }}
         >
-          <ProfileMenu
-            style={{ float: "right", marginLeft: "1vw", borderBottom: "none" }}
-            name="Active user name"
-          />
+          <div className="md:flex sm:hidden">
+            <ProfileMenu
+              style={{
+                float: "right",
+                marginLeft: "2vw",
+                borderBottom: "none",
+              }}
+              name="Active user name"
+            />
+          </div>
 
-          <IconButton sx={{ float: "right", marginLeft: ".5vw" }}>
-            <NotificationAdd className="primaryColor" />
-          </IconButton>
-          {/* <Avatar
-            sx={{
-              // marginLeft: "2vw",
-              width: 55,
-              height: 55,
-              border: "4px solid blue",
-              marginLeft: ".4vw",
-              marginRight: ".4vw",
-              float: "right",
-            }}
-            src={avatarImage}
-          ></Avatar> */}
+          <div className="md:ml-[0%] sm:mr-[10%] md:flex sm:flex ">
+            <LightAndDarkModeSwitch style={{ float: "right" }} />
 
-          <LightAndDarkModeSwitch style={{ float: "right" }} />
+            <IconButton>
+              <NotificationAdd className="primaryColor" />
+            </IconButton>
+          </div>
         </div>
       </div>
       {/* // ======  PAGE CONTENT ===== \\ */}
-      <div style={{ flex: ".89", display: "flex" }}>
+      <div className="md:basis-[89%] md:flex md:flex-shrink-0  sm:basis-[89%] sm:flex sm:flex-shrink-0">
         {/* // NAV ARAEA */}
         <div
+          className="md:flex sm:hidden"
           style={{
             flex: ".18",
-            display: "flex",
+            // display: "flex",
             flexDirection: "column",
             paddingTop: "5vh",
           }}
@@ -317,8 +317,9 @@ const PlayerVersionMotherComponent = () => {
 
         {/* // ROUTES SECTION */}
         <div
+          className="md:basis-[82%] sm:basis-[100%]"
           style={{
-            flex: ".82",
+            // flex: ".82",
             padding: "2vh 1.5vw",
           }}
         >

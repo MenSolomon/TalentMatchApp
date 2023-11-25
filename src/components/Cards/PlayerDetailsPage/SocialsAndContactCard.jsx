@@ -10,10 +10,8 @@ const SocialAndContactAreaCard = ({ instagram, facebook }) => {
 
   return (
     <div
-      className="playerCard"
+      className="playerCard md:w-[100%] md:h-[100%]  sm:w-[40vw] sm:h-[100%]"
       style={{
-        width: "100%",
-        height: "100%",
         borderRadius: "1vw",
         paddingTop: "1.5vw",
         paddingLeft: "1.5vw",

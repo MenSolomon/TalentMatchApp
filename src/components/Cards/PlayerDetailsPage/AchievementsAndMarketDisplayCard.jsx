@@ -59,20 +59,26 @@ border-box;`;
 
   return (
     <div
-      className="playerCard"
+      className="playerCard  md:w-[100%] md:h-[100%] md:flex md:flex-col  sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
       style={{
-        width: "100%",
-        height: "100%",
+        // width: "100%",
+        // height: "100%",
         borderRadius: "1vw",
         padding: "1.5vw",
-        display: "flex",
+        // display: "flex",
         // color: "#E4E8F9",
-        flexDirection: "column",
+        // flexDirection: "column",
       }}
     >
       <div style={{ flex: ".3", display: "flex" }}>
         {" "}
-        <span style={{ fontWeight: "bolder" }}> Market Value :</span>
+        <span
+          style={{ fontWeight: "bolder" }}
+          className="md:text-[1.2em]  sm:text-[15px]"
+        >
+          {" "}
+          Market Value :
+        </span>
         <BasicButton
           style={{
             width: "4vw",
@@ -81,39 +87,49 @@ border-box;`;
             color: "white",
             marginLeft: "1vw",
           }}
+          className="text-[10px]"
           innerText="$10M"
         />
       </div>
       <div style={{ flex: ".4", display: "flex", gap: "1.3vw" }}>
         <img
-          style={{
-            width: "18%",
-            height: "50px",
-            //   border: "2px solid red",
-            //   backgroundImage: `url(${worldCup})`,
-            //   backgroundSize: "contain",
-          }}
+          style={
+            {
+              // width: "18%",
+              // height: "50px",
+              //   border: "2px solid red",
+              //   backgroundImage: `url(${worldCup})`,
+              //   backgroundSize: "contain",
+            }
+          }
+          className="md:w-[18%] md:h-[50px] sm:w-[12%] "
           src={worldCup}
         ></img>
         <img
-          style={{
-            width: "20%",
-            height: "50px",
-            //   border: "2px solid red",
-            //   backgroundImage: `url(${worldCup})`,
-            //   backgroundSize: "contain",
-          }}
+          style={
+            {
+              // width: "20%",
+              // height: "50px",
+              //   border: "2px solid red",
+              //   backgroundImage: `url(${worldCup})`,
+              //   backgroundSize: "contain",
+            }
+          }
+          className="md:w-[20%] md:h-[50px] sm:w-[12%]"
           src={uefa}
         ></img>
         <img
-          style={{
-            width: "25%",
-            height: "50px",
-            //   border: "2px solid red",
-            //   backgroundImage: `url(${worldCup})`,
-            //   backgroundSize: "contain",
-          }}
+          style={
+            {
+              // width: "25%",
+              // height: "50px",
+              //   border: "2px solid red",
+              //   backgroundImage: `url(${worldCup})`,
+              //   backgroundSize: "contain",
+            }
+          }
           src={BalonDor}
+          className="md:w-[25%] md:h-[50px] sm:w-[15%]"
         ></img>
 
         {/* <img
@@ -139,19 +155,25 @@ border-box;`;
             paddingTop: "2vh",
             display: "flex",
           }}
+          className="md:text-[1.2em]  sm:text-[10px]"
         >
-          condition <Favorite sx={{ fontSize: "1.2em" }} />{" "}
+          condition <Favorite className="md:text-[1.2em]  sm:text-[15px]" />{" "}
           <Avatar
             sx={{
-              width: 30,
-              height: 30,
+              // width: 30,
+              // height: 30,
               marginLeft: 0.6,
               marginRight: 0.6,
             }}
+            className="md:w-[25%] sm:w-[12%]"
           >
-            <Icon>vital_signs</Icon>
+            <Icon className="md:text-[1.2em]  sm:text-[15px]">vital_signs</Icon>
           </Avatar>{" "}
-          <Details sx={{ fontSize: "1.2em" }} /> Sharpness{" "}
+          <Details
+            className="md:text-[1.2em]  sm:text-[15px]"
+            // sx={{ fontSize: "1.2em" }}
+          />{" "}
+          Sharpness{" "}
         </div>
       </div>
     </div>

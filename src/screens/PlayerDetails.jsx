@@ -93,11 +93,8 @@ const PlayerDetails = () => {
 
   return (
     <div
+      className="md:w-[100%] md:h-[100%] md:grid   sm:w-[100%] sm:h-[100%] sm:flex  sm:flex-col"
       style={{
-        width: "100%",
-        height: "100%",
-        // background: "blue",
-        display: "grid",
         gridTemplateRows:
           isCardsCollapsedVariable === false ? "2% 35% 9% 54%" : "2% 9% 89%",
         gridTemplateColumns: "1fr",
@@ -149,7 +146,10 @@ const PlayerDetails = () => {
           />
         </div>
         {/* Achievements and Trophies Area */}
-        <div style={{ flex: ".27", padding: "1vw" }}>
+        <div
+          className="sm:hidden md:flex"
+          style={{ flex: ".27", padding: "1vw" }}
+        >
           {" "}
           <AchievementAndMarketValueCard
             worldCup={worldCup}
@@ -158,11 +158,44 @@ const PlayerDetails = () => {
           />
         </div>
         {/* Socials And Contact Area */}
-        <div style={{ flex: ".2", padding: "1vw" }}>
+        <div
+          className="sm:hidden md:flex"
+          style={{ flex: ".2", padding: "1vw" }}
+        >
           {" "}
           <SocialAndContactAreaCard instagram={instagram} facebook={facebook} />
         </div>
       </div>
+
+      {/* // Card Display Area 2 */}
+      <div
+        style={{
+          gridArea: "CardDisplay",
+          display: isCardsCollapsedVariable === false ? "flex" : "none",
+        }}
+      >
+        {/* Achievements and Trophies Area */}
+        <div
+          className="md:hidden sm:flex"
+          style={{ flex: ".27", padding: "1vw" }}
+        >
+          <AchievementAndMarketValueCard
+            worldCup={worldCup}
+            BalonDor={BalonDor}
+            uefa={uefa}
+          />
+        </div>
+        {/* Socials And Contact Area */}
+        <div
+          className="md:hidden sm:flex"
+          style={{ flex: ".2", padding: "1vw" }}
+        >
+          {" "}
+          <SocialAndContactAreaCard instagram={instagram} facebook={facebook} />
+        </div>
+      </div>
+
+      {/* ================== */}
       <div style={{ gridArea: "MenuStrip" }}>
         <PlayerDetailsMenuTab PlayerTabItemsArray={menuLabelArray} />
       </div>

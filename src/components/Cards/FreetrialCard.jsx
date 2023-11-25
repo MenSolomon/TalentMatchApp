@@ -33,7 +33,7 @@ const FreetrialCard = ({ name, roleImage, imageStyle }) => {
         className="chooseARoleCard"
         sx={{
           // background: "pink",
-          width: "20%",
+          width: "15%",
           height: "70%",
           display: "flex",
           flexDirection: "column",

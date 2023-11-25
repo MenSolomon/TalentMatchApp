@@ -13,28 +13,14 @@ const PlayerComparison = () => {
   console.log(selectedPlayersToCompare, "SSA");
 
   return (
-    <div
-      style={{
-        display: "flex",
-        width: "100%",
-        height: "100%",
-        flexDirection: "column",
-      }}
-    >
-      <div style={{ flex: ".1" }}>
+    <div className="md:flex md:w-[100%] md:h-[100%] md:flex-col  sm:flex sm:w-[100%] sm:h-[100%] sm:flex-col ">
+      <div className="md:basis-[10%]  sm:basis-[10%]">
         <h3> PlayerComparison </h3>
       </div>
 
       {selectedPlayersToCompare && selectedPlayersToCompare.length <= 0 ? (
         // DISPLAY TWO DRAWER ICONS WITH PERSONS
-        <div
-          style={{
-            flex: ".9",
-            display: "flex",
-            justifyContent: "center",
-            gap: "8vw",
-          }}
-        >
+        <div className="md:basis-[90%] md:flex md:justify-center md:gap-[8vw]  sm:basis-[90%] sm:flex sm:justify-center sm:gap-[8vw]">
           {/* <PlayerComparisonDrawer /> */}
           <PlayerComparisonDrawer />
           <PlayerComparisonDrawer />
@@ -42,14 +28,8 @@ const PlayerComparison = () => {
       ) : (
         // DISPLAY CARDS WITH PLAYERS DETAILS
 
-        <div
-          style={{
-            flex: ".9",
-            display: "flex",
-            justifyContent: "center",
-            gap: "3vw",
-          }}
-        >
+        <div className="md:basis-[90%] md:flex md:justify-center md:gap-[3vw] md:flex-row  sm:basis-[90%] sm:flex sm:flex-wrap sm:justify-center sm:gap-[3vw] ">
+          {/* sm:overflow-y-scroll */}
           {selectedPlayersToCompare.map((data, index) => {
             const { firstName, surName, position, image } = data;
 

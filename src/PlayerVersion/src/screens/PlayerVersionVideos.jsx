@@ -11,26 +11,32 @@ const PlayerVersionVideos = () => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
+      className="md:flex md:flex-col md:h-[100%] md:W-[100%]  sm:flex sm:flex-col sm:h-[100%] sm:W-[100%]"
+      style={
+        {
+          // display: "flex",
+          // flexDirection: "column",
+          // height: "100%",
+          // width: "100%",
+        }
+      }
     >
       {/* // Heading Area */}
-      <div style={{ flex: ".1" }}>
+      <div className="md:basis-[10%]  sm:basis-[10%]">
         <h3 style={{ margin: 0, float: "left" }}>Profile Videos</h3>{" "}
       </div>
 
       {/* Video DISPLAY AREA */}
 
       <div
-        style={{
-          flex: ".9",
-          display: "flex",
-          flexDirection: "column",
-        }}
+        className="md:basis-[90%] md:flex md:flex-col  sm:basis-[90%] sm:flex sm:flex-col"
+        style={
+          {
+            // flex: ".9",
+            // display: "flex",
+            // flexDirection: "column",
+          }
+        }
       >
         {/* // FILTER ROW */}
         <div
@@ -60,15 +66,32 @@ const PlayerVersionVideos = () => {
           <div style={{ flex: ".15" }}>Video</div>
 
           {/* Description */}
-          <div style={{ flex: ".33" }}>Description</div>
+          <div className="sm:flex sm:justify-start" style={{ flex: ".33" }}>
+            Description
+          </div>
 
           {/* Date uploaded */}
-          <div style={{ flex: ".17" }}>Date uploaded</div>
+          <div
+            className="sm:flex sm:justify-center  md:flex md:justify-start"
+            style={{ flex: ".17" }}
+          >
+            Date uploaded
+          </div>
           {/* Category */}
-          <div style={{ flex: ".2" }}>Category</div>
+          <div
+            className="sm:flex sm:justify-center  md:flex md:justify-start"
+            style={{ flex: ".2" }}
+          >
+            Category
+          </div>
 
           {/* Views */}
-          <div style={{ flex: ".1" }}>Views</div>
+          <div
+            className="sm:flex sm:justify-center  md:flex md:justify-start"
+            style={{ flex: ".1" }}
+          >
+            Views
+          </div>
         </div>
         {/* VIDEOS CONTENT ROWS */}
         <div

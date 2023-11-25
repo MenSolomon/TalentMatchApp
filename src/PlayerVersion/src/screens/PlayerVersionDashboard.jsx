@@ -12,48 +12,43 @@ const PlayerVersionDashboard = () => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
+      className="md:flex md:flex-col md:w-[100%] md:h-[100%]  sm:flex sm:flex-col sm:w-[100%] sm:h-[100%]"
+      style={
+        {
+          // background: "pink",
+        }
+      }
     >
       {/* // Heading Area */}
-      <div style={{ flex: ".1" }}>
+      <div className="md:basis-[10%] sm:basis-[10%]">
         <h3 style={{ margin: 0, float: "left" }} className="primaryTextColor">
           Profile dashboard
         </h3>{" "}
       </div>
 
       {/* // Cards  (upload video card , analytics summary card and other information card) */}
-      <div style={{ flex: ".9", display: "flex", gap: "2.5vw" }}>
-        <div style={{ flex: ".33" }}>
+      <div className="md:basis-[90%] md:flex-row md:flex md:gap-[2.5vw]   sm:basis-[90%] sm:flex sm:flex-col sm:gap-[2.5vw] sm:overflow-y-scroll md:overflow-y-hidden">
+        <div className="md:w-[30%] md:h-[100%] md:flex-shrink-0   sm:w-[100%] sm:h-[100%] sm:flex-shrink-0">
           {/* // DRAG AND DROP VIDEO CARD*/}
           <div
-            className="cardBackground"
+            className="cardBackground md:w-[100%] md:h-[96%] md:grid md:place-items-center md:relative   sm:w-[100%] sm:h-[96%] sm:grid sm:place-items-center sm:relative"
             style={{
-              width: "100%",
-              height: "96%",
               borderRadius: "1vw",
-              display: "grid",
-              placeItems: "center",
-              position: "relative",
             }}
           >
             {/* // DASHED BORDER DIV */}
             <div
+              className="md:w-[88%] md:h-[90%] md:absolute md:place-items-center md:grid   sm:w-[50%] sm:h-[90%] sm:absolute sm:place-items-center sm:grid"
               style={{
-                width: "88%",
-                height: "90%",
                 borderRadius: ".7vw",
                 border: `1px dashed ${primaryTextColor}`,
-                position: "absolute",
-                display: "grid",
-                placeItems: "center",
               }}
             >
-              <img src={VideoImage} style={{ width: "200px", color: "red" }} />
+              <img
+                className="md:w-[200px] sm:w-[150px]"
+                src={VideoImage}
+                style={{ color: "red" }}
+              />
 
               <span style={{ textAlign: "center" }}>
                 Want to see metrics on your recent video? Upload and publish a
@@ -63,21 +58,12 @@ const PlayerVersionDashboard = () => {
             </div>
           </div>
         </div>
-        <div style={{ flex: ".33" }}>
+        <div className="md:w-[30%] md:h-[100%] md:flex-shrink-0   sm:w-[100%] sm:h-[100%] sm:flex-shrink-0">
           {/* PROFILE ANALYTICS */}
           <div
-            className="cardBackground"
+            className="cardBackground md:w-[100%] md:h-[85%] md:flex md:flex-col md:gap-[1vh] md:pl-[2vw] md:pr-[2vw] md:pt-[3vh] md:pb-[2vh]  sm:w-[100%] sm:h-[85%] sm:flex sm:flex-col sm:gap-[1vh] sm:pl-[2vw] sm:pr-[2vw] sm:pt-[3vh] sm:pb-[2vh]"
             style={{
-              width: "100%",
-              height: "85%",
               borderRadius: "1vw",
-              display: "flex",
-              flexDirection: "column",
-              gap: "1vh",
-              paddingLeft: "2vw",
-              paddingRight: "2vw",
-              paddingTop: "3vh",
-              paddingBottom: "2vh",
             }}
           >
             {/* // PROFILE ANALYTICS TOTAL VIEWS */}
@@ -120,38 +106,25 @@ const PlayerVersionDashboard = () => {
 
         {/* // LATEST NEWS AND COMMENTS */}
         <div
-          style={{
-            flex: ".33",
-            // background: "white",
-            display: "flex",
-            flexDirection: "column",
-            gap: "2.4vh",
-          }}
+          className="md:w-[30%] md:h-[100%] md:flex-shrink-0 md:flex md:flex-col md:gap-[2.4vh]   sm:w-[100%] sm:h-[100%] sm:flex-shrink-0 sm:flex sm:flex-col sm:gap-[2.4vh]"
+          style={
+            {
+              // background: "white",
+            }
+          }
         >
           <div
-            className="cardBackground"
+            className="cardBackground md:basis-[50%] md:pl-[2vw] md:pr-[2vw] md:pt-[3vh] md:pb-[2vh]   sm:basis-[50%] sm:pl-[2vw] sm:pr-[2vw] sm:pt-[3vh] sm:pb-[2vh]"
             style={{
-              flex: ".5",
-
               borderRadius: "1vw",
-              paddingLeft: "2vw",
-              paddingRight: "2vw",
-              paddingTop: "3vh",
-              paddingBottom: "2vh",
             }}
           >
             <h5>Recent messages</h5>
           </div>
           <div
-            className="cardBackground"
+            className="cardBackground md:basis-[50%] md:pl-[2vw] md:pr-[2vw] md:pt-[3vh] md:pb-[2vh]   sm:basis-[50%] sm:pl-[2vw] sm:pr-[2vw] sm:pt-[3vh] sm:pb-[2vh]"
             style={{
-              flex: ".5",
-
               borderRadius: "1vw",
-              paddingLeft: "2vw",
-              paddingRight: "2vw",
-              paddingTop: "3vh",
-              paddingBottom: "2vh",
             }}
           >
             <h5>News</h5>

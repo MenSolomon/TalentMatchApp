@@ -168,28 +168,30 @@ const HomePage = () => {
 
   return (
     <div
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1vh",
-      }}
+      className="md:w-[100%] md:h-[100%] md:flex md:flex-col md:gap-[1vh]  sm:w-[97vw] sm:h-[100%] sm:flex sm:flex-col-reverse sm:gap-[1vh] "
+      // style={{ background: "yellow", overflowY: "scroll" flex-col-reverse }}
+      // style={{ overflowY: "scroll" }}
     >
       {/* // FIRST SECTION`` */}
       <div
+        className="md:basis-[55%] md:flex md:flex-row md:gap-[1.1vw]  sm:basis-[55%] sm:flex sm:flex-col sm:gap-[1.1vw] md:w-[100%] sm:w-[100%]"
         style={{
-          flex: ".55",
+          // flex: ".55",
           padding: "1vh .7vw",
-          display: "flex",
-          gap: "1.1vw",
+          // flexDirection: "",
+          // flexDirection:""
+          // display: "flex",
+          // gap: "1.1vw",
+          // background: "peru",
+          // width: "100vw",
         }}
       >
         {/* // Transfer News carousel */}
         <div
+          className="md:basis-[60%] md:relative  sm:basis-[60%] sm:relative"
           style={{
-            flex: ".6",
-            // background: "white",
+            // flex: ".6",
+            // background: "white",`
             borderRadius: "1vw",
             position: "relative",
           }}
@@ -198,10 +200,13 @@ const HomePage = () => {
         </div>
         {/* // Most Viewed Player /&& fantasy player of the week ,  free agent pick of the week */}
         <div
-          style={{
-            flex: ".4",
-            display: "flex",
-          }}
+          className="md:basis-[40%] md:flex  sm:basis-[40%] sm:flex"
+          style={
+            {
+              // flex: ".4",
+              // display: "flex",
+            }
+          }
         >
           {/* // Players of the Week Pick */}
           <div
@@ -251,11 +256,13 @@ const HomePage = () => {
 
       {/* SECOND SECTION */}
       <div
+        className="md:basis-[45%] md:flex md:flex-col  sm:basis-[45%] sm:flex sm:flex-col  "
         style={{
-          flex: ".45",
+          // flex: ".45",
           padding: ".4vh .5vw",
-          display: "flex",
-          flexDirection: "column",
+          // display: "flex",
+          // flexDirection: "column",
+          // background: "pink",
         }}
       >
         {/* // Headers */}

@@ -54,6 +54,7 @@ const NewsCarousel = ({ NewsArray }) => {
       style={{
         // background: "black",
         height: "100%",
+        // width: "100%",
         borderRadius: "1vw",
       }}
     >
@@ -87,13 +88,13 @@ const NewsCarousel = ({ NewsArray }) => {
               }}
             >
               <div
-                className="cardBackground"
+                className="cardBackground md:flex md:w-[100%] md:h-[100%]  sm:flex sm:w-[100%] sm:h-[100%]"
                 style={{
                   borderRadius: "1vw",
-                  display: "flex",
+                  // display: "flex",
                   gap: ".5vw",
-                  width: "100%",
-                  height: "100%",
+                  // width: "100%",
+                  // height: "100%",
                 }}
               >
                 {/* // Player information */}
@@ -137,8 +138,9 @@ const NewsCarousel = ({ NewsArray }) => {
                     <video
                       id={`video-${index}`}
                       src="../../../public/believerJuggling.mp4"
-                      width="100%"
-                      style={{ position: "absolute" }}
+                      className="md:w-[100%] md:absolute  sm:w-[100%] sm:absolute"
+                      // width="100%"
+                      // style={{ position: "absolute" }}
                       // autoPlay={true}
                       controls
                     ></video>

@@ -11,18 +11,9 @@ import avatarImage from "../assets/images/avatar.jpg";
 
 const CoachAgentScoutVersionInbox = () => {
   return (
-    <div
-      className="primaryTextColor"
-      style={{ display: "flex", width: "100%", height: "100%" }}
-    >
+    <div className="primaryTextColor md:flex md:w-[100%] md:h-[100%] md:flex-row  sm:flex sm:flex-col sm:w-[100%] sm:h-[100%] ">
       {/* MESSAGE OVERVIEW SECTION */}
-      <div
-        style={{
-          flex: ".35",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      <div className="md:basis-[35%] md:flex md:flex-col  sm:basis-[35%] sm:flex sm:flex-col">
         {/* // INBOX HEADER */}
         <div style={{ flex: ".2" }}>
           <h5 style={{ fontWeight: "bolder", margin: "0" }}>Inbox</h5>
@@ -61,12 +52,12 @@ const CoachAgentScoutVersionInbox = () => {
 
       {/* INBOX CONTENT SECTION */}
       <div
-        className="cardBackground"
+        className="cardBackground md:basis-[65%] md:flex md:flex-col  sm:basis-[65%] sm:flex sm:flex-col"
         style={{
-          flex: ".65",
+          // flex: ".65",
           // background: "red",
-          display: "flex",
-          flexDirection: "column",
+          // display: "flex",
+          // flexDirection: "column",
           paddingLeft: "1.5vw",
           borderRadius: "1vw",
         }}

@@ -31,51 +31,18 @@ const PlayerComparisonCard = ({
 
   return (
     <Card
-      className="primaryTextColor cardBackground"
-      sx={{ borderRadius: "1vw", width: "28%", height: "70vh" }}
+      className="primaryTextColor cardBackground md:h-[70vh] md:w-[28%]  sm:h-[70vh] sm:w-[100%]"
+      sx={{ borderRadius: "1vw" }}
     >
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      <div className="md:h-[100%] md:w-[100%] md:flex md:flex-col  sm:h-[100%] sm:w-[100%] sm:flex sm:flex-col">
         {/* Player Profiles */}
-        <div
-          style={{
-            flex: ".1",
-            display: "flex",
-            padding: "10px",
-          }}
-        >
-          <div
-            style={{
-              flex: ".7",
-              // background: "peru",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <div
-              style={{
-                flex: ".5",
-                //   background: "green",
-                display: "flex",
-                justifyContent: "flex-start",
-                alignItems: "center",
-              }}
-            >
+        <div className="md:basis-[10%] md:flex md:p-[10px]  sm:basis-[10%] sm:flex sm:p-[10px]">
+          <div className="md:basis-[70%] md:flex md:flex-col  sm:basis-[70%] sm:flex sm:flex-col">
+            <div className="md:basis-[50%] md:flex md:justify-start md:items-center  sm:basis-[50%] sm:flex sm:justify-start sm:items-center">
               {/* <AccountCircleOutlined sx={{ fontSize: "65px" }} /> */}
               <Avatar src={image} sx={{ width: 50, height: 50 }}></Avatar>
             </div>
-            <div
-              style={{
-                flex: ".5",
-                //   background: "cyan",
-              }}
-            >
+            <div className="md:basis-[50%]  sm:basis-[50%]">
               {/* NAME AND POSITION AREA  */}
               <div
                 style={{
@@ -86,34 +53,24 @@ const PlayerComparisonCard = ({
               <h6> {position}</h6>
             </div>
           </div>
-          <div style={{ flex: ".3" }}>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <div className="md:basis-[30%]  sm:basis-[30%]">
+            <div className="md:flex md:justify-end  sm:flex sm:justify-end">
               <IconButton onClick={handleCardClose}>
                 <Close />
               </IconButton>
             </div>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              {/* <Flag sx={{ fontSize: "50px" }} /> */}
+            <div className="md:flex md:justify-end  sm:flex sm:justify-end">
               <img src={sourceLogo} style={{ width: "45px" }} />
             </div>
           </div>
         </div>
         {/* // CLubs Section */}
-        <div style={{ flex: ".1", padding: "10px" }}>
+        <div className="md:basis-[10%] md:p-[10px]  sm:basis-[10%] sm:p-[10px]">
           <h6>Club Name: {playerName}</h6>
           <h6>Age: {age}</h6>
           <h6>Height: {height} </h6>
         </div>
-        <div
-          style={{
-            flex: ".8",
-            // display: "flex",
-            // flexDirection: "column",
-            // gap: "15px",
-            overflowY: "scroll",
-            padding: "10px",
-          }}
-        >
+        <div className="md:basis-[80%] md:p-[10px] md:overflow-y-scroll  sm:basis-[80%] sm:p-[10px] sm:overflow-y-scroll">
           <PlayerComparisonAccordion />
         </div>
       </div>

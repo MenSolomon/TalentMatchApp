@@ -27,13 +27,13 @@ export default function PlayerComparisonDrawer() {
 
   const list = (anchor) => (
     <Box
-      className="cardBackground primaryTextColor"
+      className="cardBackground primaryTextColor md:w-[100%] md:h-[100%] md:flex md:flex-col   sm:h-[100%] sm:flex sm:flex-col sm:w-[100%]"
       sx={{
-        width: 400,
-        height: "100%",
+        // width: 400,
+        // height: "100%",
         padding: "3vh 1vw",
-        display: "flex",
-        flexDirection: "column",
+        // display: "flex",
+        // flexDirection: "column",
         zIndex: "10000",
       }}
       role="presentation"
@@ -85,17 +85,17 @@ const PlayerProfileAdd = ({ clickFunction }) => {
   return (
     <>
       <div
-        className=""
+        className="md:w-[12vw] md:h-[25vh] md:flex md:items-center md:justify-center  sm:w-[42vw] sm:h-[20vh] sm:flex sm:items-center sm:justify-center"
         onClick={clickFunction}
         style={{
-          width: "12vw",
-          height: "25vh",
+          // width: "12vw",
+          // height: "25vh",
           //   background: "green",
           border: `2px dashed ${primaryTextColor}`,
           borderRadius: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          // display: "flex",
+          // alignItems: "center",
+          // justifyContent: "center",
           cursor: "pointer",
         }}
       >

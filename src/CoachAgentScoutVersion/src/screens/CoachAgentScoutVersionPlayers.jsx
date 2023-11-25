@@ -9,18 +9,24 @@ const CoachAgentScoutVersionPlayers = () => {
   const PlayerArray = useSelector(selectPlayersInAgencyArray);
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
+      className="md:flex md:flex-col md:h-[100%] md:w-[100%]   
+      sm:flex sm:flex-col sm:h-[100%] sm:w-[100%] 
+      "
+      // style={{
+      //   display: "flex",
+      //   flexDirection: "column",
+      //   height: "100%",
+      //   width: "100%",
+      // }}
     >
       <div style={{ flex: ".1" }}>
         <h3 style={{ margin: 0, float: "left" }}>Players</h3>{" "}
       </div>
 
-      <div style={{ flex: ".8", flexWrap: "wrap", display: "flex" }}>
+      <div
+        className="md:flex md:flex-wrap md:gap-[0%] md:justify-center sm:flex  sm:flex-wrap sm:justify-center sm:gap-[15px] sm:overflow-y-scroll md:overflow-y-hidden "
+        style={{ flex: ".8" }}
+      >
         {PlayerArray.slice(0, 9).map((data, index) => {
           const {
             firstName,

@@ -32,14 +32,19 @@ const FreeTrial = () => {
           // background: "red",
           justifyContent: "center",
           display: "flex",
-          gap: "10px",
+          gap: "20px",
           alignItems: "center",
-          flexWrap: "wrap",
+          // flexWrap: "wrap",
         }}
       >
         <FreetrialCard name="Coach" roleImage="/public/CoachBlue.png" />
         <FreetrialCard
           name="Player"
+          roleImage="/public/PlayerBlue.png"
+          imageStyle={{ maxWidth: "60px", height: "89px" }}
+        />
+        <FreetrialCard
+          name="Club"
           roleImage="/public/PlayerBlue.png"
           imageStyle={{ maxWidth: "60px", height: "89px" }}
         />

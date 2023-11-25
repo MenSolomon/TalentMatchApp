@@ -8,17 +8,17 @@ const ClubandNationalTeamDisplayCard = ({
 }) => {
   return (
     <div
-      className="playerCard"
+      className="playerCard md:w-[100%] md:h-[100%] md:flex md:flex-col  sm:w-[40vw] sm:h-[100%] sm:flex sm:flex-col"
       style={{
-        width: "100%",
-        height: "100%",
+        // width: "100%",
+        // height: "100%",
         // background:
         //   "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
         // background: "white",
         // position: "relative",
         padding: "1.5vw",
-        display: "flex",
-        flexDirection: "column",
+        // display: "flex",
+        // flexDirection: "column",
         // borderBottom: "1px solid ",
         // borderRight: "1px solid #BECBCC",
         borderRadius: "1vw",
@@ -53,8 +53,9 @@ const ClubandNationalTeamDisplayCard = ({
                   paddingBottom: 0,
                   paddingTop: 0,
                   textAlign: "right",
-                  fontSize: ".94em",
+                  // fontSize: ".94em",
                 }}
+                className="md:text-[.94em] sm:text-[15px]"
               >
                 {ClubName}
               </p>{" "}
@@ -63,7 +64,8 @@ const ClubandNationalTeamDisplayCard = ({
               {" "}
               <img
                 src={countryImage}
-                style={{ width: "40px", float: "right" }}
+                style={{ float: "right" }}
+                className="md:w-[40px] sm:w-[20px]"
               />{" "}
             </div>
           </div>
@@ -71,16 +73,28 @@ const ClubandNationalTeamDisplayCard = ({
           {/* Club Image */}
           <div style={{ flex: ".3", paddingLeft: ".3vw" }}>
             {/* <img src={clubImage} style={{ width: "100%" }} /> */}
-            <Avatar sx={{ width: 60, height: 60 }} src={clubImage}></Avatar>
+            <Avatar
+              // sx={{ width: 60, height: 60 }}
+              className="md:w-[40px] md:h-[60px] sm:w-[20px]"
+              src={clubImage}
+            ></Avatar>
           </div>
         </div>
         {/* // Height And Preffered Foot Area */}
         <div>
           {" "}
-          <h6 style={{ ...hTagStyle, fontSize: ".95em" }}>
+          <h6
+            style={{ ...hTagStyle }}
+            className="md:text-[1em]  sm:text-[10px]"
+          >
             Preferred foot : Left
           </h6>{" "}
-          <h6 style={{ ...hTagStyle, fontSize: ".95em" }}>Height : 5'11''</h6>{" "}
+          <h6
+            style={{ ...hTagStyle }}
+            className="md:text-[1em]  sm:text-[10px]"
+          >
+            Height : 5'11''
+          </h6>{" "}
         </div>
       </div>
     </div>

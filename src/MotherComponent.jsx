@@ -197,18 +197,23 @@ const MotherComponent = () => {
 
   return (
     <div
+      className="md:flex md:flex-col md:h-[100vh] md:w-[100vw] sm:flex sm:flex-col sm:h-[100vh] sm:w-[100vw]"
       style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        width: "100vw",
+        // display: "flex",
+        // flexDirection: "column",
+        // height: "100vh",
+        // width: "100vw",
         // background: background,
         color: primaryTextColor,
         // zIndex: "-3",
+        // background: "yellow",
       }}
     >
       {/* //=====  NAVBAR ======= \\ */}
-      <div style={{ flex: ".11", display: "flex" }}>
+      <div
+        className="md:flex md:basis-[11%]  sm:flex sm:basis-[11%]"
+        // style={{ background: "yellow" }}
+      >
         {/* // Logo Area */}
 
         <div
@@ -219,7 +224,11 @@ const MotherComponent = () => {
             placeContent: "center",
           }}
         >
-          <img style={{ width: "110px" }} src={logoImage} />
+          <img
+            style={{ width: "110px" }}
+            src={logoImage}
+            // className="sm:hidden md:block"
+          />
           {/* <h4 style={{ marginTop: "2vh" }}>Talent Match</h4> */}
         </div>
         {/* // Search Area? */}
@@ -260,20 +269,29 @@ const MotherComponent = () => {
         </div>
       </div>
       {/* // ======  PAGE CONTENT ===== \\ */}
-      <div style={{ flex: ".89", display: "flex" }}>
+      <div className="md:flex md:basis-[89%]  sm:flex sm:basis-[89%]">
         {/* // NAV ARAEA */}
         <div
-          style={{
-            flex: ".18",
-            display: "flex",
-            flexDirection: "column",
-            paddingTop: "5vh",
-            // background: "yellow",
-          }}
+          className="md:basis-[18%] md:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:block sm:hidden"
+          style={
+            {
+              // flex: ".18",
+              // display: "flex",
+              // flexDirection: "column",
+              // paddingTop: "5vh",
+              // background: "yellow",
+            }
+          }
         >
           {/* // USE A MAP FOR THIS */}
           {/* // NavBAR FIRST HALF */}
-          <div style={{ flex: ".65", overflowY: "scroll", maxHeight: "45vh" }}>
+          <div
+            style={{
+              flex: ".65",
+              overflowY: "scroll",
+              maxHeight: "45vh",
+            }}
+          >
             <ul style={{ listStyleType: "none", marginLeft: "2vw" }}>
               {menuButtonsArray &&
                 menuButtonsArray.map((data, index) => {

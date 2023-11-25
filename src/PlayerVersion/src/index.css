@@ -47,3 +47,12 @@ tbody tr {
 ul {
   list-style-type: none;
 }
+
+.css-1p823my-MuiListItem-root:not(:nth-child(2)) {
+  height: 15%;
+}
+.css-1p823my-MuiListItem-root:nth-child(2) {
+  background: red;
+  /* height: 10vh; */
+  position: relative;
+}
