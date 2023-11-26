@@ -25,6 +25,8 @@ import BasicSnackBar from "./components/Snackbars/BasicSnackbar";
 import WarningAlertModal from "./components/Modals/WarningAlertModal";
 import Marquee from "react-fast-marquee";
 import { selectClubsInDatabase } from "./statemanager/slices/ClubsInDatabaseSlice";
+import SmallScreenMenuDrawer from "./components/Drawer/SmallScreenMenuDrawer";
+import { selectCurrentScreenSize } from "./statemanager/slices/OtherComponentStatesSlice";
 
 const MotherComponent = () => {
   const LoginUserDetails = useSelector(selectUserDetailsObject);
@@ -52,6 +54,10 @@ const MotherComponent = () => {
 
   const dispatch = useDispatch();
   const clubsInDatabase = useSelector(selectClubsInDatabase);
+
+  const screenSize = useSelector(selectCurrentScreenSize);
+
+  let screenWidth = parseInt(screenSize?.width, 10);
 
   // const [themePallette, setThemePallette] = useState({us});
 
@@ -303,21 +309,25 @@ const MotherComponent = () => {
 
   return (
     <div
+      className="md:flex md:flex-col md:h-[112vh] md:w-[100vw] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw]"
       style={{
         visibility:
           savedProfile && savedProfile?.length > 0 ? "visible" : "hidden",
-        display: "flex",
+        // display: "flex",
 
-        flexDirection: "column",
-        height: "100vh",
-        width: "100vw",
-        // background: background,
+        // flexDirection: "column",
+        // height: "100vh",
+        // width: "100vw",
+        // background: "red",
         color: primaryTextColor,
         // zIndex: "-3",
       }}
     >
       {/* //=====  NAVBAR ======= \\ */}
-      <div style={{ flex: ".11", display: "flex" }}>
+      <div
+        className="md:flex md:basis-[11%]  sm:flex sm:basis-[8%]"
+        // style={{ flex: ".11", display: "flex" }}
+      >
         {/* // Logo Area */}
 
         <div
@@ -328,7 +338,14 @@ const MotherComponent = () => {
             placeContent: "center",
           }}
         >
-          <img style={{ width: "110px" }} src={logoImage} />
+          <div className="sm:block md:hidden">
+            <SmallScreenMenuDrawer />{" "}
+          </div>
+          <img
+            className="sm:hidden md:block"
+            style={{ width: "110px" }}
+            src={logoImage}
+          />
           {/* <h4 style={{ marginTop: "2vh" }}>Talent Match</h4> */}
         </div>
         {/* // Search Area? */}
@@ -342,14 +359,18 @@ const MotherComponent = () => {
           }}
         >
           <Marquee
+            // className="sm:hidden md:block"
+
             speed={35}
             pauseOnClick={true}
             play
             loop={0}
-            style={{ width: "100%", position: "absolute" }}
+            style={{
+              width: "100%",
+              position: "absolute",
+              display: screenWidth < 1024 ? "none" : "flex",
+            }}
           >
-            {/* I can be a React component, multiple React components, or just some
-            text. */}
             {clubsInDatabase.map((data, index) => {
               const { clubImage, clubName } = data;
               return (
@@ -398,17 +419,29 @@ const MotherComponent = () => {
         </div>
       </div>
       {/* // ======  PAGE CONTENT ===== \\ */}
-      <div style={{ flex: ".89", display: "flex" }}>
+      <div
+        className="md:flex md:basis-[89%]  sm:flex sm:basis-[92%] sm:overflow-y-scroll sm:width-[100vw] "
+        style={
+          {
+            // flex: ".89",
+            // display: "flex",
+            // background: "green",
+            // overflowY: "visible",
+          }
+        }
+      >
         {/* // NAV ARAEA */}
         <div
-          style={{
-            flex: ".18",
-            display: "flex",
-
-            flexDirection: "column",
-            paddingTop: "5vh",
-            // background: "yellow",
-          }}
+          className="md:basis-[18%] md:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:block sm:hidden"
+          style={
+            {
+              // flex: ".18",
+              // display: "flex",
+              // flexDirection: "column",
+              // paddingTop: "5vh",
+              // background: "yellow",
+            }
+          }
         >
           {/* // USE A MAP FOR THIS */}
           {/* // NavBAR FIRST HALF */}
@@ -487,9 +520,11 @@ const MotherComponent = () => {
 
         {/* // ROUTES SECTION */}
         <div
+          className="md:basis-[82%] sm:basis-[100%]"
           style={{
-            flex: ".82",
+            // flex: ".82",
             padding: "2vh 1.5vw",
+
             // background: "blue",
           }}
         >

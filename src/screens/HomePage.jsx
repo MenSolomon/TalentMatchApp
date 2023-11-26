@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import WarningAlertModal from "../components/Modals/WarningAlertModal";
 import CreateProfileModal from "../components/Modals/CreateProfileModal";
 import WelcomeMessageModal from "../components/Modals/WelcomeMessageModal";
+import { useEffect } from "react";
 
 const HomePage = () => {
   // const NewsData = [
@@ -172,24 +173,33 @@ const HomePage = () => {
   return (
     <div
       style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1vh",
+        // width: "100%",
+        // height: "100%",
+        // display: "flex",
+        // flexDirection: "column",
+        // gap: "1vh",
+        // background: "yellow",
+        // display: "grid",
+        // gridTemplateColumns: "1fr",
+        // gridTemplateRows: "14vh 93vh 5vh",
+        gridTemplateAreas: "'flicks''PlayerContent''empty' ",
       }}
+      className="md:w-[100%] md:h-[100%] md:flex md:flex-col md:gap-[1vh]  sm:w-[100%] sm:h-[130%] sm:grid sm:grid-cols-1 sm:grid-rows-[14vh,93vh,5vh] sm:gap-[1vh] "
     >
       {/* // FIRST SECTION`` */}
       <div
+        className="md:basis-[55%] md:flex md:flex-row md:gap-[1.1vw]  sm:basis-[90%] sm:flex sm:flex-col sm:gap-[1.1vw] md:w-[100%] sm:w-[100%]  "
         style={{
           flex: ".55",
           padding: "1vh .7vw",
-          display: "flex",
-          gap: "1.1vw",
+          gridArea: "PlayerContent",
+          // display: "flex",
+          // gap: "1.1vw",
         }}
       >
         {/* // Transfer News carousel */}
         <div
+          className="md:basis-[60%] md:relative  sm:basis-[60%] sm:relative"
           style={{
             flex: ".6",
             // background: "white",
@@ -201,6 +211,7 @@ const HomePage = () => {
         </div>
         {/* // Most Viewed Player /&& fantasy player of the week ,  free agent pick of the week */}
         <div
+          className="md:basis-[40%] md:flex  sm:basis-[40%] sm:flex"
           style={{
             flex: ".4",
             display: "flex",
@@ -254,11 +265,13 @@ const HomePage = () => {
 
       {/* SECOND SECTION */}
       <div
+        className="md:basis-[45%] md:flex md:flex-col  sm:basis-[10%] sm:flex sm:flex-col "
         style={{
-          flex: ".45",
+          gridArea: "flicks",
+          // flex: ".45",
           padding: ".4vh .5vw",
-          display: "flex",
-          flexDirection: "column",
+          // display: "flex",
+          // flexDirection: "column",
         }}
       >
         {/* // Headers */}

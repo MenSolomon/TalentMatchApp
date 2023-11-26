@@ -38,6 +38,7 @@ const NewsCarousel = ({ NewsArray }) => {
 
   return (
     <Carousel
+      className="MatchedPlayers"
       activeIndex={activeIndex}
       onSelect={handleSelect}
       //   controls={false}
@@ -55,6 +56,7 @@ const NewsCarousel = ({ NewsArray }) => {
         // background: "black",
         height: "100%",
         borderRadius: "1vw",
+        // width: "93vw",
       }}
     >
       {MatchedPlayersArray &&

@@ -27,9 +27,9 @@ const persistConfig = {
     // "UserLoginData",
     "SavedProfiles",
     "OtherComponentStates",
-    // "Database",
+    "Database",
     // "ThemeProviderSlice",
-    // "TempDatabase",
+    "TempDatabase",
   ],
 };
 

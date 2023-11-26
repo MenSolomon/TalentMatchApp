@@ -36,10 +36,11 @@ import WarningAlertModal from "./components/Modals/WarningAlertModal";
 import { createTheme, ThemeProvider, Button, CssBaseline } from "@mui/material";
 import Error404 from "./screens/Error404";
 import ErrorPageNotFound from "./screens/ErrorPageNotFound";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 import { selectUserDetailsObject } from "./statemanager/slices/LoginUserDataSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { setCurrentScreenSize } from "./statemanager/slices/OtherComponentStatesSlice";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -194,11 +195,10 @@ const App = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { pathname, search, hash } = location;
   const userLoginObject = useSelector(selectUserDetailsObject);
-
-  // const { role } = userLoginObject;
 
   useEffect(() => {
     if (
@@ -217,6 +217,36 @@ const App = () => {
       }
     }
   }, [userLoginObject]);
+
+  const [screenSize, setScreenSize] = useState({
+    width: window.screen.width,
+    height: window.screen.height,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenSize({
+        width: window.screen.width,
+        height: window.screen.height,
+      });
+    };
+
+    // Attach the event listener
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []); // Empty dependency array means this effect runs once after the initial render
+
+  useEffect(() => {
+    console.log(`${screenSize.width} ,width`, `${screenSize.height} ,height`);
+
+    const { width, height } = screenSize;
+
+    dispatch(setCurrentScreenSize({ width, height }));
+  }, [screenSize]);
 
   return (
     <ThemeProvider theme={theme}>

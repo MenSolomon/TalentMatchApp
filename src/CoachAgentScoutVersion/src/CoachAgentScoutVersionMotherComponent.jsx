@@ -18,6 +18,8 @@ import {
 import BasicSnackBar from "../../components/Snackbars/BasicSnackbar";
 import Marquee from "react-fast-marquee";
 import { selectClubsInDatabase } from "../../statemanager/slices/ClubsInDatabaseSlice";
+import SmallScreenCoachAgentClubMenuDrawer from "./components/Drawer/SmallScreenCoachAgentClubMenuDrawer";
+import { selectCurrentScreenSize } from "../../statemanager/slices/OtherComponentStatesSlice";
 
 const CoachAgentScoutVersionMotherComponent = () => {
   const dispatch = useDispatch();
@@ -47,6 +49,9 @@ const CoachAgentScoutVersionMotherComponent = () => {
 
   // const [isSwitched, setIsSwitched] = useState(false);
   const clubsInDatabase = useSelector(selectClubsInDatabase);
+  const screenSize = useSelector(selectCurrentScreenSize);
+
+  let screenWidth = parseInt(screenSize?.width, 10);
 
   const themeProviderObject = useSelector(selectThemeProviderObject);
 
@@ -211,18 +216,22 @@ const CoachAgentScoutVersionMotherComponent = () => {
 
   return (
     <div
+      className="md:flex md:flex-col md:h-[112vh] md:w-[100vw] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw]"
       style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        width: "100vw",
+        // display: "flex",
+        // flexDirection: "column",
+        // height: "100vh",
+        // width: "100vw",
         // background: background,
         color: primaryTextColor,
         // zIndex: "-3",
       }}
     >
       {/* //=====  NAVBAR ======= \\ */}
-      <div style={{ flex: ".11", display: "flex" }}>
+      <div
+        className="md:flex md:basis-[11%]  sm:flex sm:basis-[8%]"
+        // style={{ flex: ".11", display: "flex" }}
+      >
         {/* // Logo Area */}
 
         <div
@@ -233,19 +242,14 @@ const CoachAgentScoutVersionMotherComponent = () => {
             placeContent: "center",
           }}
         >
-          {/* <Avatar
-            sx={{
-              // marginLeft: "2vw",
-              width: 62,
-              height: 62,
-              border: "4px solid blue",
-              marginLeft: ".4vw",
-              marginRight: ".4vw",
-            }}
-            src={avatarImage}
-          ></Avatar>
-          <h4 style={{ marginTop: "2vh" }}>Talent Match</h4> */}
-          <img style={{ width: "110px" }} src={logoImage} />
+          <div className="sm:block md:hidden">
+            <SmallScreenCoachAgentClubMenuDrawer />{" "}
+          </div>
+          <img
+            className="sm:hidden md:block"
+            style={{ width: "110px" }}
+            src={logoImage}
+          />
         </div>
         {/* // Search Area? */}
         <div style={{ flex: ".635", paddingTop: "1%", position: "relative" }}>
@@ -254,7 +258,11 @@ const CoachAgentScoutVersionMotherComponent = () => {
             pauseOnClick={true}
             play
             loop={0}
-            style={{ width: "100%", position: "absolute" }}
+            style={{
+              width: "100%",
+              position: "absolute",
+              display: screenWidth < 1024 ? "none" : "flex",
+            }}
           >
             {/* I can be a React component, multiple React components, or just some
          text. */}
@@ -292,15 +300,19 @@ const CoachAgentScoutVersionMotherComponent = () => {
         </div>
       </div>
       {/* // ======  PAGE CONTENT ===== \\ */}
-      <div style={{ flex: ".89", display: "flex" }}>
+      <div
+        className="md:flex md:basis-[89%]  sm:flex sm:basis-[92%] sm:overflow-y-scroll sm:width-[100vw] "
+        // style={{ flex: ".89", display: "flex" }}
+      >
         {/* // NAV ARAEA */}
         <div
-          style={{
-            flex: ".18",
-            display: "flex",
-            flexDirection: "column",
-            paddingTop: "5vh",
-          }}
+          className="md:basis-[18%] md:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:block sm:hidden"
+          // style={{
+          //   flex: ".18",
+          //   display: "flex",
+          //   flexDirection: "column",
+          //   paddingTop: "5vh",
+          // }}
         >
           {/* // USE A MAP FOR THIS */}
           {/* // NavBAR FIRST HALF */}
@@ -370,8 +382,9 @@ const CoachAgentScoutVersionMotherComponent = () => {
 
         {/* // ROUTES SECTION */}
         <div
+          className="md:basis-[82%] sm:basis-[100%]"
           style={{
-            flex: ".82",
+            // flex: ".82",
             padding: "2vh 1.5vw",
           }}
         >

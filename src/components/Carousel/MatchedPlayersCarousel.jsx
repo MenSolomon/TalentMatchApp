@@ -2,6 +2,8 @@ import { Avatar } from "@mui/material";
 import { useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { useSelector } from "react-redux";
+import { selectCurrentScreenSize } from "../../statemanager/slices/OtherComponentStatesSlice";
 
 const MatchedPlayersCarousel = () => {
   const responsive = {
@@ -21,7 +23,8 @@ const MatchedPlayersCarousel = () => {
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
-      items: 1,
+      items: 4,
+      slidesToSlide: 1,
     },
   };
 
@@ -95,16 +98,25 @@ const MatchedPlayersCarousel = () => {
     }
   };
 
+  const screenSize = useSelector(selectCurrentScreenSize);
+
+  let screenWidth = parseInt(screenSize?.width, 10);
+
   return (
     <div
       style={{
         position: "relative",
         height: "100%",
-        width: "77vw",
+        width: screenWidth >= 1024 ? "77vw" : "90vw",
         // background: "red",
       }}
     >
-      <Carousel responsive={responsive}>
+      <Carousel
+        responsive={responsive}
+        arrows={screenWidth >= 1024 ? true : false}
+        swipeable={screenWidth >= 1024 ? true : true}
+        draggable={screenWidth >= 1024 ? true : true}
+      >
         {reelArray.map((data, index) => {
           const { publisherImg, video } = data;
 
@@ -131,60 +143,90 @@ const MatchedPlayersCarousel = () => {
 export default MatchedPlayersCarousel;
 
 const VideoCard = ({ publisherImg, video, vidIndex }) => {
-  return (
-    <div
-      style={{
-        borderRadius: "1vw",
-        position: "relative",
-        paddingTop: "1vh",
-        width: "13vw",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          zIndex: "3",
-          top: "2vh",
-          left: ".5vw",
-          display: "flex",
-        }}
-      >
-        <Avatar
-          className="cardBackground"
-          src={publisherImg}
-          sx={{
-            width: 30,
-            height: 30,
-            border: "1px solid #5585FE",
-            cursor: "pointer",
-            // right: "1vw",
-          }}
-        />
+  const screenSize = useSelector(selectCurrentScreenSize);
 
-        <h6
+  let screenWidth = parseInt(screenSize?.width, 10);
+
+  return (
+    <>
+      {screenWidth >= 1024 ? (
+        <div
           style={{
-            color: "black",
+            borderRadius: "1vw",
             position: "relative",
-            top: "1vh",
-            fontSize: ".75em",
-            fontWeight: "bolder",
+            paddingTop: "1vh",
+            width: "13vw",
           }}
         >
-          {" "}
-          {/* &nbsp; Okachi */}
-        </h6>
-      </div>
-      {/* <div onClick={() => handleVideoClick(index)}> */}
-      <video
-        id={`carouselVideo-${vidIndex}`}
-        width="160vw"
-        style={{ height: "33vh" }}
-        controls
-      >
-        {" "}
-        <source src={video} type="video/mp4" />
-      </video>{" "}
-      {/* </div> */}
-    </div>
+          <div
+            style={{
+              position: "absolute",
+              zIndex: "3",
+              top: "2vh",
+              left: ".5vw",
+              display: "flex",
+            }}
+          >
+            <Avatar
+              className="cardBackground"
+              src={publisherImg}
+              sx={{
+                width: 30,
+                height: 30,
+                border: "1px solid #5585FE",
+                cursor: "pointer",
+                // right: "1vw",
+              }}
+            />
+
+            <h6
+              style={{
+                color: "black",
+                position: "relative",
+                top: "1vh",
+                fontSize: ".75em",
+                fontWeight: "bolder",
+              }}
+            >
+              {" "}
+              {/* &nbsp; Okachi */}
+            </h6>
+          </div>
+          {/* <div onClick={() => handleVideoClick(index)}> */}
+          <video
+            id={`carouselVideo-${vidIndex}`}
+            width="160vw"
+            style={{ height: "33vh" }}
+            controls
+          >
+            {" "}
+            <source src={video} type="video/mp4" />
+          </video>{" "}
+          {/* </div> */}
+        </div>
+      ) : (
+        <div
+          style={{
+            borderRadius: "1vw",
+            position: "relative",
+            paddingTop: "1vh",
+            height: "20vh",
+            width: "6vw",
+          }}
+        >
+          <Avatar
+            className="cardBackground"
+            src={publisherImg}
+            sx={{
+              width: 70,
+              height: 70,
+              border: "1px solid #5585FE",
+              cursor: "pointer",
+              // right: "1vw",
+            }}
+          />
+        </div>
+      )}
+    </>
   );
 };

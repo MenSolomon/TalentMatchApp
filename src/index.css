@@ -708,6 +708,12 @@ ol {
   list-style-type: none;
 }
 
+@media (min-width: 1000px) {
+  .motherComponentContentArea {
+    overflow-y: scroll;
+  }
+}
+
 /* ol */
 
 /* 

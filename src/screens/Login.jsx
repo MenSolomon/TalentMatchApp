@@ -85,27 +85,31 @@ const Login = () => {
 
   return (
     <div
+      className="md:w-[100%] md:h-[100vh] md:flex md:flex-col md:pl-[3vw] md:p-[3vw] md:pt-[1.5vh]  sm:w-[100%] sm:h-[100vh] sm:flex sm:flex-col sm:pl-[3vw] sm:p-[3vw] sm:pt-[1.5vh]"
       style={{
-        width: "100%",
-        height: "100vh",
+        // width: "100%",
+        // height: "100vh",
         // backgroundImage: `linear-gradient(0deg, rgba(46,46,46,1) 0%, rgba(255,255,255,1) 100%),url("${imageBackground}")`,
         backgroundImage: `linear-gradient(90deg, rgba(32,32,32,0.975210066936931) 0%, rgba(55,54,54,0.9780111873851103) 34%, rgba(23,21,21,1) 100%),url("${imageBackground}")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         // background: "blue",
         backgroundRepeat: "no-repeat",
-        display: "flex",
-        flexDirection: "column",
-        // padding: "2vw",
-        paddingLeft: "3vw",
-        padding: "3vw",
-        paddingTop: "1.5vh",
+        // display: "flex",
+        // flexDirection: "column",
+        // // padding: "2vw",
+        // paddingLeft: "3vw",
+        // padding: "3vw",
+        // paddingTop: "1.5vh",
 
         color: "white",
       }}
     >
       {/* NAVIGATION AREA */}
-      <div style={{ flex: ".1", display: "flex" }}>
+      <div
+        className="md:flex md:basis-[10%]  sm:flex sm:basis-[10%]"
+        //  style={{ flex: ".1", display: "flex" }}
+      >
         {/* LOGO AREA */}
         <div style={{ flex: ".2", display: "flex" }}>
           {" "}
@@ -133,114 +137,128 @@ const Login = () => {
       </div>
 
       {/* BODY AREA */}
-      <div style={{ flex: ".9", display: "flex" }}>
+      <div
+        className="md:flex md:basis-[90%]   sm:flex sm:justify-center sm:basis-[100%]"
+        // style={{ flex: ".9", display: "flex" }}
+      >
         {/* CREATE ACCOUNT SECTION */}
-        <div style={{ flex: ".45", paddingTop: "0vh" }}>
-          <h1 style={{ fontSize: "3.3em" }}>
+        <div className="md:basis-[45%] md:w-[100%] md:flex-shrink-0   sm:basis-[100%] sm:w-[100%] sm:flex-shrink-0 ">
+          <h1
+            className="sm:block sm:text-[3em]  md:block md:text-[3.3em]"
+            //  style={{ fontSize: "3.3em" }}
+          >
             {" "}
             Welcome Back{" "}
             <span style={{ fontSize: "2em", color: "blue" }}>.</span>{" "}
           </h1>
+          <div>
+            <div className="sm:pt-[5%] md:pt-[0%]">
+              <h5>
+                Dont have an account?{" "}
+                <span
+                  style={{ color: "#5585FE", cursor: "pointer" }}
+                  onClick={() => {
+                    Navigate("/membership-plans");
+                  }}
+                >
+                  Choose a plan
+                </span>{" "}
+              </h5>
+            </div>
 
-          <h5>
-            Dont have an account?{" "}
-            <span
-              style={{ color: "#5585FE", cursor: "pointer" }}
-              onClick={() => {
-                Navigate("/membership-plans");
-              }}
-            >
-              Choose a plan
-            </span>{" "}
-          </h5>
+            {/* //First Name And Surname */}
 
-          {/* //First Name And Surname */}
+            {/* Email */}
+            <div className="sm:pt-[5%] md:pt-[0%]">
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <TextField
+                  focused
+                  color="info"
+                  id="outlined-basic"
+                  label="Email"
+                  variant="outlined"
+                  type="email"
+                  required
+                  sx={{ marginBottom: "4vh" }}
+                  className="sm:w-[100%]  md:w-[80%]"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Mail style={iconColor} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  {...register("email", { required: true })}
+                />
+                {/* Password */}
 
-          {/* Email */}
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <TextField
-              onClick={resetErrorMessage}
-              focused
-              color="info"
-              id="outlined-basic"
-              label="Email"
-              variant="outlined"
-              type="email"
-              required
-              sx={{ width: "80%", marginBottom: "4vh" }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Mail style={iconColor} />
-                  </InputAdornment>
-                ),
-              }}
-              {...register("email", { required: true })}
-            />
-            {/* Password */}
+                <FormControl
+                  className="sm:w-[100%] md:w-[80%]"
+                  sx={{ marginBottom: "3vh" }}
+                  variant="outlined"
+                  focused
+                  color="info"
+                >
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    Password
+                  </InputLabel>
+                  <OutlinedInput
+                    {...register("password", { required: true })}
+                    required
+                    id="outlined-adornment-password"
+                    type={showPassword ? "text" : "password"}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? (
+                            <VisibilityOff style={iconColor} />
+                          ) : (
+                            <Visibility style={iconColor} />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="Password"
+                  />
+                </FormControl>
 
-            <FormControl
-              sx={{ width: "80%", marginBottom: "3vh" }}
-              variant="outlined"
-              focused
-              color="info"
-            >
-              <InputLabel htmlFor="outlined-adornment-password">
-                Password
-              </InputLabel>
-              <OutlinedInput
-                onClick={resetErrorMessage}
-                {...register("password", { required: true })}
-                required
-                id="outlined-adornment-password"
-                type={showPassword ? "text" : "password"}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? (
-                        <VisibilityOff style={iconColor} />
-                      ) : (
-                        <Visibility style={iconColor} />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
-              />
+                {/* Login ACCOUNT */}
 
-              <div style={{ color: "red" }}>{errorMessage}</div>
-            </FormControl>
-
-            {/* Login ACCOUNT */}
-
-            <Button
-              type="submit"
-              sx={{
-                width: "15vw",
-                height: "7vh",
-                background: "#5585FE",
-                color: "white",
-                borderRadius: "1vw",
-                fontWeight: "bold",
-              }}
-            >
-              Login
-            </Button>
-          </form>
+                <div>
+                  <Button
+                    type="submit"
+                    className="md:w-[15vw] sm:w-[30vw]"
+                    sx={{
+                      // width: "15vw",
+                      height: "7vh",
+                      background: "#5585FE",
+                      color: "white",
+                      borderRadius: "1vw",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Login
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
         {/* SOCIAL MEDIA SECTIONS / EMPTY SECTIOn */}
         <div
-          style={{
-            flex: ".55",
-
-            display: "flex",
-            flexDirection: "column-reverse",
-          }}
+          className="md:basis-[55%] md:flex md:flex-col-reverse md:w-[100%] md:flex-shrink-0   sm:hidden"
+          style={
+            {
+              // flex: ".55",
+              // display: "flex",
+              // flexDirection: "column-reverse",
+            }
+          }
         >
           {/* //ICON AREA */}
           <div style={{ flex: ".2" }}>

@@ -11,6 +11,10 @@ export const OtherComponentStatesSlice = createSlice({
     warningAlertModalCounter: 0,
     warningAlertModalMessage: "",
     videoBelow15mbSelected: false,
+    currentScreenSize: {
+      width: "",
+      height: "",
+    },
   },
 
   reducers: {
@@ -41,6 +45,9 @@ export const OtherComponentStatesSlice = createSlice({
     setVideoBelow15mbSelected: (state, action) => {
       state.videoBelow15mbSelected = action.payload;
     },
+    setCurrentScreenSize: (state, action) => {
+      state.currentScreenSize = action.payload;
+    },
   },
 });
 
@@ -60,6 +67,8 @@ export const selectWarningAlertModalMessage = (state) =>
   state.OtherComponentStates.warningAlertModalMessage;
 export const selectVideoBelow15mbSelected = (state) =>
   state.OtherComponentStates.videoBelow15mbSelected;
+export const selectCurrentScreenSize = (state) =>
+  state.OtherComponentStates.currentScreenSize;
 
 export const {
   setAutoCompletePlayerPosition,
@@ -71,5 +80,6 @@ export const {
   setWarningAlertModalMessage,
   setWarningAlertModalCounter,
   setVideoBelow15mbSelected,
+  setCurrentScreenSize,
 } = OtherComponentStatesSlice.actions;
 export default OtherComponentStatesSlice.reducer;
