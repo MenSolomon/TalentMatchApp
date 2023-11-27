@@ -37,11 +37,11 @@ const PlayerCompareDisplayCard = ({ firstName, surName, position, image }) => {
 
   return (
     <div
-      className="primaryTextColor"
+      className="primaryTextColor md:w-[100%] md:h-[10vh] md:flex   sm:w-[100%] sm:h-[10vh] sm:flex"
       style={{
-        width: "100%",
-        height: "10vh",
-        display: "flex",
+        // width: "100%",
+        // height: "10vh",
+        // display: "flex",
         borderBottom: "1px solid rgba(255, 255, 255, 0.066)",
         // alignItems: "center",
         // justifyContent: "center",

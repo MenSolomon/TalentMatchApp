@@ -52,20 +52,14 @@ import { db } from "../../Firebase/Firebase";
 import moment from "moment";
 
 const style = {
-  position: "absolute",
+  // position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "85%",
-  height: "94%",
   bgcolor: "background.paper",
   border: "transparent",
   boxShadow: 24,
   borderRadius: "1vw",
-  padding: "2vw",
-  display: "flex",
-  flexDirection: "column",
-  paddingTop: "3vh",
 };
 
 const inputStyles = {
@@ -1010,12 +1004,17 @@ export default function CreateProfileModal({ ProfileType }) {
         }}
       >
         <Fade in={open}>
-          <div className="cardBackground primaryTextColor" style={style}>
+          <div
+            className="cardBackground primaryTextColor md:flex md:flex-col md:pt-[3vh]
+            md:w-[85%] md:h-[94%] md:p-[2vw] md:absolute     sm:flex sm:flex-col sm:pt-[3vh]
+            sm:w-[85%] sm:h-[94%] sm:p-[2vw] sm:absolute"
+            style={style}
+          >
             {/* HEader MEssage */}
             <div
               style={{
                 flex: ".1",
-                // background: "green",
+                background: "green",
                 display: "flex",
                 gap: "4vw",
               }}
@@ -1053,7 +1052,7 @@ export default function CreateProfileModal({ ProfileType }) {
                 )}
               </div>
             </div>
-            <div style={{ flex: ".9", display: "flex" }}>
+            <div style={{ flex: ".9", display: "flex", background: "pink" }}>
               {/* // Personal information */}
               <div
                 style={{

@@ -27,26 +27,35 @@ const Players = () => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
+      className="md:flex md:flex-col md:h-[100%] md:w-[100%]   sm:flex sm:flex-col sm:h-[100%] sm:w-[100%]"
+      style={
+        {
+          // display: "flex",
+          // flexDirection: "column",
+          // height: "100%",
+          // width: "100%",
+        }
+      }
     >
-      <div style={{ flex: ".1", display: "flex" }}>
+      <div
+        className="md:flex md:basis-[10%]   sm:flex sm:basis-[10%]"
+        // style={{ flex: ".1", display: "flex" }}
+      >
         <h3 style={{ margin: 0, float: "left" }}>{profileName} Profile</h3>
 
         <CreateProfileModal ProfileType="Edit" />
       </div>
       {/* /// Matched players display */}
       <div
-        style={{
-          flex: ".8",
-          // flexWrap: "wrap",
-          // display: "flex",
-          // background: "red",
-        }}
+        className="md:basis-[80%] sm:basis-[80%]"
+        style={
+          {
+            // flex: ".8",
+            // flexWrap: "wrap",
+            // display: "flex",
+            // background: "red",
+          }
+        }
       >
         {/* {PlayerArray.slice(0, 9).map((data, index) => {
           const {
@@ -77,12 +86,15 @@ const Players = () => {
       </div>
       {/* // Pagination Area  */}
       <div
-        style={{
-          flex: "0.1",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between", // Use space-between to push the last two divs to the far right
-        }}
+        className="md:basis-[10%] md:flex md:items-center md:justify-between    sm:basis-[10%] sm:flex sm:items-center sm:justify-between"
+        style={
+          {
+            // flex: "0.1",
+            // display: "flex",
+            // alignItems: "center",
+            // justifyContent: "space-between" ,// Use space-between to push the last two divs to the far right
+          }
+        }
       >
         <div>Rows per page: 20</div>
         <Pagination

@@ -395,7 +395,10 @@ export default function FilteredPlayersTable() {
   console.log("Table Row", rows);
 
   return (
-    <div style={{ height: "42.5vh", width: "100%" }}>
+    <div
+      className="md:w-[100%] md:h-[42.5vh] sm:h-[42.5vh] sm:w-[100%]"
+      // style={{ height: "42.5vh" }}
+    >
       {/* <TableContainer>
         <Table
           aria-label="collapsible table"
@@ -406,14 +409,15 @@ export default function FilteredPlayersTable() {
       </TableContainer> */}
 
       <TableContainer
-        className="cardBackground primaryTextColor"
+        className="cardBackground primaryTextColor md:w-[100%] md:h-[30%]  sm:w-[100%] sm:h-[30%]"
         sx={{
-          width: "100%",
-          height: "30%",
+          // width: "100%",
+          // height: "30%",
           overflowY: "scroll",
           borderRadius: "0vw",
           borderTopLeftRadius: ".4vw",
           borderTopRightRadius: ".4vw",
+          // background: "pink",
         }}
         component={Card}
       >

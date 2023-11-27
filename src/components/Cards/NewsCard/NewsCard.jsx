@@ -11,16 +11,16 @@ const NewsCard = ({ title, image, url, source, style }) => {
   return (
     <>
       <Card
-        className="newsCard"
+        className="newsCard md:w-[30%] md:h-[45%] md:relative md:flex md:flex-col   sm:w-[100%] sm:h-[45%] sm:relative sm:flex sm:flex-col"
         sx={{
           ...style,
-          width: "30%",
-          height: "45%",
+          // width: "30%",
+          // height: "45%",
           background: `url(${image})`,
           backgroundSize: "cover",
-          display: "flex",
-          flexDirection: "column",
-          position: "relative",
+          // display: "flex",
+          // flexDirection: "column",
+          // position: "relative",
           color: "white",
           borderRadius: "10px",
         }}

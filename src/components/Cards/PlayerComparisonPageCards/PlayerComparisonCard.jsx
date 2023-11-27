@@ -31,16 +31,20 @@ const PlayerComparisonCard = ({
 
   return (
     <Card
-      className="primaryTextColor cardBackground"
-      sx={{ borderRadius: "1vw", width: "28%", height: "70vh" }}
+      className="primaryTextColor cardBackground md:w-[28%] md:h-[70vh]     sm:w-[100%] sm:h-[70vh]"
+      sx={{ borderRadius: "1vw" }}
+      // , width: "28%", height: "70vh"
     >
       <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-        }}
+        className="md:w-[100%] md:h-[100%] md:flex md:flex-col       sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
+        style={
+          {
+            // width: "100%",
+            // height: "100%",
+            // display: "flex",
+            // flexDirection: "column",
+          }
+        }
       >
         {/* Player Profiles */}
         <div

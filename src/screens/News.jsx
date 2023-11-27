@@ -134,36 +134,43 @@ const News = () => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        width: "100%",
-        height: "100%",
-        // background: "peru",
-        flexDirection: "column",
-      }}
+      className="md:flex md:flex-col md:w-[100%] md:h-[100%]   sm:flex sm:flex-col sm:w-[100%] sm:h-[100%]"
+      style={
+        {
+          // display: "flex",
+          // width: "100%",
+          // height: "100%",
+          // background: "peru",
+          // flexDirection: "column",
+        }
+      }
     >
       <div
-        style={{
-          flex: ".1",
-          //   background: "red",
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-        }}
+        className="md:flex md:items-center md:basis-[10%] md:justify-start   sm:flex sm:items-center sm:basis-[10%] sm:justify-start"
+        style={
+          {
+            // flex: ".1",
+            //   background: "red",
+            // display: "flex",
+            // justifyContent: "flex-start",
+            // alignItems: "center",
+          }
+        }
       >
         <h4>Latest News</h4>
       </div>
       <div
+        className="md:flex md:items-center md:basis-[90%] md:justify-start md:flex-wrap md:gap-[10px] md:p-[20px]   sm:flex sm:items-center sm:basis-[90%] sm:justify-start sm:flex-wrap sm:gap-[10px] sm:p-[20px]"
         style={{
-          flex: ".9",
+          // flex: ".9",
           //   background: "yellow",
-          flexWrap: "wrap",
-          display: "flex",
+          // flexWrap: "wrap",
+          // display: "flex",
           overflowY: "scroll",
-          gap: "10px",
-          padding: "20px",
-          justifyContent: "flex-start",
-          alignItems: "center",
+          // gap: "10px",
+          // padding: "20px",
+          // justifyContent: "flex-start",
+          // alignItems: "center",
           borderRadius: "20px",
         }}
       >
