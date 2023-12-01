@@ -93,9 +93,11 @@ const PlayerDetails = () => {
 
   return (
     <div
+      // md:gap-[0em]   sm:gap-[10%]
+      className="md:w-[100%] md:h-[95%]  sm:w-[100%] sm:h-[100%]"
       style={{
-        width: "100%",
-        height: "95%",
+        // width: "100%",
+        // height: "95%",
         // background: "blue",
         display: "grid",
         gridTemplateRows:
@@ -116,6 +118,7 @@ const PlayerDetails = () => {
       </div>
       {/* // Card Display Area */}
       <div
+        className="sm:flex sm:flex-col sm:gap-[2%]  md:flex md:flex-row"
         style={{
           gridArea: "CardDisplay",
           display: isCardsCollapsedVariable === false ? "flex" : "none",
@@ -163,7 +166,12 @@ const PlayerDetails = () => {
           <SocialAndContactAreaCard instagram={instagram} facebook={facebook} />
         </div>
       </div>
-      <div style={{ gridArea: "MenuStrip" }}>
+      {/* ============================================= */}
+      <div
+        style={{
+          gridArea: "MenuStrip",
+        }}
+      >
         <PlayerDetailsMenuTab PlayerTabItemsArray={menuLabelArray} />
       </div>
       <div style={{ gridArea: "ContentArea" }}></div>

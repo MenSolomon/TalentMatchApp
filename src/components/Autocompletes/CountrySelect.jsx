@@ -16,7 +16,8 @@ export default function CountrySelect({
   return (
     <Autocomplete
       id="country-select-demo"
-      sx={{ width: 300, color: "black" }}
+      className="sm:w-[100%] md:w-[90%]"
+      sx={{ color: "black" }}
       options={countries}
       value={countries.find((country) => country.label === defaultValue)}
       autoHighlight

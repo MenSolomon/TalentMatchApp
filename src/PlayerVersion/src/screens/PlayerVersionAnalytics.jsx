@@ -5,44 +5,50 @@ import ProfileAnalyticsCard from "../components/Cards/ProfileAnalyticsCard";
 const PlayerVersionAnalytics = () => {
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
-      className="primaryTextColor"
+      style={
+        {
+          // display: "flex",
+          // flexDirection: "column",
+          // height: "100%",
+          // width: "100%",
+        }
+      }
+      className="primaryTextColor md:flex md:flex-col md:w-[100%] md:h-[100%]     sm:flex sm:flex-col sm:w-[100%] sm:h-[100%]"
     >
       {/* // Heading Area */}
-      <div style={{ flex: ".1" }}>
+      <div className="md:basis-[10%]  sm:basis-[10%]">
         <h3 style={{ margin: 0, float: "left" }}>Profile Analytics</h3>{" "}
       </div>
 
       <div
-        style={{
-          flex: ".9",
-
-          display: "flex",
-          gap: "1vw",
-        }}
+        className="md:basis-[90%] md:flex md:gap-[1vw] md:flex-row    sm:basis-[90%] sm:flex  sm:flex-col sm:gap-[1vw]"
+        style={
+          {
+            // flex: ".9",
+            // display: "flex",
+            // gap: "1vw",
+          }
+        }
       >
         {/* REALTIME CARD AREA */}
         <div
+          className="md:flex md:justify-center    sm:flex sm:justify-center"
           style={{
             flex: ".3",
 
-            display: "flex",
-            justifyContent: "center",
+            // display: "flex",
+            // justifyContent: "center",
           }}
         >
           <ProfileAnalyticsCard />
         </div>
         {/* VIEWS GRAPH AREA */}
         <div
+          className="md:flex md:flex-col  sm:flex sm:flex-col"
           style={{
             flex: ".7",
-            display: "flex",
-            flexDirection: "column",
+            // display: "flex",
+            // flexDirection: "column",
           }}
         >
           {/* // VIEWS GRAPH HEADER */}

@@ -3,10 +3,10 @@ import { Checkbox } from "@mui/material";
 const InboxMessageCard = () => {
   return (
     <div
-      className="messageCard cardBackground"
+      className="messageCard cardBackground md:w-[100%] md:h-[24%]   sm:w-[100%] sm:h-[40%]"
       style={{
-        width: "100%",
-        height: "24%",
+        // width: "100%",
+        // height: "24%",
         marginBottom: "1%",
         // background: "blue",
         display: "flex",

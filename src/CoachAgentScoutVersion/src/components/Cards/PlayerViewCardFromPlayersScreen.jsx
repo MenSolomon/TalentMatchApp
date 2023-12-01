@@ -20,11 +20,11 @@ const PlayerViewCardFromPlayersScreen = ({
   return (
     <div onClick={handlePlayerManagementNavigation}>
       <Card
-        className="cardBackground primaryTextColor"
+        className="cardBackground primaryTextColor md:flex md:w-[24.7vw] md:h-[20vh]    sm:flex sm:w-[100%] sm:h-[15vh]"
         style={{
-          display: "flex",
-          width: "24.7vw",
-          height: "20vh",
+          // display: "flex",
+          // width: "24.7vw",
+          // height: "20vh",
           borderRadius: "1vw",
           padding: ".7vw",
           gap: ".4vw",
@@ -36,7 +36,8 @@ const PlayerViewCardFromPlayersScreen = ({
         <div style={{ flex: ".3" }}>
           <img
             src={image}
-            style={{ width: "100%", height: "100%", borderRadius: ".8vw" }}
+            className="sm:w-[100%] sm:h-[100%]   md:w-[100%] md:h-[100%]"
+            style={{ borderRadius: ".8vw" }}
           />
 
           {}

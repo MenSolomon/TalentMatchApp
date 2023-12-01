@@ -17,6 +17,7 @@ export default function DatePickerTool({
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer sx={{ ...containerStyle }} components={["DatePicker"]}>
         <DatePicker
+          className="md:w-[23vw] sm:w-[100%]"
           onChange={handleDateChange}
           sx={{ ...style }}
           label={label}

@@ -49,7 +49,7 @@ const PlayerVersionDashboard = () => {
 
   return (
     <div
-      className="md:flex md:flex-col md:h-[100%] md:w-[100%]       sm:flex sm:flex-col sm:h-[100%] sm:w-[100%]"
+      className="md:flex md:flex-col md:h-[100%] md:w-[100%] sm:flex sm:flex-col sm:h-[100%] sm:w-[100%]"
       style={
         {
           // display: "flex",
@@ -125,7 +125,7 @@ const PlayerVersionDashboard = () => {
               paddingRight: "2vw",
               paddingTop: "3vh",
               paddingBottom: "2vh",
-              background: "red",
+              // background: "red",
             }}
           >
             {/* // PROFILE ANALYTICS TOTAL VIEWS */}
@@ -168,37 +168,41 @@ const PlayerVersionDashboard = () => {
 
         {/* // LATEST NEWS AND COMMENTS */}
         <div
+          className="md:flex md:flex-col md:gap-[2.4vh]     sm:flex sm:flex-col sm:gap-[2.4vh]"
           style={{
             flex: ".33",
             // background: "white",
-            display: "flex",
-            flexDirection: "column",
-            gap: "2.4vh",
+            // display: "flex",
+            // flexDirection: "column",
+            // gap: "2.4vh",
+            // background: "red",
           }}
         >
           <div
-            className="cardBackground"
+            className="cardBackground md:basis-[50%] md:relative md:flex-col md:flex   sm:basis-[50%] sm:relative sm:flex-col sm:flex"
             style={{
-              flex: ".5",
+              // flex: ".5",
               borderRadius: "1vw",
               paddingLeft: "2vw",
               paddingRight: "2vw",
               paddingTop: "3vh",
               paddingBottom: "2vh",
-              position: "relative",
-              display: "flex",
-              flexDirection: "column",
+              // position: "relative",
+              // display: "flex",
+              // flexDirection: "column",
+              // background: "red",
             }}
           >
-            <div style={{ flex: ".2" }}>
+            <div className="md:basis-[20%]  sm:basis-[20%]">
               <h5>Recent messages</h5>
             </div>
 
             <div
+              className="md:basis-[80%]  sm:basis-[80%]"
               style={{
                 // background: "teal",
                 overflowY: "scroll",
-                flex: ".8",
+                // flex: ".8",
                 maxHeight: "26vh",
               }}
             >
@@ -258,10 +262,11 @@ export default PlayerVersionDashboard;
 const RecentMessageCard = ({ message, userAvatar, date, userName }) => {
   return (
     <div
+      className="md:20vw md:h-[10vh]  sm:20vw sm:h-[10vh]"
       style={{
         // position: "absolute",
-        width: "20vw",
-        height: "10vh",
+        // width: "20vw",
+        // height: "10vh",
         // background: "yellow",
         display: "flex",
         padding: ".3vw",

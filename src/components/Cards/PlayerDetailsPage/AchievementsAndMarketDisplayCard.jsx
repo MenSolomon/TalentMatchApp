@@ -59,15 +59,15 @@ border-box;`;
 
   return (
     <div
-      className="playerCard"
+      className="playerCard md:w-[100%] md:h-[100%] md:flex md:flex-col  sm:w-[50%] sm:h-[100%] sm:flex sm:flex-col"
       style={{
-        width: "100%",
-        height: "100%",
+        // width: "100%",
+        // height: "100%",
         borderRadius: "1vw",
         padding: "1.5vw",
-        display: "flex",
+        // display: "flex",
         // color: "#E4E8F9",
-        flexDirection: "column",
+        // flexDirection: "column",
       }}
     >
       <div style={{ flex: ".3", display: "flex" }}>

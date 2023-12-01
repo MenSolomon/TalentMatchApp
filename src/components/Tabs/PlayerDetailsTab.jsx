@@ -49,7 +49,7 @@ export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box className="md:w-[100%]  sm:w-[100%]">
       <Box sx={{ borderColor: "divider" }}>
         <Tabs
           value={value}
@@ -105,11 +105,15 @@ export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
               <Suspense
                 fallback={
                   <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
+                    className="md:w-[100%] md:flex md:justify-center  sm:w-[100%]  sm:flex sm:justify-center"
+                    style={
+                      {
+                        // width: "100%",
+                        // display: "flex",
+                        // justifyContent: "center",
+                        // background: "yellow",
+                      }
+                    }
                   >
                     <CircularProgress />
                   </div>

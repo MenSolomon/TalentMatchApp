@@ -55,13 +55,15 @@ const ProfileViewGraphThirtyDays = () => {
 
   return (
     <div
-      style={{ marginTop: "1vh", paddingLeft: ".6vw", paddingRight: ".6vw" }}
+      className="md:mt-[1vh] md:pl-[0.6vw] md:pr-[6vw]     sm:mt-[1vh] sm:pl-[0.6vw] sm:pr-[6vw]"
+      // style={{ marginTop: "1vh", paddingLeft: ".6vw", paddingRight: ".6vw" }}
     >
       {/* <h6 style={{ fontWeight: "bolder" }}>Last 5 matches G/A ratio</h6> */}
       <Line
         data={data}
         options={options}
-        style={{ width: "20%", marginTop: "0vh", height: "15vh" }}
+        className="md:w-[20%] md:h-[15vh]  md:mt-[0vh] sm:w-[20%] sm:mt-[0vh] sm:h-[15vh]"
+        // style={{ marginTop: "0vh" }}
         // style={{ background: "transparent" ,padding:"1px"}}
       ></Line>
     </div>

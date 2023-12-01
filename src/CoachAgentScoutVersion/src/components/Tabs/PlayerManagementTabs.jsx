@@ -50,12 +50,15 @@ export default function PlayerManagementTabs({
 
   return (
     <Box
-      sx={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-      }}
+      className="md:w-[100%] md:flex md:flex-col md:h-[100%]   sm:w-[100%] sm:flex sm:flex-col sm:h-[100%]"
+      sx={
+        {
+          // width: "100%",
+          // height: "100%",
+          // display: "flex",
+          // flexDirection: "column",
+        }
+      }
     >
       <Box sx={{ borderColor: "divider", flex: ".1" }}>
         <Tabs
@@ -70,7 +73,9 @@ export default function PlayerManagementTabs({
             // borderRight: "1px solid #0d818e",
             fontWeight: "bolder",
             // border: "1px solid green",
+            // width: "100%",
           }}
+          className="md:w-[100%] sm:w-[100%]"
         >
           {/* REMIND ME TO ADD NAVIGATE BASED ON THE NAME OF THE SCREEN  */}
 
@@ -79,12 +84,12 @@ export default function PlayerManagementTabs({
           {PlayerManagementTabItemsArray.map((data, key) => {
             return (
               <Tab
-                className="primaryColor"
-                label={data}
+                className="primaryColor  "
+                label={`${data.slice(0, 4)}..`}
                 sx={{
                   minWidth: "7vw",
                   // marginRight: "2vw",
-                  fontWeight: "bold",
+                  // fontWeight: "bold",
                 }}
                 {...a11yProps(key)}
               />
@@ -106,8 +111,6 @@ export default function PlayerManagementTabs({
           return (
             <>
               <CustomTabPanel value={value} index={index} key={index}>
-                {/* {data} */}
-
                 <Suspense
                   fallback={
                     <div

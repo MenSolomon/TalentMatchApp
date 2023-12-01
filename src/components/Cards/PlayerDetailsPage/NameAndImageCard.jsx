@@ -10,25 +10,31 @@ const NameAndImageCard = ({
 }) => {
   return (
     <div
-      className="playerCard"
+      className="playerCard md:w-[100%] md:h-[100%] md:flex     sm:w-[50%] sm:h-[100%] sm:flex"
       style={{
-        width: "100%",
-        height: "100%",
+        // width: "100%",
+        // height: "100%",
         padding: "1.5vw",
         borderRadius: "1vw",
-        display: "flex",
+        // display: "flex",
         //   borderRadius: "1vw",
+        // background: "red",
       }}
     >
       {/* // Image flex area */}
-      <div style={{ flex: ".4" }}>
+      <div className="md:basis-[40%] sm:basis-[30%]">
         {" "}
-        <img src={image} style={{ width: "100%", borderRadius: "5%" }} />{" "}
+        <img
+          className="sm:w-[80%] md:w-[100%]"
+          src={image}
+          style={{ borderRadius: "5%" }}
+        />{" "}
       </div>
       {/* // names flex area */}
       <div
+        className="md:basis-[60%] sm:basis-[70%]"
         style={{
-          flex: ".6",
+          // flex: ".6",
 
           paddingLeft: ".4vw",
         }}
@@ -43,17 +49,18 @@ const NameAndImageCard = ({
             <h6>{age}</h6>
           </div>
           <div
+            className="md:basis-[60%] md:flex md:flex-col sm:basis-[60%] sm:flex sm:flex-col"
             style={{
-              flex: ".6",
+              // flex: ".6",
 
-              display: "flex",
-              flexDirection: "column",
+              // display: "flex",
+              // flexDirection: "column",
               paddingBottom: ".6vh",
             }}
           >
-            <div style={{ flex: "0.5" }}></div>
+            {/* <div style={{ flex: "0.5" }}>ig</div> */}
             {/* // POSTION PLACEMENT */}
-            <div style={{ flex: "0.5", display: "flex" }}>
+            <div className="md:basis-[5%] md:flex sm:basis-[5%] sm:flex ">
               <Avatar
                 src=""
                 alt=""

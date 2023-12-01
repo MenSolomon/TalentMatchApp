@@ -48,15 +48,18 @@ const CoachAgentScoutVersionDashboard = () => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
+      className="md:flex md:flex-col md:h-[100%] md:w-[100%] sm:flex sm:flex-col sm:h-[100%] sm:w-[100%]"
+      style={
+        {
+          // display: "flex",
+          // flexDirection: "column",
+          // height: "100%",
+          // width: "100%",
+        }
+      }
     >
       {/* // Heading Area */}
-      <div style={{ flex: ".1" }}>
+      <div className="md:basis-[10%] sm:basis-[10%]">
         <h3 style={{ margin: 0, float: "left" }} className="primaryTextColor">
           Profile dashboard
         </h3>{" "}
@@ -67,30 +70,31 @@ const CoachAgentScoutVersionDashboard = () => {
       </div>
 
       {/* // Cards  (upload video card , analytics summary card and other information card) */}
-      <div style={{ flex: ".9", display: "flex", gap: "2.5vw" }}>
+      <div className="md:basis-[90%] md:flex-row md:flex md:gap-[2.5vw]     sm:basis-[90%] sm:flex-col sm:flex sm:gap-[2.5vw]">
         <div style={{ flex: ".33" }}>
           {/* // DRAG AND DROP VIDEO CARD*/}
           <div
-            className="cardBackground"
+            className="cardBackground md:w-[100%] md:h-[85%] md:grid md:place-items-center md:relative    sm:w-[100%] sm:h-[50vh] sm:grid sm:place-items-center sm:relative"
             style={{
-              width: "100%",
-              height: "96%",
+              // width: "100%",
+              // height: "96%",
               borderRadius: "1vw",
-              display: "grid",
-              placeItems: "center",
-              position: "relative",
+              // display: "grid",
+              // placeItems: "center",
+              // position: "relative",
             }}
           >
             {/* // DASHED BORDER DIV */}
             <div
+              className="cardBackground md:w-[88%] md:h-[90%] md:grid md:place-items-center md:absolute     sm:w-[88%] sm:h-[90%] sm:grid sm:place-items-center sm:relative"
               style={{
-                width: "88%",
-                height: "90%",
+                // width: "88%",
+                // height: "90%",
                 borderRadius: ".7vw",
                 border: `1px dashed ${primaryTextColor}`,
-                position: "absolute",
-                display: "grid",
-                placeItems: "center",
+                // position: "absolute",
+                // display: "grid",
+                // placeItems: "center",
               }}
             >
               <img
@@ -110,18 +114,19 @@ const CoachAgentScoutVersionDashboard = () => {
         <div style={{ flex: ".33" }}>
           {/* PROFILE ANALYTICS */}
           <div
-            className="cardBackground"
+            className="cardBackground md:h-[85%] md:w-[100%] md:flex-col md:flex    sm:h-[50vh] sm:w-[100%] sm:flex-col sm:flex"
             style={{
-              width: "100%",
-              height: "85%",
+              // width: "100%",
+              // height: "85%",
               borderRadius: "1vw",
-              display: "flex",
-              flexDirection: "column",
+              // display: "flex",
+              // flexDirection: "column",
               gap: "1vh",
               paddingLeft: "2vw",
               paddingRight: "2vw",
               paddingTop: "3vh",
               paddingBottom: "2vh",
+              // background: "red",
             }}
           >
             {/* // PROFILE ANALYTICS TOTAL VIEWS */}
@@ -164,26 +169,29 @@ const CoachAgentScoutVersionDashboard = () => {
 
         {/* // LATEST NEWS AND COMMENTS */}
         <div
+          className="md:flex md:flex-col md:gap-[2vh]     sm:flex sm:flex-col sm:gap-[2.4vh]"
           style={{
             flex: ".33",
             // background: "white",
-            display: "flex",
-            flexDirection: "column",
-            gap: "2.4vh",
+            // display: "flex",
+            // flexDirection: "column",
+            // gap: "2.4vh",
+            // background: "red",
           }}
         >
           <div
-            className="cardBackground"
+            className="cardBackground md:basis-[50%] md:relative md:flex-col md:flex   sm:basis-[50%] sm:relative sm:flex-col sm:flex"
             style={{
-              flex: ".5",
+              // flex: ".5",
               borderRadius: "1vw",
               paddingLeft: "2vw",
               paddingRight: "2vw",
               paddingTop: "3vh",
               paddingBottom: "2vh",
-              position: "relative",
-              display: "flex",
-              flexDirection: "column",
+              // position: "relative",
+              // display: "flex",
+              // flexDirection: "column",
+              // background: "red",
             }}
           >
             <div style={{ flex: ".2" }}>
@@ -238,7 +246,7 @@ const CoachAgentScoutVersionDashboard = () => {
                   title={title}
                   image={img}
                   url={url}
-                  style={{ minWidth: "20.5vw", minHeight: "27vh" }}
+                  style={{ minWidth: "20.1vw", minHeight: "24vh" }}
                 />
               );
             })}
@@ -254,10 +262,11 @@ export default CoachAgentScoutVersionDashboard;
 const RecentMessageCard = ({ message, userAvatar, date, userName }) => {
   return (
     <div
+      className="md:20vw md:h-[10vh]  sm:20vw sm:h-[10vh]"
       style={{
         // position: "absolute",
-        width: "20vw",
-        height: "10vh",
+        // width: "20vw",
+        // height: "10vh",
         // background: "yellow",
         display: "flex",
         padding: ".3vw",

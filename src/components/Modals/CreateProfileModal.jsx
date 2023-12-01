@@ -53,8 +53,8 @@ import moment from "moment";
 
 const style = {
   // position: "absolute",
-  top: "50%",
-  left: "50%",
+  // top: "50%",
+  // left: "50%",
   transform: "translate(-50%, -50%)",
   bgcolor: "background.paper",
   border: "transparent",
@@ -1002,33 +1002,39 @@ export default function CreateProfileModal({ ProfileType }) {
             timeout: 500,
           },
         }}
+        // style={{ width: "100vw", height: "100vh" }}
+        className="md:w-[100vw] md:h-[100vh]    sm:w-[111vw] sm:h-[100vh]"
       >
         <Fade in={open}>
           <div
             className="cardBackground primaryTextColor md:flex md:flex-col md:pt-[3vh]
             md:w-[85%] md:h-[94%] md:p-[2vw] md:absolute     sm:flex sm:flex-col sm:pt-[3vh]
-            sm:w-[85%] sm:h-[94%] sm:p-[2vw] sm:absolute"
+            sm:w-[85%] sm:h-[94%] sm:p-[2vw] sm:absolute md:top-[50%] md:left-[50%]    sm:top-[50%] sm:left-[45%]"
             style={style}
           >
             {/* HEader MEssage */}
             <div
+              className="md:flex md:flex-row md:gap-[4vw]  sm:flex sm:flex-col sm:gap-[4vw]"
               style={{
                 flex: ".1",
-                background: "green",
-                display: "flex",
-                gap: "4vw",
+                // background: "green",
+                // display: "flex",
+                // gap: "4vw",
+                // flexDirection: "column",
               }}
             >
-              <h2 className="secondaryTextColor">
-                {" "}
-                {ProfileType === "Edit"
-                  ? "Edit Profile"
-                  : savedProfile.length <= 0
-                  ? "Default Profile"
-                  : "Search Profile"}{" "}
-              </h2>{" "}
-              <h6>Who are you looking for? </h6>{" "}
-              <div style={{ justifySelf: "flex-end" }}>
+              <div className="md:flex sm:flex">
+                <h2 className="secondaryTextColor">
+                  {" "}
+                  {ProfileType === "Edit"
+                    ? "Edit Profile"
+                    : savedProfile.length <= 0
+                    ? "Default Profile"
+                    : "Search Profile"}{" "}
+                </h2>{" "}
+                <h6>Who are you looking for? </h6>{" "}
+              </div>
+              <div className="sm:self-center md:self-end">
                 {" "}
                 {savedProfile.length <= 0 ? (
                   ""
@@ -1052,16 +1058,23 @@ export default function CreateProfileModal({ ProfileType }) {
                 )}
               </div>
             </div>
-            <div style={{ flex: ".9", display: "flex", background: "pink" }}>
+
+            {/* ================================= */}
+            <div
+              className="md:flex md:flex-row md:overflow-y-hidden md:gap-[0%] sm:flex-col-reverse   sm:gap-[2vh] sm:flex sm:overflow-y-scroll "
+              style={{ flex: ".9" }}
+            >
               {/* // Personal information */}
               <div
+                className="md:flex md:flex-col md:relative md:gap-[2vh] md:ml-[2%]  sm:ml-[4%] sm:flex sm:flex-col  sm:relative sm:gap-[2vh]"
                 style={{
                   flex: ".33",
-                  display: "flex",
-                  gap: "2vh",
-                  flexDirection: "column",
+                  // display: "flex",
+                  // gap: "2vh",
+                  // flexDirection: "column",
                   paddingRight: "1.5vw",
-                  position: "relative",
+                  // position: "relative",
+                  // background: "yellow",
                 }}
               >
                 {" "}
@@ -1104,13 +1117,14 @@ export default function CreateProfileModal({ ProfileType }) {
                   editDefaultValue={AgeRangeValue}
                 />
                 <Button
+                  className="md:absolute md:bottom-[-24%] md:w-[23vw] sm:w-[100%] sm:absolute sm:bottom-[0%]"
                   sx={{
-                    width: "23vw",
+                    // width: "23vw",
                     background: "blue",
                     color: "white",
                     border: ".5vw",
-                    position: "absolute",
-                    bottom: 50,
+                    // position: "absolute",
+                    // bottom: 50,
                   }}
                   onClick={
                     ProfileType === "Edit"
@@ -1123,13 +1137,16 @@ export default function CreateProfileModal({ ProfileType }) {
               </div>
               {/* Player Data */}
               <div
+                className="md:flex md:flex-col sm:flex sm:flex-col  "
                 style={{
                   flex: ".34",
-                  display: "flex",
-                  flexDirection: "column",
+                  // display: "flex",
+                  // flexDirection: "column",
+                  // background: "pink",
                 }}
               >
                 <div
+                  className="sm:ml-[2%]"
                   style={{
                     flex: ".1",
                   }}
@@ -1295,11 +1312,12 @@ export default function CreateProfileModal({ ProfileType }) {
               </div>
               {/* Extra Info Data */}
               <div
+                className="md:flex md:flex-col  md:gap-[2vh]  sm:flex sm:flex-col  sm:gap-[2vh]"
                 style={{
                   flex: ".33",
-                  display: "flex",
-                  gap: "2vh",
-                  flexDirection: "column",
+                  // display: "flex",
+                  // gap: "2vh",
+                  // flexDirection: "column",
                 }}
               >
                 <h4 className="secondaryTextColor">

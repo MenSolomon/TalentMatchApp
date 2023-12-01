@@ -10,18 +10,25 @@ const CoachAgentScoutVersionPlayers = () => {
   const PlayerArray = useSelector(selectPlayersInAgencyArray);
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
+      className="
+    md:flex md:flex-col md:h-[100%] md:w-[100%]    sm:flex sm:flex-col sm:h-[100%] sm:w-[100%]"
+      style={
+        {
+          // display: "flex",
+          // flexDirection: "column",
+          // height: "100%",
+          // width: "100%",
+        }
+      }
     >
-      <div style={{ flex: ".1" }}>
+      <div className="md:basis-[10%] sm:basis-[10%]">
         <h3 style={{ margin: 0, float: "left" }}>Players</h3>{" "}
       </div>
 
-      <div style={{ flex: ".8", flexWrap: "wrap", display: "flex" }}>
+      <div
+        className="md:flex md:flex-row md:gap-[0em] md:flex-wrap md:basis-[70%]  sm:flex sm:flex-col sm:gap-[1em] sm:basis-[70%]"
+        // style={{ flex: ".8" }}
+      >
         {PlayerArray.slice(0, 9).map((data, index) => {
           const {
             firstName,
@@ -51,7 +58,10 @@ const CoachAgentScoutVersionPlayers = () => {
       </div>
       {/* // Pagination Area  */}
 
-      <div style={{ flex: ".1", display: "grid", placeContent: "center" }}>
+      <div
+        className="md:basis-[10%]   sm:basis-[10%]"
+        style={{ display: "grid", placeContent: "center" }}
+      >
         {" "}
         <Pagination
           className="primaryTextColor"

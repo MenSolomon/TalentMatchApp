@@ -30,27 +30,14 @@ const MatchedPlayerCard = ({
   return (
     <div>
       <div
-        className="primaryColor"
+        className="primaryColor md:w-[100%] md:h-[43vh] md:flex md:flex-col sm:w-[100%] sm:h-[43vh] sm:flex sm:flex-col"
         // className="concave"
         style={{
-          // position: "relative",
-          width: "100%",
-          height: "43vh",
-          // background:
-          //   "linear-gradient(133deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
-          // background: "#1B1E2B",
-
-          // borderBottomLeftRadius: "0px",
-          // borderBottomRightRadius: "6%",
-          // borderTopRightRadius: "6%",
-          // borderTopLeftRadius: "6%",
-          display: "flex",
-          flexDirection: "column",
+          // display: "flex",
+          // flexDirection: "column",
           padding: "1vh .7vw",
           gap: "1vh",
           cursor: "pointer",
-          // borderBottom: "3px solid white",
-          // borderLeft: "3px solid white",
         }}
       >
         {/* Player Image And Club */}
@@ -104,12 +91,17 @@ const MatchedPlayerCard = ({
             >
               <Avatar
                 src={PlayerClub}
-                style={{ width: "35px", height: "35px", borderRadius: "50%" }}
+                style={{
+                  width: "35px",
+                  height: "35px",
+                  borderRadius: "50%",
+                }}
               />
             </div>
           </div>
           {/* // Player Image */}
           <div
+            className="md:h-[100%]  sm:h-[60%]"
             style={{
               flex: ".6",
               // used the regex to fix bug of images not displaying (images with white white spaces between names ) .. regex replaces all the spaces with %20 to suit  ES6 imports rules
@@ -117,11 +109,14 @@ const MatchedPlayerCard = ({
               backgroundSize: "cover",
               borderRadius: "15%",
               backgroundPosition: "center",
+              // background: "red",
+              // height: "100%",
             }}
           ></div>
         </div>
         {/*Player Name*/}
         <div
+          className="sm:text-[1.5em]  md:text-[1.2em]"
           style={{
             flex: ".2",
             //   background: "blue",

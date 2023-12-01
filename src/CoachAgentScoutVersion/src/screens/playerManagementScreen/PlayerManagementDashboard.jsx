@@ -39,41 +39,34 @@ const PlayerManagementDashboard = () => {
 
   return (
     <div
+      className="md:w-[100%] md:h-[100%] md:flex md:flex-col       sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
       style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
         fontSize: ".8em",
       }}
     >
       {/* // Heading Area */}
-
       {/* // Cards  (upload video card , analytics summary card and other information card) */}
-      <div style={{ flex: ".5", display: "flex", gap: "1.5vw" }}>
+
+      <div
+        className="md:flex md:gap-[1.5vw] md:flex-row     sm:flex-col sm:flex sm:gap-[4.5vw]"
+        style={{
+          flex: ".5",
+        }}
+      >
         <div style={{ flex: ".33" }}>
           {/* // DRAG AND DROP VIDEO CARD*/}
           <div
-            className="cardBackground"
+            className="cardBackground md:w-[100%] md:h-[120%] md:grid md:place-items-center md:relative              sm:w-[100%] sm:h-[120%] sm:grid sm:place-items-center sm:relative"
             style={{
-              width: "100%",
-              height: "120%",
               borderRadius: "1vw",
-              display: "grid",
-              placeItems: "center",
-              position: "relative",
             }}
           >
             {/* // DASHED BORDER DIV */}
             <div
+              className="cardBackground md:w-[88%] md:h-[90%] md:grid md:place-items-center md:absolute            sm:w-[100%] sm:h-[40vh] sm:grid sm:place-items-center sm:relative"
               style={{
-                width: "88%",
-                height: "90%",
                 borderRadius: ".7vw",
                 border: `1px dashed ${primaryTextColor}`,
-                position: "absolute",
-                display: "grid",
-                placeItems: "center",
               }}
             >
               <img src={VideoImage} style={{ width: "150px", color: "red" }} />
@@ -89,18 +82,9 @@ const PlayerManagementDashboard = () => {
         <div style={{ flex: ".33" }}>
           {/* PROFILE ANALYTICS */}
           <div
-            className="cardBackground"
+            className="cardBackground md:flex md:flex-col md:w-[100%] md:h-[120%] md:pt-[3vh] md:pr-[2vw] md:pl-[2vw] md:gap-[.5vh] md:pb-[2vh]                 sm:flex sm:flex-col sm:w-[100%] sm:h-[120%] sm:pt-[3vh] sm:pr-[2vw] sm:pl-[2vw] sm:gap-[.5vh] sm:pb-[2vh]"
             style={{
-              width: "100%",
-              height: "120%",
               borderRadius: "1vw",
-              display: "flex",
-              flexDirection: "column",
-              gap: ".5vh",
-              paddingLeft: "2vw",
-              paddingRight: "2vw",
-              paddingTop: "3vh",
-              paddingBottom: "2vh",
             }}
           >
             {/* // PROFILE ANALYTICS TOTAL VIEWS */}
@@ -129,40 +113,31 @@ const PlayerManagementDashboard = () => {
               <h6>Views</h6>
               <h6>Watch Time(hours)</h6>
             </div>
-
-            {/* TOP VIDEOS SECTION */}
-            {/* <div style={{ flex: ".3", paddingTop: "2vh" }}>
-              <h6>Top videos</h6>
-              <h6 className="secondaryTextColor">Last 48 hours</h6>
-            </div>
-            <div style={{ flex: ".05" }}>
-              <Button>Go to profile analytics</Button>
-            </div> */}
           </div>
         </div>
 
         {/* // LATEST NEWS AND COMMENTS */}
         <div
+          className="md:flex md:flex-col md:gap-[2.4vh]        sm:flex sm:flex-col sm:gap-[2.4vh]"
           style={{
             flex: ".33",
-            // background: "white",
-            display: "flex",
-            flexDirection: "column",
-            gap: "2.4vh",
+            // display: "flex",
+            // flexDirection: "column",
+            // gap: "2.4vh",
           }}
         >
           <div
-            className="cardBackground"
+            className="cardBackground md:relative md:flex md:flex-col md:pb-[2vh] md:pt-[3vh] md:pr-[1vw] md:pl-[1vw]                   sm:relative sm:flex sm:flex-col sm:pb-[2vh] sm:pt-[3vh] sm:pr-[1vw] sm:pl-[1vw]"
             style={{
               // flex: ".5",
               borderRadius: "1vw",
-              paddingLeft: "1vw",
-              paddingRight: "1vw",
-              paddingTop: "3vh",
-              paddingBottom: "2vh",
-              position: "relative",
-              display: "flex",
-              flexDirection: "column",
+              // paddingLeft: "1vw",
+              // paddingRight: "1vw",
+              // paddingTop: "3vh",
+              // paddingBottom: "2vh",
+              // position: "relative",
+              // display: "flex",
+              // flexDirection: "column",
             }}
           >
             <div style={{ flex: ".2" }}>
@@ -170,11 +145,11 @@ const PlayerManagementDashboard = () => {
             </div>
 
             <div
+              className="md:max-h-[30vh]  sm:max-h-[30vh]"
               style={{
                 // background: "teal",
                 overflowY: "scroll",
                 flex: "1",
-                maxHeight: "30vh",
               }}
             >
               {dummyRecentMessages.map((data, index) => {
@@ -206,10 +181,11 @@ export default PlayerManagementDashboard;
 const RecentMessageCard = ({ message, userAvatar, date, userName }) => {
   return (
     <div
+      className="md:w-[17vw] md:h-[10vh]  sm:w-[100%] sm:h-[8vh]"
       style={{
         // position: "absolute",
-        width: "17vw",
-        height: "10vh",
+        // width: "17vw",
+        // height: "10vh",
         // background: "yellow",
         display: "flex",
         padding: ".3vw",
