@@ -7,11 +7,11 @@ const VideoComponentRows = ({ url, description, category, date, views }) => {
         borderBottom: "1px solid rgba(48, 48, 48, 0.952)",
         flex: ".1",
         paddingTop: "1vh",
-        display: "flex",
-        width: "100%",
-        height: "25%",
+        // display: "flex",
+        // width: "100%",
+        // height: "25%",
       }}
-      className="VideoComponent"
+      className="VideoComponent md:flex md:w-[100%] md:h-[25%]           sm:flex sm:w-[100%] sm:h-[25%]"
     >
       {/* // CHeck box */}
       <div style={{ flex: ".05" }}>

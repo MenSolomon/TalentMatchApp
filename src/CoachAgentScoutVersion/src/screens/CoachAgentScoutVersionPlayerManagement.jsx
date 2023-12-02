@@ -205,13 +205,13 @@ const CoachAgentScoutVersionPlayerManagement = () => {
           }}
         >
           <Card
-            className="cardBackground primaryTextColor"
+            className="cardBackground primaryTextColor md:w-[100%] md:h-[100%] md:flex md:flex-col       sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
             style={{
-              width: "100%",
-              height: "100%",
-              //   background: "red",
-              display: "flex",
-              flexDirection: "column",
+              // width: "100%",
+              // height: "100%",
+              // background: "red",
+              // display: "flex",
+              // flexDirection: "column",
               borderRadius: "1vw",
               padding: "1.4vw",
               paddingTop: "8vh",

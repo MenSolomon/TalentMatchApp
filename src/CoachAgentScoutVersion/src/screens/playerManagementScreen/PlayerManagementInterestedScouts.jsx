@@ -13,16 +13,18 @@ const PlayerManagementInterestedScouts = () => {
         flexDirection: "column",
         height: "48vh",
         width: "100%",
+        // background: "red",
       }}
       className="primaryTextColor"
     >
       {/* Video DISPLAY AREA */}
       <div
+        className="md:flex md:flex-wrap md:gap-[2%] md:flex-row      sm:flex sm:flex-col sm:gap-[3%]"
         style={{
           flex: ".85",
-          display: "flex",
-          gap: "2%",
-          flexWrap: "wrap",
+          // display: "flex",
+          // gap: "2%",
+          // flexWrap: "nowrap",
           //   background: "red",
         }}
       >
@@ -31,21 +33,21 @@ const PlayerManagementInterestedScouts = () => {
           UserName="Nana K"
           avatarUrl={userImage}
           backgroundUrl={kotokoImage}
-          style={{ maxHeight: "9vw", maxWidth: "18vw" }}
+          // style={{ maxHeight: "9vw", maxWidth: "18vw" }}
         />
         <ScoutsDisplayCard
           AgencyName="Hearts of oak"
           UserName="Nana K"
           avatarUrl={userImage}
           backgroundUrl={heartsImage}
-          style={{ maxHeight: "9vw", maxWidth: "18vw" }}
+          // style={{ maxHeight: "9vw", maxWidth: "18vw" }}
         />
         <ScoutsDisplayCard
           AgencyName="Kotoko FC"
           UserName="Nana K"
           avatarUrl={userImage}
           backgroundUrl={kotokoImage}
-          style={{ maxHeight: "9vw", maxWidth: "18vw" }}
+          // style={{ maxHeight: "9vw", maxWidth: "18vw" }}
         />
 
         <ScoutsDisplayCard
@@ -53,7 +55,7 @@ const PlayerManagementInterestedScouts = () => {
           UserName="Nana K"
           avatarUrl={userImage}
           backgroundUrl={kotokoImage}
-          style={{ maxHeight: "9vw", maxWidth: "18vw" }}
+          // style={{ maxHeight: "9vw", maxWidth: "18vw" }}
         />
       </div>
 

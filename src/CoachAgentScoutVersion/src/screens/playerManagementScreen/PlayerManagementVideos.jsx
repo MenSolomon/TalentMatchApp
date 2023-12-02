@@ -3,12 +3,14 @@ import VideoComponentRows from "../../components/Rows/VideoComponentRows";
 const PlayerManagementVideos = () => {
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-
-        width: "100%",
-      }}
+      className="md:flex md:flex-col md:w-[100%]   sm:flex sm:flex-col sm:w-[100%]"
+      style={
+        {
+          // display: "flex",
+          // flexDirection: "column",
+          // width: "100%",
+        }
+      }
     >
       {/* Video DISPLAY AREA */}
 
