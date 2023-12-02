@@ -41,6 +41,12 @@ import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSl
 import { selectUserDetailsObject } from "./statemanager/slices/LoginUserDataSlice";
 import { useEffect, useState } from "react";
 import { setCurrentScreenSize } from "./statemanager/slices/OtherComponentStatesSlice";
+import BasicBackdrop from "./components/Backdrops/BasicBackdrop";
+import {
+  setInternetConnectionOffline,
+  setInternetConnectionOnline,
+} from "./statemanager/slices/InternetActivitiesSlice";
+import ContactSupportModal from "./components/Modals/ContactSupportModal";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -200,6 +206,7 @@ const App = () => {
   const { pathname, search, hash } = location;
   const userLoginObject = useSelector(selectUserDetailsObject);
 
+  // this use effect is to redirect studio for the desired role on user change
   useEffect(() => {
     if (
       userLoginObject?.role === "Player" &&
@@ -247,6 +254,28 @@ const App = () => {
 
     dispatch(setCurrentScreenSize({ width, height }));
   }, [screenSize]);
+
+  /// Listen wherther or not internet is connected
+
+  useEffect(() => {
+    const handleOnline = () => {
+      dispatch(setInternetConnectionOnline());
+    };
+
+    const handleOffline = () => {
+      dispatch(setInternetConnectionOffline());
+    };
+
+    // Add event listeners
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    // Cleanup event listeners on component unmount
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [dispatch]); // Include dispatch in the dependency array to avoid lint warnings
 
   return (
     <ThemeProvider theme={theme}>
@@ -371,6 +400,9 @@ const App = () => {
       </Routes>
       {/* //// Alert Modal to display error messages */}
       <WarningAlertModal />
+
+      <BasicBackdrop />
+      <ContactSupportModal />
     </ThemeProvider>
   );
 };

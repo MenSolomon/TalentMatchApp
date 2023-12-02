@@ -1,4 +1,4 @@
-import { Avatar, Card, IconButton } from "@mui/material";
+import { Avatar, Card, IconButton, Tooltip } from "@mui/material";
 import PlayerManagementTabs from "../components/Tabs/PlayerManagementTabs";
 import { selectPlayersInAgencyArray } from "../statemanager/slices/PlayersInAgencySlice";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import EditPlayerProfileModal from "../components/Modals/EditPlayerModal";
 import TransferPlayerModal from "../components/Modals/TransferPlayerModal";
 import { setPlayerSelectedByClubOrScoutInPlayerManagement } from "../../../statemanager/slices/PlayersInAgencySlice";
 import ConfirmClubExitModal from "../components/Modals/ConfirmClubExitModal";
+import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
 
 const CoachAgentScoutVersionPlayerManagement = () => {
   const { playerId } = useParams();
@@ -21,11 +22,13 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   const [playerData, setPlayerData] = useState({
     firstName: "",
     surName: "",
-    image: "",
+    player_profile_image: "",
     Age: "",
     position: "",
     jerseyNumber: "",
     clubName: "",
+    CountryCode: "",
+    Nationality: "",
   });
   // const history = useHistory();
 
@@ -54,7 +57,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     // "Settings",
   ];
 
-  const PlayerArray = useSelector(selectPlayersInAgencyArray);
+  // this selectPlayersInAgencyArray is for dummy player created in the database however the  current selector is for the players in the database
+  const PlayerArray = useSelector(selectPlayersDatabase);
 
   useEffect(() => {
     const selectedArray = PlayerArray.filter((data) => {
@@ -78,39 +82,54 @@ const CoachAgentScoutVersionPlayerManagement = () => {
       const {
         firstName,
         surName,
-        image,
+        player_profile_image,
         Age,
         position,
         jerseyNumber,
         clubName,
+        CountryCode,
+        Nationality,
       } = filteredPlayerArray[0];
 
       setPlayerData({
         firstName,
         surName,
-        image,
+        player_profile_image,
         Age,
         position,
         jerseyNumber,
         clubName,
+        CountryCode,
+        Nationality,
       });
     } else {
       // Set default values or handle the case when filteredPlayerArray is undefined or empty
       setPlayerData({
         firstName: "",
         surName: "",
-        image: "",
+        player_profile_image: "",
         Age: "",
         position: "",
         jerseyNumber: "",
+        CountryCode: "",
+        Nationality: "",
       });
     }
   }, [filteredPlayerArray]);
 
   // Destructuring the items of playerData
 
-  const { firstName, surName, Age, image, position, jerseyNumber, clubName } =
-    playerData;
+  const {
+    firstName,
+    surName,
+    Age,
+    player_profile_image,
+    position,
+    jerseyNumber,
+    clubName,
+    CountryCode,
+    Nationality,
+  } = playerData;
 
   return (
     <div
@@ -138,26 +157,31 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               float: "right",
               width: "8.5vw",
               height: "18vh",
-              background: "blue",
+              // background: "blue",
               marginRight: ".5vw",
               borderRadius: "1vw",
-              backgroundImage: `url('${image}')`,
+              backgroundImage: `url('${player_profile_image}')`,
               backgroundSize: "cover",
             }}
           ></Card>
 
           {/* Club Logo Canvas */}
-
-          <Avatar
-            sx={{
-              width: 56,
-              height: 56,
-              position: "absolute",
-              bottom: "-3vh",
-              left: "30%",
-            }}
-            src="/ghana.png"
-          />
+          <div className="PlayerManagementNationalityTooltip">
+            <Tooltip title={Nationality}>
+              <Avatar
+                sx={{
+                  width: 56,
+                  height: 56,
+                  // position: "absolute",
+                  // bottom: "-3vh",
+                  // left: "30%",
+                  // did the positioning Styling in css because wanted the tooltip to move with the avatar
+                }}
+                src={`https://flagcdn.com/${CountryCode.toLowerCase()}.svg`}
+                alt={CountryCode}
+              />{" "}
+            </Tooltip>{" "}
+          </div>
         </div>
         {/* Player Name */}
         <div style={{ flex: ".6", padding: "1vw", paddingLeft: "1vw" }}>

@@ -5,9 +5,34 @@ import PlayerViewCardFromPlayersScreen from "../components/Cards/PlayerViewCardF
 
 import { Pagination } from "@mui/material";
 import { selectPlayersInAgencyArray } from "../../../statemanager/slices/PlayersInAgencySlice";
+import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
+import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
 
 const CoachAgentScoutVersionPlayers = () => {
-  const PlayerArray = useSelector(selectPlayersInAgencyArray);
+  // const PlayerArray = useSelector(selectPlayersInAgencyArray);
+  const allPlayersInDatabase = useSelector(selectPlayersDatabase);
+
+  const userLoginObject = useSelector(selectUserDetailsObject);
+  const playersInPossessionDetails =
+    userLoginObject?.playersInPossession &&
+    userLoginObject?.playersInPossession.map((player) => {
+      const playerIdToMatch = player.playerId;
+      // Find the player in allPlayersArray based on playerId
+      const matchedPlayer = allPlayersInDatabase.find(
+        (player) => player.id === playerIdToMatch
+      );
+
+      return matchedPlayer;
+    });
+
+  console.log(
+    playersInPossessionDetails,
+    allPlayersInDatabase,
+    "PROAS",
+    userLoginObject?.playersInPossession,
+    userLoginObject
+  );
+
   return (
     <div
       style={{
@@ -22,43 +47,58 @@ const CoachAgentScoutVersionPlayers = () => {
       </div>
 
       <div style={{ flex: ".8", flexWrap: "wrap", display: "flex" }}>
-        {PlayerArray.slice(0, 9).map((data, index) => {
-          const {
-            firstName,
-            surName,
-            Age,
-            position,
-            Nationality,
-            jerseyNumber,
-            image,
-            id,
-          } = data;
+        {playersInPossessionDetails === undefined ? (
+          <div> No players for this club yet </div>
+        ) : (
+          playersInPossessionDetails?.slice(0, 9).map((data, index) => {
+            const {
+              firstName,
+              surName,
+              Age,
+              position,
+              Nationality,
+              jerseyNumber,
+              player_profile_image,
+              id,
+            } = data;
 
-          return (
-            <PlayerViewCardFromPlayersScreen
-              key={index}
-              image={image}
-              surName={surName}
-              age={Age}
-              position={position}
-              jerseyNumber={jerseyNumber}
-              firstName={firstName}
-              nationality={Nationality}
-              id={id}
-            />
-          );
-        })}
+            // A reget to extract the position Abreviation
+
+            var positionABR = position.match(/\((.*?)\)/);
+
+            // Check if there are matches and get the value inside parentheses
+            var result = positionABR ? positionABR[1] : null;
+
+            return (
+              <PlayerViewCardFromPlayersScreen
+                key={index}
+                image={player_profile_image}
+                surName={surName}
+                age={Age}
+                position={result}
+                positionToolTipInFull={position}
+                jerseyNumber={jerseyNumber}
+                firstName={firstName}
+                nationality={Nationality}
+                id={id}
+              />
+            );
+          })
+        )}
       </div>
       {/* // Pagination Area  */}
 
       <div style={{ flex: ".1", display: "grid", placeContent: "center" }}>
-        {" "}
-        <Pagination
-          className="primaryTextColor"
-          sx={{ color: "white" }}
-          count={1}
-          color="primary"
-        />{" "}
+        {playersInPossessionDetails === undefined ? (
+          ""
+        ) : (
+          <Pagination
+            className="primaryTextColor"
+            sx={{ color: "white" }}
+            count={1}
+            color="primary"
+          />
+        )}
       </div>
     </div>
   );

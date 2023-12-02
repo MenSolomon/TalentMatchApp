@@ -2,12 +2,24 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 
-export default function CountrySelect({ selectLabel, styles }) {
+export default function CountrySelect({
+  selectLabel,
+  styles,
+  countryName,
+  countryCode,
+}) {
+  const handleAutoSelect = (e, v) => {
+    console.log(v.label);
+    countryName(v.label);
+    countryCode(v.code);
+  };
+
   return (
     <Autocomplete
       id="country-select-demo"
       sx={{ ...styles }}
       options={countries}
+      onChange={handleAutoSelect}
       autoHighlight
       getOptionLabel={(option) => option.label}
       renderOption={(props, option) => (

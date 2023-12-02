@@ -10,6 +10,10 @@ export const OtherComponentStatesSlice = createSlice({
     snackbarMessage: "",
     warningAlertModalCounter: 0,
     warningAlertModalMessage: "",
+    contactSupportModalCounter: 0,
+    contactSupportModalMessage: "",
+    circularLoadBackdropCounter: 0,
+    circularLoadBackdropTrigger: false,
     videoBelow15mbSelected: false,
     currentScreenSize: {
       width: "",
@@ -42,6 +46,18 @@ export const OtherComponentStatesSlice = createSlice({
     setWarningAlertModalMessage: (state, action) => {
       state.warningAlertModalMessage = action.payload;
     },
+    setContactSupportModalCounter: (state) => {
+      state.contactSupportModalCounter += 1;
+    },
+    setContactSupportModalMessage: (state, action) => {
+      state.contactSupportModalMessage = action.payload;
+    },
+    setOpenCircularLoadBackdrop: (state) => {
+      state.circularLoadBackdropTrigger = true;
+    },
+    setCloseCircularLoadBackdrop: (state) => {
+      state.circularLoadBackdropTrigger = false;
+    },
     setVideoBelow15mbSelected: (state, action) => {
       state.videoBelow15mbSelected = action.payload;
     },
@@ -65,10 +81,19 @@ export const selectWarningAlertModalCounter = (state) =>
   state.OtherComponentStates.warningAlertModalCounter;
 export const selectWarningAlertModalMessage = (state) =>
   state.OtherComponentStates.warningAlertModalMessage;
+export const selectCircularLoadBackdropTriggerState = (state) =>
+  state.OtherComponentStates.circularLoadBackdropTrigger;
+// export const selectCircularLoadBackdropCounter = (state) =>
+//   state.OtherComponentStates.circularLoadBackdropCounter;
 export const selectVideoBelow15mbSelected = (state) =>
   state.OtherComponentStates.videoBelow15mbSelected;
 export const selectCurrentScreenSize = (state) =>
   state.OtherComponentStates.currentScreenSize;
+
+export const selectContactSupportModalCounter = (state) =>
+  state.OtherComponentStates.contactSupportModalCounter;
+export const selectContactSupportModalMessage = (state) =>
+  state.OtherComponentStates.contactSupportModalMessage;
 
 export const {
   setAutoCompletePlayerPosition,
@@ -81,5 +106,9 @@ export const {
   setWarningAlertModalCounter,
   setVideoBelow15mbSelected,
   setCurrentScreenSize,
+  setOpenCircularLoadBackdrop,
+  setCloseCircularLoadBackdrop,
+  setContactSupportModalCounter,
+  setContactSupportModalMessage,
 } = OtherComponentStatesSlice.actions;
 export default OtherComponentStatesSlice.reducer;

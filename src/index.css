@@ -708,6 +708,13 @@ ol {
   list-style-type: none;
 }
 
+.PlayerManagementNationalityTooltip span {
+  position: absolute;
+  color: "red";
+  top: 17vh;
+  left: 28%;
+}
+
 @media (min-width: 1000px) {
   .motherComponentContentArea {
     overflow-y: scroll;

@@ -3,30 +3,40 @@ import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { Typography } from "@mui/material";
 
-function valuetext(value) {
-  return `${value}yrs`;
-}
+// function valuetext(value) {
+//   return `${value}yrs`;
+// }
 
-export default function BasicSlider({ style, rangeName }) {
-  const [value, setValue] = React.useState([20, 37]);
-
+export default function BasicSlider({
+  style,
+  rangeName,
+  max,
+  min,
+  sliderValue,
+  steps,
+}) {
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    sliderValue(newValue);
   };
 
   return (
-    <Box className="primaryTextColor" sx={{ color: "white", width: 300 }}>
+    <Box
+      className="primaryTextColor"
+      sx={{ color: "white", width: 300, ...style }}
+    >
       <Typography sx={{ textAlign: "center", fontWeight: "700" }}>
         {rangeName}
       </Typography>
       <Slider
-        getAriaLabel={() => "Age Range"}
-        value={value}
+        getAriaLabel={() => {
+          rangeName;
+        }}
+        step={steps}
+        marks
         onChange={handleChange}
         valueLabelDisplay="on"
-        getAriaValueText={valuetext}
-        max={50}
-        min={10}
+        max={max}
+        min={min}
       />
     </Box>
   );

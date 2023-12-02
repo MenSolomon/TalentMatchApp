@@ -216,7 +216,7 @@ const CoachAgentScoutVersionMotherComponent = () => {
 
   return (
     <div
-      className="md:flex md:flex-col md:h-[112vh] md:w-[100vw] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw]"
+      className="md:flex md:flex-col md:h-[100vh] md:w-[100vw] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw]"
       style={{
         // display: "flex",
         // flexDirection: "column",

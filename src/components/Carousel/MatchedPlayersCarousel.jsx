@@ -218,9 +218,9 @@ const VideoCard = ({ publisherImg, video, vidIndex }) => {
             className="cardBackground"
             src={publisherImg}
             sx={{
-              width: 70,
-              height: 70,
-              border: "1px solid #5585FE",
+              width: 80,
+              height: 80,
+              border: "7px solid #5585FE",
               cursor: "pointer",
               // right: "1vw",
             }}

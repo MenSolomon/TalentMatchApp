@@ -1,4 +1,4 @@
-import { Card } from "@mui/material";
+import { Card, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const PlayerViewCardFromPlayersScreen = ({
@@ -10,6 +10,7 @@ const PlayerViewCardFromPlayersScreen = ({
   position,
   jerseyNumber,
   id,
+  positionToolTipInFull,
 }) => {
   const navigate = useNavigate();
 
@@ -70,7 +71,10 @@ const PlayerViewCardFromPlayersScreen = ({
             {/* Position */}
             <div style={{ flex: ".25" }}>
               {" "}
-              <span style={{ fontWeight: "700" }}>Pos </span> <br /> {position}
+              <Tooltip title={positionToolTipInFull}>
+                <span style={{ fontWeight: "700" }}>Pos </span> <br />{" "}
+                {position}{" "}
+              </Tooltip>
             </div>
           </div>
         </div>
