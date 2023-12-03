@@ -53,8 +53,20 @@ const PlayerViewCardFromPlayersScreen = ({
         >
           {/* Name Details */}
           <div style={{ flex: ".5" }}>
-            <p style={{ margin: 0 }}>{firstName}</p>{" "}
-            <h4 style={{ margin: 0 }}>{surName}</h4>
+            <p style={{ margin: 0 }}>
+              {firstName.length >= 10 ? (
+                <Tooltip title={firstName}>{firstName.slice(0, 10)}...</Tooltip>
+              ) : (
+                firstName
+              )}
+            </p>{" "}
+            <h4 style={{ margin: 0 }}>
+              {surName.length >= 10 ? (
+                <Tooltip title={surName}>{surName.slice(0, 7)}...</Tooltip>
+              ) : (
+                surName
+              )}
+            </h4>
           </div>
           {/* Descriptive area (Age , Nationality , Postion) */}
           <div style={{ flex: ".5", display: "flex" }}>
@@ -66,7 +78,13 @@ const PlayerViewCardFromPlayersScreen = ({
             {/* Nationality */}
             <div style={{ flex: ".5" }}>
               <span style={{ fontWeight: "700" }}>Country </span> <br />{" "}
-              {nationality}
+              {nationality.length >= 20 ? (
+                <Tooltip title={nationality}>
+                  {nationality.slice(0, 18)}...
+                </Tooltip>
+              ) : (
+                nationality
+              )}
             </div>
             {/* Position */}
             <div style={{ flex: ".25" }}>

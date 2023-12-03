@@ -49,7 +49,7 @@ const CountryStats = () => {
         </div>
       </div>
 
-      {/* Div for housing the last 5 Club Matches Statisitcs
+      {/* Div for housing the last 5 Club Matches Statistics
        */}
       <div
         style={{

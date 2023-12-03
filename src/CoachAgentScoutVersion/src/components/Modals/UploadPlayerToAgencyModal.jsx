@@ -405,7 +405,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
             // if statment to check if there is a player already created to prevent first player to be created bug
 
             // Retrieveing the details of players In possession
-            console.log(userLoginObject?.playersInPossession ,"DUMDUM")
+            console.log(userLoginObject?.playersInPossession, "DUMDUM");
             const playersInPossessionDetails =
               userLoginObject?.playersInPossession === undefined
                 ? []
@@ -420,9 +420,15 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                   });
 
             const jerseyMatch = playersInPossessionDetails.filter((data) => {
+              // alert(`${jerseyNumber}=== ${data.jerseyNumber}`);
               return jerseyNumber === data.jerseyNumber;
             });
             // if statement to prevent duplication of jersey number
+            console.log(
+              playersInPossessionDetails,
+              "Jersey Match",
+              jerseyMatch
+            );
 
             if (jerseyMatch.length > 0) {
               triggerWarningAlertModal(
@@ -507,14 +513,14 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                 Achievements: [],
                 Market_Value_History: [],
                 Club_History: [],
-                Statisitcs: [
+                Statistics: [
                   {
-                    Season: "23/24",
+                    Season: "Overall",
                     General: {
                       Games_Played: 0,
                       Minutes_Played: 0,
                       Starts: 0,
-                      "Subbed off": 0,
+                      Subbed_off: 0,
                     },
                     Defence: {
                       Clearance: 0,
@@ -550,10 +556,62 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       Long_passes_rate: 0,
                       Opponent_half_pass_accuracy: 0,
                       Own_half_pass_accuracy: 0,
-                      "Pass_direction_forward_%": 0,
-                      "Pass_direction_backward_%": 0,
-                      "Pass_direction_left_%": 0,
-                      "Pass_direction_right_%": 0,
+                      Pass_direction_forward_percent: 0,
+                      Pass_direction_backward_percent: 0,
+                      Pass_direction_left_percent: 0,
+                      Pass_direction_right_percent: 0,
+                      Total_passes: 0,
+                      Successful_passes: 0,
+                      Key_passes: 0,
+                      Total_passes_per_90_mins: 0,
+                    },
+                  },
+                  {
+                    Season: "23/24",
+                    General: {
+                      Games_Played: 0,
+                      Minutes_Played: 0,
+                      Starts: 0,
+                      Subbed_off: 0,
+                    },
+                    Defence: {
+                      Clearance: 0,
+                      Tackles: 0,
+                      Duels: 0,
+                      Aeriel_duels: 0,
+                      Blocks: 0,
+                      Interceptions: 0,
+                    },
+                    Attack: {
+                      Total_shots: 0,
+                      Shots_on_target: 0,
+                      Goals_Scored: 0,
+                      Conversion_rate: 0,
+                      Minutes_per_goal: 0,
+                      Header_goals: 0,
+                      Left_goals: 0,
+                      Right_goals: 0,
+                      Other_goals: 0,
+                      Goals_outside_the_box: 0,
+                      Goals_inside_the_box: 0,
+                      Goals_from_freekicks: 0,
+                    },
+                    Discipline: {
+                      Fouls_conceeded: 0,
+                      Fouls_won: 0,
+                      Yellow_cards: 0,
+                      Red_cards: 0,
+                    },
+                    Distribution: {
+                      Assists: 0,
+                      Pass_success_rate: 0,
+                      Long_passes_rate: 0,
+                      Opponent_half_pass_accuracy: 0,
+                      Own_half_pass_accuracy: 0,
+                      Pass_direction_forward_percent: 0,
+                      Pass_direction_backward_percent: 0,
+                      Pass_direction_left_percent: 0,
+                      Pass_direction_right_percent: 0,
                       Total_passes: 0,
                       Successful_passes: 0,
                       Key_passes: 0,
@@ -566,7 +624,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       Games_Played: 0,
                       Minutes_Played: 0,
                       Starts: 0,
-                      "Subbed off": 0,
+                      Subbed_off: 0,
                     },
                     Defence: {
                       Clearance: 0,
@@ -602,10 +660,10 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       Long_passes_rate: 0,
                       Opponent_half_pass_accuracy: 0,
                       Own_half_pass_accuracy: 0,
-                      "Pass_direction_forward_%": 0,
-                      "Pass_direction_backward_%": 0,
-                      "Pass_direction_left_%": 0,
-                      "Pass_direction_right_%": 0,
+                      Pass_direction_forward_percent: 0,
+                      Pass_direction_backward_percent: 0,
+                      Pass_direction_left_percent: 0,
+                      Pass_direction_right_percent: 0,
                       Total_passes: 0,
                       Successful_passes: 0,
                       Key_passes: 0,
@@ -618,7 +676,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       Games_Played: 0,
                       Minutes_Played: 0,
                       Starts: 0,
-                      "Subbed off": 0,
+                      Subbed_off: 0,
                     },
                     Defence: {
                       Clearance: 0,
@@ -654,10 +712,10 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       Long_passes_rate: 0,
                       Opponent_half_pass_accuracy: 0,
                       Own_half_pass_accuracy: 0,
-                      "Pass_direction_forward_%": 0,
-                      "Pass_direction_backward_%": 0,
-                      "Pass_direction_left_%": 0,
-                      "Pass_direction_right_%": 0,
+                      Pass_direction_forward_percent: 0,
+                      Pass_direction_backward_percent: 0,
+                      Pass_direction_left_percent: 0,
+                      Pass_direction_right_percent: 0,
                       Total_passes: 0,
                       Successful_passes: 0,
                       Key_passes: 0,
@@ -670,7 +728,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       Games_Played: 0,
                       Minutes_Played: 0,
                       Starts: 0,
-                      "Subbed off": 0,
+                      Subbed_off: 0,
                     },
                     Defence: {
                       Clearance: 0,
@@ -706,10 +764,10 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       Long_passes_rate: 0,
                       Opponent_half_pass_accuracy: 0,
                       Own_half_pass_accuracy: 0,
-                      "Pass_direction_forward_%": 0,
-                      "Pass_direction_backward_%": 0,
-                      "Pass_direction_left_%": 0,
-                      "Pass_direction_right_%": 0,
+                      Pass_direction_forward_percent: 0,
+                      Pass_direction_backward_percent: 0,
+                      Pass_direction_left_percent: 0,
+                      Pass_direction_right_percent: 0,
                       Total_passes: 0,
                       Successful_passes: 0,
                       Key_passes: 0,
@@ -722,7 +780,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       Games_Played: 0,
                       Minutes_Played: 0,
                       Starts: 0,
-                      "Subbed off": 0,
+                      Subbed_off: 0,
                     },
                     Defence: {
                       Clearance: 0,
@@ -758,10 +816,10 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       Long_passes_rate: 0,
                       Opponent_half_pass_accuracy: 0,
                       Own_half_pass_accuracy: 0,
-                      "Pass_direction_forward_%": 0,
-                      "Pass_direction_backward_%": 0,
-                      "Pass_direction_left_%": 0,
-                      "Pass_direction_right_%": 0,
+                      Pass_direction_forward_percent: 0,
+                      Pass_direction_backward_percent: 0,
+                      Pass_direction_left_percent: 0,
+                      Pass_direction_right_percent: 0,
                       Total_passes: 0,
                       Successful_passes: 0,
                       Key_passes: 0,
@@ -1104,6 +1162,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                   min={1}
                   steps={1}
                   sliderValue={(e) => {
+                    // alert(e);
                     setJerseyNumber(e);
                   }}
                 />

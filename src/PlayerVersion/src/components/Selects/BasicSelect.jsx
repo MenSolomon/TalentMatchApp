@@ -4,11 +4,16 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useState } from "react";
 
-export default function BasicSelect({ widthSize, label, MenuItemArray }) {
-  const [selectValue, setSelectValue] = useState("");
+export default function BasicSelect({
+  selectedValue,
+  widthSize,
+  label,
+  MenuItemArray,
+}) {
+  // const [selectValue, setSelectValue] = useState("");
 
   const handleChange = (event) => {
-    setSelectValue(event.target.value);
+    selectedValue(event.target.value);
   };
 
   return (
@@ -17,7 +22,7 @@ export default function BasicSelect({ widthSize, label, MenuItemArray }) {
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
-        value={selectValue}
+        // value={selectValue}
         label="selectValue"
         // size="small"
         sx={{ width: widthSize ? widthSize : 200 }}

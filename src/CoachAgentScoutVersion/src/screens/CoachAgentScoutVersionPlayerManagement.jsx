@@ -4,7 +4,7 @@ import { selectPlayersInAgencyArray } from "../statemanager/slices/PlayersInAgen
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Instagram, Twitter } from "@mui/icons-material";
+import { Facebook, Instagram, Twitter } from "@mui/icons-material";
 import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
 import BasicButton from "../../../components/Buttons/BasicButton";
 import BasicButtonWithEndIcon from "../../../components/Buttons/BasicButtonWithEndIcon";
@@ -29,6 +29,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     clubName: "",
     CountryCode: "",
     Nationality: "",
+    Social_media: [],
   });
   // const history = useHistory();
 
@@ -89,8 +90,10 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         clubName,
         CountryCode,
         Nationality,
+        Social_media,
       } = filteredPlayerArray[0];
 
+      console.log(Social_media, "Social_media");
       setPlayerData({
         firstName,
         surName,
@@ -101,6 +104,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         clubName,
         CountryCode,
         Nationality,
+        Social_media,
       });
     } else {
       // Set default values or handle the case when filteredPlayerArray is undefined or empty
@@ -113,6 +117,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         jerseyNumber: "",
         CountryCode: "",
         Nationality: "",
+        Social_media: [],
       });
     }
   }, [filteredPlayerArray]);
@@ -129,8 +134,13 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     clubName,
     CountryCode,
     Nationality,
+    Social_media,
   } = playerData;
 
+  const openLinkInNewPage = (link) => {
+    // Open the link in a new tab or window
+    window.open(link, "_blank");
+  };
   return (
     <div
       style={{
@@ -246,11 +256,44 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             {/* // Socials Area (Twitter and instagram) */}
 
             <div style={{ flex: ".1", display: "flex" }}>
-              <IconButton>
-                <Twitter style={{ color: "#5585FE" }} />
-              </IconButton>
-              <IconButton>
-                <Instagram style={{ color: "#5585FE" }} />
+              <Tooltip
+                title={
+                  Social_media.length == 0 ||
+                  Social_media[0].Instagram === "https://www.instagram.com//"
+                    ? ""
+                    : Social_media[0].Instagram
+                }
+              >
+                {" "}
+                <IconButton
+                  onClick={() => {
+                    Social_media.length == 0 ||
+                    Social_media[0].Instagram === "https://www.instagram.com//"
+                      ? ""
+                      : openLinkInNewPage(Social_media[0].Instagram);
+                  }}
+                >
+                  <Instagram style={{ color: "#5585FE" }} />
+                </IconButton>
+              </Tooltip>
+              <IconButton
+                onClick={() => {
+                  Social_media.length == 0 ||
+                  Social_media[0].Facebook === "https://web.facebook.com/"
+                    ? ""
+                    : openLinkInNewPage(Social_media[0].Facebook);
+                }}
+              >
+                <Tooltip
+                  title={
+                    Social_media.length == 0 ||
+                    Social_media[0].Facebook === "https://web.facebook.com/"
+                      ? ""
+                      : Social_media[0].Facebook
+                  }
+                >
+                  <Facebook style={{ color: "#5585FE" }} />
+                </Tooltip>
               </IconButton>
             </div>
 

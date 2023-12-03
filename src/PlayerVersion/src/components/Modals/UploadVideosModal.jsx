@@ -22,10 +22,40 @@ import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectVideoBelow15mbSelected,
+  setCloseCircularLoadBackdrop,
+  setOpenCircularLoadBackdrop,
+  setSnackbarMessage,
+  setSnackbarTriggerCounter,
   setVideoBelow15mbSelected,
   setWarningAlertModalCounter,
   setWarningAlertModalMessage,
 } from "../../../../statemanager/slices/OtherComponentStatesSlice";
+import {
+  selectPlayerSelectedByClubOrScoutInPlayerManagement,
+  setPlayerSelectedByClubOrScoutInPlayerManagement,
+} from "../../../../statemanager/slices/PlayersInAgencySlice";
+import { db, storage } from "../../../../Firebase/Firebase";
+import { v4 as uuidv4 } from "uuid";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  serverTimestamp,
+  arrayUnion,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
+import moment from "moment";
+import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
+import { selectPlayersDatabase } from "../../../../statemanager/slices/DatabaseSlice";
+// import {
+//   arrayUnion,
+//   doc,
+//   getDoc,
+//   increment,
+//   serverTimestamp,
+//   setDoc,
+//   updateDoc,
+// } from "firebase/firestore";
+// import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const style = {
   position: "absolute",
@@ -64,8 +94,21 @@ const styles = {
 const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
   const dispatch = useDispatch();
   const isVideoSelected = useSelector(selectVideoBelow15mbSelected);
+  const CurrentPlayerSelectedForClubScoutCoachAndAgentManagement = useSelector(
+    selectPlayerSelectedByClubOrScoutInPlayerManagement
+  );
+  const allPlayerDatabase = useSelector(selectPlayersDatabase);
+  const userDetailsObject = useSelector(selectUserDetailsObject);
+
+  const { id, firstName, surName } =
+    CurrentPlayerSelectedForClubScoutCoachAndAgentManagement;
+
+  const { role, surname } = userDetailsObject;
 
   const [open, setOpen] = useState(false);
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+
   // const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
@@ -112,8 +155,83 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
   ];
 
   useEffect(() => {
-    console.log("cl", selectedFile);
-  }, [selectedFile]);
+    // this is to update the video array of the particylar player in redux to get a realtime update of players object without querying the database
+
+    const updatedPlayerObject = allPlayerDatabase.filter((data) => {
+      return data.id === id;
+    });
+
+    dispatch(
+      setPlayerSelectedByClubOrScoutInPlayerManagement(updatedPlayerObject[0])
+    );
+  }, [allPlayerDatabase]);
+
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
+  const uploadVideoToDatabaseFunction = async () => {
+    const uuid = uuidv4();
+
+    if (category.length === 0) {
+      triggerWarningAlertModal("Please select a category");
+    } else {
+      try {
+        const playerVideoRef = ref(
+          storage,
+          `videos/playerVideoGallery/${firstName}${surName}${id}/${
+            selectedFile?.name + "-" + uuid
+          }`
+        );
+
+        dispatch(setOpenCircularLoadBackdrop());
+        // Upload the image
+        await uploadBytes(playerVideoRef, selectedFile);
+
+        // Get the download URL
+        const url = await getDownloadURL(playerVideoRef);
+
+        const playerObjectRef = doc(db, `players_database/${id}`);
+        await updateDoc(playerObjectRef, {
+          videos: arrayUnion({
+            filename: selectedFile?.name,
+            dateUploaded: moment().format("MMMM D, YYYY HH:mm:ss"),
+            url,
+            description,
+            category,
+            views: 0,
+            // suggestion: thought of making the uploaded by an accountId for specifity instead of names
+            uploadedBy:
+              role === "Club"
+                ? userDetailsObject.club
+                : `${userDetailsObject.firstName}${surname}`,
+          }),
+        });
+
+        dispatch(setCloseCircularLoadBackdrop());
+
+        setCategory("");
+
+        handleClose();
+        // turnMotherModalAfterSubmitted(false);
+
+        dispatch(
+          setSnackbarMessage(
+            `"Video uploaded to ${firstName} ${surName}'s gallery successfuly"`
+          )
+        );
+        dispatch(setSnackbarTriggerCounter());
+      } catch (error) {
+        console.error(error);
+        // alert(error);
+        dispatch(setCloseCircularLoadBackdrop());
+        triggerWarningAlertModal(
+          "Something went wrong ... please try again after a while"
+        );
+      }
+    }
+  };
+
   return (
     <div>
       {/* <Button onClick={handleOpen}>Upload Videos</Button> */}
@@ -141,7 +259,7 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                   alignItems: "center",
                 }}
               >
-                <h3>Upload video</h3>
+                <h3>Upload video </h3>
               </div>
               <div
                 style={{
@@ -207,12 +325,32 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                       label={"Category"}
                       MenuItemArray={CategorySelectArray}
                       widthSize={400}
+                      selectedValue={(e) => {
+                        // alert(e);
+                        setCategory(e);
+                      }}
                     />
                     <TextField
                       // id="outlined-multiline-flexible"
+                      InputProps={{
+                        inputProps: {
+                          maxLength: 150, // Set your desired max character limit
+                        },
+                      }}
                       multiline
                       rows={8}
-                      label="Description"
+                      label={
+                        <span
+                          style={{
+                            color: description.length === 150 ? "red" : "",
+                          }}
+                        >
+                          Description {description.length}/150
+                        </span>
+                      }
+                      onChange={(e) => {
+                        setDescription(e.target.value);
+                      }}
                       size="medium"
                       sx={{ width: "80%" }}
                     />
@@ -345,7 +483,10 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                   justifyContent: "center",
                 }}
               >
-                <Button onClick={handleClose} variant="contained">
+                <Button
+                  onClick={uploadVideoToDatabaseFunction}
+                  variant="contained"
+                >
                   Upload
                 </Button>
               </div>
@@ -514,7 +655,7 @@ export default function UploadVideoModal() {
                   >
                     <div>
                       <h5>Drag and drop video files to Upload</h5>
-                      <small>Your video should noy be larger than 15mb</small>
+                      <small>Your video should not be larger than 15mb</small>
                     </div>
                     <div>
                       <Button onClick={handleClick} variant="contained">

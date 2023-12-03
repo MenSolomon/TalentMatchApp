@@ -1,4 +1,4 @@
-import { Checkbox } from "@mui/material";
+import { Checkbox, Tooltip } from "@mui/material";
 
 const VideoComponentRows = ({ url, description, category, date, views }) => {
   return (
@@ -6,10 +6,10 @@ const VideoComponentRows = ({ url, description, category, date, views }) => {
       style={{
         borderBottom: "1px solid rgba(48, 48, 48, 0.952)",
         flex: ".1",
-        paddingTop: "1vh",
+        paddingTop: ".5vh",
         display: "flex",
         width: "100%",
-        height: "25%",
+        height: "10vh",
       }}
       className="VideoComponent"
     >
@@ -27,21 +27,33 @@ const VideoComponentRows = ({ url, description, category, date, views }) => {
           position: "relative",
         }}
       >
-        <div
+        <video
           style={{
             width: "80%",
-            height: "90%",
-            background: "black",
+            height: "95%",
+            // background: "black",
             position: "absolute",
           }}
-        ></div>
+          src={url}
+          controls
+        />
       </div>
 
       {/* Description */}
-      <div style={{ flex: ".33" }}>{description} </div>
+      <div style={{ flex: ".25" }}>
+        {" "}
+        {description.length >= 50 ? (
+          <Tooltip title={description}>
+            {" "}
+            {description.substring(0, 50)}...{" "}
+          </Tooltip>
+        ) : (
+          description
+        )}{" "}
+      </div>
 
       {/* Date uploaded */}
-      <div style={{ flex: ".17" }}>{date}</div>
+      <div style={{ flex: ".25" }}>{date}</div>
       {/* Category */}
       <div style={{ flex: ".2" }}>{category}</div>
 

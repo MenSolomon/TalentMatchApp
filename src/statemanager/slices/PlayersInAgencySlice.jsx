@@ -215,7 +215,7 @@ export const PlayersInAgencySlice = createSlice({
       Achievements: [],
       Market_Value_History: [],
       Club_History: [],
-      Statisitcs: [
+      Statistics: [
         {
           Season: "23/24",
           General: {
