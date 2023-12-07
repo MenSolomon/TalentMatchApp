@@ -164,7 +164,8 @@ const MarketValueGraph = () => {
       <Line
         data={data}
         options={options}
-        style={{ width: "20%", marginTop: "0vh", height: "15vh" }}
+        className="md:w-[20%] sm:w-[80%]"
+        style={{ marginTop: "0vh", height: "15vh" }}
         // style={{ background: "transparent" ,padding:"1px"}}
       ></Line>
     </div>

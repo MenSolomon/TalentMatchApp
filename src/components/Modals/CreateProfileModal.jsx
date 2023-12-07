@@ -15,6 +15,7 @@ import GroupedRadio from "../Radio/GroupedRadio";
 import CheckboxesGroup from "../CheckBoxes/GroupedCheckBox";
 import RangeSlider from "../Slider/RangeSlider";
 import { useDispatch, useSelector } from "react-redux";
+import { AddOutlined, Close } from "@mui/icons-material";
 import {
   selectUserDetailsObject,
   setUserDetailsObject,
@@ -1003,7 +1004,7 @@ export default function CreateProfileModal({ ProfileType }) {
           },
         }}
         // style={{ width: "100vw", height: "100vh" }}
-        className="md:w-[100vw] md:h-[100vh]    sm:w-[111vw] sm:h-[100vh]"
+        className="md:w-[100vw] md:h-[100vh]    sm:w-[110vw] sm:h-[102vh]"
       >
         <Fade in={open}>
           <div
@@ -1034,6 +1035,7 @@ export default function CreateProfileModal({ ProfileType }) {
                 </h2>{" "}
                 <h6>Who are you looking for? </h6>{" "}
               </div>
+
               <div className="sm:self-center md:self-end">
                 {" "}
                 {savedProfile.length <= 0 ? (
@@ -1056,6 +1058,20 @@ export default function CreateProfileModal({ ProfileType }) {
                     }}
                   />
                 )}
+              </div>
+              <div
+                className="md:hidden sm:block"
+                style={{
+                  display: "flex",
+                  justifyContent: "end",
+                  // alignItems: "end",
+                  paddingLeft: "30%",
+                  fontSize: "2em",
+                }}
+              >
+                {/* <IconButton size="small" sx={{ background: "#5585FE" }}> */}
+                <Close onClick={handleClose} style={{ color: "white" }} />{" "}
+                {/* </IconButton> */}
               </div>
             </div>
 

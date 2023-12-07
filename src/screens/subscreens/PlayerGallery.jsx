@@ -22,14 +22,17 @@ const PlayerGallery = () => {
 
   return (
     <div
-      style={{
-        width: "100%",
-        height: "40vh",
-        display: "flex",
-        gap: "2vw",
-        flexWrap: "wrap",
-        overflowY: "scroll",
-      }}
+      className="md:w-[100%] md:h-[40vh] md:flex md:flex-wrap md:gap-[2vw] md:overflow-y-scroll md:justify-start   sm:overflow-y-scroll  sm:w-[100%] sm:h-[50vh] sm:flex sm:flex-wrap sm:justify-center sm:gap-[2vw]"
+      style={
+        {
+          // width: "100%",
+          // height: "40vh",
+          // display: "flex",
+          // gap: "2vw",
+          // flexWrap: "wrap",
+          // overflowY: "scroll",
+        }
+      }
     >
       {videosArray.map((data, key) => {
         const { url, videoCategory } = data;

@@ -10,7 +10,7 @@ const NameAndImageCard = ({
 }) => {
   return (
     <div
-      className="playerCard md:w-[100%] md:h-[100%] md:flex     sm:w-[50%] sm:h-[100%] sm:flex"
+      className="playerCard md:w-[100%] md:h-[100%] md:flex     sm:w-[100%] sm:h-[100%] sm:flex"
       style={{
         // width: "100%",
         // height: "100%",

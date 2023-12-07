@@ -114,7 +114,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
 
   return (
     <div
-      className="md:w-[100%] md:h-[100%] md:flex md:flex-col md:gap-[0px]   sm:gap-[50px]    sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
+      className="md:w-[100%] md:h-[100%] md:flex md:flex-col md:gap-[0px]   sm:gap-[50px]   sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
       style={
         {
           // display: "flex",
@@ -155,7 +155,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
           {/* Club Logo Canvas */}
 
           <Avatar
-            className="md:absolute md:left-[30%] md:bottom-[-15vh]    sm:absolute sm:left-[140%] sm:bottom-[-9vh]"
+            className="md:absolute md:left-[30%] md:bottom-[-15vh]    sm:absolute sm:left-[140%] sm:bottom-[-7vh]"
             sx={{
               width: 56,
               height: 56,
@@ -205,7 +205,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
           }}
         >
           <Card
-            className="cardBackground primaryTextColor md:w-[100%] md:h-[100%] md:flex md:flex-col       sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
+            className="cardBackground primaryTextColor md:w-[100%] md:h-[100%] md:flex md:flex-col md:p-[1.4vw]   sm:p-[2vw] sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
             style={{
               // width: "100%",
               // height: "100%",
@@ -213,7 +213,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               // display: "flex",
               // flexDirection: "column",
               borderRadius: "1vw",
-              padding: "1.4vw",
+              // padding: "1.4vw",
               paddingTop: "8vh",
             }}
           >

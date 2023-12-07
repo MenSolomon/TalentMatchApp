@@ -28,36 +28,36 @@ import {
 } from "../../../../statemanager/slices/OtherComponentStatesSlice";
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
+  // position: "absolute",
+  // top: "50%",
+  // left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "65%",
-  height: "94%",
+  // width: "65%",
+  // height: "94%",
   bgcolor: "background.paper",
   border: "transparent",
   boxShadow: 24,
   borderRadius: "1vw",
   padding: "2vw",
-  display: "flex",
-  flexDirection: "column",
+  // display: "flex",
+  // flexDirection: "column",
   paddingTop: "3vh",
 };
 
 const styles = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
+  // position: "absolute",
+  // top: "50%",
+  // left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "65%",
-  height: "94%",
+  // width: "65%",
+  // height: "94%",
   bgcolor: "background.paper",
   border: "transparent",
   boxShadow: 24,
   borderRadius: "1vw",
   padding: "2vw",
-  display: "flex",
-  flexDirection: "column",
+  // display: "flex",
+  // flexDirection: "column",
   paddingTop: "3vh",
 };
 
@@ -131,7 +131,13 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
         }}
       >
         <Fade in={open}>
-          <div className="cardBackground primaryTextColor" style={styles}>
+          <div
+            className="cardBackground primaryTextColor md:w-[65%] md:h-[94%] md:absolute md:top-[50%] md:left-[50%] md:flex md:flex-col 
+
+             sm:w-[100%] sm:h-[100%] sm:absolute sm:top-[50%] sm:left-[50%] sm:flex sm:flex-col 
+             "
+            style={styles}
+          >
             <div style={{ flex: "0.1", display: "flex" }}>
               <div
                 style={{
@@ -162,10 +168,11 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
             </div>
             <Divider style={{ background: "black" }} />
             <div
+              className="md:flex md:flex-row md:gap-[0em]   sm:gap-[1em]   sm:flex sm:flex-col"
               style={{
                 flex: "0.8",
                 // background: "peru",
-                display: "flex",
+                // display: "flex",
                 // flexDirection: "column",
               }}
             >
@@ -201,6 +208,7 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                       display: "flex",
                       flexDirection: "column",
                       gap: 20,
+                      // background: "red",
                     }}
                   >
                     <BasicSelect
@@ -214,7 +222,8 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                       rows={8}
                       label="Description"
                       size="medium"
-                      sx={{ width: "80%" }}
+                      className="md:w-[80%] sm:w-[100%]"
+                      // sx={{ width: "80%" }}
                     />
                   </div>
                 </div>
@@ -253,65 +262,6 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                   <h6 style={{ textDecoration: "underline" }}>File name </h6>{" "}
                   <h6>{selectedFile?.name}</h6>
                 </div>
-                {/* <div
-                  style={{
-                    flex: "0.5",
-                    // background: "blue",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <div
-                    style={{
-                      flex: "0.5",
-                      // background: "yellow",
-                      display: "flex",
-                    }}
-                  >
-                    <div style={{ flex: "0.8" }}>
-                      <div style={{ padding: "10px" }}>
-                        <h6>Video Link</h6>
-                        <h6>https://youtu.be/any</h6>
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        flex: "0.2",
-                        // background: "yellow",
-                        alignItems: "center",
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <ContentCopy />
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      flex: "0.5",
-                      // background: "peru",
-                      display: "flex",
-                    }}
-                  >
-                    <div style={{ flex: "0.8" }}>
-                      <div style={{ padding: "10px" }}>
-                        <h6>Video Link</h6>
-                        <h6>https://youtu.be/any</h6>
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        flex: "0.2",
-                        // background: "yellow",
-                        alignItems: "center",
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <ContentCopy />
-                    </div>
-                  </div>
-                </div> */}
               </div>
 
               {/* End of Watch Videos */}
@@ -435,7 +385,13 @@ export default function UploadVideoModal() {
         }}
       >
         <Fade in={open}>
-          <div className="cardBackground primaryTextColor" style={style}>
+          <div
+            className="cardBackground primaryTextColor md:w-[65%] md:h-[94%] md:absolute md:top-[50%] md:left-[50%] md:flex md:flex-col
+
+            sm:w-[100%] sm:h-[94%] sm:absolute sm:top-[50%] sm:left-[50%] sm:flex sm:flex-col
+            "
+            style={style}
+          >
             {/* Upload Videos */}
             <div style={{ flex: "0.1", display: "flex" }}>
               <div

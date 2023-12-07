@@ -520,11 +520,10 @@ const MotherComponent = () => {
 
         {/* // ROUTES SECTION */}
         <div
-          className="md:basis-[82%] sm:basis-[100%]"
+          className="md:basis-[82%]  sm:basis-[100%]"
           style={{
             // flex: ".82",
             padding: "2vh 1.5vw",
-
             // background: "blue",
           }}
         >

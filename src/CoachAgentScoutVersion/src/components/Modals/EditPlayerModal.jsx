@@ -198,7 +198,7 @@ const EditPlayerProfileModal = () => {
         aria-describedby="child-modal-description"
       >
         <Box
-          className="cardBackground primaryTextColor md:h-[94%] md:w-[80%] sm:w-[80%]  sm:h-[90%]"
+          className="cardBackground primaryTextColor md:h-[94%] md:w-[80%] sm:w-[100%]  sm:h-[100%]"
           sx={{ ...style }}
         >
           <h2 id="child-modal-title">Edit a player profile</h2>

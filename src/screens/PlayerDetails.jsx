@@ -96,9 +96,9 @@ const PlayerDetails = () => {
       // md:gap-[0em]   sm:gap-[10%]
       className="md:w-[100%] md:h-[95%]  sm:w-[100%] sm:h-[100%]"
       style={{
-        // width: "100%",
         // height: "95%",
-        // background: "blue",
+        // width: "100%",
+        // background: "red",
         display: "grid",
         gridTemplateRows:
           isCardsCollapsedVariable === false ? "2% 35% 9% 54%" : "2% 9% 89%",
@@ -118,14 +118,17 @@ const PlayerDetails = () => {
       </div>
       {/* // Card Display Area */}
       <div
-        className="sm:flex sm:flex-col sm:gap-[2%]  md:flex md:flex-row"
+        className="sm:flex sm:flex-col sm:gap-[0%]  md:flex md:flex-row"
         style={{
           gridArea: "CardDisplay",
           display: isCardsCollapsedVariable === false ? "flex" : "none",
         }}
       >
         {/* // Image And Name Area */}
-        <div style={{ flex: ".26", padding: "1vw" }}>
+        <div
+          className=" md:basis-[26%] sm:basis-[26%]"
+          style={{ padding: "1vw" }}
+        >
           <NameAndImageCard
             firstname={selectedPlayerArray[0]?.firstName}
             surname={selectedPlayerArray[0]?.surName}
@@ -136,7 +139,10 @@ const PlayerDetails = () => {
           />
         </div>
         {/* Club and Value Area */}
-        <div style={{ flex: ".27", padding: "1vw" }}>
+        <div
+          className="sm:hidden md:block md:basis-[27%] sm:basis-[27%]"
+          style={{ padding: "1vw" }}
+        >
           {" "}
           <ClubandNationalTeamDisplayCard
             hTagStyle={hTagStyle}
@@ -152,7 +158,10 @@ const PlayerDetails = () => {
           />
         </div>
         {/* Achievements and Trophies Area */}
-        <div style={{ flex: ".27", padding: "1vw" }}>
+        <div
+          className="sm:hidden md:block md:basis-[27%] sm:basis-[27%]"
+          style={{ padding: "1vw" }}
+        >
           {" "}
           <AchievementAndMarketValueCard
             worldCup={worldCup}
@@ -161,7 +170,10 @@ const PlayerDetails = () => {
           />
         </div>
         {/* Socials And Contact Area */}
-        <div style={{ flex: ".2", padding: "1vw" }}>
+        <div
+          className="sm:hidden md:block md:basis-[20%] sm:basis-[20%]"
+          style={{ padding: "1vw" }}
+        >
           {" "}
           <SocialAndContactAreaCard instagram={instagram} facebook={facebook} />
         </div>

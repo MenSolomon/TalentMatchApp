@@ -3,12 +3,15 @@ import ReactPlayer from "react-player";
 const GalleryVideoComponent = ({ url, videoCategory }) => {
   return (
     <div
-      style={{
-        width: "260px",
-        height: "150px",
-        display: "flex",
-        flexDirection: "column",
-      }}
+      className="md:w-[260px] md:h-[150px] md:flex md:flex-col           sm:w-[260px] sm:h-[150px] sm:flex sm:flex-col"
+      style={
+        {
+          // width: "260px",
+          // height: "150px",
+          // display: "flex",
+          // flexDirection: "column",
+        }
+      }
     >
       <div
         style={{
@@ -27,7 +30,6 @@ const GalleryVideoComponent = ({ url, videoCategory }) => {
           height="100%"
           width="100%"
           show
-
           style={{ position: "relative" }}
         />{" "}
       </div>

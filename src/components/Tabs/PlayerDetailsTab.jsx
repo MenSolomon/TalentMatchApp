@@ -74,9 +74,10 @@ export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
               <Tab
                 key={key}
                 className="primaryColor"
-                label={data}
+                // label={data}
+                label={`${data.slice(0, 1)}..`}
                 sx={{
-                  width: "10vw",
+                  width: "0.5vw",
                   // marginRight: "2vw",
                   fontWeight: "bold",
                 }}

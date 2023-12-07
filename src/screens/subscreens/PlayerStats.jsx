@@ -78,12 +78,13 @@ const PlayerStats = () => {
 
   return (
     <div
+      className="md:w-[100%] md:flex md:flex-col md:h-[40vh]              sm:w-[100%] sm:flex sm:flex-col sm:h-[40vh]"
       style={{
         // background: "yellow",
-        width: "100%",
-        height: "40vh",
-        display: "flex",
-        flexDirection: "column",
+        // width: "100%",
+        // height: "40vh",
+        // display: "flex",
+        // flexDirection: "column",
         overflowY: "scroll",
       }}
     >

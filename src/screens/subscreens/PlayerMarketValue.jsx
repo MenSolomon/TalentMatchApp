@@ -4,14 +4,15 @@ import { CurrencyPound } from "@mui/icons-material";
 const PlayerMarketValue = () => {
   return (
     <div
-      className="primaryTextColor"
-      style={{ width: "100%", height: "40vh", display: "flex" }}
+      className="primaryTextColor md:w-[100%] md:h-[40vh] md:flex              sm:w-[100%] sm:h-[40vh] sm:flex sm:flex-row"
+      // style={{ width: "100%", height: "40vh", display: "flex" }}
     >
       <div style={{ flex: ".15", padding: "1vw", paddingTop: "4vh" }}>
         <h6> Current Value </h6>
         <h1 className="styleTextColor" style={{ fontWeight: "bolder" }}>
           {" "}
-          50M <CurrencyPound />
+          50M
+          <CurrencyPound />
           {/* <MonetizationOn />{" "} */}
         </h1>
         <h6 className="secondaryTextColor"> Last update </h6>
