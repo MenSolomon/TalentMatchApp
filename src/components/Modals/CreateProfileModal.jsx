@@ -63,9 +63,9 @@ const style = {
   borderRadius: "1vw",
 };
 
-const inputStyles = {
-  width: "85%",
-};
+// const inputStyles = {
+//   width: "85%",
+// };
 
 // const selectFieldStyle ={
 //   width:130
@@ -1004,13 +1004,13 @@ export default function CreateProfileModal({ ProfileType }) {
           },
         }}
         // style={{ width: "100vw", height: "100vh" }}
-        className="md:w-[100vw] md:h-[100vh]    sm:w-[110vw] sm:h-[102vh]"
+        // className="md:w-[100vw] md:h-[100vh]    sm:w-[100vw] sm:h-[102vh]"
       >
         <Fade in={open}>
           <div
             className="cardBackground primaryTextColor md:flex md:flex-col md:pt-[3vh]
             md:w-[85%] md:h-[94%] md:p-[2vw] md:absolute     sm:flex sm:flex-col sm:pt-[3vh]
-            sm:w-[85%] sm:h-[94%] sm:p-[2vw] sm:absolute md:top-[50%] md:left-[50%]    sm:top-[50%] sm:left-[45%]"
+            sm:w-[100%] sm:h-[100%] sm:p-[2vw] sm:absolute md:top-[50%] md:left-[50%]    sm:top-[50%] sm:left-[50%]"
             style={style}
           >
             {/* HEader MEssage */}
@@ -1082,7 +1082,7 @@ export default function CreateProfileModal({ ProfileType }) {
             >
               {/* // Personal information */}
               <div
-                className="md:flex md:flex-col md:relative md:gap-[2vh] md:ml-[2%]  sm:ml-[4%] sm:flex sm:flex-col  sm:relative sm:gap-[2vh]"
+                className="md:flex md:flex-col md:relative md:gap-[2vh] md:ml-[2%]  sm:ml-[0%] sm:flex sm:flex-col  sm:relative sm:gap-[2vh]"
                 style={{
                   flex: ".33",
                   // display: "flex",
@@ -1182,17 +1182,19 @@ export default function CreateProfileModal({ ProfileType }) {
                 {/* // Player stats information area */}
                 <div
                   style={{
-                    // flex: ".9",
+                    flex: ".9",
                     height: "68vh",
                     // overflowY: "scroll",
                     paddingLeft: "1vw",
                     paddingTop: "3vh",
-                    overflowY: "scroll",
+                    // overflowY: "scroll",
+                    display: "flex",
+                    flexDirection: "column",
                   }}
                 >
                   <BasicAutoComplete
                     style={{
-                      ...inputStyles,
+                      // ...inputStyles,
                       marginBottom: "2.5vh",
                       color: "black",
                     }}
