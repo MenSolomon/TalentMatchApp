@@ -14,6 +14,7 @@ export default function BasicSlider({
   min,
   sliderValue,
   steps,
+  defaultValue,
 }) {
   const handleChange = (event, newValue) => {
     sliderValue(newValue);
@@ -33,6 +34,7 @@ export default function BasicSlider({
         }}
         step={steps}
         marks
+        defaultValue={defaultValue}
         onChange={handleChange}
         valueLabelDisplay="on"
         max={max}

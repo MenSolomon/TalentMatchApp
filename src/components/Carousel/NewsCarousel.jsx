@@ -96,6 +96,7 @@ const NewsCarousel = ({ NewsArray }) => {
                   gap: ".5vw",
                   width: "100%",
                   height: "100%",
+                  // background: `linear-gradient(90deg, rgba(32,32,32,0.9582366589327146) 0%, rgba(55,54,54,0.9535962877030162) 31%, rgba(23,21,21,0.7540603248259861) 44%, rgba(14,50,142,0.8120649651972158) 100%)`,
                 }}
               >
                 {/* // Player information */}

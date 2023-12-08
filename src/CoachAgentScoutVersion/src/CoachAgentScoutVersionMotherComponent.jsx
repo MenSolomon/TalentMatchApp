@@ -12,6 +12,7 @@ import NavBarButton from "./components/NavBarButtons/NavBarButton";
 import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 import {
+  selectUserDetailsObject,
   setLoginStatus,
   setUserDetailsObject,
 } from "../../statemanager/slices/LoginUserDataSlice";
@@ -20,9 +21,11 @@ import Marquee from "react-fast-marquee";
 import { selectClubsInDatabase } from "../../statemanager/slices/ClubsInDatabaseSlice";
 import SmallScreenCoachAgentClubMenuDrawer from "./components/Drawer/SmallScreenCoachAgentClubMenuDrawer";
 import { selectCurrentScreenSize } from "../../statemanager/slices/OtherComponentStatesSlice";
+import NotificationsMenu from "../../components/Menu/NotificationsMenu";
 
 const CoachAgentScoutVersionMotherComponent = () => {
   const dispatch = useDispatch();
+  const LoginUserDetails = useSelector(selectUserDetailsObject);
 
   const menuButtonsArray = [
     { name: "Home", icon: "home", path: "/" },
@@ -264,8 +267,6 @@ const CoachAgentScoutVersionMotherComponent = () => {
               display: screenWidth < 1024 ? "none" : "flex",
             }}
           >
-            {/* I can be a React component, multiple React components, or just some
-         text. */}
             {clubsInDatabase.map((data, index) => {
               const { clubImage, clubName } = data;
               return (
@@ -278,6 +279,8 @@ const CoachAgentScoutVersionMotherComponent = () => {
               );
             })}
           </Marquee>
+
+          {/* {LoginUserDetails.accountId} */}
         </div>
         {/* // profile details Area */}
         <div
@@ -290,9 +293,11 @@ const CoachAgentScoutVersionMotherComponent = () => {
           }}
         >
           <LightAndDarkModeSwitch />
-          <IconButton sx={{ marginTop: "1vh" }}>
-            <NotificationAdd className="primaryColor" />
-          </IconButton>
+          <div
+            style={{ marginTop: "2vh", marginLeft: "-1vw", marginRight: "1vw" }}
+          >
+            <NotificationsMenu />
+          </div>
           <ProfileMenu
             style={{ borderBottom: "none" }}
             name="Active user name"

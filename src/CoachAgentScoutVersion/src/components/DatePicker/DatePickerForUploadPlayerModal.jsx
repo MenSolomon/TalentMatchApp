@@ -7,7 +7,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 
-export default function DatePickerTool({
+export default function DatePickerForEditPlayerModal({
   label,
   style,
   containerStyle,
@@ -27,6 +27,7 @@ export default function DatePickerTool({
       <DemoContainer sx={{ ...containerStyle }} components={["DatePicker"]}>
         <DatePicker
           // value={dayjs(defaultValue)}
+          value={dayjs(defaultValue)}
           onChange={handleDateChange}
           sx={{ ...style }}
           label={label}

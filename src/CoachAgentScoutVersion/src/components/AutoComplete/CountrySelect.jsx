@@ -7,6 +7,7 @@ export default function CountrySelect({
   styles,
   countryName,
   countryCode,
+  defaultCountry,
 }) {
   const handleAutoSelect = (e, v) => {
     console.log(v.label);
@@ -17,6 +18,7 @@ export default function CountrySelect({
   return (
     <Autocomplete
       id="country-select-demo"
+      defaultValue={defaultCountry}
       sx={{ ...styles }}
       options={countries}
       onChange={handleAutoSelect}

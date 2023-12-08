@@ -47,9 +47,11 @@ import {
   setInternetConnectionOnline,
 } from "./statemanager/slices/InternetActivitiesSlice";
 import ContactSupportModal from "./components/Modals/ContactSupportModal";
+import { selectUsersDatabase } from "./statemanager/slices/DatabaseSlice";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
+  const usersDatabase = useSelector(selectUsersDatabase);
 
   const { primaryTextColor } = themeProviderObject;
 
@@ -276,6 +278,10 @@ const App = () => {
       window.removeEventListener("offline", handleOffline);
     };
   }, [dispatch]); // Include dispatch in the dependency array to avoid lint warnings
+
+  useEffect(() => {
+    alert(userLoginObject.accountId + "  from App JSZ");
+  }, [usersDatabase]);
 
   return (
     <ThemeProvider theme={theme}>

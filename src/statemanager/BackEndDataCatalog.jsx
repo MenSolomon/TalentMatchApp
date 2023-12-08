@@ -66,25 +66,25 @@ const BackEndDataCatalog = ({ children }) => {
         }
       });
 
-      console.log(items, "All Users array");
-
+      console.log(items, "Account ID", loginUserObject?.accountId);
+      alert(loginUserObject?.accountId + "Acc Backend");
       if (items.length > 0) {
+        // alert(`${accountId} Vas`);
         dispatch(setUsersDatabase(items));
-        const updatedLoginUserDetails = items.filter((data) => {
-          return data.accountId === loginUserObject?.accountId;
-        });
-
-        console.log(updatedLoginUserDetails, "Tennis");
-        if (loginUserObject?.accountId) {
-          dispatch(setUserDetailsObject(updatedLoginUserDetails[0]));
-          console.log("UdatedLoginUserDetails", updatedLoginUserDetails);
+        if (loginUserObject?.accountId !== undefined) {
+          dispatch(
+            setUserDetailsObject(
+              items.find((obj) => obj.accountId === loginUserObject?.accountId)
+            )
+          );
         }
       }
     });
     return () => {
       alldata();
     };
-  }, [temDataBase, currentCreatedSearchProfileName]);
+    // currentCreatedSearchProfileName (DEPENDENCY)
+  }, []);
 
   // Players in database
   useEffect(() => {

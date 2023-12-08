@@ -10,7 +10,10 @@ import BasicButton from "../../../components/Buttons/BasicButton";
 import BasicButtonWithEndIcon from "../../../components/Buttons/BasicButtonWithEndIcon";
 import EditPlayerProfileModal from "../components/Modals/EditPlayerModal";
 import TransferPlayerModal from "../components/Modals/TransferPlayerModal";
-import { setPlayerSelectedByClubOrScoutInPlayerManagement } from "../../../statemanager/slices/PlayersInAgencySlice";
+import {
+  selectPlayerSelectedByClubOrScoutInPlayerManagement,
+  setPlayerSelectedByClubOrScoutInPlayerManagement,
+} from "../../../statemanager/slices/PlayersInAgencySlice";
 import ConfirmClubExitModal from "../components/Modals/ConfirmClubExitModal";
 import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
 
@@ -18,6 +21,9 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   const { playerId } = useParams();
   const dispatch = useDispatch();
   const userLoginObject = useSelector(selectUserDetailsObject);
+  const currentPlayerInfoObject = useSelector(
+    selectPlayerSelectedByClubOrScoutInPlayerManagement
+  );
   const [filteredPlayerArray, setFilteredPlayerArray] = useState([]);
   const [playerData, setPlayerData] = useState({
     firstName: "",
@@ -62,10 +68,13 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   const PlayerArray = useSelector(selectPlayersDatabase);
 
   useEffect(() => {
+    // alert(playerId);
     const selectedArray = PlayerArray.filter((data) => {
       const { id } = data;
       return playerId === id;
     });
+
+    console.log("playNow", selectedArray);
 
     dispatch(
       setPlayerSelectedByClubOrScoutInPlayerManagement(selectedArray[0])
@@ -74,8 +83,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   }, [playerId]);
 
   useEffect(() => {
-    console.log(filteredPlayerArray);
-  }, [filteredPlayerArray]);
+    setFilteredPlayerArray([currentPlayerInfoObject]);
+  }, [currentPlayerInfoObject]);
 
   // Setting the filtered array to playerData state only when it is not undefined and has a length of greater than 0 which prevents page break down // write a no reults when page array is less than 0
   useEffect(() => {

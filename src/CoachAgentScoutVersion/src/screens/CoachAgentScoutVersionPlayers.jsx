@@ -7,6 +7,7 @@ import { Pagination } from "@mui/material";
 import { selectPlayersInAgencyArray } from "../../../statemanager/slices/PlayersInAgencySlice";
 import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
 import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
+import { useState } from "react";
 
 const CoachAgentScoutVersionPlayers = () => {
   // const PlayerArray = useSelector(selectPlayersInAgencyArray);
@@ -33,6 +34,24 @@ const CoachAgentScoutVersionPlayers = () => {
     userLoginObject
   );
 
+  // Pagination settings
+  const PlayersPerPage = 9;
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const getTotalPages = () =>
+    Math.ceil(playersInPossessionDetails.length / PlayersPerPage);
+
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
+  const getplayersInPossessionDetailsForPage = () => {
+    const startIndex = (currentPage - 1) * PlayersPerPage;
+    const endIndex = startIndex + PlayersPerPage;
+    return playersInPossessionDetails.slice(startIndex, endIndex);
+  };
+
   return (
     <div
       style={{
@@ -47,10 +66,11 @@ const CoachAgentScoutVersionPlayers = () => {
       </div>
 
       <div style={{ flex: ".8", flexWrap: "wrap", display: "flex" }}>
-        {playersInPossessionDetails === undefined ? (
+        {playersInPossessionDetails === undefined ||
+        playersInPossessionDetails?.length === 0 ? (
           <div> No players for this club yet </div>
         ) : (
-          playersInPossessionDetails?.slice(0, 9).map((data, index) => {
+          getplayersInPossessionDetailsForPage().map((data, index) => {
             const {
               firstName,
               surName,
@@ -95,8 +115,10 @@ const CoachAgentScoutVersionPlayers = () => {
           <Pagination
             className="primaryTextColor"
             sx={{ color: "white" }}
-            count={1}
+            count={getTotalPages()}
             color="primary"
+            page={currentPage}
+            onChange={handlePageChange}
           />
         )}
       </div>

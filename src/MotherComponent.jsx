@@ -1,4 +1,4 @@
-import { NotificationAdd } from "@mui/icons-material";
+import { NotificationAdd, Notifications } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import { useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
@@ -27,10 +27,11 @@ import Marquee from "react-fast-marquee";
 import { selectClubsInDatabase } from "./statemanager/slices/ClubsInDatabaseSlice";
 import SmallScreenMenuDrawer from "./components/Drawer/SmallScreenMenuDrawer";
 import { selectCurrentScreenSize } from "./statemanager/slices/OtherComponentStatesSlice";
+import NotificationsMenu from "./components/Menu/NotificationsMenu";
 
 const MotherComponent = () => {
   const LoginUserDetails = useSelector(selectUserDetailsObject);
-  const { savedProfile } = LoginUserDetails;
+  // const { savedProfile } = LoginUserDetails;
 
   const menuButtonsArray = [
     { name: "Home", icon: "home", path: "/" },
@@ -312,7 +313,10 @@ const MotherComponent = () => {
       className="md:flex md:flex-col md:h-[112vh] md:w-[100vw] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw]"
       style={{
         visibility:
-          savedProfile && savedProfile?.length > 0 ? "visible" : "hidden",
+          LoginUserDetails?.savedProfile &&
+          LoginUserDetails?.savedProfile?.length > 0
+            ? "visible"
+            : "hidden",
         // display: "flex",
 
         // flexDirection: "column",
@@ -383,6 +387,7 @@ const MotherComponent = () => {
               );
             })}
           </Marquee>
+          {/* {LoginUserDetails.accountId} */}
 
           {/* "#3D2A2F */}
           {/* <SeachBarTextField label={"Search Player"} marginLeft="3vw" />{" "} */}
@@ -408,9 +413,13 @@ const MotherComponent = () => {
 
           <LightAndDarkModeSwitch />
 
-          <IconButton sx={{ marginTop: "1vh" }}>
-            <NotificationAdd className="primaryColor" />
-          </IconButton>
+          {/* <IconButton sx={{ marginTop: "1vh" }}> */}
+          <div
+            style={{ marginTop: "2vh", marginLeft: "-1vw", marginRight: "1vw" }}
+          >
+            <NotificationsMenu />
+          </div>
+          {/* </IconButton> */}
 
           <ProfileMenu
             style={{ borderBottom: "none" }}

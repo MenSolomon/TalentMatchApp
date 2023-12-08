@@ -1,5 +1,8 @@
 import { Card, Tooltip } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { selectPlayersDatabase } from "../../../../statemanager/slices/DatabaseSlice";
+import { setPlayerSelectedByClubOrScoutInPlayerManagement } from "../../../../statemanager/slices/PlayersInAgencySlice";
 
 const PlayerViewCardFromPlayersScreen = ({
   image,
@@ -13,8 +16,18 @@ const PlayerViewCardFromPlayersScreen = ({
   positionToolTipInFull,
 }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const PlayerArray = useSelector(selectPlayersDatabase);
 
   const handlePlayerManagementNavigation = () => {
+    const selectedArray = PlayerArray.filter((data) => {
+      return data.id === id;
+    });
+
+    dispatch(
+      setPlayerSelectedByClubOrScoutInPlayerManagement(selectedArray[0])
+    );
     navigate(`/multiStudio/players/${id}`);
   };
 

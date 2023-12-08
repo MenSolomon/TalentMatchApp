@@ -172,6 +172,7 @@ const Login = () => {
             <div className="sm:pt-[5%] md:pt-[0%]">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <TextField
+                  onClick={resetErrorMessage}
                   focused
                   color="info"
                   id="outlined-basic"
@@ -225,9 +226,13 @@ const Login = () => {
                     }
                     label="Password"
                   />
+
+                  <div style={{ color: "red" }}>{errorMessage}</div>
                 </FormControl>
 
                 {/* Login ACCOUNT */}
+
+                <div> </div>
 
                 <div>
                   <Button

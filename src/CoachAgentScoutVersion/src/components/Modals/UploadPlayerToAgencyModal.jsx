@@ -350,6 +350,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
           CountryCode === "" ||
           CountryName === "" ||
           PlayerPosition === "" ||
+          PreferredFoot === "" ||
           DOB === "" ||
           jerseyNumber === "" ||
           height === "" ||
@@ -461,6 +462,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
               const selectedFile = file[0];
 
               // upload the image to google storage
+              // POSSIBLE BUG FIX .. reject any image file name which has %2F or %20 in its name
               const profileImageRef = ref(
                 storage,
                 `playersProfileImages/${selectedFile.name + "-" + uuid}`

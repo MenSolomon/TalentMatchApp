@@ -25,7 +25,13 @@ import { selectPlayerSelectedByClubOrScoutInPlayerManagement } from "../../../..
 import {
   setSnackbarMessage,
   setSnackbarTriggerCounter,
+  setWarningAlertModalCounter,
+  setWarningAlertModalMessage,
 } from "../../../../statemanager/slices/OtherComponentStatesSlice";
+import { selectUsersDatabase } from "../../../../statemanager/slices/DatabaseSlice";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { db } from "../../../../Firebase/Firebase";
+import moment from "moment";
 
 const style = {
   position: "absolute",
@@ -62,6 +68,7 @@ export default function TransferPlayerModal() {
   const [nameOfDestinatedClub, setNameOfDestinatedClub] =
     useState("Designated club");
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
+  const allUsersDatabase = useSelector(selectUsersDatabase);
   const allClubsInDatabase = useSelector(selectClubsInDatabase);
   const selectedPlayerInManagementObject = useSelector(
     selectPlayerSelectedByClubOrScoutInPlayerManagement
@@ -77,17 +84,100 @@ export default function TransferPlayerModal() {
     setNameOfDestinatedClub(e);
   };
 
-  const handleSendTransferRequest = () => {
-    dispatch(
-      setSnackbarMessage(`Transfer request sent to ${nameOfDestinatedClub}`)
-    );
-    dispatch(setSnackbarTriggerCounter());
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
+
+  const handleSendTransferRequest = async () => {
+    try {
+      const AccountsWithRoleAsClubAndDesignatedClubName =
+        allUsersDatabase.filter((data) => {
+          return data.role === "Club" && data.club === nameOfDestinatedClub;
+        });
+
+      console.log(
+        allUsersDatabase,
+        AccountsWithRoleAsClubAndDesignatedClubName,
+        "honey",
+        nameOfDestinatedClub
+      );
+
+      if (AccountsWithRoleAsClubAndDesignatedClubName.length > 0) {
+        const userToSendNotificationRef = doc(
+          db,
+          `users_db`,
+          AccountsWithRoleAsClubAndDesignatedClubName[0].accountId
+        );
+
+        const playerObjectInjectionRef = doc(
+          db,
+          `players_database`,
+          selectedPlayerInManagementObject?.id
+        );
+
+        const senderClub = allClubsInDatabase.filter((data) => {
+          return data.clubName === userLoginDetailsObject.club;
+        });
+
+        await updateDoc(playerObjectInjectionRef, {
+          TransferStatus: "Transfer Listed",
+        });
+
+        await updateDoc(userToSendNotificationRef, {
+          Notifications: arrayUnion({
+            dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+            senderAddress: userLoginDetailsObject.email,
+            senderId: userLoginDetailsObject.accountId,
+            type: "Transfer request",
+            message:
+              userLoginDetailsObject.role === "Club"
+                ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${firstName} ${surName} valid from ${startDate} to ${endDate}  `
+                : "",
+            senderProfileImage:
+              userLoginDetailsObject.role === "Club"
+                ? senderClub[0]?.clubImage
+                : "",
+            readStatus: false,
+            transferPlayerId: selectedPlayerInManagementObject?.id,
+          }),
+        });
+
+        dispatch(
+          setSnackbarMessage(`Transfer request sent to ${nameOfDestinatedClub}`)
+        );
+        dispatch(setSnackbarTriggerCounter());
+      } else {
+        alert("The club adminstrative account hasnt been activated yet");
+      }
+    } catch (error) {
+      alert("error with sending notification retry");
+    }
   };
 
   return (
     <div>
-      <div onClick={handleOpen}>
+      <div
+        onClick={() => {
+          selectedPlayerInManagementObject?.TransferStatus === undefined
+            ? handleOpen()
+            : selectedPlayerInManagementObject?.TransferStatus ===
+              "Transfer Listed"
+            ? triggerWarningAlertModal(
+                `Player transfer already sent wait till ... to try send request`
+              )
+            : handleOpen();
+        }}
+      >
         <BasicButtonWithEndIcon
+          // disabled={
+          //   selectedPlayerInManagementObject?.TransferStatus === undefined
+          //     ? false
+          //     : selectedPlayerInManagementObject?.TransferStatus ===
+          //       "Transfer Listed"
+          //     ? true
+          //     : false
+          // }
           innerText="Transfer "
           style={{ width: "9vw", height: "6vh", marginBottom: "1.5vh" }}
           endIcon={"swap_horiz"}
@@ -173,7 +263,13 @@ export default function TransferPlayerModal() {
                   label="Start date"
                   // defaultValue={startDate}
                   dateValue={(e) => {
-                    setStartDate(e.$d.toISOString());
+                    setStartDate(
+                      e.$d.toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })
+                    );
                     // alert(e);
                     console.log(e, "start");
                   }}
@@ -185,7 +281,13 @@ export default function TransferPlayerModal() {
                   label="End date"
                   // defaultValue={userData.DOB}
                   dateValue={(e) => {
-                    setEndDate(e.$d.toISOString());
+                    setEndDate(
+                      e.$d.toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })
+                    );
                     console.log(e, "end");
                     // alert(e);
                   }}

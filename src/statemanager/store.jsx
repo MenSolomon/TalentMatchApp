@@ -32,6 +32,7 @@ const persistConfig = {
     // "ThemeProviderSlice",
     "TempDatabase",
   ],
+  // whitelist:
 };
 
 const PlayersInAgencySlicePersistConfig = {
