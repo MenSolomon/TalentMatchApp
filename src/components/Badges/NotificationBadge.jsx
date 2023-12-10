@@ -6,6 +6,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Notifications } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserDataSlice";
+import { selectUserNotifications } from "../../statemanager/slices/NofiticationsSlice";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -18,10 +19,11 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 export default function NotificationBadge({ onClick }) {
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
+  const notificationsArray = useSelector(selectUserNotifications);
 
   const notificationsWithUnreadStatus =
-    userLoginDetailsObject?.Notifications &&
-    userLoginDetailsObject?.Notifications.filter((data) => {
+    notificationsArray &&
+    notificationsArray.filter((data) => {
       return data.readStatus === false;
     });
 
@@ -34,8 +36,8 @@ export default function NotificationBadge({ onClick }) {
     >
       <StyledBadge
         badgeContent={
-          userLoginDetailsObject.Notifications === undefined ||
-          userLoginDetailsObject?.Notifications.length === 0 ||
+          notificationsArray === undefined ||
+          notificationsArray === 0 ||
           notificationsWithUnreadStatus.length === 0
             ? 0
             : notificationsWithUnreadStatus.length

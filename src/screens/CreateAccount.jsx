@@ -20,8 +20,36 @@ import {
 import DatePickerTool from "../components/DatePicker/DatePicker";
 import ClubAutoComplete from "../components/Autocompletes/ClubAutoComplete";
 import { setThemeProviderToLightMode } from "../statemanager/slices/ThemeProviderSlice";
+import { selectClubsInDatabase } from "../statemanager/slices/ClubsInDatabaseSlice";
+import BasicAutoComplete from "../components/Autocompletes/BasicAutoComplete";
+import BasicSlider from "../CoachAgentScoutVersion/src/components/slider/BasicSlider";
+import GroupedRadio from "../components/Radio/GroupedRadio";
+import BasicSelect from "../components/Selects/BasicSelect";
+import {
+  setWarningAlertModalCounter,
+  setWarningAlertModalMessage,
+} from "../statemanager/slices/OtherComponentStatesSlice";
 
 const CreateAccount = () => {
+  const soccerPositions = [
+    "Goalkeeper (GK)",
+    "Defender (D)",
+    "Center Back (CB)",
+    "Full-back (FB)",
+    "Wing-back (WB)",
+    "Midfielder (MF)",
+    "Central Midfielder (CM)",
+    "Defensive Midfielder (CDM)",
+    "Attacking Midfielder (CAM)",
+    "Wide Midfielder (WM)",
+    "Forward (F)",
+    "Striker (ST)",
+    "Center Forward (CF)",
+    "Winger (W)",
+  ];
+
+  const preferredFootArray = ["Left", "Right", "Both"];
+
   const [phoneNumber, setPhoneNumber] = useState("");
 
   const userFormDataWithOnlySubscriptionPackage =
@@ -51,10 +79,15 @@ const CreateAccount = () => {
     dispatch(setCompletedSteps({ ...completedStepsObject, 2: true }));
   };
 
+  const [CountryCode, setCountryCode] = useState("");
+
   const [Nationality, setNationality] = useState("");
   const [selectedClubName, setSelectedClubName] = useState("");
   const [DOB, setDOB] = useState("");
   const [passwordMatch, setPasswordMatch] = useState("");
+  const [PlayerPosition, setPlayerPosition] = useState("");
+  const [height, setHeight] = useState("");
+  const [preferredFoot, setPreferredFoot] = useState("");
 
   const handleClubSelect = (selectedClubName) => {
     // Do something with the selected clubName
@@ -62,88 +95,7 @@ const CreateAccount = () => {
     setSelectedClubName(selectedClubName);
     // console.log("Selected club:", selectedClubName);
   };
-  const clubImageLinks = [
-    {
-      clubName: "Asante Kotoko SC",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/en/f/fd/Asante_Kotoko_SC_%28logo%29.png",
-    },
-    {
-      clubName: "Accra Lions",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/commons/e/e8/Accra_lions_logo.png",
-    },
-    {
-      clubName: "Berekum Chelsea",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/en/1/1a/Berekum_Chelsea_Logo.png",
-    },
-    {
-      clubName: "Accra Great Olympics",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/en/8/8f/The_Official_Accra_Great_Olympics_logo.jpg",
-    },
-    {
-      clubName: "Karela United FC",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/en/6/69/Karela_United_FC_logo.png",
-    },
-    {
-      clubName: "King Faisal Babes FC",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/en/c/c7/King_Faisal_Babes_FC_%28logo%29.png",
-    },
-    {
-      clubName: "Kotoku Royals F.C.",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/en/a/a0/Kotoku_Royals_F.C._logo.png",
-    },
-    {
-      clubName: "Legon Cities FC",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/en/b/b1/Legon_Cities_FC.png",
-    },
-    {
-      clubName: "Medeama SC",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/en/b/bb/Medeama_SC_logo.png",
-    },
-    {
-      clubName: "Real Tamale United",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/en/b/b1/Real_Tamale_United_logo.png",
-    },
-    {
-      clubName: "Samartex",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/en/f/fb/Samartex_logo.png",
-    },
-    {
-      clubName: "Bofoakwa Tano",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/en/a/a5/Bofoakwa_Tano.jpg",
-    },
-    {
-      clubName: "Hasmal",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/commons/a/ae/Hasmal_logo.jpg",
-    },
-    {
-      clubName: "Sekondi Wise Fighters",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/en/2/21/Sekondi_Wise_Fighters_logo.jpg",
-    },
-    {
-      clubName: "Berekum Arsenal",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/en/0/0a/Berekum_Arsenal_Logo.png",
-    },
-    {
-      clubName: "New Edubiase United",
-      clubImage:
-        "https://upload.wikimedia.org/wikipedia/en/6/61/New_Edubiase_United.gif",
-    },
-  ];
+  const clubsInDatabase = useSelector(selectClubsInDatabase);
 
   // hook form
   const {
@@ -151,6 +103,11 @@ const CreateAccount = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
 
   const onSubmit = (formData, e) => {
     e.preventDefault();
@@ -170,34 +127,98 @@ const CreateAccount = () => {
       surname,
       DateOfBirth: DOB.toString(),
       // DOB,
-      ...(roleSelected === "Player" || roleSelected === "Club"
+      ...(roleSelected === "Player"
+        ? ""
+        : roleSelected === "Club"
         ? { club: selectedClubName }
         : { organization }),
       phoneNumber: "",
       email,
       Nationality,
       password,
+      CountryCode,
+    };
+
+    const userDataForPlayer = {
+      firstName,
+      surname,
+      DateOfBirth: DOB.toString(),
+      phoneNumber: "",
+      email,
+      Nationality,
+      CountryCode,
+      password,
+      height,
+      PlayerPosition,
+      preferredFoot,
     };
 
     if (Nationality === "" || Nationality === "False") {
       setNationality("False");
-    } else {
-      if (DOB === "" || DOB === "False") {
-        setDOB("False");
+    }
+
+    if (DOB === "" || DOB === "False") {
+      setDOB("False");
+    }
+
+    if (password !== confirmPassword) {
+      setPasswordMatch("False");
+    }
+
+    if (roleSelected === "Player") {
+      if (height === "" || height === "False") {
+        setHeight("False");
+      }
+      if (preferredFoot === "" || preferredFoot === "False") {
+        setPreferredFoot("False");
+      }
+      if (PlayerPosition === "" || PlayerPosition === "False") {
+        setPlayerPosition("False");
+      }
+
+      if (
+        height === "" ||
+        height === "False" ||
+        PlayerPosition === "" ||
+        PlayerPosition === "False" ||
+        preferredFoot === "" ||
+        preferredFoot === "False" ||
+        password !== confirmPassword
+      ) {
+        ("DO NOTHING");
       } else {
-        if (password !== confirmPassword) {
-          setPasswordMatch("False");
-        } else {
-          // alert("Form Taken");
-          dispatch(
-            setUserSignUpData({ paymentType, subscriptionPackage, ...userData })
-          );
-          setNationality("");
-          setDOB("");
-          setPhoneNumber("");
-          handleTrialNavigation();
-          handleStepsCompleted();
-        }
+        dispatch(
+          setUserSignUpData({
+            paymentType,
+            subscriptionPackage,
+            ...userDataForPlayer,
+          })
+        );
+        setNationality("");
+        setDOB("");
+        setPhoneNumber("");
+        setHeight("");
+        setPlayerPosition("");
+        setPreferredFoot("");
+        handleTrialNavigation();
+        handleStepsCompleted();
+      }
+    } else {
+      // USER DATA FOR OTHER ROLES EXCEPT PLAYER
+
+      if (password === confirmPassword) {
+        dispatch(
+          setUserSignUpData({
+            paymentType,
+            subscriptionPackage,
+            ...userData,
+          })
+        );
+        setNationality("");
+        setDOB("");
+        setPhoneNumber("");
+        handleTrialNavigation();
+        handleStepsCompleted();
       }
     }
 
@@ -275,7 +296,7 @@ const CreateAccount = () => {
         }}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div style={{ display: "flex", gap: "2vw", marginBottom: "3vh" }}>
+          <div style={{ display: "flex", gap: "2vw", marginBottom: "1.5vh" }}>
             <div>
               <TextField
                 sx={{ width: "15vw" }}
@@ -330,7 +351,7 @@ const CreateAccount = () => {
             </div>
           </div>
           {/* EMAIL AND PHONE NUMBER */}
-          <div style={{ display: "flex", gap: "2vw", marginBottom: "3vh" }}>
+          <div style={{ display: "flex", gap: "2vw", marginBottom: "1.5vh" }}>
             <div>
               <TextField
                 sx={{ width: "15vw" }}
@@ -376,6 +397,10 @@ const CreateAccount = () => {
                 selectValue={(e) => {
                   setNationality(e);
                 }}
+                selectCountryCode={(e) => {
+                  setCountryCode(e);
+                  // alert(e);
+                }}
               />
               {/* write a statement for validation */}
               {Nationality === "False" ? (
@@ -389,14 +414,39 @@ const CreateAccount = () => {
           </div>
 
           {/*ORGANIZATION/CLUB NAME AND PASSWORDS*/}
-          <div style={{ display: "flex", gap: "2vw", marginBottom: "3vh" }}>
-            {roleSelected === "Player" || roleSelected === "Club" ? (
+          <div style={{ display: "flex", gap: "2vw", marginBottom: "1vh" }}>
+            {roleSelected === "Club" ? (
               <ClubAutoComplete
-                ListArray={clubImageLinks}
+                ListArray={clubsInDatabase}
                 label="Select a club"
                 style={{ width: "15vw" }}
                 onClubSelect={handleClubSelect}
               />
+            ) : roleSelected === "Player" ? (
+              <div>
+                <BasicAutoComplete
+                  style={{
+                    // ...inputStyles,
+                    width: "15vw",
+                    marginBottom: "2.5vh",
+                    color: "black",
+                  }}
+                  ListArray={soccerPositions}
+                  label="Position * "
+                  AutoCompleteValue={(e) => {
+                    setPlayerPosition(e);
+                    // alert(e);
+                  }}
+                  // defaultValue={PlayerPositionAutoCompleteValue}
+                />
+                {PlayerPosition === "False" ? (
+                  <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
+                    Position is required
+                  </p>
+                ) : (
+                  ""
+                )}
+              </div>
             ) : (
               <TextField
                 sx={{ width: "15vw" }}
@@ -443,16 +493,59 @@ const CreateAccount = () => {
             </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: "2vw",
-              marginBottom: "3vh",
-              alignItems: "center",
-              justifyContent: "center",
-              paddingRight: "13%",
-            }}
-          ></div>
+          {roleSelected === "Player" ? (
+            <div
+              style={{
+                display: "flex",
+                gap: "2vw",
+                marginBottom: "1vh",
+                // alignItems: "center",
+                // justifyContent: "center",
+                paddingRight: "13%",
+              }}
+            >
+              <div>
+                <BasicSelect
+                  inputStyle={{ width: "15vw" }}
+                  label={"Preferred foot *"}
+                  itemsArray={preferredFootArray}
+                  selectedValue={(e) => {
+                    setPreferredFoot(e);
+                  }}
+                />
+                {preferredFoot === "False" ? (
+                  <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
+                    Preferred foot is required
+                  </p>
+                ) : (
+                  ""
+                )}
+              </div>
+
+              <div>
+                <BasicSlider
+                  style={{ width: "15vw", color: "black" }}
+                  rangeName="Height (m) *"
+                  max={2.5}
+                  min={0.3}
+                  steps={0.1}
+                  sliderValue={(e) => {
+                    setHeight(e);
+                  }}
+                />
+                {height === "False" ? (
+                  <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
+                    Height is required
+                  </p>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+
           <Button
             type="submit"
             sx={{
@@ -462,6 +555,7 @@ const CreateAccount = () => {
               textTransform: "none",
               width: "37vw",
               marginLeft: "13%",
+              marginTop: "1vh",
 
               // color: buttonColor,
             }}

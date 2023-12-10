@@ -13,6 +13,7 @@ import {
 
 import avatarImage from "../../assets/images/avatar.jpg";
 import { Avatar } from "@mui/material";
+import { setUserSavedProfiles } from "../../statemanager/slices/SavedProfileSlice";
 
 export default function ProfileMenu({ style, name }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -84,6 +85,7 @@ export default function ProfileMenu({ style, name }) {
             Navigate("/login");
             dispatch(setLoginStatus(false));
             dispatch(setUserDetailsObject({}));
+            dispatch(setUserSavedProfiles([]));
           }}
         >
           Logout

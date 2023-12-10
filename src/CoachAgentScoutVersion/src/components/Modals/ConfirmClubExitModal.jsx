@@ -10,6 +10,12 @@ import { useDispatch, useSelector } from "react-redux";
 import BasicButtonWithEndIcon from "../../../../components/Buttons/BasicButtonWithEndIcon";
 import { selectPlayerSelectedByClubOrScoutInPlayerManagement } from "../../../../statemanager/slices/PlayersInAgencySlice";
 import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { db } from "../../../../Firebase/Firebase";
+import {
+  setSnackbarMessage,
+  setSnackbarTriggerCounter,
+} from "../../../../statemanager/slices/OtherComponentStatesSlice";
 
 const style = {
   position: "absolute",
@@ -43,7 +49,47 @@ export default function ConfirmClubExitModal() {
   const selectedPlayerInManagementObject = useSelector(
     selectPlayerSelectedByClubOrScoutInPlayerManagement
   );
-  const { firstName, surName } = selectedPlayerInManagementObject;
+  const {
+    firstName,
+    surName,
+    id,
+    contractEndDate,
+    contractStartDate,
+    clubName,
+  } = selectedPlayerInManagementObject;
+
+  const handleConfirmPlayerExit = async () => {
+    try {
+      const userObjectRef = doc(db, `users_db`, userLoginObject?.accountId);
+      const playerObjectInjectionRef = doc(db, `players_database`, id);
+      // Update player's club to free agent
+      await updateDoc(playerObjectInjectionRef, {
+        clubName: "Free agent",
+        contractEndDate: "",
+        contractStartDate: "",
+        jerseyNumber: "",
+        Club_History: arrayUnion({
+          teamName: clubName,
+          dateLeft: contractEndDate,
+          dateJoined: contractStartDate,
+        }),
+      });
+
+      // Remove player from players in possession Id...
+
+      await updateDoc(userObjectRef, {
+        playersInPossession: arrayRemove({ playerId: id }),
+      });
+      dispatch(
+        setSnackbarMessage(
+          `${firstName} ${surName} successfully exited from your club`
+        )
+      );
+      dispatch(setSnackbarTriggerCounter());
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div>
@@ -133,7 +179,10 @@ export default function ConfirmClubExitModal() {
               }}
             >
               <Button
-                onClick={handleClose}
+                onClick={() => {
+                  handleConfirmPlayerExit();
+                  handleClose();
+                }}
                 sx={{
                   background: "green",
                   borderRadius: "2vw",

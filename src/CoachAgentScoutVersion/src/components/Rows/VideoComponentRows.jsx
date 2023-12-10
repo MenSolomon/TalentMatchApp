@@ -1,6 +1,12 @@
 import { Checkbox, Tooltip } from "@mui/material";
+import { useSelector } from "react-redux";
+import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
 
 const VideoComponentRows = ({ url, description, category, date, views }) => {
+  const userLoginObject = useSelector(selectUserDetailsObject);
+
+  const { role } = userLoginObject;
+
   return (
     <div
       style={{
@@ -9,7 +15,7 @@ const VideoComponentRows = ({ url, description, category, date, views }) => {
         paddingTop: ".5vh",
         display: "flex",
         width: "100%",
-        height: "10vh",
+        height: role === "Player" ? "15vh" : "10vh",
       }}
       className="VideoComponent"
     >

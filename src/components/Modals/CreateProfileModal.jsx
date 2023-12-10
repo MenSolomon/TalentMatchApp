@@ -29,6 +29,7 @@ import {
   selectCurrentProfile,
   selectCurrentProfileFilterObject,
   selectPreviousProfile,
+  selectUserSavedProfiles,
   setCurrentProfile,
   setCurrentProfileFilterObject,
   setPreviousProfile,
@@ -47,9 +48,10 @@ import {
   setWarningAlertModalMessage,
 } from "../../statemanager/slices/OtherComponentStatesSlice";
 import BasicSelect from "../Selects/BasicSelect";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../Firebase/Firebase";
 import moment from "moment";
+import { v4 as uuidv4 } from "uuid";
 
 const style = {
   position: "absolute",
@@ -198,7 +200,9 @@ export default function CreateProfileModal({ ProfileType }) {
     selectEditFilterModalButtonClicked
   );
   const loginUserDetails = useSelector(selectUserDetailsObject);
-  const { savedProfile, email } = loginUserDetails;
+  const userSavedProfiles = useSelector(selectUserSavedProfiles);
+
+  const { email } = loginUserDetails;
   const allUsers = useSelector(selectTempUsersDatabase);
   const currentProfileFilterObject = useSelector(
     selectCurrentProfileFilterObject
@@ -360,61 +364,32 @@ export default function CreateProfileModal({ ProfileType }) {
 
   // FUNCTION FOR CREATING PROFILE
   const handleCreateProfile = () => {
-    const unMacthedPlayerDatabase = allUsers.filter((data) => {
-      return data.email !== email;
-    });
+    const { accountId } = loginUserDetails;
+    const uuid = uuidv4();
+    // alert("Saved prof" + accountId);
 
-    const { savedProfile, accountId } = loginUserDetails;
-
-    if (savedProfile.length <= 0) {
+    if (userSavedProfiles.length < 1) {
       // cont newProfile == log
       // alert("less");
 
       // This is the rest of users in the database devoid of the current user logged in
 
-      console.log(unMacthedPlayerDatabase, "unmatched players");
-
-      dispatch(
-        setUserDetailsObject({
-          ...loginUserDetails,
-          savedProfile: [
-            {
-              label: "Default",
-              dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-              filter: currentProfileFilterObject,
-            },
-          ],
-        })
-      );
       // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
 
       // alert(accountId);
       ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
-
-      const collectionRef = doc(db, `users_db`, accountId);
-      updateDoc(collectionRef, {
-        savedProfile: arrayUnion({
-          label: "Default",
-          dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-          filter: currentProfileFilterObject,
-        }),
-      });
-
-      dispatch(
-        setTempUsersDatabase([
-          ...unMacthedPlayerDatabase,
-          {
-            ...loginUserDetails,
-            savedProfile: [
-              {
-                label: "Default",
-                dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-                filter: currentProfileFilterObject,
-              },
-            ],
-          },
-        ])
+      const savedProfileSubCollectionRef = doc(
+        db,
+        `users_db/${accountId}/SavedProfiles`,
+        "Default"
       );
+
+      setDoc(savedProfileSubCollectionRef, {
+        label: "Default",
+        dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+        filter: currentProfileFilterObject,
+        labelId: "Default",
+      });
 
       handleClose();
 
@@ -472,10 +447,15 @@ export default function CreateProfileModal({ ProfileType }) {
         })
       );
     } else {
+      const savedProfileSubCollectionRef = doc(
+        db,
+        `users_db/${accountId}/SavedProfiles`,
+        uuid
+      );
       if (profileName !== "" && profileName.toLowerCase() !== "") {
         ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
 
-        const profileNameMatch = savedProfile.filter((data) => {
+        const profileNameMatch = userSavedProfiles.filter((data) => {
           const { label } = data;
           return (
             label.replace(/\s/g, "").toLowerCase() ===
@@ -487,31 +467,12 @@ export default function CreateProfileModal({ ProfileType }) {
         // This it to make sure that we dont create a profile with the same name
 
         if (profileNameMatch.length <= 0) {
-          const collectionRef = doc(db, `users_db`, accountId);
-          updateDoc(collectionRef, {
-            savedProfile: arrayUnion({
-              label: profileName,
-              dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-              filter: currentProfileFilterObject,
-            }),
+          setDoc(savedProfileSubCollectionRef, {
+            label: profileName,
+            dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+            filter: currentProfileFilterObject,
+            labelId: uuid,
           });
-
-          dispatch(
-            setTempUsersDatabase([
-              ...unMacthedPlayerDatabase,
-              {
-                ...loginUserDetails,
-                savedProfile: [
-                  ...savedProfile,
-                  {
-                    label: profileName,
-                    dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-                    filter: currentProfileFilterObject,
-                  },
-                ],
-              },
-            ])
-          );
 
           handleClose();
           dispatch(
@@ -604,64 +565,45 @@ export default function CreateProfileModal({ ProfileType }) {
       positionRangeSliderValues,
     } = currentProfileFilterObject;
 
-    const { savedProfile, accountId } = loginUserDetails;
+    const { accountId } = loginUserDetails;
 
-    const unMacthedProflie = savedProfile.filter((data) => {
-      return data.label !== currentProfileClicked;
-    });
-
-    const MacthedProfile = savedProfile.filter((data) => {
+    const MacthedProfile = userSavedProfiles.filter((data) => {
       return data.label === currentProfileClicked;
     });
 
-    const nameExists = savedProfile.filter(
+    const nameExists = userSavedProfiles.filter(
       (data) => data.label.toLowerCase() === profileName.toLowerCase()
     );
-    const { dateCreated } = MacthedProfile[0];
-    const collectionRef = doc(db, `users_db`, accountId);
+    const { labelId } = MacthedProfile[0];
 
-    console.log(dateCreated, " Date Created");
-    console.log("Unmatched Profile", unMacthedProflie);
-    console.log(profileName, currentProfileFilterObject, "TO BE EDITED");
     if (profileName === "") {
       triggerWarningAlertModal("name cannot be empty ");
     } else {
       // This if statement makes prevents saved name from being the same as a existing profile name
       if (nameExists.length <= 0 || profileName === currentProfileClicked) {
-        const sortedProfile = [
-          ...unMacthedProflie,
-          {
-            label: profileName,
-            dateCreated,
-            filter: {
-              PlaceOfBirth,
-              NationalityValue,
-              AgeRangeValue,
-              HeightRangeValue,
-              PlayerPositionAutoCompleteValue: PlayerPositionAutoCompleteValue,
-              ClubCountryValue,
-              MarketValue,
-              CaptainRadioValue,
-              PrefferedFootRadioValue,
-              PlayerDivisionValue,
-              ContractStatusCheckBoxes,
-              positionRangeSliderValues: positionRangeSliderValues,
-            },
-          },
-        ]
-          .slice()
-          .sort((a, b) => {
-            // Convert date strings to Moment.js objects
-            const dateA = moment(a.dateCreated, "YYYY-MM-DD HH:mm:ss");
-            const dateB = moment(b.dateCreated, "YYYY-MM-DD HH:mm:ss");
-
-            // Compare the Moment.js objects in descending order
-            // return dateB.diff(dateA);
-            return dateA.diff(dateB);
-          });
-
         // Update the document in Firestore
-        updateDoc(collectionRef, { savedProfile: sortedProfile });
+        const selectedProfileRef = doc(
+          db,
+          `users_db/${accountId}/SavedProfiles`,
+          labelId
+        );
+        updateDoc(selectedProfileRef, {
+          label: profileName,
+          filter: {
+            PlaceOfBirth,
+            NationalityValue,
+            AgeRangeValue,
+            HeightRangeValue,
+            PlayerPositionAutoCompleteValue: PlayerPositionAutoCompleteValue,
+            ClubCountryValue,
+            MarketValue,
+            CaptainRadioValue,
+            PrefferedFootRadioValue,
+            PlayerDivisionValue,
+            ContractStatusCheckBoxes,
+            positionRangeSliderValues: positionRangeSliderValues,
+          },
+        });
         dispatch(setPreviousProfile(profileName));
 
         navigate(`/profile/${profileName}`);
@@ -833,9 +775,8 @@ export default function CreateProfileModal({ ProfileType }) {
 
   useEffect(() => {
     // currentProfileClicked
-    const { savedProfile } = loginUserDetails;
 
-    const filteredObject = savedProfile.filter((data) => {
+    const filteredObject = userSavedProfiles.filter((data) => {
       return data.label === previousProfileClicked;
     });
 
@@ -941,7 +882,7 @@ export default function CreateProfileModal({ ProfileType }) {
             <Settings />
           </IconButton>
         </Tooltip>
-      ) : savedProfile.length <= 0 ? (
+      ) : userSavedProfiles.length <= 0 ? (
         <div onClick={handleOpen}>
           {/* // CHANING THE MODAL ENTRY ICON / CARD */}
           <BasicButton
@@ -1024,14 +965,14 @@ export default function CreateProfileModal({ ProfileType }) {
                 {" "}
                 {ProfileType === "Edit"
                   ? "Edit Profile"
-                  : savedProfile.length <= 0
+                  : userSavedProfiles.length <= 0
                   ? "Default Profile"
                   : "Search Profile"}{" "}
               </h2>{" "}
               <h6>Who are you looking for? </h6>{" "}
               <div style={{ justifySelf: "flex-end" }}>
                 {" "}
-                {savedProfile.length <= 0 ? (
+                {userSavedProfiles.length <= 0 ? (
                   ""
                 ) : currentProfileClicked.toLowerCase() === "default" &&
                   ProfileType === "Edit" ? (

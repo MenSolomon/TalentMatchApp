@@ -4,6 +4,7 @@ export const SavedProfileSlice = createSlice({
   name: "SavedProfiles",
   initialState: {
     currentProfile: "",
+    userSavedProfiles: [],
     currentProfileFilterObject: {
       PlaceOfBirth: "Any",
       NationalityValue: "Any",
@@ -56,6 +57,9 @@ export const SavedProfileSlice = createSlice({
   },
 
   reducers: {
+    setUserSavedProfiles: (state, action) => {
+      state.userSavedProfiles = action.payload;
+    },
     setCurrentProfile: (state, action) => {
       state.currentProfile = action.payload;
     },
@@ -68,6 +72,8 @@ export const SavedProfileSlice = createSlice({
   },
 });
 
+export const selectUserSavedProfiles = (state) =>
+  state.SavedProfiles.userSavedProfiles;
 export const selectCurrentProfile = (state) =>
   state.SavedProfiles.currentProfile;
 export const selectCurrentProfileFilterObject = (state) =>
@@ -76,6 +82,7 @@ export const selectPreviousProfile = (state) =>
   state.SavedProfiles.previousProfile;
 
 export const {
+  setUserSavedProfiles,
   setCurrentProfile,
   setCurrentProfileFilterObject,
   setPreviousProfile,

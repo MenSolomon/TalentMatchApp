@@ -21,7 +21,10 @@ import TransferClubSelect from "../Selects/TransferClubSelect";
 import DatePickerTool from "../../../../components/DatePicker/DatePicker";
 import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
 import { selectClubsInDatabase } from "../../../../statemanager/slices/ClubsInDatabaseSlice";
-import { selectPlayerSelectedByClubOrScoutInPlayerManagement } from "../../../../statemanager/slices/PlayersInAgencySlice";
+import {
+  selectPlayerSelectedByClubOrScoutInPlayerManagement,
+  setPlayerSelectedByClubOrScoutInPlayerManagement,
+} from "../../../../statemanager/slices/PlayersInAgencySlice";
 import {
   setSnackbarMessage,
   setSnackbarTriggerCounter,
@@ -29,9 +32,20 @@ import {
   setWarningAlertModalMessage,
 } from "../../../../statemanager/slices/OtherComponentStatesSlice";
 import { selectUsersDatabase } from "../../../../statemanager/slices/DatabaseSlice";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "../../../../Firebase/Firebase";
 import moment from "moment";
+import { v4 } from "uuid";
 
 const style = {
   position: "absolute",
@@ -89,31 +103,153 @@ export default function TransferPlayerModal() {
     dispatch(setWarningAlertModalCounter());
   };
 
+  // const handleSendTransferRequest = async () => {
+  //   try {
+  //     const uuid = v4();
+  //     const userRef = collection(db, `users_db`);
+
+  //     const q = query(userRef, where("club", "==", nameOfDestinatedClub));
+  //     const alldata = onSnapshot(q, (querySnapshot) => {
+  //       const items = [];
+  //       querySnapshot.forEach((doc) => {
+  //         items.push(doc.data());
+  //       });
+
+  //       items.forEach((item) => {
+  //         if (item.dateCreated !== "" && item.dateCreated !== null) {
+  //           const firestoreTimestamp = item.dateCreated;
+  //           const date = firestoreTimestamp.toDate();
+  //           const options = {
+  //             year: "numeric",
+  //             month: "long",
+  //             day: "numeric",
+  //             hour: "numeric",
+  //             minute: "numeric",
+  //             second: "numeric",
+  //           };
+  //           const dateTimeFormat = new Intl.DateTimeFormat("en-US", options);
+  //           const dateString = dateTimeFormat.format(date);
+  //           item.dateCreated = dateString;
+  //         }
+  //       });
+
+  //       if (items.length > 0) {
+  //         const playerObjectInjectionRef = doc(
+  //           db,
+  //           `players_database`,
+  //           selectedPlayerInManagementObject?.id
+  //         );
+
+  //         // alert("RECEPIENT ID" + items[0].accountId);
+
+  //         const userToSendNotificationRef = doc(
+  //           db,
+  //           `users_db/${items[0].accountId}/Notifications`,
+  //           uuid
+  //         );
+
+  //         const senderClub = allClubsInDatabase.filter((data) => {
+  //           return data.clubName === userLoginDetailsObject.club;
+  //         });
+
+  //         updateDoc(playerObjectInjectionRef, {
+  //           TransferStatus: "Transfer Listed",
+  //         });
+
+  //         setDoc(userToSendNotificationRef, {
+  //           NotificationId: uuid,
+  //           transferComplete: "pending",
+  //           dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+  //           senderAddress: userLoginDetailsObject.email,
+  //           senderId: userLoginDetailsObject.accountId,
+  //           type: "Transfer request",
+  //           message:
+  //             userLoginDetailsObject.role === "Club"
+  //               ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${firstName} ${surName} valid from ${startDate} to ${endDate}  `
+  //               : "",
+  //           senderProfileImage:
+  //             userLoginDetailsObject.role === "Club"
+  //               ? senderClub[0]?.clubImage
+  //               : "",
+  //           readStatus: false,
+  //           transferPlayerId: selectedPlayerInManagementObject?.id,
+  //         });
+
+  //         dispatch(
+  //           setSnackbarMessage(
+  //             `Transfer request sent to ${nameOfDestinatedClub}`
+  //           )
+  //         );
+  //         dispatch(setSnackbarTriggerCounter());
+  //       } else {
+  //         alert("The club adminstrative account hasnt been activated yet");
+  //       }
+  //     });
+  //     return () => {
+  //       alldata();
+  //     };
+  //   } catch (error) {
+  //     alert("error with sending notification retry");
+  //   }
+  // };
   const handleSendTransferRequest = async () => {
     try {
-      const AccountsWithRoleAsClubAndDesignatedClubName =
-        allUsersDatabase.filter((data) => {
-          return data.role === "Club" && data.club === nameOfDestinatedClub;
+      const uuid = v4();
+      const userRef = collection(db, `users_db`);
+
+      // Create a promise that resolves when onSnapshot is done
+      const onSnapshotPromise = new Promise((resolve) => {
+        const q = query(userRef, where("club", "==", nameOfDestinatedClub));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const items = [];
+          querySnapshot.forEach((doc) => {
+            items.push(doc.data());
+          });
+
+          items.forEach((item) => {
+            if (item.dateCreated !== "" && item.dateCreated !== null) {
+              const firestoreTimestamp = item.dateCreated;
+              const date = firestoreTimestamp.toDate();
+              const options = {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
+              };
+              const dateTimeFormat = new Intl.DateTimeFormat("en-US", options);
+              const dateString = dateTimeFormat.format(date);
+              item.dateCreated = dateString;
+            }
+          });
+
+          // Resolve the promise with the items array
+          // console.log("items")
+          // alert(items.length);
+          resolve(items);
+
+          unsubscribe(); // Unsubscribe from the snapshot after resolving
         });
+      });
 
-      console.log(
-        allUsersDatabase,
-        AccountsWithRoleAsClubAndDesignatedClubName,
-        "honey",
-        nameOfDestinatedClub
-      );
+      // Wait for onSnapshot to complete and get the items array
+      const items = await onSnapshotPromise;
 
-      if (AccountsWithRoleAsClubAndDesignatedClubName.length > 0) {
-        const userToSendNotificationRef = doc(
-          db,
-          `users_db`,
-          AccountsWithRoleAsClubAndDesignatedClubName[0].accountId
-        );
+      // alert(items.length);
+      console.log(items.length);
 
+      if (items.length > 0) {
         const playerObjectInjectionRef = doc(
           db,
           `players_database`,
           selectedPlayerInManagementObject?.id
+        );
+
+        const userToSendNotificationRef = doc(
+          db,
+          `users_db/${items[0].accountId}/Notifications`,
+          uuid
         );
 
         const senderClub = allClubsInDatabase.filter((data) => {
@@ -124,34 +260,54 @@ export default function TransferPlayerModal() {
           TransferStatus: "Transfer Listed",
         });
 
-        await updateDoc(userToSendNotificationRef, {
-          Notifications: arrayUnion({
-            dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-            senderAddress: userLoginDetailsObject.email,
-            senderId: userLoginDetailsObject.accountId,
-            type: "Transfer request",
-            message:
-              userLoginDetailsObject.role === "Club"
-                ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${firstName} ${surName} valid from ${startDate} to ${endDate}  `
-                : "",
-            senderProfileImage:
-              userLoginDetailsObject.role === "Club"
-                ? senderClub[0]?.clubImage
-                : "",
-            readStatus: false,
-            transferPlayerId: selectedPlayerInManagementObject?.id,
-          }),
+        await setDoc(userToSendNotificationRef, {
+          NotificationId: uuid,
+          transferComplete: "pending",
+          dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+          senderAddress: userLoginDetailsObject.email,
+          senderId: userLoginDetailsObject.accountId,
+          type: "Transfer request",
+          message:
+            userLoginDetailsObject.role === "Club"
+              ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${firstName} ${surName} valid from ${startDate} to ${endDate}  `
+              : "",
+          senderProfileImage:
+            userLoginDetailsObject.role === "Club"
+              ? senderClub[0]?.clubImage
+              : "",
+          readStatus: false,
+          transferPlayerId: selectedPlayerInManagementObject?.id,
         });
+
+        // UPDATING THE TRANSFERED PLAYER REALTIME IN REDUX .. to prevent  sender from sending transfer request to another club
+
+        const docRef = doc(
+          db,
+          "players_database",
+          selectedPlayerInManagementObject?.id
+        );
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          console.log("Document data:", docSnap.data());
+          dispatch(
+            setPlayerSelectedByClubOrScoutInPlayerManagement(docSnap.data())
+          );
+        } else {
+          // docSnap.data() will be undefined in this case
+          console.log("No such document!");
+        }
 
         dispatch(
           setSnackbarMessage(`Transfer request sent to ${nameOfDestinatedClub}`)
         );
         dispatch(setSnackbarTriggerCounter());
       } else {
-        alert("The club adminstrative account hasnt been activated yet");
+        alert("The club administrative account hasn't been activated yet");
       }
     } catch (error) {
-      alert("error with sending notification retry");
+      alert("Error with sending notification, please retry" + error);
+      console.error(error);
     }
   };
 

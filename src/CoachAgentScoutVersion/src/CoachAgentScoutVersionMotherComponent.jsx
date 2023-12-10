@@ -22,6 +22,7 @@ import { selectClubsInDatabase } from "../../statemanager/slices/ClubsInDatabase
 import SmallScreenCoachAgentClubMenuDrawer from "./components/Drawer/SmallScreenCoachAgentClubMenuDrawer";
 import { selectCurrentScreenSize } from "../../statemanager/slices/OtherComponentStatesSlice";
 import NotificationsMenu from "../../components/Menu/NotificationsMenu";
+import { setUserSavedProfiles } from "../../statemanager/slices/SavedProfileSlice";
 
 const CoachAgentScoutVersionMotherComponent = () => {
   const dispatch = useDispatch();
@@ -357,6 +358,7 @@ const CoachAgentScoutVersionMotherComponent = () => {
                         onClick={() => {
                           dispatch(setLoginStatus(false));
                           dispatch(setUserDetailsObject({}));
+                          dispatch(setUserSavedProfiles([]));
                         }}
                       >
                         <NavBarButton

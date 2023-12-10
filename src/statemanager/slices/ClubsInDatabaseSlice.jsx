@@ -10,6 +10,11 @@ export const ClubsInDatabaseSlice = createSlice({
           "https://upload.wikimedia.org/wikipedia/en/f/fd/Asante_Kotoko_SC_%28logo%29.png",
       },
       {
+        clubName: "Accra Heats of Oak",
+        clubImage:
+          "https://upload.wikimedia.org/wikipedia/en/0/01/Accra_hearts_of_oak_sc.png",
+      },
+      {
         clubName: "Accra Lions",
         clubImage:
           "https://upload.wikimedia.org/wikipedia/commons/e/e8/Accra_lions_logo.png",

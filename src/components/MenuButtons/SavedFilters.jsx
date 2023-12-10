@@ -3,11 +3,12 @@ import { useSelector } from "react-redux";
 import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserDataSlice";
 import moment from "moment";
 import { useState, useEffect } from "react";
+import { selectUserSavedProfiles } from "../../statemanager/slices/SavedProfileSlice";
 
 const SavedFilters = () => {
-  const loginUserDetails = useSelector(selectUserDetailsObject);
+  // const loginUserDetails = useSelector(selectUserDetailsObject);
 
-  const { savedProfile } = loginUserDetails;
+  const userSavedProfiles = useSelector(selectUserSavedProfiles);
 
   // Create a deep copy of savedProfile into the data array to fix problem of not being able to sort the data
   // const [data, setData] = useState([...savedProfile]);
@@ -38,7 +39,7 @@ const SavedFilters = () => {
     <SideBarAccordion
       categoryLabel="Saved Profiles"
       categoryIcon={"star"}
-      categoryOptionsList={savedProfile}
+      categoryOptionsList={userSavedProfiles}
     />
   );
 };

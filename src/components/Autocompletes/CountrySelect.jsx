@@ -6,11 +6,13 @@ export default function CountrySelect({
   selectLabel,
   styles,
   selectValue,
+  selectCountryCode,
   defaultValue,
 }) {
   const handleAutoSelect = (e, v) => {
     console.log(v.label);
     selectValue(v.label);
+    selectCountryCode(v.code);
   };
 
   return (

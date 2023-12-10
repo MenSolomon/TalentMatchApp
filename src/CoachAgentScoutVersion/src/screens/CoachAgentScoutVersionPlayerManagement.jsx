@@ -2,7 +2,7 @@ import { Avatar, Card, IconButton, Tooltip } from "@mui/material";
 import PlayerManagementTabs from "../components/Tabs/PlayerManagementTabs";
 import { selectPlayersInAgencyArray } from "../statemanager/slices/PlayersInAgencySlice";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Facebook, Instagram, Twitter } from "@mui/icons-material";
 import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
@@ -20,6 +20,7 @@ import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlic
 const CoachAgentScoutVersionPlayerManagement = () => {
   const { playerId } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userLoginObject = useSelector(selectUserDetailsObject);
   const currentPlayerInfoObject = useSelector(
     selectPlayerSelectedByClubOrScoutInPlayerManagement
@@ -37,6 +38,20 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     Nationality: "",
     Social_media: [],
   });
+
+  // Useeffect to redirect player to all players page if playerTo display's ID isnt included in playersInPossessionArray
+
+  useEffect(() => {
+    const checkPlayerInPossessionArray =
+      userLoginObject?.playersInPossession.filter((data) => {
+        return data.playerId === playerId;
+      });
+
+    if (checkPlayerInPossessionArray.length === 0) {
+      navigate("/multiStudio/players");
+    }
+  }, [playerId, userLoginObject]);
+
   // const history = useHistory();
 
   // const handleUsernameChange = (newUsername) => {

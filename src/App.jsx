@@ -279,9 +279,9 @@ const App = () => {
     };
   }, [dispatch]); // Include dispatch in the dependency array to avoid lint warnings
 
-  useEffect(() => {
-    alert(userLoginObject.accountId + "  from App JSZ");
-  }, [usersDatabase]);
+  // useEffect(() => {
+  //   alert(userLoginObject.accountId + "  from App JSZ");
+  // }, [usersDatabase]);
 
   return (
     <ThemeProvider theme={theme}>

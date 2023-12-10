@@ -15,6 +15,7 @@ import OtherComponentStatesReducer from "./slices/OtherComponentStatesSlice";
 import DatabaseReducer from "./slices/DatabaseSlice";
 import ClubsInDatabaseReducer from "./slices/ClubsInDatabaseSlice";
 import InternetActivitieReducer from "./slices/InternetActivitiesSlice";
+import NofiticationsReducer from "./slices/NofiticationsSlice";
 
 const persistConfig = {
   key: "root",
@@ -26,11 +27,12 @@ const persistConfig = {
     "FormStepper",
     "UserData",
     // "UserLoginData",
-    "SavedProfiles",
+    // "SavedProfiles",
     "OtherComponentStates",
     // "Database",
     // "ThemeProviderSlice",
     "TempDatabase",
+    "clubsInTalentMeetDatabase",
   ],
   // whitelist:
 };
@@ -49,6 +51,18 @@ const PlayersInAgencySlicePersistConfig = {
   ],
 };
 
+const SavedProfilesSlicePersistConfig = {
+  key: "SavedProfiles",
+  version: 1,
+  storage,
+  blacklist: [
+    "currentProfileFilterObject",
+    "currentProfile",
+    "previousProfile",
+  ],
+  whitelist: ["userSavedProfiles"],
+};
+
 const reducer = combineReducers({
   //   files: incomeReducer,
   CollapsePlayerCards: playerDetailsCardsCollapseReducer,
@@ -61,11 +75,15 @@ const reducer = combineReducers({
   UserData: UserDaterReducer,
   TempDatabase: TempDatabaseReducer,
   UserLoginData: LoginUserDataSlice,
-  SavedProfiles: SavedProfilesReducer,
+  SavedProfiles: persistReducer(
+    SavedProfilesSlicePersistConfig,
+    SavedProfilesReducer
+  ),
   OtherComponentStates: OtherComponentStatesReducer,
   Database: DatabaseReducer,
   clubsInTalentMeetDatabase: ClubsInDatabaseReducer,
   InternetActivities: InternetActivitieReducer,
+  Notifications: NofiticationsReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

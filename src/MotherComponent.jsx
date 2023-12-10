@@ -28,9 +28,14 @@ import { selectClubsInDatabase } from "./statemanager/slices/ClubsInDatabaseSlic
 import SmallScreenMenuDrawer from "./components/Drawer/SmallScreenMenuDrawer";
 import { selectCurrentScreenSize } from "./statemanager/slices/OtherComponentStatesSlice";
 import NotificationsMenu from "./components/Menu/NotificationsMenu";
+import {
+  selectUserSavedProfiles,
+  setUserSavedProfiles,
+} from "./statemanager/slices/SavedProfileSlice";
 
 const MotherComponent = () => {
   const LoginUserDetails = useSelector(selectUserDetailsObject);
+  const usersSavedProfile = useSelector(selectUserSavedProfiles);
   // const { savedProfile } = LoginUserDetails;
 
   const menuButtonsArray = [
@@ -313,8 +318,7 @@ const MotherComponent = () => {
       className="md:flex md:flex-col md:h-[112vh] md:w-[100vw] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw]"
       style={{
         visibility:
-          LoginUserDetails?.savedProfile &&
-          LoginUserDetails?.savedProfile?.length > 0
+          usersSavedProfile && usersSavedProfile.length > 0
             ? "visible"
             : "hidden",
         // display: "flex",
@@ -498,6 +502,7 @@ const MotherComponent = () => {
                         onClick={() => {
                           dispatch(setLoginStatus(false));
                           dispatch(setUserDetailsObject({}));
+                          dispatch(setUserSavedProfiles([]));
                         }}
                       >
                         <NavBarButton

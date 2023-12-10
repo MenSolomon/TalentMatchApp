@@ -18,6 +18,8 @@ import {
   arrayUnion,
   deleteField,
   doc,
+  getDoc,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../Firebase/Firebase";
@@ -27,6 +29,10 @@ import {
 } from "../../statemanager/slices/OtherComponentStatesSlice";
 import { selectPlayersDatabase } from "../../statemanager/slices/DatabaseSlice";
 import { selectClubsInDatabase } from "../../statemanager/slices/ClubsInDatabaseSlice";
+import { selectUserNotifications } from "../../statemanager/slices/NofiticationsSlice";
+import { v4 } from "uuid";
+import { faLessThanEqual } from "@fortawesome/free-solid-svg-icons";
+import { setPlayerSelectedByClubOrScoutInPlayerManagement } from "../../statemanager/slices/PlayersInAgencySlice";
 
 export default function NotificationsMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -42,49 +48,30 @@ export default function NotificationsMenu() {
   const dispatch = useDispatch();
 
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
-
+  const notificationsArray = useSelector(selectUserNotifications);
+  // const savedProfileSubCollectionRef = doc(
+  //   db,
+  //   `users_db/${accountId}/SavedProfiles`,
+  //   uuid
+  // );
   // const { accountId } = userLoginDetailsObject;
 
-  const handleUpdateReadStatus = async (dateSent, readStatus) => {
+  const handleUpdateReadStatus = async (
+    notificationId,
+    notificationReadStatus
+  ) => {
     // Let the notifications have an id (uuidV4) instead of using DateCreated as unique id
 
     // alert(dateSent + "in Work db" + userLoginDetailsObject.accountId);
-    const LoginUserObjectRef = doc(
+    const userNotificationObjectRef = doc(
       db,
-      `users_db/${userLoginDetailsObject.accountId}`
+      `users_db/${userLoginDetailsObject.accountId}/Notifications`,
+      notificationId
     );
 
-    // const readStatusUpdateArray = userLoginDetailsObject?.Notifications.map(
-
-    //   (data) => {
-    //     // alert(`${data.dateCreated},${dateCreated} == ${readStatus}`);
-    //     if (data.dateCreated === dateSent) {
-    //       return { ...data, readStatus: true };
-    //     }
-    //     // Leave other seasons unchanged
-    //     return data;
-    //   }
-    // );
-
-    // const updatedNotifications = Object.keys(notifications).map(key => {
-    //   const data = notifications[key];
-    //   if (data.dateCreated === dateSent) {
-    //     return { ...data, readStatus: true };
-    //   }
-    //   return data;
-    // });
-
-    alert("Trua" + userLoginDetailsObject?.accountId);
-    const readStatusUpdateArray = (
-      userLoginDetailsObject?.Notifications || []
-    ).map((data) =>
-      data.dateCreated === dateSent ? { ...data, readStatus: true } : data
-    );
-
-    console.log(readStatusUpdateArray, "axe");
-    if (readStatus === false) {
-      updateDoc(LoginUserObjectRef, {
-        Notifications: readStatusUpdateArray,
+    if (notificationReadStatus === false) {
+      updateDoc(userNotificationObjectRef, {
+        readStatus: true,
       });
 
       // alert("update Successful");
@@ -94,8 +81,8 @@ export default function NotificationsMenu() {
   };
 
   const sortedNotificationsArray =
-    userLoginDetailsObject?.Notifications &&
-    [...userLoginDetailsObject?.Notifications].slice().sort((a, b) => {
+    notificationsArray &&
+    [...notificationsArray].slice().sort((a, b) => {
       const dateA = moment(a.dateCreated, "YYYY-MM-DD HH:mm:ss");
       const dateB = moment(b.dateCreated, "YYYY-MM-DD HH:mm:ss");
 
@@ -148,7 +135,7 @@ export default function NotificationsMenu() {
             </div>
             {/* // Menu Items */}
             <div style={{ flex: ".85", overflowY: "scroll" }}>
-              {userLoginDetailsObject.Notifications === undefined ? (
+              {notificationsArray.length <= 0 ? (
                 <h5>No notifications yet </h5>
               ) : (
                 sortedNotificationsArray.map((data, index) => {
@@ -160,15 +147,17 @@ export default function NotificationsMenu() {
                     senderProfileImage,
                     readStatus,
                     transferPlayerId,
+                    NotificationId,
+                    transferComplete,
                   } = data;
 
                   return (
                     <MenuItem
                       key={index}
                       sx={{ height: "15.5vh" }}
-                      // onClick={() => {
-                      //   handleUpdateReadStatus(dateCreated, readStatus);
-                      // }}
+                      onClick={() => {
+                        handleUpdateReadStatus(NotificationId, readStatus);
+                      }}
                       // onClick={handleClose}
                     >
                       <MenuItemRow
@@ -180,6 +169,8 @@ export default function NotificationsMenu() {
                         notificationMessage={message}
                         dateSent={dateCreated}
                         senderId={data.senderId}
+                        notificationId={NotificationId}
+                        transferCompleteStatus={transferComplete}
                       />
                     </MenuItem>
                   );
@@ -202,6 +193,8 @@ const MenuItemRow = ({
   senderAddress,
   senderId,
   transferPlayerId,
+  notificationId,
+  transferCompleteStatus,
 }) => {
   // const handleAcceptPlayerTransfer =async({dateCreated,userId,playerId,readStatus})=>{
   //   const playerObjectRef = doc(db, `players_database/${playerId}`);
@@ -229,20 +222,30 @@ const MenuItemRow = ({
     // Delelte playerId from sendrs PlayersInPossession Array
     // Add playerId to loggedIn Club's PlayersInpossession Array
 
+    // const savedProfileSubCollectionRef = doc(
+    //   db,
+    //   `users_db/${accountId}/SavedProfiles`,
+    //   uuid
+    // );
+
     try {
+      const uuid = v4();
       const playerObjetRef = doc(db, `players_database/${transferPlayerId}`);
       const LoginUserObjectRef = doc(
         db,
         `users_db/${userLoginDetailsObject.accountId}`
       );
-      const senderObjectRef = doc(db, `users_db/${senderId}`);
-
-      alert(senderId);
-      await updateDoc(playerObjetRef, {
-        clubName: userLoginDetailsObject?.club,
-        jerseyNumber: "",
-        TransferStatus: "",
-      });
+      const senderObjectRef = doc(db, `users_db`, senderId);
+      const senderNotificationObjectRef = doc(
+        db,
+        `users_db/${senderId}/Notifications`,
+        uuid
+      );
+      const userOldNotificationMessageObjectRef = doc(
+        db,
+        `users_db/${userLoginDetailsObject.accountId}/Notifications`,
+        notificationId
+      );
 
       await updateDoc(LoginUserObjectRef, {
         playersInPossession: arrayUnion({ playerId: transferPlayerId }),
@@ -250,6 +253,12 @@ const MenuItemRow = ({
 
       await updateDoc(senderObjectRef, {
         playersInPossession: arrayRemove({ playerId: transferPlayerId }),
+      });
+
+      await updateDoc(playerObjetRef, {
+        clubName: userLoginDetailsObject?.club,
+        jerseyNumber: "",
+        TransferStatus: "",
       });
 
       const playerMatchObject = allPlayersDatabase.find((obj) => {
@@ -260,29 +269,34 @@ const MenuItemRow = ({
         return data.clubName === userLoginDetailsObject.club;
       });
 
-      await updateDoc(senderObjectRef, {
-        Notifications: arrayUnion({
-          dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-          senderAddress: userLoginDetailsObject.email,
-          senderId: userLoginDetailsObject.accountId,
-          type: "Transfer request",
-          message:
-            userLoginDetailsObject.role === "Club"
-              ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${playerMatchObject?.firstName} ${playerMatchObject?.surName}  accepted`
-              : "",
-          senderProfileImage:
-            userLoginDetailsObject.role === "Club"
-              ? senderClub[0]?.clubImage
-              : "",
-          readStatus: false,
-          transferPlayerId: transferPlayerId,
-        }),
+      // update  users's notification as transfer  successful or accepted
+
+      await updateDoc(userOldNotificationMessageObjectRef, {
+        transferComplete: "accepted",
+      });
+
+      await setDoc(senderNotificationObjectRef, {
+        NotificationId: uuid,
+        dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+        senderAddress: userLoginDetailsObject.email,
+        senderId: userLoginDetailsObject.accountId,
+        type: "Transfer request",
+        message:
+          userLoginDetailsObject.role === "Club"
+            ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${playerMatchObject?.firstName} ${playerMatchObject?.surName}  accepted`
+            : "",
+        senderProfileImage:
+          userLoginDetailsObject.role === "Club"
+            ? senderClub[0]?.clubImage
+            : "",
+        readStatus: false,
+        transferPlayerId: transferPlayerId,
       });
 
       // THe sender needs to be alerted that the transfer is complete
       // /.////////
 
-      alert("updated");
+      // alert("updated");
       dispatch(setSnackbarMessage(`Player's clubName update successfully`));
       dispatch(setSnackbarTriggerCounterToZero());
 
@@ -298,7 +312,79 @@ const MenuItemRow = ({
       //   }
       // );
     } catch (error) {
+      console.error(error, "NotifError");
       alert("Error", error.message);
+    }
+  };
+
+  const handleDeclineClick = async () => {
+    try {
+      const uuid = v4();
+      const playerObjetRef = doc(db, `players_database/${transferPlayerId}`);
+
+      const senderNotificationObjectRef = doc(
+        db,
+        `users_db/${senderId}/Notifications`,
+        uuid
+      );
+
+      const playerMatchObject = allPlayersDatabase.find((obj) => {
+        return obj.id === transferPlayerId;
+      });
+
+      const senderClub = allClubsInDatabase.filter((data) => {
+        return data.clubName === userLoginDetailsObject.club;
+      });
+
+      const userOldNotificationMessageObjectRef = doc(
+        db,
+        `users_db/${userLoginDetailsObject.accountId}/Notifications`,
+        notificationId
+      );
+
+      await updateDoc(userOldNotificationMessageObjectRef, {
+        transferComplete: "declined",
+      });
+
+      await updateDoc(playerObjetRef, {
+        // TransferStatus: "Currently renewed contract",
+        TransferStatus: "",
+      });
+
+      await setDoc(senderNotificationObjectRef, {
+        NotificationId: uuid,
+        dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+        senderAddress: userLoginDetailsObject.email,
+        senderId: userLoginDetailsObject.accountId,
+        type: "Transfer request",
+        message:
+          userLoginDetailsObject.role === "Club"
+            ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${playerMatchObject?.firstName} ${playerMatchObject?.surName}  declined`
+            : "",
+        senderProfileImage:
+          userLoginDetailsObject.role === "Club"
+            ? senderClub[0]?.clubImage
+            : "",
+        readStatus: false,
+        transferPlayerId: transferPlayerId,
+      });
+
+      // UPDATING THE TRANSFERED PLAYER REALTIME IN REDUX
+
+      const docRef = doc(db, "players_database", transferPlayerId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+        dispatch(
+          setPlayerSelectedByClubOrScoutInPlayerManagement(docSnap.data())
+        );
+      } else {
+        // docSnap.data() will be undefined in this case
+        console.log("No such document!");
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -366,24 +452,27 @@ const MenuItemRow = ({
           >
             {relativeDate} &nbsp;
             {type === "Transfer request" &&
-              !notificationMessage.includes("accepted") && (
-                <>
-                  <BasicButton
-                    onClick={handleAcceptClick}
-                    innerText="Accept"
-                    style={{
-                      maxHeight: "5vh",
-                      marginLeft: "1vw",
-                      marginRight: ".4vw",
-                    }}
-                  />
+            transferCompleteStatus === "pending" ? (
+              <>
+                <BasicButton
+                  onClick={handleAcceptClick}
+                  innerText="Accept"
+                  style={{
+                    maxHeight: "5vh",
+                    marginLeft: "1vw",
+                    marginRight: ".4vw",
+                  }}
+                />
 
-                  <BasicButton
-                    innerText="Decline"
-                    style={{ maxHeight: "5vh" }}
-                  />
-                </>
-              )}
+                <BasicButton
+                  innerText="Decline"
+                  onClick={handleDeclineClick}
+                  style={{ maxHeight: "5vh" }}
+                />
+              </>
+            ) : (
+              <b> {transferCompleteStatus}</b>
+            )}
           </div>
         </div>
       </div>

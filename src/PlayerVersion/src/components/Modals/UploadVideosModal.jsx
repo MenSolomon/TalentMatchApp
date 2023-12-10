@@ -204,7 +204,7 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
             uploadedBy:
               role === "Club"
                 ? userDetailsObject.club
-                : `${userDetailsObject.firstName}${surname}`,
+                : `${userDetailsObject.accountId}`,
           }),
         });
 
@@ -215,11 +215,15 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
         handleClose();
         // turnMotherModalAfterSubmitted(false);
 
-        dispatch(
-          setSnackbarMessage(
-            `"Video uploaded to ${firstName} ${surName}'s gallery successfuly"`
-          )
-        );
+        role === "Player"
+          ? dispatch(
+              setSnackbarMessage(`"Video uploaded to your gallery successfuly"`)
+            )
+          : dispatch(
+              setSnackbarMessage(
+                `"Video uploaded to ${firstName} ${surName}'s gallery successfuly"`
+              )
+            );
         dispatch(setSnackbarTriggerCounter());
       } catch (error) {
         console.error(error);

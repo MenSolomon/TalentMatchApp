@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserDataSlice";
 import BasicButton from "../Buttons/BasicButton";
 import CreateProfileModal from "./CreateProfileModal";
+import { selectUserSavedProfiles } from "../../statemanager/slices/SavedProfileSlice";
 
 const style = {
   position: "absolute",
@@ -31,6 +32,8 @@ const style = {
 
 export default function WelcomeMessageModal() {
   const LoginUserDetails = useSelector(selectUserDetailsObject);
+  const userSavedProfiles = useSelector(selectUserSavedProfiles);
+
   // const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
 
@@ -38,14 +41,14 @@ export default function WelcomeMessageModal() {
 
   // const { savedProfile } = LoginUserDetails;
   const [open, setOpen] = React.useState(
-    LoginUserDetails?.savedProfile.length > 0 ? false : true
+    userSavedProfiles.length > 0 ? false : true
   );
 
   React.useEffect(() => {
-    if (LoginUserDetails?.savedProfile.length > 0) {
+    if (userSavedProfiles.length > 0) {
       setOpen(false);
     }
-  }, [LoginUserDetails]);
+  }, [userSavedProfiles]);
 
   return (
     <div>

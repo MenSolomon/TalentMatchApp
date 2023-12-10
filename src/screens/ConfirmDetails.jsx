@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { selectRoleSelected } from "../statemanager/slices/SignupStepperSlice";
+import {
+  selectRoleSelected,
+  setCompletedSteps,
+  setRoleSelected,
+} from "../statemanager/slices/SignupStepperSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Card, Checkbox, FormControlLabel } from "@mui/material";
 import PaymentModeSelect from "../components/Selects/PaymentModeSelect";
@@ -14,10 +18,22 @@ import {
   selectTempUsersDatabase,
   setTempUsersDatabase,
 } from "../statemanager/slices/TempDatabaseSlice";
-import { serverTimestamp, collection, doc, setDoc } from "firebase/firestore";
+import {
+  serverTimestamp,
+  collection,
+  doc,
+  setDoc,
+  onSnapshot,
+  where,
+  query,
+  getDocs,
+} from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../Firebase/Firebase";
-import { selectUsersDatabase } from "../statemanager/slices/DatabaseSlice";
+import {
+  selectPlayersDatabase,
+  selectUsersDatabase,
+} from "../statemanager/slices/DatabaseSlice";
 import {
   setWarningAlertModalCounter,
   setWarningAlertModalMessage,
@@ -31,6 +47,7 @@ const ConfirmDetails = () => {
   const roleSelected = useSelector(selectRoleSelected);
   const userData = useSelector(selectUserSignUpData);
   const allUsers = useSelector(selectUsersDatabase);
+  const allPlayersInDatabase = useSelector(selectPlayersDatabase);
   const today = moment();
   //
   const [agreement, setAgreement] = useState(false);
@@ -63,107 +80,528 @@ const ConfirmDetails = () => {
     dispatch(setWarningAlertModalCounter());
   };
 
-  const handleStartFreeTrial = () => {
-    const uuid = uuidv4();
-    if (roleSelected === "") {
-      triggerWarningAlertModal(
-        "Please complete step 1 (Select your role before starting trial)"
-      );
-    } else {
-      if (userData.subscriptionPackage === "") {
+  // ... (existing code above)
+
+  const handleStartFreeTrial = async () => {
+    try {
+      const uuid = uuidv4();
+      if (roleSelected === "") {
+        triggerWarningAlertModal(
+          "Please complete step 1 (Select your role before starting trial)"
+        );
+      } else if (userData.subscriptionPackage === "") {
         triggerWarningAlertModal(
           "Please complete step 2 (Choose a package before starting trial)"
         );
+      } else if (userData.firstname === "") {
+        triggerWarningAlertModal(
+          "Please complete step 3 (Create an account before starting trial)"
+        );
+      } else if (userData.paymentType === "" || !userData.paymentType) {
+        triggerWarningAlertModal("Please select a payment type");
+      } else if (agreement === false || privacy === false) {
+        triggerWarningAlertModal(
+          "Please read terms and conditions as well as our privacy policy and tick the boxes to agree"
+        );
       } else {
-        if (userData.firstname === "") {
-          triggerWarningAlertModal(
-            "Please complete step 3 (Create account before starting trial)"
-          );
-        } else {
-          if (userData.paymentType === "" || !userData.paymentType) {
-            triggerWarningAlertModal("Please select a payment type");
-          } else {
-            if (agreement === false || privacy === false) {
-              // alert(
-              //   "please read terms and condition as well as our privacy policy and tick the boxes to agree"
-              // );
+        const userRef = collection(db, `users_db`);
+        const q = query(userRef, where("email", "==", email));
+        const docSnap = await getDocs(q);
 
+        // Have to write a code to inject data ointo database when users_db is empty however db wont be empty ever
+        // if (docSnap.size > 0) {
+        const items = [];
+        docSnap.forEach((doc) => {
+          items.push(doc.data());
+        });
+
+        items.forEach((item) => {
+          if (item.dateCreated !== "" && item.dateCreated !== null) {
+            const firestoreTimestamp = item.dateCreated;
+            const date = firestoreTimestamp.toDate();
+            const options = {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
+            };
+            const dateTimeFormat = new Intl.DateTimeFormat("en-US", options);
+            const dateString = dateTimeFormat.format(date);
+            item.dateCreated = dateString;
+          }
+        });
+
+        if (items.length > 0) {
+          triggerWarningAlertModal("Account Exists");
+        } else {
+          if (roleSelected === "Player") {
+            // Existing player code
+
+            const ExistingPlayerProfile = allPlayersInDatabase.filter(
+              (data) => {
+                const {
+                  firstName,
+                  surName,
+                  Nationality,
+                  position,
+                  date_of_birth,
+                  preferredFoot,
+                } = data;
+
+                // Define the variables to compare
+                const variablesToCompare = [
+                  firstName.toLowerCase() === userData?.firstName.toLowerCase(),
+                  surName.toLowerCase() === userData?.surname.toLowerCase(),
+                  Nationality.toLowerCase() ===
+                    userData?.Nationality.toLowerCase(),
+                  position.toLowerCase() ===
+                    userData?.PlayerPosition.toLowerCase(),
+                  date_of_birth === userData?.DateOfBirth,
+                  data.height === userData?.height,
+                  preferredFoot === userData?.preferredFoot,
+                  // Add more variables to compare as needed
+                ];
+
+                // Count the number of matches
+                const numberOfMatches = variablesToCompare.filter(
+                  (match) => match
+                ).length;
+
+                // Check if at least 4 variables match
+                return numberOfMatches >= 4;
+              }
+            );
+
+            if (ExistingPlayerProfile.length > 0) {
               triggerWarningAlertModal(
-                "please read terms and condition as well as our privacy policy and tick the boxes to agree"
+                "Oops, our system detected a possible existing player in our database. Please recheck player details. If it happens that he doesn't exist, you can send an account verification request, and our support team will verify and be with you shortly. Thank you."
               );
             } else {
-              // CHECKING IF THE USER ALREADY EXISTS
-              if (allUsers.length > 0) {
-                const userExistence = allUsers.filter((data) => {
-                  return data.email === userData.email;
-                });
+              var givenDate = moment(userData?.DateOfBirth, "MMMM D, YYYY");
+              var currentDate = moment();
+              var hasBirthdayOccurred = currentDate.isSameOrAfter(
+                moment(givenDate).year(currentDate.year())
+              );
+              var ageDifference =
+                currentDate.year() -
+                givenDate.year() -
+                (hasBirthdayOccurred ? 0 : 1);
+              var currentAge = Math.round(ageDifference);
 
-                console.log(allUsers, "Existence", userExistence);
-
-                if (userExistence.length > 0) {
-                  triggerWarningAlertModal("Account Exists");
-                } else {
-                  // THis is the part where you finally navigate to login page and accept data
-                  // alert("sending data and setting up account for freetrial");
-
-                  dispatch(
-                    setTempUsersDatabase([
-                      ...allUsers,
-                      {
-                        ...userData,
-                        role: roleSelected,
-                        savedProfile: [],
-                        accountId: uuid,
-
-                        // dateCreated: serverTimestamp(),
-                      },
-                    ])
-                  );
-
-                  // db function
-                  setDoc(doc(db, `users_db`, uuid), {
-                    ...userData,
-                    role: roleSelected,
-                    savedProfile: [],
-                    dateCreated: serverTimestamp(),
-                    accountId: uuid,
-                  });
-                  //
-                  // dispatch(setLoginStatus(true));
-                  // dispatch(setUserDetailsObject(userData));
-                  // navigate("/");
-
-                  navigate("/login");
-                }
-              } else {
-                // THIS IS THE PART WHERE THAT HANDLES AN EMPTY DATABASE WHICH WILL BE USED PREFEREABLY ONLY ONCE
-                // alert(
-                //   "sending first user into our database and setting up account for freetrial"
-                // );
-                dispatch(
-                  setTempUsersDatabase([
-                    {
-                      ...userData,
-                      role: roleSelected,
-                      savedProfile: [],
-                      accountId: uuid,
+              // Set the document in the database
+              await setDoc(doc(db, `players_database`, uuid), {
+                id: uuid,
+                Account_creator_id: uuid,
+                player_profile_image: "",
+                firstName: userData?.firstName,
+                surName: userData?.surname,
+                CountryCode: userData?.CountryCode,
+                Nationality: userData?.Nationality,
+                dateCreated: serverTimestamp(),
+                Age: currentAge,
+                position: userData?.PlayerPosition,
+                date_of_birth: userData?.DateOfBirth,
+                jerseyNumber: "",
+                clubName: "Free agent",
+                preferredFoot: userData?.preferredFoot,
+                height: userData?.height,
+                marketValue: "",
+                contractStartDate: "",
+                contractEndDate: "",
+                Social_media: [
+                  {
+                    Facebook: `https://web.facebook.com/`,
+                    Instagram: `https://www.instagram.com//`,
+                  },
+                ],
+                current_health: "Match Fit",
+                videos: [],
+                Achievements: [],
+                Market_Value_History: [],
+                Club_History: [],
+                Statistics: [
+                  {
+                    Season: "Overall",
+                    General: {
+                      Games_Played: 0,
+                      Minutes_Played: 0,
+                      Starts: 0,
+                      Subbed_off: 0,
                     },
-                  ])
-                );
-
-                setDoc(doc(db, `users_db`, uuid), {
-                  ...userData,
-                  role: roleSelected,
-                  savedProfile: [],
-                  dateCreated: serverTimestamp(),
-                  accountId: uuid,
-                });
-                navigate("/login");
-              }
+                    Defence: {
+                      Clearance: 0,
+                      Tackles: 0,
+                      Duels: 0,
+                      Aeriel_duels: 0,
+                      Blocks: 0,
+                      Interceptions: 0,
+                    },
+                    Attack: {
+                      Total_shots: 0,
+                      Shots_on_target: 0,
+                      Goals_Scored: 0,
+                      Conversion_rate: 0,
+                      Minutes_per_goal: 0,
+                      Header_goals: 0,
+                      Left_goals: 0,
+                      Right_goals: 0,
+                      Other_goals: 0,
+                      Goals_outside_the_box: 0,
+                      Goals_inside_the_box: 0,
+                      Goals_from_freekicks: 0,
+                    },
+                    Discipline: {
+                      Fouls_conceeded: 0,
+                      Fouls_won: 0,
+                      Yellow_cards: 0,
+                      Red_cards: 0,
+                    },
+                    Distribution: {
+                      Assists: 0,
+                      Pass_success_rate: 0,
+                      Long_passes_rate: 0,
+                      Opponent_half_pass_accuracy: 0,
+                      Own_half_pass_accuracy: 0,
+                      Pass_direction_forward_percent: 0,
+                      Pass_direction_backward_percent: 0,
+                      Pass_direction_left_percent: 0,
+                      Pass_direction_right_percent: 0,
+                      Total_passes: 0,
+                      Successful_passes: 0,
+                      Key_passes: 0,
+                      Total_passes_per_90_mins: 0,
+                    },
+                  },
+                  {
+                    Season: "23/24",
+                    General: {
+                      Games_Played: 0,
+                      Minutes_Played: 0,
+                      Starts: 0,
+                      Subbed_off: 0,
+                    },
+                    Defence: {
+                      Clearance: 0,
+                      Tackles: 0,
+                      Duels: 0,
+                      Aeriel_duels: 0,
+                      Blocks: 0,
+                      Interceptions: 0,
+                    },
+                    Attack: {
+                      Total_shots: 0,
+                      Shots_on_target: 0,
+                      Goals_Scored: 0,
+                      Conversion_rate: 0,
+                      Minutes_per_goal: 0,
+                      Header_goals: 0,
+                      Left_goals: 0,
+                      Right_goals: 0,
+                      Other_goals: 0,
+                      Goals_outside_the_box: 0,
+                      Goals_inside_the_box: 0,
+                      Goals_from_freekicks: 0,
+                    },
+                    Discipline: {
+                      Fouls_conceeded: 0,
+                      Fouls_won: 0,
+                      Yellow_cards: 0,
+                      Red_cards: 0,
+                    },
+                    Distribution: {
+                      Assists: 0,
+                      Pass_success_rate: 0,
+                      Long_passes_rate: 0,
+                      Opponent_half_pass_accuracy: 0,
+                      Own_half_pass_accuracy: 0,
+                      Pass_direction_forward_percent: 0,
+                      Pass_direction_backward_percent: 0,
+                      Pass_direction_left_percent: 0,
+                      Pass_direction_right_percent: 0,
+                      Total_passes: 0,
+                      Successful_passes: 0,
+                      Key_passes: 0,
+                      Total_passes_per_90_mins: 0,
+                    },
+                  },
+                  {
+                    Season: "22/23",
+                    General: {
+                      Games_Played: 0,
+                      Minutes_Played: 0,
+                      Starts: 0,
+                      Subbed_off: 0,
+                    },
+                    Defence: {
+                      Clearance: 0,
+                      Tackles: 0,
+                      Duels: 0,
+                      Aeriel_duels: 0,
+                      Blocks: 0,
+                      Interceptions: 0,
+                    },
+                    Attack: {
+                      Total_shots: 0,
+                      Shots_on_target: 0,
+                      Goals_Scored: 0,
+                      Conversion_rate: 0,
+                      Minutes_per_goal: 0,
+                      Header_goals: 0,
+                      Left_goals: 0,
+                      Right_goals: 0,
+                      Other_goals: 0,
+                      Goals_outside_the_box: 0,
+                      Goals_inside_the_box: 0,
+                      Goals_from_freekicks: 0,
+                    },
+                    Discipline: {
+                      Fouls_conceeded: 0,
+                      Fouls_won: 0,
+                      Yellow_cards: 0,
+                      Red_cards: 0,
+                    },
+                    Distribution: {
+                      Assists: 0,
+                      Pass_success_rate: 0,
+                      Long_passes_rate: 0,
+                      Opponent_half_pass_accuracy: 0,
+                      Own_half_pass_accuracy: 0,
+                      Pass_direction_forward_percent: 0,
+                      Pass_direction_backward_percent: 0,
+                      Pass_direction_left_percent: 0,
+                      Pass_direction_right_percent: 0,
+                      Total_passes: 0,
+                      Successful_passes: 0,
+                      Key_passes: 0,
+                      Total_passes_per_90_mins: 0,
+                    },
+                  },
+                  {
+                    Season: "21/22",
+                    General: {
+                      Games_Played: 0,
+                      Minutes_Played: 0,
+                      Starts: 0,
+                      Subbed_off: 0,
+                    },
+                    Defence: {
+                      Clearance: 0,
+                      Tackles: 0,
+                      Duels: 0,
+                      Aeriel_duels: 0,
+                      Blocks: 0,
+                      Interceptions: 0,
+                    },
+                    Attack: {
+                      Total_shots: 0,
+                      Shots_on_target: 0,
+                      Goals_Scored: 0,
+                      Conversion_rate: 0,
+                      Minutes_per_goal: 0,
+                      Header_goals: 0,
+                      Left_goals: 0,
+                      Right_goals: 0,
+                      Other_goals: 0,
+                      Goals_outside_the_box: 0,
+                      Goals_inside_the_box: 0,
+                      Goals_from_freekicks: 0,
+                    },
+                    Discipline: {
+                      Fouls_conceeded: 0,
+                      Fouls_won: 0,
+                      Yellow_cards: 0,
+                      Red_cards: 0,
+                    },
+                    Distribution: {
+                      Assists: 0,
+                      Pass_success_rate: 0,
+                      Long_passes_rate: 0,
+                      Opponent_half_pass_accuracy: 0,
+                      Own_half_pass_accuracy: 0,
+                      Pass_direction_forward_percent: 0,
+                      Pass_direction_backward_percent: 0,
+                      Pass_direction_left_percent: 0,
+                      Pass_direction_right_percent: 0,
+                      Total_passes: 0,
+                      Successful_passes: 0,
+                      Key_passes: 0,
+                      Total_passes_per_90_mins: 0,
+                    },
+                  },
+                  {
+                    Season: "20/21",
+                    General: {
+                      Games_Played: 0,
+                      Minutes_Played: 0,
+                      Starts: 0,
+                      Subbed_off: 0,
+                    },
+                    Defence: {
+                      Clearance: 0,
+                      Tackles: 0,
+                      Duels: 0,
+                      Aeriel_duels: 0,
+                      Blocks: 0,
+                      Interceptions: 0,
+                    },
+                    Attack: {
+                      Total_shots: 0,
+                      Shots_on_target: 0,
+                      Goals_Scored: 0,
+                      Conversion_rate: 0,
+                      Minutes_per_goal: 0,
+                      Header_goals: 0,
+                      Left_goals: 0,
+                      Right_goals: 0,
+                      Other_goals: 0,
+                      Goals_outside_the_box: 0,
+                      Goals_inside_the_box: 0,
+                      Goals_from_freekicks: 0,
+                    },
+                    Discipline: {
+                      Fouls_conceeded: 0,
+                      Fouls_won: 0,
+                      Yellow_cards: 0,
+                      Red_cards: 0,
+                    },
+                    Distribution: {
+                      Assists: 0,
+                      Pass_success_rate: 0,
+                      Long_passes_rate: 0,
+                      Opponent_half_pass_accuracy: 0,
+                      Own_half_pass_accuracy: 0,
+                      Pass_direction_forward_percent: 0,
+                      Pass_direction_backward_percent: 0,
+                      Pass_direction_left_percent: 0,
+                      Pass_direction_right_percent: 0,
+                      Total_passes: 0,
+                      Successful_passes: 0,
+                      Key_passes: 0,
+                      Total_passes_per_90_mins: 0,
+                    },
+                  },
+                  {
+                    Season: "19/20",
+                    General: {
+                      Games_Played: 0,
+                      Minutes_Played: 0,
+                      Starts: 0,
+                      Subbed_off: 0,
+                    },
+                    Defence: {
+                      Clearance: 0,
+                      Tackles: 0,
+                      Duels: 0,
+                      Aeriel_duels: 0,
+                      Blocks: 0,
+                      Interceptions: 0,
+                    },
+                    Attack: {
+                      Total_shots: 0,
+                      Shots_on_target: 0,
+                      Goals_Scored: 0,
+                      Conversion_rate: 0,
+                      Minutes_per_goal: 0,
+                      Header_goals: 0,
+                      Left_goals: 0,
+                      Right_goals: 0,
+                      Other_goals: 0,
+                      Goals_outside_the_box: 0,
+                      Goals_inside_the_box: 0,
+                      Goals_from_freekicks: 0,
+                    },
+                    Discipline: {
+                      Fouls_conceeded: 0,
+                      Fouls_won: 0,
+                      Yellow_cards: 0,
+                      Red_cards: 0,
+                    },
+                    Distribution: {
+                      Assists: 0,
+                      Pass_success_rate: 0,
+                      Long_passes_rate: 0,
+                      Opponent_half_pass_accuracy: 0,
+                      Own_half_pass_accuracy: 0,
+                      Pass_direction_forward_percent: 0,
+                      Pass_direction_backward_percent: 0,
+                      Pass_direction_left_percent: 0,
+                      Pass_direction_right_percent: 0,
+                      Total_passes: 0,
+                      Successful_passes: 0,
+                      Key_passes: 0,
+                      Total_passes_per_90_mins: 0,
+                    },
+                  },
+                ],
+              });
+              // alert("pdb");
+              await setDoc(doc(db, `users_db`, uuid), {
+                ...userData,
+                role: roleSelected,
+                dateCreated: serverTimestamp(),
+                accountId: uuid,
+              });
+              await navigate("/login");
+              dispatch(setCompletedSteps({}));
+              dispatch(setRoleSelected(""));
+              dispatch(
+                setUserSignUpData({
+                  firstname: "",
+                  surname: "",
+                  DateOfBirth: "",
+                  organization: "",
+                  phoneNumber: "",
+                  email: "",
+                  Nationality: "",
+                  DOB: "",
+                  password: "",
+                  subscriptionPackage: "",
+                  paymentType: "",
+                  paymentDetails: {},
+                })
+              );
             }
+          } else {
+            setDoc(doc(db, `users_db`, uuid), {
+              ...userData,
+              role: roleSelected,
+              dateCreated: serverTimestamp(),
+              accountId: uuid,
+            });
+            alert("Other Accs");
+            await navigate("/login");
+
+            dispatch(setCompletedSteps({}));
+            dispatch(setRoleSelected(""));
+            dispatch(
+              setUserSignUpData({
+                firstname: "",
+                surname: "",
+                DateOfBirth: "",
+                organization: "",
+                phoneNumber: "",
+                email: "",
+                Nationality: "",
+                DOB: "",
+                password: "",
+                subscriptionPackage: "",
+                paymentType: "",
+                paymentDetails: {},
+              })
+            );
           }
         }
+        // } else {
+        //  // Cde to inject data for the first time
+
+        // }
       }
+    } catch (error) {
+      console.error("Error fetching document:", error);
+      alert("Error in createing player database");
+      // Handle the error as needed
     }
   };
 
@@ -292,48 +730,106 @@ const ConfirmDetails = () => {
 
             {/* User FORM */}
             <div>
-              <ul
-                style={{
-                  fontSize: ".9em",
-                  listStyleType: "disc",
-                  color: "#9FA4B1",
-                  fontWeight: "bolder",
-                }}
-              >
-                <li>
-                  First name:{" "}
-                  <span style={{ color: "black" }}> {firstName} </span>{" "}
-                </li>
-                <li>
-                  Surname: <span style={{ color: "black" }}> {surname} </span>{" "}
-                </li>
-                <li>
-                  Date of birth:{" "}
-                  <span style={{ color: "black" }}> {DateOfBirth} </span>{" "}
-                </li>
-                <li>
-                  Email: <span style={{ color: "black" }}> {email} </span>{" "}
-                </li>
-                <li>
-                  Phone number:
-                  <span style={{ color: "black" }}> {phoneNumber}</span>{" "}
-                </li>
-                <li>
-                  Nationality:{" "}
-                  <span style={{ color: "black" }}> {Nationality} </span>{" "}
-                </li>
-                <li>
-                  {roleSelected === "Player" || roleSelected === "Club"
-                    ? "Club Name"
-                    : "Organisation"}
-                  <span style={{ color: "black" }}>
-                    {" "}
+              {roleSelected === "Player" ? (
+                <ul
+                  style={{
+                    fontSize: ".9em",
+                    listStyleType: "disc",
+                    color: "#9FA4B1",
+                    fontWeight: "bolder",
+                  }}
+                >
+                  <li>
+                    First name:{" "}
+                    <span style={{ color: "black" }}> {firstName} </span>{" "}
+                  </li>
+                  <li>
+                    Surname: <span style={{ color: "black" }}> {surname} </span>{" "}
+                  </li>
+                  <li>
+                    Date of birth:{" "}
+                    <span style={{ color: "black" }}> {DateOfBirth} </span>{" "}
+                  </li>
+                  <li>
+                    Email: <span style={{ color: "black" }}> {email} </span>{" "}
+                  </li>
+                  <li>
+                    Phone number:
+                    <span style={{ color: "black" }}> {phoneNumber}</span>{" "}
+                  </li>
+                  <li>
+                    Nationality:{" "}
+                    <span style={{ color: "black" }}>
+                      {" "}
+                      {Nationality} {userData?.CountryCode}{" "}
+                    </span>{" "}
+                  </li>
+
+                  <li>
+                    Position:
+                    <span style={{ color: "black" }}>
+                      {userData?.PlayerPosition}
+                    </span>{" "}
+                  </li>
+                  <li>
+                    Preferred foot:{" "}
+                    <span style={{ color: "black" }}>
+                      {" "}
+                      {userData?.preferredFoot}{" "}
+                    </span>{" "}
+                  </li>
+                  <li>
+                    Height:{" "}
+                    <span style={{ color: "black" }}>
+                      {" "}
+                      {userData?.height}m{" "}
+                    </span>{" "}
+                  </li>
+                </ul>
+              ) : (
+                <ul
+                  style={{
+                    fontSize: ".9em",
+                    listStyleType: "disc",
+                    color: "#9FA4B1",
+                    fontWeight: "bolder",
+                  }}
+                >
+                  <li>
+                    First name:{" "}
+                    <span style={{ color: "black" }}> {firstName} </span>{" "}
+                  </li>
+                  <li>
+                    Surname: <span style={{ color: "black" }}> {surname} </span>{" "}
+                  </li>
+                  <li>
+                    Date of birth:{" "}
+                    <span style={{ color: "black" }}> {DateOfBirth} </span>{" "}
+                  </li>
+                  <li>
+                    Email: <span style={{ color: "black" }}> {email} </span>{" "}
+                  </li>
+                  <li>
+                    Phone number:
+                    <span style={{ color: "black" }}> {phoneNumber}</span>{" "}
+                  </li>
+                  <li>
+                    Nationality:{" "}
+                    <span style={{ color: "black" }}> {Nationality} </span>{" "}
+                  </li>
+                  <li>
                     {roleSelected === "Player" || roleSelected === "Club"
-                      ? userData?.club
-                      : userData?.organization}{" "}
-                  </span>{" "}
-                </li>
-              </ul>
+                      ? "Club Name"
+                      : "Organisation"}
+                    <span style={{ color: "black" }}>
+                      {" "}
+                      {roleSelected === "Player" || roleSelected === "Club"
+                        ? userData?.club
+                        : userData?.organization}{" "}
+                    </span>{" "}
+                  </li>
+                </ul>
+              )}
             </div>
           </div>
 

@@ -32,6 +32,19 @@ import {
 } from "../statemanager/slices/LoginUserDataSlice";
 import { selectUsersDatabase } from "../statemanager/slices/DatabaseSlice";
 import WarningAlertModal from "../components/Modals/WarningAlertModal";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../Firebase/Firebase";
+import { setUserSavedProfiles } from "../statemanager/slices/SavedProfileSlice";
+import { setUserNotifications } from "../statemanager/slices/NofiticationsSlice";
+import { setPlayerSelectedByClubOrScoutInPlayerManagement } from "../statemanager/slices/PlayersInAgencySlice";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -55,33 +68,281 @@ const Login = () => {
     setErrorMessage("");
   };
 
-  const onSubmit = (formData) => {
-    // alert(formData.email, formData.password);
+  // const onSubmit = (formData) => {
+  //   // alert(formData.email, formData.password);
 
-    const matchUserAccount = AllUsersDatabase.filter((data) => {
-      return data.email === formData.email;
-    });
+  //   //     const docRef = doc(db, "cities", "SF");
+  //   // const docSnap = await getDoc(docRef);
 
-    // console.log("ax1x", matchUserAccount[0]);
-    if (matchUserAccount.length > 0) {
-      if (matchUserAccount[0].password === formData.password) {
-        dispatch(setLoginStatus(true));
-        dispatch(setUserDetailsObject(matchUserAccount[0]));
-        setErrorMessage("");
+  //   // if (docSnap.exists()) {
+  //   //   console.log("Document data:", docSnap.data());
+  //   // } else {
+  //   //   // docSnap.data() will be undefined in this case
+  //   //   console.log("No such document!");
+  //   // }
+  //   // where("state", "==", "CO"), where("name", "==", "Denver")
+  //   // const q = query(
+  //   //   collection(db, "users_db"),
 
-        Navigate("/");
-      } else {
-        setErrorMessage("Password doesnt match account");
-        // alert();
-      }
-    } else {
-      setErrorMessage("Account doesn't exist");
-    }
-  };
+  //   // );
+
+  //   // const querySnapshot = getDocs(q);
+  //   // querySnapshot.forEach((doc) => {
+  //   //   // doc.data() is never undefined for query doc snapshots
+  //   //   console.log(doc.id, " => ", doc.data());
+  //   //   alert("Collected");
+  //   //   console.log(doc.data(), "USer");
+  //   // });
+
+  //   const userRef = collection(db, `users_db`);
+
+  //   const q = query(
+  //     userRef,
+  //     where("email", "==", formData.email),
+  //     where("password", "==", formData.password)
+  //   );
+  //   const alldata = onSnapshot(q, (querySnapshot) => {
+  //     const items = [];
+  //     querySnapshot.forEach((doc) => {
+  //       items.push(doc.data());
+  //     });
+
+  //     items.forEach((item) => {
+  //       if (item.dateCreated !== "" && item.dateCreated !== null) {
+  //         const firestoreTimestamp = item.dateCreated;
+  //         const date = firestoreTimestamp.toDate();
+  //         const options = {
+  //           year: "numeric",
+  //           month: "long",
+  //           day: "numeric",
+  //           hour: "numeric",
+  //           minute: "numeric",
+  //           second: "numeric",
+  //         };
+  //         const dateTimeFormat = new Intl.DateTimeFormat("en-US", options);
+  //         const dateString = dateTimeFormat.format(date);
+  //         item.dateCreated = dateString;
+  //       }
+  //     });
+
+  //     if (items.length > 0) {
+  //       dispatch(setLoginStatus(true));
+  //       dispatch(setUserDetailsObject(items[0]));
+
+  //       // Setting Profiles Array to
+
+  //       const savedProfileSubCollectionRef = collection(
+  //         db,
+  //         `users_db/${items[0].accountId}/SavedProfiles`
+  //       );
+
+  //       const q = query(savedProfileSubCollectionRef);
+  //       const allProfiles = onSnapshot(q, (querySnapshot) => {
+  //         const profileItems = [];
+  //         querySnapshot.forEach((doc) => {
+  //           profileItems.push(doc.data());
+  //         });
+
+  //         // console.log(loginUserObject?.accountId, items, "SavedPFS");
+  //         dispatch(setUserSavedProfiles(profileItems));
+
+  //         const notificationsSubCollectionRef = collection(
+  //           db,
+  //           `users_db/${items[0].accountId}/Notifications`
+  //         );
+
+  //         const q = query(notificationsSubCollectionRef);
+  //         const allNotifications = onSnapshot(q, (querySnapshot) => {
+  //           const notificationItems = [];
+  //           querySnapshot.forEach((doc) => {
+  //             notificationItems.push(doc.data());
+  //           });
+
+  //           const docRef = doc(db, "players_database", items[0].accountId);
+  //           const docSnap = getDoc(docRef);
+
+  //           // if (docSnap.exists()) {
+  //           //   console.log("Document data:", docSnap.data());
+  //           // } else {
+  //           //   // docSnap.data() will be undefined in this case
+  //           //   console.log("No such document!");
+  //           // }
+
+  //           items[0].role === "Player"
+  //             ? dispatch(
+  //                 setPlayerSelectedByClubOrScoutInPlayerManagement(
+  //                   docSnap.data()
+  //                 )
+  //               )
+  //             : "";
+
+  //           // console.log(loginUserObject?.accountId, items, "SavedPFS");
+  //           dispatch(setUserNotifications(notificationItems));
+  //           Navigate("/");
+  //           setErrorMessage("");
+  //         });
+  //         return () => {
+  //           allNotifications();
+  //         };
+  //       });
+  //       return () => {
+  //         allProfiles();
+  //       };
+  //     } else {
+  //       setErrorMessage("Account doesn't exist");
+  //     }
+  //   });
+  //   return () => {
+  //     alldata();
+  //   };
+
+  //   // Navigate("/");
+
+  //   // const matchUserAccount = AllUsersDatabase.filter((data) => {
+  //   //   return data.email === formData.email;
+  //   // });
+
+  //   // // console.log("ax1x", matchUserAccount[0]);
+  //   // if (matchUserAccount.length > 0) {
+  //   //   if (matchUserAccount[0].password === formData.password) {
+  //   //     dispatch(setLoginStatus(true));
+  //   //     dispatch(setUserDetailsObject(matchUserAccount[0]));
+  //   //     setErrorMessage("");
+
+  //   //     Navigate("/");
+  //   //   } else {
+  //   //     setErrorMessage("Password doesnt match account");
+  //   //     // alert();
+  //   //   }
+  //   // } else {
+  //   //   setErrorMessage("Account doesn't exist");
+  //   // }
+  // };
 
   // const handleLogin()=>{
 
   // }
+
+  const onSubmit = (formData) => {
+    const userRef = collection(db, `users_db`);
+
+    const q = query(
+      userRef,
+      where("email", "==", formData.email),
+      where("password", "==", formData.password)
+    );
+
+    const alldata = onSnapshot(q, async (querySnapshot) => {
+      const items = [];
+      querySnapshot.forEach((doc) => {
+        items.push(doc.data());
+      });
+
+      items.forEach(async (item) => {
+        if (item.dateCreated !== "" && item.dateCreated !== null) {
+          const firestoreTimestamp = item.dateCreated;
+          const date = firestoreTimestamp.toDate();
+          const options = {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+          };
+          const dateTimeFormat = new Intl.DateTimeFormat("en-US", options);
+          const dateString = dateTimeFormat.format(date);
+          item.dateCreated = dateString;
+        }
+      });
+
+      if (items.length > 0) {
+        dispatch(setLoginStatus(true));
+        dispatch(setUserDetailsObject(items[0]));
+
+        const savedProfileSubCollectionRef = collection(
+          db,
+          `users_db/${items[0].accountId}/SavedProfiles`
+        );
+
+        const q = query(savedProfileSubCollectionRef);
+        const allProfiles = onSnapshot(q, (querySnapshot) => {
+          const profileItems = [];
+          querySnapshot.forEach((doc) => {
+            profileItems.push(doc.data());
+          });
+
+          dispatch(setUserSavedProfiles(profileItems));
+
+          const notificationsSubCollectionRef = collection(
+            db,
+            `users_db/${items[0].accountId}/Notifications`
+          );
+
+          const q = query(notificationsSubCollectionRef);
+          const allNotifications = onSnapshot(q, async (querySnapshot) => {
+            const notificationItems = [];
+            querySnapshot.forEach((doc) => {
+              notificationItems.push(doc.data());
+            });
+
+            const docRef = doc(db, "players_database", items[0].accountId);
+            try {
+              const docSnap = await getDoc(docRef);
+              if (docSnap.exists()) {
+                const playerData = docSnap.data();
+
+                if (items[0].role === "Player") {
+                  const firestoreTimestamp = playerData.dateCreated;
+                  const date = firestoreTimestamp.toDate();
+                  const options = {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    second: "numeric",
+                  };
+                  const dateTimeFormat = new Intl.DateTimeFormat(
+                    "en-US",
+                    options
+                  );
+                  const dateString = dateTimeFormat.format(date);
+                  playerData.dateCreated = dateString;
+
+                  dispatch(
+                    setPlayerSelectedByClubOrScoutInPlayerManagement(playerData)
+                  );
+                }
+              } else {
+                console.log("No such document!");
+              }
+            } catch (error) {
+              console.error("Error getting document:", error);
+            }
+
+            dispatch(setUserNotifications(notificationItems));
+            Navigate("/");
+            setErrorMessage("");
+          });
+
+          return () => {
+            allNotifications();
+          };
+        });
+
+        return () => {
+          allProfiles();
+        };
+      } else {
+        setErrorMessage("Account doesn't exist");
+      }
+    });
+
+    return () => {
+      alldata();
+    };
+  };
 
   return (
     <div

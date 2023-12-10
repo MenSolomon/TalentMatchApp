@@ -64,7 +64,7 @@ const PlayerVersionDashboard = () => {
       </div>
 
       {/* // Cards  (upload video card , analytics summary card and other information card) */}
-      <div style={{ flex: ".9", display: "flex", gap: "2.5vw" }}>
+      <div style={{ flex: ".77", display: "flex", gap: "2.5vw" }}>
         <div style={{ flex: ".33" }}>
           {/* // DRAG AND DROP VIDEO CARD*/}
           <div

@@ -19,6 +19,7 @@ import Marquee from "react-fast-marquee";
 import { selectClubsInDatabase } from "../../statemanager/slices/ClubsInDatabaseSlice";
 import { selectCurrentScreenSize } from "../../statemanager/slices/OtherComponentStatesSlice";
 import SmallScreenPlayerMenuDrawer from "./components/Drawer/SmallScreenPlayerMenuDrawer";
+import { setUserSavedProfiles } from "../../statemanager/slices/SavedProfileSlice";
 
 const PlayerVersionMotherComponent = () => {
   const dispatch = useDispatch();
@@ -347,6 +348,7 @@ const PlayerVersionMotherComponent = () => {
                         onClick={() => {
                           dispatch(setLoginStatus(false));
                           dispatch(setUserDetailsObject({}));
+                          dispatch(setUserSavedProfiles([]));
                         }}
                       >
                         <NavBarButton
