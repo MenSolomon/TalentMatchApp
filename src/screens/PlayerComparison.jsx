@@ -51,7 +51,19 @@ const PlayerComparison = () => {
           }}
         >
           {selectedPlayersToCompare.map((data, index) => {
-            const { firstName, surName, position, image } = data;
+            const {
+              firstName,
+              surName,
+              position,
+              image,
+              height,
+              Age,
+              clubName,
+              playerId,
+              statistics,
+              CountryCode,
+              Nationality,
+            } = data;
 
             return (
               <>
@@ -60,9 +72,13 @@ const PlayerComparison = () => {
                   surName={surName}
                   position={position}
                   image={image}
-                  height={"1'7"}
-                  age={20}
-                  playerName={"King"}
+                  height={height}
+                  age={Age}
+                  clubName={clubName}
+                  CountryCode={CountryCode}
+                  statistics={statistics}
+                  Nationality={Nationality}
+                  playerId={playerId}
                   key={index}
                 />
               </>

@@ -41,16 +41,7 @@ function a11yProps(index) {
   };
 }
 
-export default function PlayerDetailsMenuTab({
-  PlayerTabItemsArray,
-  Nationality,
-  PlaceOfBirth,
-  DateOfBirth,
-  clubName,
-  contractStartDate,
-  contactEndDate,
-  Position,
-}) {
+export default function NotificationsTab({ NotificationsTabItemsArray }) {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -66,7 +57,7 @@ export default function PlayerDetailsMenuTab({
           aria-label="basic tabs example"
           sx={{
             background: "transparent",
-            borderRadius: "1vw",
+            // borderRadius: "1vw",
             // border: "2px solid #5585fe",
             color: "white",
             // borderRight: "1px solid #0d818e",
@@ -78,14 +69,16 @@ export default function PlayerDetailsMenuTab({
 
           {/* ======  The propertyDetails tabs are created with an array (PropertyTabItemsArray) a prop,  which is called when we use this component is used in the propertyDetails table .. This is for dynamic rendering of the NavBars in anyCase where we want to change or edit the menu items   */}
 
-          {PlayerTabItemsArray.map((data, key) => {
+          {NotificationsTabItemsArray.map((data, key) => {
             return (
               <Tab
                 key={key}
-                className="primaryColor"
+                // className="primaryColor"
                 label={data}
                 sx={{
-                  width: "10vw",
+                  width: "4vw",
+                  fontSize: ".8em",
+                  color: "black",
                   // marginRight: "2vw",
                   fontWeight: "bold",
                 }}
@@ -101,9 +94,9 @@ export default function PlayerDetailsMenuTab({
      This array (PropertyTabItemsArray), dynamically imports and lazy loads the contents of the menu Items .. Note that each menu item's component is already Created with the respective Name in the path below  (The names are caps sensitive) .. CustomTabPanel is the component that holds the display of the Dynamically iimported Component ... TaskBarComponent is the name chosen to as a parameter for displaying the component....
    At line 98 where data is ==="OVerview", we are trying to make sure that the totalUnits, activeUnits , propertyImage1 and propertyImage2 are specifically sent to the Overview Component ..  This will be done for passing specific values to the other components as well with the tenary operators */}
 
-      {PlayerTabItemsArray.map((data, index) => {
+      {NotificationsTabItemsArray.map((data, index) => {
         let TaskBarComponent = lazy(() =>
-          import(`../../screens/subscreens/Player${data}.jsx`)
+          import(`../../screens/NotificationsScreens/${data}.jsx`)
         );
 
         return (
@@ -116,6 +109,7 @@ export default function PlayerDetailsMenuTab({
                   <div
                     style={{
                       width: "100%",
+                      // height: "49vh",
                       display: "flex",
                       justifyContent: "center",
                     }}
@@ -124,15 +118,7 @@ export default function PlayerDetailsMenuTab({
                   </div>
                 }
               >
-                <TaskBarComponent
-                  Nationality={Nationality}
-                  PlaceOfBirth={PlaceOfBirth}
-                  DateOfBirth={DateOfBirth}
-                  clubName={clubName}
-                  contractStartDate={contractStartDate}
-                  contactEndDate={contactEndDate}
-                  Position={Position}
-                />
+                <TaskBarComponent />
               </Suspense>
             </CustomTabPanel>
           </>

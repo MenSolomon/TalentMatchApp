@@ -1,25 +1,42 @@
 // import { useSelector } from "react-redux";
 // import { selectThemeProviderObject } from "../statemanager/slices/ThemeProviderSlice";
 
-import { Checkbox, Pagination } from "@mui/material";
-import { useState } from "react";
+import { Checkbox, CircularProgress, Pagination } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
 import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
 import { selectPlayerSelectedByClubOrScoutInPlayerManagement } from "../../../statemanager/slices/PlayersInAgencySlice";
 import VideoComponentRows from "../../../CoachAgentScoutVersion/src/components/Rows/VideoComponentRows";
+import { db } from "../../../Firebase/Firebase";
+import { collection, onSnapshot, query } from "firebase/firestore";
 
 const PlayerVersionVideos = () => {
-  const dispatch = useDispatch();
-
-  const CurrentPlayerSelectedForClubScoutCoachAndAgentManagement = useSelector(
-    selectPlayerSelectedByClubOrScoutInPlayerManagement
-  );
-  const allPlayerDatabase = useSelector(selectPlayersDatabase);
   const userDetailsObject = useSelector(selectUserDetailsObject);
 
-  const { id, firstName, surName, videos } =
-    CurrentPlayerSelectedForClubScoutCoachAndAgentManagement;
+  const [videos, setVideos] = useState([]);
+  const [circularLoader, setCircularLoader] = useState(true);
+
+  useEffect(() => {
+    const playerObjectRef = collection(
+      db,
+      `players_database/${userDetailsObject.accountId}/videos`
+    );
+
+    const q2 = query(playerObjectRef);
+    const allVideos = onSnapshot(q2, (querySnapshot) => {
+      const videosArray = [];
+      querySnapshot.forEach((doc) => {
+        videosArray.push(doc.data());
+      });
+
+      setCircularLoader(false);
+      setVideos(videosArray);
+    });
+    return () => {
+      allVideos();
+    };
+  }, []);
 
   const VideosPerPage = 3;
 
@@ -53,111 +70,109 @@ const PlayerVersionVideos = () => {
 
       {/* Video DISPLAY AREA */}
 
-      <div
-        style={{
-          flex: ".7",
-          // background: "red",
-          display: "flex",
-          flexDirection: "column",
-          // marginBottom: "1vh",
-        }}
-      >
-        {videos.length === 0 ? (
-          "No videos uploaded yet"
-        ) : (
-          <>
-            {/* // FILTER ROW */}
-            <div
-              style={{
-                // border: "1px solid black",
-                borderBottom: "none",
-                flex: ".1",
-              }}
-            >
-              Filter
-            </div>
-            {/* HEADER ROW */}
-            <div
-              style={{
-                // border: "1px solid black",
-                flex: ".1",
-                // borderBottom: "1px solid black",
-                display: "flex",
-                fontWeight: "bolder",
-              }}
-            >
-              {/* // CHeck box */}
-              <div style={{ flex: ".05" }}>
-                <Checkbox />
+      {circularLoader === true ? (
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      ) : videos.length === 0 ? (
+        "No videos uploaded yet"
+      ) : (
+        <div
+          style={{
+            flex: ".7",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {videos.length === 0 ? (
+            "No videos uploaded yet"
+          ) : (
+            <>
+              <div
+                style={{
+                  flex: ".1",
+                  borderBottom: "none",
+                }}
+              >
+                Filter
               </div>
-              {/* Videos */}
-              <div style={{ flex: ".15" }}>Video</div>
 
-              {/* Description */}
-              <div style={{ flex: ".25" }}>Description</div>
+              <div
+                style={{
+                  flex: ".1",
+                  display: "flex",
+                  fontWeight: "bolder",
+                }}
+              >
+                <div style={{ flex: ".05" }}>
+                  <Checkbox />
+                </div>
+                <div style={{ flex: ".15" }}>Video</div>
+                <div style={{ flex: ".25" }}>Description</div>
+                <div style={{ flex: ".25" }}>Date uploaded</div>
+                <div style={{ flex: ".2" }}>Category</div>
+                <div style={{ flex: ".1" }}>Views</div>
+              </div>
 
-              {/* Date uploaded */}
-              <div style={{ flex: ".25" }}>Date uploaded</div>
-              {/* Category */}
-              <div style={{ flex: ".2" }}>Category</div>
+              <div
+                style={{
+                  flex: ".7",
+                  borderBottom: "none",
+                }}
+              >
+                {getVideosForPage().map((data, index) => {
+                  const {
+                    filename,
+                    description,
+                    category,
+                    dateUploaded,
+                    url,
+                    views,
+                    uploadedBy,
+                    id,
+                  } = data;
 
-              {/* Views */}
-              <div style={{ flex: ".1" }}>Views</div>
-            </div>
-            {/* VIDEOS CONTENT ROWS */}
-            <div
-              style={{
-                // border: "1px solid black",
-                flex: ".7",
-                borderBottom: "none",
-              }}
-            >
-              {getVideosForPage().map((data, index) => {
-                const {
-                  filename,
-                  description,
-                  category,
-                  dateUploaded,
-                  url,
-                  views,
-                  uploadedBy,
-                } = data;
-
-                return (
-                  <VideoComponentRows
-                    key={index}
-                    url={url}
-                    description={description}
-                    category={category}
-                    views={views}
-                    date={dateUploaded}
-                  />
-                );
-              })}
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* VIDEOS PAGINATION ROW */}
-      <div
-        style={{
-          flex: ".1",
-          display: "grid",
-          placeItems: "center",
-          paddingTop: "1vh",
-          // background: "blue",
-        }}
-      >
-        <Pagination
-          className="primaryTextColor"
-          sx={{ color: "white" }}
-          count={getTotalPages()}
-          color="primary"
-          page={currentPage}
-          onChange={handlePageChange}
-        />
-      </div>
+                  return (
+                    <VideoComponentRows
+                      key={index}
+                      url={url}
+                      description={description}
+                      category={category}
+                      views={views}
+                      date={dateUploaded}
+                      id={id}
+                      uploaderId={data?.uploadedById}
+                    />
+                  );
+                })}
+              </div>
+            </>
+          )}
+          <div
+            style={{
+              flex: ".1",
+              display: "grid",
+              placeItems: "center",
+              paddingTop: "1vh",
+            }}
+          >
+            <Pagination
+              className="primaryTextColor"
+              sx={{ color: "white" }}
+              count={getTotalPages()}
+              color="primary"
+              page={currentPage}
+              onChange={handlePageChange}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -40,7 +40,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 import { selectUserDetailsObject } from "./statemanager/slices/LoginUserDataSlice";
 import { useEffect, useState } from "react";
-import { setCurrentScreenSize } from "./statemanager/slices/OtherComponentStatesSlice";
+import {
+  setCurrentBrowserSize,
+  setCurrentScreenSize,
+} from "./statemanager/slices/OtherComponentStatesSlice";
 import BasicBackdrop from "./components/Backdrops/BasicBackdrop";
 import {
   setInternetConnectionOffline,
@@ -48,6 +51,7 @@ import {
 } from "./statemanager/slices/InternetActivitiesSlice";
 import ContactSupportModal from "./components/Modals/ContactSupportModal";
 import { selectUsersDatabase } from "./statemanager/slices/DatabaseSlice";
+import Favorites from "./screens/Favorites";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -232,6 +236,17 @@ const App = () => {
     height: window.screen.height,
   });
 
+  const [browserSize, setBrowserSize] = useState({
+    width:
+      window.innerWidth ||
+      document.documentElement.clientWidth ||
+      document.body.clientWidth,
+    height:
+      window.innerHeight ||
+      document.documentElement.clientHeight ||
+      document.body.clientHeight,
+  });
+
   useEffect(() => {
     const handleResize = () => {
       setScreenSize({
@@ -248,6 +263,43 @@ const App = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []); // Empty dependency array means this effect runs once after the initial render
+
+  // GETTING THE SIZE OF THE WINDOW
+
+  useEffect(() => {
+    const handleResize = () => {
+      setBrowserSize({
+        width:
+          window.innerWidth ||
+          document.documentElement.clientWidth ||
+          document.body.clientWidth,
+        height:
+          window.innerHeight ||
+          document.documentElement.clientHeight ||
+          document.body.clientHeight,
+      });
+    };
+
+    console.log(browserSize, "Deava");
+    // Attach the event listener
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // useEffect to handle setting browser size
+  useEffect(() => {
+    console.log(`${browserSize.width} ,width`, `${browserSize.height} ,height`);
+
+    const { width, height } = browserSize;
+
+    dispatch(setCurrentBrowserSize({ width, height }));
+  }, [browserSize]);
+
+  /// Useeffect to handle screen size
 
   useEffect(() => {
     console.log(`${screenSize.width} ,width`, `${screenSize.height} ,height`);
@@ -291,7 +343,7 @@ const App = () => {
 
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<MotherComponent />}>
-            <Route path="/favorite" element={<Error404 />} />
+            <Route path="/favorite" element={<Favorites />} />
             <Route path="/help" element={<Error404 />} />
             <Route path="/settings" element={<Error404 />} />
 

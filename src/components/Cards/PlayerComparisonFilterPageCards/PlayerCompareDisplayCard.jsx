@@ -1,5 +1,5 @@
 import { AddOutlined } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import PlayerComparisonModal from "../../Modals/PlayerComparisonModal";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,7 +8,19 @@ import {
 } from "../../../statemanager/slices/PlayersInAgencySlice";
 import { useEffect } from "react";
 
-const PlayerCompareDisplayCard = ({ firstName, surName, position, image }) => {
+const PlayerCompareDisplayCard = ({
+  firstName,
+  surName,
+  position,
+  image,
+  statistics,
+  playerId,
+  clubName,
+  Nationality,
+  CountryCode,
+  Age,
+  height,
+}) => {
   const dispatch = useDispatch();
   const currentPlayerSelectedArray = useSelector(selectPlayerToCompareArray);
 
@@ -18,13 +30,37 @@ const PlayerCompareDisplayCard = ({ firstName, surName, position, image }) => {
         dispatch(
           setSelectedPlayerToCompareArray([
             ...currentPlayerSelectedArray,
-            { firstName, surName, position, image },
+            {
+              firstName,
+              surName,
+              position,
+              image,
+              statistics,
+              playerId,
+              clubName,
+              Nationality,
+              CountryCode,
+              Age,
+              height,
+            },
           ])
         );
       } else {
         dispatch(
           setSelectedPlayerToCompareArray([
-            { firstName, surName, position, image },
+            {
+              firstName,
+              surName,
+              position,
+              image,
+              statistics,
+              playerId,
+              clubName,
+              Nationality,
+              CountryCode,
+              Age,
+              height,
+            },
           ])
         );
       }
@@ -34,6 +70,11 @@ const PlayerCompareDisplayCard = ({ firstName, surName, position, image }) => {
   useEffect(() => {
     console.log(currentPlayerSelectedArray, "ARRAY SELECTED");
   }, [currentPlayerSelectedArray]);
+
+  var positionABR = position.match(/\((.*?)\)/);
+
+  // Check if there are matches and get the value inside parentheses
+  var AbbreviatedPosition = positionABR ? positionABR[1] : null;
 
   return (
     <div
@@ -88,7 +129,10 @@ const PlayerCompareDisplayCard = ({ firstName, surName, position, image }) => {
           paddingTop: "1.5vh",
         }}
       >
-        <h6> {position} </h6>
+        <h6>
+          {" "}
+          <Tooltip title={position}>{AbbreviatedPosition}</Tooltip>{" "}
+        </h6>
       </div>
     </div>
   );

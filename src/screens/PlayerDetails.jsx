@@ -39,26 +39,50 @@ import {
   setIsCollapseTrue,
 } from "../statemanager/slices/CollapsePlayerDisplayCards";
 import { useParams } from "react-router-dom";
-import { selectPlayersInAgencyArray } from "../statemanager/slices/PlayersInAgencySlice";
+import {
+  selectPlayersInAgencyArray,
+  setPlayerSelectedToView,
+} from "../statemanager/slices/PlayersInAgencySlice";
+import { selectPlayersDatabase } from "../statemanager/slices/DatabaseSlice";
+import { selectClubsInDatabase } from "../statemanager/slices/ClubsInDatabaseSlice";
+import { selectUserDetailsObject } from "../statemanager/slices/LoginUserDataSlice";
+import { doc, increment, updateDoc } from "firebase/firestore";
+import { db } from "../Firebase/Firebase";
 
 const PlayerDetails = () => {
   const { playerId } = useParams();
-  const [selectedPlayerArray, setSelectedPlayerArray] = useState([]);
+  const dispatch = useDispatch();
+
+  const allPlayersArray = useSelector(selectPlayersDatabase);
+
+  const allClubsInDatabase = useSelector(selectClubsInDatabase);
+  const fileteredPlayer = allPlayersArray.filter((data) => {
+    // should be id for filtering not name
+    const { id } = data;
+    return playerId === id;
+  });
+  const [selectedPlayerArray, setSelectedPlayerArray] =
+    useState(fileteredPlayer);
   const [firstName, setFirstName] = useState("");
   const [surName, setSurName] = useState("");
 
-  const allPlayersArray = useSelector(selectPlayersInAgencyArray);
+  const clubObject = allClubsInDatabase.find((data) => {
+    return data.clubName === selectedPlayerArray[0]?.clubName;
+  });
+
+  // console.log(clubObject);
 
   useEffect(() => {
     const fileteredPlayer = allPlayersArray.filter((data) => {
       // should be id for filtering not name
-      const { firstName, surName } = data;
-      return playerId === `${firstName}${surName}`;
+      const { id } = data;
+      return playerId === id;
     });
 
     // setSurName(selectedPlayerArray[0]?.surName);
     // console.log(surName);
     setSelectedPlayerArray(fileteredPlayer);
+    dispatch(setPlayerSelectedToView(fileteredPlayer[0]));
     console.log(selectedPlayerArray, fileteredPlayer);
   }, [playerId, allPlayersArray]);
 
@@ -79,7 +103,6 @@ const PlayerDetails = () => {
   ];
 
   const isCardsCollapsedVariable = useSelector(selectIsCollapesedVariable);
-  const dispatch = useDispatch();
 
   const handleSetCollapseCards = async () => {
     if (isCardsCollapsedVariable === false) {
@@ -90,6 +113,39 @@ const PlayerDetails = () => {
 
     // alert(isCardsCollapsedVariable);
   };
+
+  const userLoginObject = useSelector(selectUserDetailsObject);
+  const [playerViewCounter, setPlayerViewCounter] = useState(1);
+
+  useEffect(() => {
+    const handleProfileViewUpdate = async () => {
+      try {
+        // this is to make sure an owner of account's view doesnt get counted as player view
+        if (playerViewCounter <= 1) {
+          if (userLoginObject.accountId !== playerId) {
+            const playerVideoToUpdateRef = doc(
+              db,
+              `players_database/`,
+              playerId
+            );
+            // Atomically increment the views of the video by 1.
+            await updateDoc(playerVideoToUpdateRef, {
+              views: increment(1),
+            });
+            setPlayerViewCounter(playerViewCounter + 1);
+            // alert("Player updated");
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        // alert("Player updated Error");
+      }
+    };
+
+    return () => {
+      handleProfileViewUpdate();
+    };
+  }, []);
 
   return (
     <div
@@ -127,8 +183,12 @@ const PlayerDetails = () => {
             firstname={selectedPlayerArray[0]?.firstName}
             surname={selectedPlayerArray[0]?.surName}
             position={selectedPlayerArray[0]?.position}
-            age={selectedPlayerArray[0]?.Age}
-            image={selectedPlayerArray[0]?.image}
+            age={
+              selectedPlayerArray[0]?.Age === null
+                ? ""
+                : selectedPlayerArray[0]?.Age
+            }
+            image={selectedPlayerArray[0]?.player_profile_image}
             hTagStyle={hTagStyle}
           />
         </div>
@@ -137,34 +197,45 @@ const PlayerDetails = () => {
           {" "}
           <ClubandNationalTeamDisplayCard
             hTagStyle={hTagStyle}
-            clubImage={selectedPlayerArray[0]?.clubLogo}
-            countryImage={
-              selectedPlayerArray[0]?.Nationality === "Ghana"
-                ? ghana
-                : selectedPlayerArray[0]?.Nationality === "Nigeria"
-                ? nigeria
-                : ""
-            }
+            clubImage={clubObject === undefined ? "" : clubObject?.clubImage}
+            Nationality={selectedPlayerArray[0]?.Nationality}
+            countryCode={selectedPlayerArray[0]?.CountryCode}
             ClubName={selectedPlayerArray[0]?.clubName}
+            PreferredFoot={selectedPlayerArray[0]?.preferredFoot}
+            Height={selectedPlayerArray[0]?.height}
           />
         </div>
         {/* Achievements and Trophies Area */}
         <div style={{ flex: ".27", padding: "1vw" }}>
           {" "}
           <AchievementAndMarketValueCard
-            worldCup={worldCup}
-            BalonDor={BalonDor}
-            uefa={uefa}
+            marketValue={selectedPlayerArray[0]?.marketValue}
+            healthCondition={selectedPlayerArray[0]?.current_health}
           />
         </div>
         {/* Socials And Contact Area */}
         <div style={{ flex: ".2", padding: "1vw" }}>
           {" "}
-          <SocialAndContactAreaCard instagram={instagram} facebook={facebook} />
+          <SocialAndContactAreaCard
+            facebookImg={facebook}
+            instaImg={instagram}
+            instagram={selectedPlayerArray[0]?.Social_media[0]?.Instagram}
+            facebook={selectedPlayerArray[0]?.Social_media[0]?.Facebook}
+          />
         </div>
       </div>
       <div style={{ gridArea: "MenuStrip" }}>
-        <PlayerDetailsMenuTab PlayerTabItemsArray={menuLabelArray} />
+        <PlayerDetailsMenuTab
+          Nationality={selectedPlayerArray[0]?.Nationality}
+          PlaceOfBirth={selectedPlayerArray[0]?.Nationality}
+          DateOfBirth={selectedPlayerArray[0]?.date_of_birth}
+          clubName={selectedPlayerArray[0]?.clubName}
+          contractStartDate={selectedPlayerArray[0]?.contractStartDate}
+          contactEndDate={selectedPlayerArray[0]?.contractEndDate}
+          Position={selectedPlayerArray[0]?.position}
+          PlayerTabItemsArray={menuLabelArray}
+          Statistics={selectedPlayerArray[0]?.Statistics}
+        />
       </div>
       <div style={{ gridArea: "ContentArea" }}></div>
     </div>

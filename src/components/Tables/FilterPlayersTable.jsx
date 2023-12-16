@@ -26,6 +26,13 @@ import PlayerOverallAttributes from "../Charts/Bars/PlayerOverallAttributes";
 import { useSelector } from "react-redux";
 import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInAgencySlice";
 import { useNavigate } from "react-router-dom";
+import { selectPlayersDatabase } from "../../statemanager/slices/DatabaseSlice";
+import { selectClubsInDatabase } from "../../statemanager/slices/ClubsInDatabaseSlice";
+import {
+  selectCurrentProfile,
+  selectCurrentProfileFilterObject,
+  selectUserSavedProfiles,
+} from "../../statemanager/slices/SavedProfileSlice";
 
 function createData(
   name,
@@ -37,7 +44,11 @@ function createData(
   Club,
   clubName,
   ContractExpiry,
-  playerImage
+  playerImage,
+  playerId,
+  Nationality,
+  StatisticsOverall,
+  StatisticsLastSeason
 ) {
   return {
     name,
@@ -50,7 +61,11 @@ function createData(
     clubName,
     ContractExpiry,
     playerImage,
-
+    playerId,
+    Nationality,
+    StatisticsOverall,
+    // currently 23/24
+    StatisticsLastSeason,
     history: [
       {
         period: "Career total",
@@ -84,10 +99,10 @@ function Row(props) {
 
   const navigate = useNavigate();
 
-  const playerNameWithoutSpaces = row.name.replace(/\s/g, "");
+  // const playerNameWithoutSpaces = row.name.replace(/\s/g, "");
 
   const handleProfileView = () => {
-    navigate(`/player-details/${playerNameWithoutSpaces}`);
+    navigate(`/player-details/${row.playerId}`);
   };
 
   return (
@@ -132,19 +147,28 @@ function Row(props) {
               sx={{ width: 30, height: 30, marginRight: 1 }}
               src={row.playerImage}
             />{" "}
-            {row.name}
+            {row.name.length >= 25 ? (
+              <Tooltip title={row.name}>{`${row.name.slice(
+                0,
+                25
+              )}...`}</Tooltip>
+            ) : (
+              row.name
+            )}
           </div>
         </TableCell>
         <TableCell align="right">{row.Age}</TableCell>
         <TableCell align="right">{row.Foot}</TableCell>
         <TableCell align="right">{row.Height}</TableCell>
         <TableCell align="right">
-          <img
-            style={{ marginLeft: "1.5vw" }}
-            src={`https://flagcdn.com/${row.Country.toLowerCase()}.svg`}
-            width="30"
-            alt=""
-          />
+          <Tooltip title={row.Nationality}>
+            <img
+              style={{ marginLeft: "1.5vw" }}
+              src={`https://flagcdn.com/${row.Country.toLowerCase()}.svg`}
+              width="30"
+              alt=""
+            />{" "}
+          </Tooltip>
         </TableCell>
         <TableCell align="right">
           <Tooltip title={row.clubName}>
@@ -276,49 +300,89 @@ function Row(props) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Period</TableCell>
-                    <TableCell>Apperance</TableCell>
-                    <TableCell>Goals</TableCell>
+                    <TableCell align="right">Period</TableCell>
+                    <TableCell align="right">Apperance</TableCell>
+                    <TableCell align="right">Goals</TableCell>
                     <TableCell align="right">Assists</TableCell>
                     <TableCell align="right">Pass success %</TableCell>
                     <TableCell align="right">Interceptions</TableCell>
-                    <TableCell align="right">Tackles won</TableCell>
-                    <TableCell align="right">Clean sheets</TableCell>
-                    <TableCell align="right">Distatnce covered(km)</TableCell>
+                    <TableCell align="right">Tackles success %</TableCell>
+                    <TableCell align="right">Yellow cards</TableCell>
+                    <TableCell align="right">Minutes played</TableCell>
                   </TableRow>
                 </TableHead>
 
                 <TableBody>
-                  {row.history.map((historyRow, key) => (
-                    <TableRow key={key}>
-                      <TableCell>{historyRow.period}</TableCell>
-                      <TableCell>{historyRow.apperances}</TableCell>
+                  {/* // Overall stats */}
+                  <TableRow>
+                    <TableCell>{row.StatisticsOverall.Season}</TableCell>
+                    <TableCell>
+                      {row.StatisticsOverall.General.Games_Played}
+                    </TableCell>
 
-                      <TableCell>{historyRow.goals}</TableCell>
-                      <TableCell align="right">{historyRow.assist}</TableCell>
-                      <TableCell align="right">
-                        {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
-                        {historyRow.passCompletionRate}
-                      </TableCell>
-                      <TableCell align="right">
-                        {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
-                        {historyRow.Interception}
-                      </TableCell>
-                      <TableCell align="right">
-                        {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
-                        {historyRow.tacklesWon}
-                      </TableCell>
-                      <TableCell align="right">
-                        {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
-                        {historyRow.CleanSheets}
-                      </TableCell>
+                    <TableCell>
+                      {row.StatisticsOverall.Attack.Goals_Scored}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.StatisticsOverall.Distribution.Assists}
+                    </TableCell>
+                    <TableCell align="right">
+                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                      {row.StatisticsOverall.Distribution.Pass_success_rate}
+                    </TableCell>
+                    <TableCell align="right">
+                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                      {row.StatisticsOverall.Defence.Interceptions}
+                    </TableCell>
+                    <TableCell align="right">
+                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                      {row.StatisticsOverall.Defence.Tackles}
+                    </TableCell>
+                    <TableCell align="right">
+                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                      {row.StatisticsOverall.Discipline.Yellow_cards}
+                    </TableCell>
 
-                      <TableCell align="right">
-                        {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
-                        {historyRow.DistanceCovered}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                    <TableCell align="right">
+                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                      {row.StatisticsOverall.General.Minutes_Played}
+                    </TableCell>
+                  </TableRow>
+                  {/* // Last season currently 23/24 */}
+                  <TableRow>
+                    <TableCell>{row.StatisticsLastSeason.Season}</TableCell>
+                    <TableCell>
+                      {row.StatisticsLastSeason.General.Games_Played}
+                    </TableCell>
+
+                    <TableCell>
+                      {row.StatisticsLastSeason.Attack.Goals_Scored}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.StatisticsLastSeason.Distribution.Assists}
+                    </TableCell>
+                    <TableCell align="right">
+                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                      {row.StatisticsLastSeason.Distribution.Pass_success_rate}
+                    </TableCell>
+                    <TableCell align="right">
+                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                      {row.StatisticsLastSeason.Defence.Interceptions}
+                    </TableCell>
+                    <TableCell align="right">
+                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                      {row.StatisticsLastSeason.Defence.Tackles}
+                    </TableCell>
+                    <TableCell align="right">
+                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                      {row.StatisticsLastSeason.Discipline.Yellow_cards}
+                    </TableCell>
+
+                    <TableCell align="right">
+                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                      {row.StatisticsLastSeason.General.Minutes_Played}
+                    </TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </Box>
@@ -358,9 +422,174 @@ const rows = [
 ];
 
 export default function FilteredPlayersTable() {
-  const playersInAgencyArray = useSelector(selectPlayersInAgencyArray);
+  const currentProfileNameSelected = useSelector(selectCurrentProfile);
 
-  const rows = playersInAgencyArray.map((data) => {
+  const savedUserProfiles = useSelector(selectUserSavedProfiles);
+  const MatchedPlayersArray = useSelector(selectPlayersDatabase);
+
+  const currentProfileFilterObjectInEffect = savedUserProfiles.find((data) => {
+    return (
+      data.label.toLowerCase() === currentProfileNameSelected.toLowerCase()
+    );
+  });
+
+  const ExistingPlayerProfile = MatchedPlayersArray.filter((data) => {
+    const {
+      Nationality,
+      position,
+      // date_of_birth,
+      Statsitics,
+      height,
+    } = data;
+
+    // Define the variables to compare
+    const variablesToCompare = [
+      Nationality.toLowerCase() ===
+        currentProfileFilterObjectInEffect?.filter.NationalityValue.toLowerCase(),
+      Nationality.toLowerCase() ===
+        currentProfileFilterObjectInEffect?.filter.NationalityValue.toLowerCase(),
+      data?.Age >=
+        currentProfileFilterObjectInEffect?.filter.AgeRangeValue[0] &&
+        data?.Age <=
+          currentProfileFilterObjectInEffect?.filter.AgeRangeValue[1],
+      height >=
+        currentProfileFilterObjectInEffect?.filter.HeightRangeValue[0] &&
+        height <=
+          currentProfileFilterObjectInEffect?.filter.HeightRangeValue[1],
+      data?.marketValue >=
+        currentProfileFilterObjectInEffect?.filter.MarketValue[0] &&
+        data?.marketValue <=
+          currentProfileFilterObjectInEffect?.filter.MarketValue[1],
+      currentProfileFilterObjectInEffect?.filter?.PlayerPositionAutoCompleteValue.toLowerCase() ===
+        position.toLowerCase(),
+      data?.preferredFoot.toLowerCase() ===
+        currentProfileFilterObjectInEffect?.filter.PrefferedFootRadioValue.toLowerCase(),
+      currentProfileFilterObjectInEffect?.filter.ContractStatusCheckBoxes.includes(
+        data?.clubName
+      ),
+      // Add more variables to compare as needed
+    ];
+
+    // Count the number of matches
+    const numberOfMatches = variablesToCompare.filter((match) => match).length;
+
+    // Check if at least 4 variables match
+    return numberOfMatches >= 5;
+  });
+
+  console.log("All Players", MatchedPlayersArray);
+
+  const allClubsInDatabase = useSelector(selectClubsInDatabase);
+
+  // const ExistingPlayerProfile = MatchedPlayersArray.filter((data) => {
+  //   const {
+  //     Nationality,
+  //     position,
+  //     // date_of_birth,
+  //     Statsitics,
+  //     height,
+  //   } = data;
+
+  //   // Define the variables to compare
+  //   const variablesToCompare = [
+  //     Nationality.toLowerCase() ===
+  //       currentProfileFilterObject?.filter.NationalityValue.toLowerCase(),
+  //     Nationality.toLowerCase() ===
+  //       currentProfileFilterObject?.filter.NationalityValue.toLowerCase(),
+  //     data?.Age >= currentProfileFilterObject?.filter.AgeRangeValue[0] &&
+  //       data?.Age <= currentProfileFilterObject?.filter.AgeRangeValue[1],
+  //     height >= currentProfileFilterObject?.filter.HeightRangeValue[0] &&
+  //       height <= currentProfileFilterObject?.filter.HeightRangeValue[1],
+  //     data?.marketValue >= currentProfileFilterObject?.filter.MarketValue[0] &&
+  //       data?.marketValue <= currentProfileFilterObject?.filter.MarketValue[1],
+  //     currentProfileFilterObject?.filter?.PlayerPositionAutoCompleteValue.toLowerCase() ===
+  //       position.toLowerCase(),
+  //     data?.preferredFoot.toLowerCase() ===
+  //       currentProfileFilterObject?.filter.PrefferedFootRadioValue.toLowerCase(),
+  //     currentProfileFilterObject?.filter.ContractStatusCheckBoxes.includes(
+  //       data?.clubName
+  //     ),
+  //     // Add more variables to compare as needed
+  //   ];
+
+  //   // Count the number of matches
+  //   const numberOfMatches = variablesToCompare.filter((match) => match).length;
+
+  //   // alert(numberOfMatches);
+  //   // Check if at least 4 variables match
+  //   return numberOfMatches >= 5;
+  // });
+
+  // alert("first one" + ExistingPlayerProfile.length);
+
+  // const [PossiblePlayerMatch, setPossiblePlayerMatch] = React.useState(
+  //   ExistingPlayerProfile
+  // );
+  const [PossiblePlayerMatch, setPossiblePlayerMatch] = React.useState(
+    ExistingPlayerProfile
+  );
+
+  React.useEffect(() => {
+    const currentProfileFilterObjectInEffect = savedUserProfiles.find(
+      (data) => {
+        return (
+          data.label.toLowerCase() === currentProfileNameSelected.toLowerCase()
+        );
+      }
+    );
+
+    const ExistingPlayerProfile = MatchedPlayersArray.filter((data) => {
+      const {
+        Nationality,
+        position,
+        // date_of_birth,
+        Statsitics,
+        height,
+      } = data;
+
+      // Define the variables to compare
+      const variablesToCompare = [
+        Nationality.toLowerCase() ===
+          currentProfileFilterObjectInEffect?.filter.NationalityValue.toLowerCase(),
+        Nationality.toLowerCase() ===
+          currentProfileFilterObjectInEffect?.filter.NationalityValue.toLowerCase(),
+        data?.Age >=
+          currentProfileFilterObjectInEffect?.filter.AgeRangeValue[0] &&
+          data?.Age <=
+            currentProfileFilterObjectInEffect?.filter.AgeRangeValue[1],
+        height >=
+          currentProfileFilterObjectInEffect?.filter.HeightRangeValue[0] &&
+          height <=
+            currentProfileFilterObjectInEffect?.filter.HeightRangeValue[1],
+        data?.marketValue >=
+          currentProfileFilterObjectInEffect?.filter.MarketValue[0] &&
+          data?.marketValue <=
+            currentProfileFilterObjectInEffect?.filter.MarketValue[1],
+        currentProfileFilterObjectInEffect?.filter?.PlayerPositionAutoCompleteValue.toLowerCase() ===
+          position.toLowerCase(),
+        data?.preferredFoot.toLowerCase() ===
+          currentProfileFilterObjectInEffect?.filter.PrefferedFootRadioValue.toLowerCase(),
+        currentProfileFilterObjectInEffect?.filter.ContractStatusCheckBoxes.includes(
+          data?.clubName
+        ),
+        // Add more variables to compare as needed
+      ];
+
+      // Count the number of matches
+      const numberOfMatches = variablesToCompare.filter(
+        (match) => match
+      ).length;
+
+      // Check if at least 4 variables match
+      return numberOfMatches >= 5;
+    });
+
+    console.log(ExistingPlayerProfile + "Mawu");
+    setPossiblePlayerMatch(ExistingPlayerProfile);
+    // alert(ExistingPlayerProfile.length);
+  }, [currentProfileNameSelected, savedUserProfiles]);
+
+  const rows = PossiblePlayerMatch?.map((data, index) => {
     const {
       firstName,
       surName,
@@ -369,14 +598,21 @@ export default function FilteredPlayersTable() {
       CountryCode,
       Nationality,
       jerseyNumber,
-      image,
+      player_profile_image,
       clubName,
-      clubLogo,
+      Statistics,
       preferredFoot,
       height,
       marketValue,
-      contractExpiryDate,
+      contractStartDate,
+      id,
     } = data;
+
+    const clubObject = allClubsInDatabase.find((data) => {
+      return data.clubName === clubName;
+    });
+
+    const ClubLogo = clubObject === undefined ? "" : clubObject?.clubImage;
 
     return createData(
       `${firstName} ${surName}`,
@@ -385,10 +621,14 @@ export default function FilteredPlayersTable() {
       height,
       CountryCode,
       marketValue,
-      clubLogo,
+      ClubLogo,
       clubName,
-      contractExpiryDate,
-      image
+      contractStartDate,
+      player_profile_image,
+      id,
+      Nationality,
+      Statistics[0],
+      Statistics[1]
     );
   });
 
@@ -405,104 +645,362 @@ export default function FilteredPlayersTable() {
         </Table>
       </TableContainer> */}
 
-      <TableContainer
-        className="cardBackground primaryTextColor"
-        sx={{
-          width: "100%",
-          height: "30%",
-          overflowY: "scroll",
-          borderRadius: "0vw",
-          borderTopLeftRadius: ".4vw",
-          borderTopRightRadius: ".4vw",
-        }}
-        component={Card}
-      >
-        <Table
-          aria-label="collapsible table"
-          sx={{ width: "100%", height: "80%" }}
-        >
-          <TableHead>
-            <TableRow>
-              {/* <TableCell /> */}
-              <TableCell />
-              <TableCell />
-
-              <TableCell sx={{ marginLeft: "4vw" }}>
-                &nbsp; &nbsp;&nbsp;
-                <Checkbox />{" "}
-              </TableCell>
-              <TableCell> &nbsp; &nbsp; Personal</TableCell>
-              <TableCell />
-
-              <TableCell />
-              <TableCell />
-              <TableCell />
-              <TableCell />
-
-              <TableCell align="right">Age</TableCell>
-              <TableCell align="right">Foot</TableCell>
-              <TableCell align="right">Height</TableCell>
-              <TableCell align="right">Country</TableCell>
-              <TableCell align="right">Club</TableCell>
-              <TableCell align="right">Market value</TableCell>
-              <TableCell align="right">Contract Expiry</TableCell>
-            </TableRow>
-          </TableHead>
-        </Table>
-      </TableContainer>
-
-      <TableContainer
-        className="cardBackground primaryTextColor"
-        sx={{
-          width: "100%",
-          height: "130%",
-          overflowY: "scroll",
-          borderRadius: "0vw",
-        }}
-        component={Card}
-      >
-        <Table
-          aria-label="collapsible table"
-          sx={{ width: "100%", height: "80%" }}
-        >
-          {/* <TableHead
+      {PossiblePlayerMatch?.length === 0 ? (
+        " No Matches "
+      ) : (
+        <>
+          <TableContainer
+            className="cardBackground primaryTextColor"
             sx={{
-              // visibility: "hidden",
-              height: "0vh",
-              backround: "red",
-            }}
-          >
-            <TableRow>
-              <TableCell />
-
-              <TableCell>
-                {" "}
-                <Checkbox />{" "}
-              </TableCell>
-              <TableCell>Personal</TableCell>
-              <TableCell align="right">Age</TableCell>
-              <TableCell align="right">Foot</TableCell>
-              <TableCell align="right">Height</TableCell>
-              <TableCell align="right">Country</TableCell>
-              <TableCell align="right">Club</TableCell>
-              <TableCell align="right">Market value</TableCell>
-              <TableCell align="right">Contract Expiry</TableCell>
-            </TableRow>
-          </TableHead> */}
-          <TableBody
-            sx={{
+              width: "100%",
+              height: "30%",
               overflowY: "scroll",
-              maxHeight: "20vh",
+              borderRadius: "0vw",
+              borderTopLeftRadius: ".4vw",
+              borderTopRightRadius: ".4vw",
             }}
+            component={Card}
           >
-            {/* <div style={{ overflowY: "scroll", height: "300px" }}> */}
-            {rows.map((row) => (
-              <Row key={row.name} row={row} />
-            ))}
-            {/* </div> */}
-          </TableBody>{" "}
-        </Table>
-      </TableContainer>
+            <Table
+              aria-label="collapsible table"
+              sx={{ width: "100%", height: "80%" }}
+            >
+              <TableHead>
+                <TableRow>
+                  {/* <TableCell /> */}
+                  <TableCell />
+                  <TableCell />
+
+                  <TableCell sx={{ marginLeft: "4vw" }}>
+                    &nbsp; &nbsp;&nbsp;
+                    <Checkbox />{" "}
+                  </TableCell>
+                  <TableCell>
+                    {" "}
+                    &nbsp; &nbsp; Personal {PossiblePlayerMatch?.length}
+                  </TableCell>
+                  <TableCell />
+
+                  <TableCell />
+                  <TableCell />
+                  <TableCell />
+                  <TableCell />
+
+                  <TableCell align="right"> Age</TableCell>
+                  <TableCell align="right">Foot</TableCell>
+                  <TableCell align="right">Height</TableCell>
+                  <TableCell align="right">Country</TableCell>
+                  <TableCell align="right">Club</TableCell>
+                  <TableCell align="right">Market value</TableCell>
+                  <TableCell align="right">Contract Expiry</TableCell>
+                </TableRow>
+              </TableHead>
+            </Table>
+          </TableContainer>
+
+          <TableContainer
+            className="cardBackground primaryTextColor"
+            sx={{
+              width: "100%",
+              height: "130%",
+              overflowY: "scroll",
+              borderRadius: "0vw",
+            }}
+            component={Card}
+          >
+            <Table
+              aria-label="collapsible table"
+              sx={{ width: "100%", height: "80%" }}
+            >
+              {/* <TableHead
+      sx={{
+        // visibility: "hidden",
+        height: "0vh",
+        backround: "red",
+      }}
+    >
+      <TableRow>
+        <TableCell />
+
+        <TableCell>
+          {" "}
+          <Checkbox />{" "}
+        </TableCell>
+        <TableCell>Personal</TableCell>
+        <TableCell align="right">Age</TableCell>
+        <TableCell align="right">Foot</TableCell>
+        <TableCell align="right">Height</TableCell>
+        <TableCell align="right">Country</TableCell>
+        <TableCell align="right">Club</TableCell>
+        <TableCell align="right">Market value</TableCell>
+        <TableCell align="right">Contract Expiry</TableCell>
+      </TableRow>
+    </TableHead> */}
+              <TableBody
+                sx={{
+                  overflowY: "scroll",
+                  maxHeight: "20vh",
+                }}
+              >
+                {/* <div style={{ overflowY: "scroll", height: "300px" }}> */}
+                {rows.map((row, key) => (
+                  <Row key={key} row={row} />
+                ))}
+                {/* </div> */}
+              </TableBody>{" "}
+            </Table>
+          </TableContainer>
+        </>
+      )}
     </div>
   );
 }
+
+// export default function FilteredPlayersTable() {
+//   // const playersInAgencyArray = useSelector(selectPlayersInAgencyArray);
+
+//   // Age,
+//   // Foot,
+//   // Height,
+//   // Country,
+//   // MarketValue,
+//   // clubName,
+//   // Nationality,
+//   // StatisticsOverall,
+//   const currentProfileFilterObject = useSelector(
+//     selectCurrentProfileFilterObject
+//   );
+
+//   const MatchedPlayersArray = useSelector(selectPlayersDatabase);
+
+//   const allClubsInDatabase = useSelector(selectClubsInDatabase);
+
+//   const calculateMatches = (player, conditionsArray) => {
+//     return conditionsArray.filter((condition) => condition(player)).length;
+//   };
+
+//   // Define variablesToCompare outside the IIFE
+//   const {
+//     Nationality,
+//     position,
+//     height,
+//     marketValue,
+//     // Add more properties as needed
+//   } = MatchedPlayersArray[0]; // Use the first player as an example to get the properties
+
+//   const variablesToCompare = [
+//     (player) =>
+//       Nationality.toLowerCase() ===
+//       currentProfileFilterObject.NationalityValue.toLowerCase(),
+//     (player) =>
+//       player?.Age >= currentProfileFilterObject.AgeRangeValue[0] &&
+//       player?.Age <= currentProfileFilterObject.AgeRangeValue[1],
+//     (player) =>
+//       height >= currentProfileFilterObject.HeightRangeValue[0] &&
+//       height <= currentProfileFilterObject.HeightRangeValue[1],
+//     (player) =>
+//       player?.marketValue >= currentProfileFilterObject.MarketValue[0] &&
+//       player?.marketValue <= currentProfileFilterObject.MarketValue[1],
+//     (player) =>
+//       currentProfileFilterObject?.PlayerPositionAutoCompleteValue.toLowerCase() ===
+//       position.toLowerCase(),
+//     (player) =>
+//       player?.preferredFoot.toLowerCase() ===
+//       currentProfileFilterObject.PrefferedFootRadioValue.toLowerCase(),
+//     (player) =>
+//       currentProfileFilterObject.ContractStatusCheckBoxes.includes(
+//         player?.clubName
+//       ),
+//     // Add more conditions as needed
+//   ];
+
+//   console.log(variablesToCompare, "matches comps");
+
+//   // Filter players based on the comparison array
+//   const filteredPlayers = MatchedPlayersArray.filter((player) => {
+//     const numberOfMatches = variablesToCompare.filter((condition) =>
+//       condition(player)
+//     ).length;
+//     return numberOfMatches >= 4;
+//   });
+
+//   // Now, you can use variablesToCompare in the sort function
+//   const sortedPlayers = filteredPlayers.sort((playerA, playerB) => {
+//     // Sorting logic here
+//     // For example, you can compare the number of matches
+//     const matchesA = calculateMatches(playerA, variablesToCompare);
+//     const matchesB = calculateMatches(playerB, variablesToCompare);
+
+//     // Sort in descending order (from higher matches to lower)
+//     return matchesB - matchesA;
+//   });
+
+//   // Console log to display sorted player objects
+//   console.log("Sorted Players:", sortedPlayers);
+
+//   // Console log to display sorted player objects
+//   console.log(filteredPlayers, "Sorted Players:", sortedPlayers);
+
+//   const rows = sortedPlayers?.map((data) => {
+//     const {
+//       firstName,
+//       surName,
+//       Age,
+//       position,
+//       CountryCode,
+//       Nationality,
+//       jerseyNumber,
+//       player_profile_image,
+//       clubName,
+//       Statistics,
+//       preferredFoot,
+//       height,
+//       marketValue,
+//       contractStartDate,
+//       id,
+//     } = data;
+
+//     const clubObject = allClubsInDatabase.find((data) => {
+//       return data.clubName === clubName;
+//     });
+
+//     const ClubLogo = clubObject === undefined ? "" : clubObject?.clubImage;
+
+//     return createData(
+//       `${firstName} ${surName}`,
+//       Age,
+//       preferredFoot,
+//       height,
+//       CountryCode,
+//       marketValue,
+//       ClubLogo,
+//       clubName,
+//       contractStartDate,
+//       player_profile_image,
+//       id,
+//       Nationality,
+//       Statistics[0],
+//       Statistics[1]
+//     );
+//   });
+
+//   console.log("Table Row", rows);
+
+//   return (
+//     <div style={{ height: "42.5vh", width: "100%" }}>
+//       {/* <TableContainer>
+//         <Table
+//           aria-label="collapsible table"
+//           sx={{ width: "100%", height: "80%" }}
+//         >
+
+//         </Table>
+//       </TableContainer> */}
+
+//       {sortedPlayers?.length === 0 ? (
+//         " No Matches "
+//       ) : (
+//         <>
+//           <TableContainer
+//             className="cardBackground primaryTextColor"
+//             sx={{
+//               width: "100%",
+//               height: "30%",
+//               overflowY: "scroll",
+//               borderRadius: "0vw",
+//               borderTopLeftRadius: ".4vw",
+//               borderTopRightRadius: ".4vw",
+//             }}
+//             component={Card}
+//           >
+//             <Table
+//               aria-label="collapsible table"
+//               sx={{ width: "100%", height: "80%" }}
+//             >
+//               <TableHead>
+//                 <TableRow>
+//                   {/* <TableCell /> */}
+//                   <TableCell />
+//                   <TableCell />
+
+//                   <TableCell sx={{ marginLeft: "4vw" }}>
+//                     &nbsp; &nbsp;&nbsp;
+//                     <Checkbox />{" "}
+//                   </TableCell>
+//                   <TableCell> &nbsp; &nbsp; Personal</TableCell>
+//                   <TableCell />
+
+//                   <TableCell />
+//                   <TableCell />
+//                   <TableCell />
+//                   <TableCell />
+
+//                   <TableCell align="right">Age</TableCell>
+//                   <TableCell align="right">Foot</TableCell>
+//                   <TableCell align="right">Height</TableCell>
+//                   <TableCell align="right">Country</TableCell>
+//                   <TableCell align="right">Club</TableCell>
+//                   <TableCell align="right">Market value</TableCell>
+//                   <TableCell align="right">Contract Expiry</TableCell>
+//                 </TableRow>
+//               </TableHead>
+//             </Table>
+//           </TableContainer>
+
+//           <TableContainer
+//             className="cardBackground primaryTextColor"
+//             sx={{
+//               width: "100%",
+//               height: "130%",
+//               overflowY: "scroll",
+//               borderRadius: "0vw",
+//             }}
+//             component={Card}
+//           >
+//             <Table
+//               aria-label="collapsible table"
+//               sx={{ width: "100%", height: "80%" }}
+//             >
+//               {/* <TableHead
+//       sx={{
+//         // visibility: "hidden",
+//         height: "0vh",
+//         backround: "red",
+//       }}
+//     >
+//       <TableRow>
+//         <TableCell />
+
+//         <TableCell>
+//           {" "}
+//           <Checkbox />{" "}
+//         </TableCell>
+//         <TableCell>Personal</TableCell>
+//         <TableCell align="right">Age</TableCell>
+//         <TableCell align="right">Foot</TableCell>
+//         <TableCell align="right">Height</TableCell>
+//         <TableCell align="right">Country</TableCell>
+//         <TableCell align="right">Club</TableCell>
+//         <TableCell align="right">Market value</TableCell>
+//         <TableCell align="right">Contract Expiry</TableCell>
+//       </TableRow>
+//     </TableHead> */}
+//               <TableBody
+//                 sx={{
+//                   overflowY: "scroll",
+//                   maxHeight: "20vh",
+//                 }}
+//               >
+//                 {/* <div style={{ overflowY: "scroll", height: "300px" }}> */}
+//                 {rows.map((row) => (
+//                   <Row key={row.name} row={row} />
+//                 ))}
+//                 {/* </div> */}
+//               </TableBody>{" "}
+//             </Table>
+//           </TableContainer>
+//         </>
+//       )}
+//     </div>
+//   );
+// }

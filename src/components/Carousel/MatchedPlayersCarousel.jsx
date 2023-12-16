@@ -1,9 +1,17 @@
-import { Avatar } from "@mui/material";
-import { useState } from "react";
+import { Avatar, CircularProgress } from "@mui/material";
+import { useEffect, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { useSelector } from "react-redux";
-import { selectCurrentScreenSize } from "../../statemanager/slices/OtherComponentStatesSlice";
+import {
+  selectCurrentBrowserSize,
+  selectCurrentScreenSize,
+} from "../../statemanager/slices/OtherComponentStatesSlice";
+import { selectAllPlayersVideos } from "../../statemanager/slices/VideosSlice";
+import { useNavigate } from "react-router-dom";
+import { collection, getDocs, query } from "firebase/firestore";
+import { db } from "../../Firebase/Firebase";
+import { selectPlayersDatabase } from "../../statemanager/slices/DatabaseSlice";
 
 const MatchedPlayersCarousel = () => {
   const responsive = {
@@ -28,48 +36,80 @@ const MatchedPlayersCarousel = () => {
     },
   };
 
-  const reelArray = [
-    {
-      publisherImg: "/Solomon safo-taylor.jpg",
-      video: "/shaibuJuggling.mp4",
-    },
-    {
-      publisherImg: "/opare.jpg",
-      video: "/believerJuggling.mp4",
-    },
-    {
-      publisherImg: "/solomon agbasi.jpeg",
-      video: "./shaibuJuggling.mp4",
-    },
-    {
-      publisherImg: "/Pa_Ebou_Dampha.jpeg",
-      video: "/believerJuggling.mp4",
-    },
-    {
-      publisherImg: "/richard attah.jpeg",
-      video: "/believerJuggling.mp4",
-    },
-    {
-      publisherImg: "/sowah.jpeg",
-      video: "/believerJuggling.mp4",
-    },
-    {
-      publisherImg: "/Solomon safo-taylor.jpg",
-      video: "/shaibuJuggling.mp4",
-    },
-    {
-      publisherImg: "/richard attah.jpeg",
-      video: "/believerJuggling.mp4",
-    },
-    {
-      publisherImg: "/solomon agbasi.jpeg",
-      video: "/shaibuJuggling.mp4",
-    },
-    {
-      publisherImg: "/stephen owusu.webp",
-      video: "/believerJuggling.mp4",
-    },
-  ];
+  const [AllVideos, setAllVideos] = useState([]);
+
+  const [onOpen, setOnOpen] = useState(false);
+  const [randomizedVideos, setRandomizedVideos] = useState([]);
+
+  const AllPlayers = useSelector(selectPlayersDatabase);
+
+  // Fisher-Yates shuffle function
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array; // Return the shuffled array
+  }
+  // useEffect(() => {
+  //   if (AllVideos.length > 0 && onOpen === false) {
+  //     setOnOpen(true);
+  //     const shuffledVideos = shuffleArray(AllVideos);
+  //     setRandomizedVideos(shuffledVideos);
+  //   }
+  // }, [AllVideos, onOpen]);
+  useEffect(() => {
+    // if (AllVideos.length > 0 && onOpen === false) {
+    //   setOnOpen(true);
+    const shuffledVideos = shuffleArray([...AllVideos]);
+    setRandomizedVideos(shuffledVideos);
+    // }
+  }, [AllVideos, onOpen]);
+
+  // Shuffle the array on page load
+
+  useEffect(() => {
+    const fetchPlayerVideos = async () => {
+      const allVideos = [];
+
+      await Promise.all(
+        AllPlayers.map(async (data) => {
+          const { id: playerId, player_profile_image } = data;
+
+          const videosQuery = query(
+            collection(db, `players_database/${playerId}/videos`)
+          );
+
+          try {
+            const videosSnapshot = await getDocs(videosQuery);
+            const playerVideos = videosSnapshot.docs.map((videoDoc) => ({
+              ...videoDoc.data(),
+              playerId: playerId,
+              playerProfileImage: player_profile_image,
+            }));
+
+            allVideos.push(...playerVideos);
+          } catch (error) {
+            console.error(
+              `Error fetching videos for player ${playerId}:`,
+              error
+            );
+          }
+        })
+      );
+
+      // Now 'allVideos' contains an array of all videos for all players
+      console.log("All Videos: now", allVideos);
+      setAllVideos(allVideos);
+      // Use 'allVideos' as needed (e.g., dispatch to Redux store)
+    };
+
+    // Call the function to fetch player videos
+    fetchPlayerVideos();
+  }, [AllPlayers, db]);
+
+  // Use the randomized array as needed
+  // console.log(AllVideos);
 
   const [currentPlayingVideoIndex, setCurrentPlayingVideoIndex] = useState("");
 
@@ -103,53 +143,75 @@ const MatchedPlayersCarousel = () => {
   let screenWidth = parseInt(screenSize?.width, 10);
 
   return (
-    <div
-      style={{
-        position: "relative",
-        height: "100%",
-        width: screenWidth >= 1024 ? "77vw" : "90vw",
-        // background: "red",
-      }}
-    >
-      <Carousel
-        responsive={responsive}
-        arrows={screenWidth >= 1024 ? true : false}
-        swipeable={screenWidth >= 1024 ? true : true}
-        draggable={screenWidth >= 1024 ? true : true}
-      >
-        {reelArray.map((data, index) => {
-          const { publisherImg, video } = data;
+    <>
+      {randomizedVideos.length === 0 ? (
+        <div
+          style={{
+            position: "relative",
+            height: "100%",
+            width: screenWidth >= 1024 ? "77vw" : "90vw",
+            // background: "red",
+            display: "grid",
+            placeContent: "center",
+          }}
+        >
+          <CircularProgress />{" "}
+        </div>
+      ) : (
+        <div
+          style={{
+            position: "relative",
+            height: "100%",
+            width: screenWidth >= 1024 ? "77vw" : "90vw",
+            // background: "red",
+          }}
+        >
+          <Carousel
+            responsive={responsive}
+            arrows={screenWidth >= 1024 ? true : false}
+            swipeable={screenWidth >= 1024 ? true : true}
+            draggable={screenWidth >= 1024 ? true : true}
+          >
+            {randomizedVideos.map((data, index) => {
+              const { url, playerProfileImage, playerId, id } = data;
 
-          return (
-            <div
-              // onClick={() => {
-              //   handleVideoClick(index);
-              // }}
-              key={index}
-            >
-              <VideoCard
-                publisherImg={publisherImg}
-                video={video}
-                vidIndex={index}
-              />{" "}
-            </div>
-          );
-        })}
-      </Carousel>
-    </div>
+              return (
+                <div
+                  // onClick={() => {
+                  //   handleVideoClick(index);
+                  // }}
+                  key={index}
+                >
+                  <VideoCard
+                    publisherImg={playerProfileImage}
+                    video={url}
+                    vidIndex={id}
+                    playerId={playerId}
+                  />{" "}
+                </div>
+              );
+            })}
+          </Carousel>
+        </div>
+      )}
+    </>
   );
 };
 
 export default MatchedPlayersCarousel;
 
-const VideoCard = ({ publisherImg, video, vidIndex }) => {
+const VideoCard = ({ publisherImg, video, vidIndex, playerId }) => {
   const screenSize = useSelector(selectCurrentScreenSize);
+  const browserSize = useSelector(selectCurrentBrowserSize);
 
   let screenWidth = parseInt(screenSize?.width, 10);
+  let browserWidth = parseInt(browserSize?.width, 10);
+
+  const navigate = useNavigate();
 
   return (
     <>
-      {screenWidth >= 1024 ? (
+      {browserWidth >= 1024 ? (
         <div
           style={{
             borderRadius: "1vw",
@@ -167,17 +229,23 @@ const VideoCard = ({ publisherImg, video, vidIndex }) => {
               display: "flex",
             }}
           >
-            <Avatar
-              className="cardBackground"
-              src={publisherImg}
-              sx={{
-                width: 30,
-                height: 30,
-                border: "1px solid #5585FE",
-                cursor: "pointer",
-                // right: "1vw",
+            <span
+              onClick={() => {
+                navigate(`/player-details/${playerId}`);
               }}
-            />
+            >
+              <Avatar
+                className="cardBackground"
+                src={publisherImg}
+                sx={{
+                  width: 30,
+                  height: 30,
+                  border: "1px solid #5585FE",
+                  cursor: "pointer",
+                  // right: "1vw",
+                }}
+              />
+            </span>
 
             <h6
               style={{

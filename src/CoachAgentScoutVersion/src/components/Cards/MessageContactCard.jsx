@@ -1,29 +1,32 @@
-import { Checkbox } from "@mui/material";
+import { Avatar, Checkbox, Tooltip } from "@mui/material";
 
-const InboxMessageCard = () => {
+const MessageContactCard = ({ profileImage, message, time, profileName }) => {
   return (
     <div
       className="messageCard cardBackground"
       style={{
         width: "100%",
-        height: "24%",
+        height: "20%",
         marginBottom: "1%",
         // background: "blue",
         display: "flex",
         padding: ".2vw",
         borderRadius: ".5vw",
+        paddingTop: "1vh",
+        paddingRight: ".5vw",
         // borderLeft: "3px solid white",
         // border: "1px solid black",
       }}
     >
       {/* // CHECKBOX AREA */}
-      <div style={{ flex: ".1" }}>
-        <Checkbox />
+      <div style={{ flex: ".2", display: "flex", justifyContent: "center" }}>
+        {/* <Checkbox /> */}
+        <Avatar src={profileImage} sx={{ width: 50, height: 50 }} />
       </div>
       {/* // MESSAGE CONTENT AREA */}
       <div
         style={{
-          flex: ".9",
+          flex: ".8",
           display: "flex",
           flexDirection: "column",
           fontSize: ".9em",
@@ -32,15 +35,27 @@ const InboxMessageCard = () => {
         {/* // FROM AND DATE */}
         <div style={{ flex: ".3", display: "flex" }}>
           {/* // MESSAGE FROM */}
-          <span style={{ flex: ".7" }}>Dabo Academy</span>
+          <span style={{ flex: ".7" }}>
+            {" "}
+            <Tooltip title={profileName?.length > 20 ? profileName : ""}>
+              {" "}
+              <b>
+                {" "}
+                {profileName?.length > 20
+                  ? `${profileName.substring(0, 17)}...`
+                  : profileName}{" "}
+              </b>
+            </Tooltip>{" "}
+          </span>
           {/* // DATE RECEIVED */}
           <span
             style={{
               flex: ".3",
               textAlign: "right",
+              fontSize: ".8em",
             }}
           >
-            01/10/2023
+            {time}
           </span>
         </div>
 
@@ -53,12 +68,10 @@ const InboxMessageCard = () => {
             flexDirection: "column",
           }}
         >
-          {/* SUBJECT */}
-          <div style={{ flex: ".4" }}>Subject area</div>
-
           {/* MESSAGE */}
-          <div style={{ flex: ".6" }}>
-            MEssage this will work and it wikk wirk
+
+          <div style={{ flex: "1" }}>
+            {message?.length > 81 ? `${message.substring(0, 78)}...` : message}
           </div>
         </div>
       </div>
@@ -66,4 +79,4 @@ const InboxMessageCard = () => {
   );
 };
 
-export default InboxMessageCard;
+export default MessageContactCard;

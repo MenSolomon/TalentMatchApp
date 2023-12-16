@@ -4,6 +4,7 @@ import PlayerCompareDisplayCard from "../../components/Cards/PlayerComparisonFil
 import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInAgencySlice";
 import { useSelector } from "react-redux";
 import RangeSlider from "../../components/Slider/RangeSlider";
+import { selectPlayersDatabase } from "../../statemanager/slices/DatabaseSlice";
 
 const PlayerFilter = () => {
   const soccerPositions = [
@@ -30,7 +31,9 @@ const PlayerFilter = () => {
     marginTop: "1vh",
   };
 
-  const playerData = useSelector(selectPlayersInAgencyArray);
+  // const playerData = useSelector(selectPlayersInAgencyArray);
+
+  const playerData = useSelector(selectPlayersDatabase);
 
   return (
     <div style={{ height: "77vh", display: "flex", flexDirection: "column" }}>
@@ -63,7 +66,19 @@ const PlayerFilter = () => {
         }}
       >
         {playerData.map((data, index) => {
-          const { firstName, surName, position, image } = data;
+          const {
+            firstName,
+            surName,
+            position,
+            player_profile_image,
+            Statistics,
+            id,
+            clubName,
+            Nationality,
+            CountryCode,
+            Age,
+            height,
+          } = data;
 
           return (
             <PlayerCompareDisplayCard
@@ -71,7 +86,14 @@ const PlayerFilter = () => {
               firstName={firstName}
               surName={surName}
               position={position}
-              image={image}
+              height={height}
+              image={player_profile_image}
+              statistics={Statistics}
+              playerId={id}
+              clubName={clubName}
+              Nationality={Nationality}
+              CountryCode={CountryCode}
+              Age={Age}
             />
           );
         })}

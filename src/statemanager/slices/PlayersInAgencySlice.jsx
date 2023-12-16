@@ -208,6 +208,7 @@ export const PlayersInAgencySlice = createSlice({
     ],
     playersInAgency: [],
     selectedPlayerToCompareArray: [],
+    PlayerSelectedToView: {},
     playerSelectedByClubOrScoutInPlayerManagement: {},
     playerObjectSampleWithoutBasicInformation: {
       current_health: "Match Fit",
@@ -490,6 +491,10 @@ export const PlayersInAgencySlice = createSlice({
     setPlayerSelectedByClubOrScoutInPlayerManagement: (state, action) => {
       state.playerSelectedByClubOrScoutInPlayerManagement = action.payload;
     },
+    setPlayerSelectedToView: (state, action) => {
+      state.PlayerSelectedToView = action.payload;
+    },
+
     // setplayerObjectSampleWithoutBasicInformation: (state, action) => {
     //   state.playerSelectedByClubOrScoutInPlayerManagement = action.payload;
     // },
@@ -507,11 +512,14 @@ export const selectPlayerSelectedByClubOrScoutInPlayerManagement = (state) =>
 
 export const selectPlayerObjectSampleWithoutBasicInformation = (state) =>
   state.PlayersInAgencySlice.playerObjectSampleWithoutBasicInformation;
+export const selectPlayerSelectedToView = (state) =>
+  state.PlayersInAgencySlice.PlayerSelectedToView;
 
 export const {
   setPlayersInAgencyArray,
   setSelectedPlayerToCompareArray,
   setPlayerSelectedByClubOrScoutInPlayerManagement,
+  setPlayerSelectedToView,
   // setplayerObjectSampleWithoutBasicInformation,
 } = PlayersInAgencySlice.actions;
 export default PlayersInAgencySlice.reducer;

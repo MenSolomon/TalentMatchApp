@@ -1,63 +1,141 @@
-import PlayerComparisonAccordionDetails from "./PlayerComparisonAccordionDetails";
+import { Accordion, AccordionSummary } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Typography from "@mui/material/Typography";
+import AccordionDetails from "@mui/material/AccordionDetails";
 
-export default function PlayerComparisonAccordion() {
+export default function PlayerComparisonAccordion({
+  GeneralObject,
+  DefenseObject,
+  AttackingObject,
+  DistributionObject,
+  Discipline,
+}) {
   return (
     <div>
       <PlayerComparisonAccordionDetails
-        tittle={"Overview"}
-        names={"Appearances "}
-        firstNum={54}
-        secondNum={8}
-        subName={"Goals"}
-        thirdNum={2}
-        assist={"Clean sheets "}
-        save={"saves"}
-        lastNum={0}
+        title={"General"}
+        FirstRowName={"Games Played"}
+        FirstRowNumber={GeneralObject.Games_Played}
+        SecondRowNumber={GeneralObject.Minutes_Played}
+        SecondRowName={"Minutes Played"}
+        ThirdRowNumber={GeneralObject.Subbed_off}
+        ThirdRowName={"Subbed Off"}
+        FourthRowName={"Starts"}
+        FourthRowNumber={GeneralObject.Starts}
       />
       <PlayerComparisonAccordionDetails
-        tittle={"Defense"}
-        names={"Clean sheets  "}
-        firstNum={4}
-        secondNum={9}
-        subName={"Blocks "}
-        thirdNum={2}
-        assist={"Goals Conceded "}
-        save={"Tackles "}
-        lastNum={1}
+        title={"Defense"}
+        FirstRowName={"Clearance"}
+        FirstRowNumber={DefenseObject.Clearance}
+        SecondRowNumber={DefenseObject.Aeriel_duels}
+        SecondRowName={"Aeriel Duels"}
+        ThirdRowNumber={DefenseObject.Duels}
+        ThirdRowName={"Duels "}
+        FourthRowName={"Tackles Success"}
+        FourthRowNumber={DefenseObject.Tackles}
       />
       <PlayerComparisonAccordionDetails
-        tittle={"Attacking"}
-        names={"Goals per match "}
-        firstNum={4}
-        secondNum={9}
-        subName={"Minutes per goal"}
-        thirdNum={2}
-        assist={"Shots"}
-        save={"Shots on target "}
-        lastNum={1}
+        title={"Attacking"}
+        FirstRowName={"Total Shots"}
+        FirstRowNumber={AttackingObject.Total_shots}
+        SecondRowNumber={AttackingObject.Shots_on_target}
+        SecondRowName={"Shots on target"}
+        ThirdRowNumber={AttackingObject.Goals_Scored}
+        ThirdRowName={"Goals scored"}
+        FourthRowName={"Conversion rate"}
+        FourthRowNumber={AttackingObject.Conversion_rate}
       />
       <PlayerComparisonAccordionDetails
-        tittle={"Distribution"}
-        names={"Assists"}
-        firstNum={4}
-        secondNum={9}
-        subName={"Pass Completion % "}
-        thirdNum={2}
-        assist={"Touches "}
-        save={"Passes forward "}
-        lastNum={1}
+        title={"Distribution"}
+        FirstRowName={"Assist"}
+        FirstRowNumber={DistributionObject.Assists}
+        SecondRowNumber={DistributionObject.Total_passes}
+        SecondRowName={"Total passes"}
+        ThirdRowNumber={DistributionObject.Successful_passes}
+        ThirdRowName={"Successful passes"}
+        FourthRowName={"Key passes"}
+        FourthRowNumber={DistributionObject.Key_passes}
       />
       <PlayerComparisonAccordionDetails
-        tittle={"Discipline"}
-        names={"Yellow cards "}
-        firstNum={4}
-        secondNum={9}
-        subName={"Penalties conceded"}
-        thirdNum={2}
-        assist={"Offsides"}
-        save={"Penalties conceded "}
-        lastNum={1}
+        title={"Discipline"}
+        FirstRowName={"Red_cards"}
+        FirstRowNumber={Discipline.Red_cards}
+        SecondRowNumber={Discipline.Yellow_cards}
+        SecondRowName={"Yellow cards"}
+        ThirdRowNumber={Discipline.Fouls_conceeded}
+        ThirdRowName={"Fouls conceeded"}
+        FourthRowName={"Fouls won"}
+        FourthRowNumber={Discipline.Fouls_won}
       />
+    </div>
+  );
+}
+
+function PlayerComparisonAccordionDetails({
+  title,
+  SecondRowName,
+  FirstRowNumber,
+  FirstRowName,
+  SecondRowNumber,
+  ThirdRowNumber,
+  FourthRowNumber,
+  ThirdRowName,
+  FourthRowName,
+}) {
+  return (
+    <>
+      <Accordion className="cardBackground primaryTextColor">
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography style={{ fontWeight: "bold" }}>{title}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            <PlayerComparisonOverviewList
+              numbers={FirstRowNumber}
+              names={FirstRowName}
+            />
+          </Typography>
+          <Typography>
+            <PlayerComparisonOverviewList
+              numbers={SecondRowNumber}
+              names={SecondRowName}
+            />
+          </Typography>
+          <Typography>
+            <PlayerComparisonOverviewList
+              numbers={ThirdRowNumber}
+              names={ThirdRowName}
+            />
+          </Typography>
+          <Typography>
+            <PlayerComparisonOverviewList
+              numbers={FourthRowNumber}
+              names={FourthRowName}
+            />
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+    </>
+  );
+}
+
+function PlayerComparisonOverviewList({ names, numbers }) {
+  return (
+    <div
+      className="primaryTextColor cardBackground"
+      style={{
+        fontSize: ".8em",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <div>{names}</div>
+      <div>{numbers}</div>
     </div>
   );
 }

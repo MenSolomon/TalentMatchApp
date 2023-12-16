@@ -1,10 +1,16 @@
-import { Avatar } from "@mui/material";
+import { Avatar, Tooltip } from "@mui/material";
+import { useSelector } from "react-redux";
+import { selectClubsInDatabase } from "../../../statemanager/slices/ClubsInDatabaseSlice";
+import { LocalPolice } from "@mui/icons-material";
 
 const ClubandNationalTeamDisplayCard = ({
   hTagStyle,
   clubImage,
-  countryImage,
+  countryCode,
   ClubName,
+  Height,
+  PreferredFoot,
+  Nationality,
 }) => {
   return (
     <div
@@ -61,26 +67,60 @@ const ClubandNationalTeamDisplayCard = ({
             </div>
             <div style={{ flex: ".4" }}>
               {" "}
-              <img
-                src={countryImage}
-                style={{ width: "40px", float: "right" }}
-              />{" "}
+              <Tooltip title={Nationality}>
+                <img
+                  src={`https://flagcdn.com/${countryCode
+                    .toString()
+                    .toLowerCase()}.svg`}
+                  style={{ width: "40px", float: "right" }}
+                />{" "}
+              </Tooltip>
             </div>
           </div>
 
           {/* Club Image */}
           <div style={{ flex: ".3", paddingLeft: ".3vw" }}>
             {/* <img src={clubImage} style={{ width: "100%" }} /> */}
-            <Avatar sx={{ width: 60, height: 60 }} src={clubImage}></Avatar>
+
+            {ClubName === "Free agent" ||
+            ClubName === undefined ||
+            clubImage === "" ? (
+              <Tooltip title="Free agent">
+                {" "}
+                <LocalPolice
+                  style={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: "50%",
+                    // zIndex: "10000",
+                  }}
+                />{" "}
+              </Tooltip>
+            ) : (
+              <Tooltip title={ClubName}>
+                {" "}
+                <Avatar
+                  src={clubImage}
+                  style={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: "50%",
+                    // zIndex: "1000",
+                  }}
+                />{" "}
+              </Tooltip>
+            )}
           </div>
         </div>
         {/* // Height And Preffered Foot Area */}
         <div>
           {" "}
           <h6 style={{ ...hTagStyle, fontSize: ".95em" }}>
-            Preferred foot : Left
+            Preferred foot : {PreferredFoot}
           </h6>{" "}
-          <h6 style={{ ...hTagStyle, fontSize: ".95em" }}>Height : 5'11''</h6>{" "}
+          <h6 style={{ ...hTagStyle, fontSize: ".95em" }}>
+            Height : {Height} m
+          </h6>{" "}
         </div>
       </div>
     </div>

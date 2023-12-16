@@ -5,7 +5,20 @@ import PlayerPositionStatsBarGraphSummary from "../../components/Charts/Bars/Pla
 import PlayerOverallAttributes from "../../components/Charts/Bars/PlayerOverallAttributes";
 // import PlayerPositionStatsBarGraphSummary from "../../components/Charts/Bars/PlayerPositionStatsBarGraphSummary";
 
-const PlayerBio = () => {
+const PlayerBio = ({
+  Nationality,
+  PlaceOfBirth,
+  DateOfBirth,
+  clubName,
+  contractStartDate,
+  contactEndDate,
+  Position,
+}) => {
+  const dateObject = new Date(DateOfBirth);
+
+  // Get the date portion without the time and "GMT"
+  const formattedDate = dateObject.toDateString();
+
   return (
     <div
       style={{
@@ -63,7 +76,7 @@ const PlayerBio = () => {
                 }}
               >
                 {" "}
-                Citizenship : Ghanaian{" "}
+                Citizenship : {Nationality}{" "}
               </div>
               <div
                 style={{
@@ -73,18 +86,7 @@ const PlayerBio = () => {
                 }}
               >
                 {" "}
-                Place of birth : Ghanaian{" "}
-              </div>
-
-              <div
-                style={{
-                  fontWeight: "700",
-                  fontSize: ".8em",
-                  marginBottom: "1.1vh",
-                }}
-              >
-                {" "}
-                Date of birth : 12 february 2003{" "}
+                Place of birth : {PlaceOfBirth}{" "}
               </div>
 
               <div
@@ -95,7 +97,7 @@ const PlayerBio = () => {
                 }}
               >
                 {" "}
-                Currnet Team : Ghanaian{" "}
+                Date of birth : {formattedDate}{" "}
               </div>
 
               <div
@@ -106,17 +108,7 @@ const PlayerBio = () => {
                 }}
               >
                 {" "}
-                Joined : Ghanaian{" "}
-              </div>
-              <div
-                style={{
-                  fontWeight: "700",
-                  fontSize: ".8em",
-                  marginBottom: "1.1vh",
-                }}
-              >
-                {" "}
-                Position : Ghanaian{" "}
+                Currnet Team : {clubName}{" "}
               </div>
 
               <div
@@ -127,7 +119,28 @@ const PlayerBio = () => {
                 }}
               >
                 {" "}
-                Contract Expires : Ghanaian{" "}
+                Joined : {contractStartDate}{" "}
+              </div>
+              <div
+                style={{
+                  fontWeight: "700",
+                  fontSize: ".8em",
+                  marginBottom: "1.1vh",
+                }}
+              >
+                {" "}
+                Position : {Position}
+              </div>
+
+              <div
+                style={{
+                  fontWeight: "700",
+                  fontSize: ".8em",
+                  marginBottom: "1.1vh",
+                }}
+              >
+                {" "}
+                Contract Expires : {contactEndDate}{" "}
               </div>
             </Card>{" "}
           </div>

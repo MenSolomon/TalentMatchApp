@@ -38,7 +38,7 @@ const VideoComponentRows = ({ url, description, category, date, views }) => {
       </div>
 
       {/* Description */}
-      <div style={{ flex: ".33" }}>{description} </div>
+      <div style={{ flex: ".33", background: "blue" }}>{description} sa </div>
 
       {/* Date uploaded */}
       <div style={{ flex: ".17" }}>{date}</div>

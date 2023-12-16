@@ -4,11 +4,16 @@ import { useSelector } from "react-redux";
 import VideoImage from "../../assets/images/videoImage.svg";
 import { selectThemeProviderObject } from "../../statemanager/slices/ThemeProviderSlice";
 import UploadVideoModal from "../../../../PlayerVersion/src/components/Modals/UploadVideosModal";
+import { selectPlayerSelectedByClubOrScoutInPlayerManagement } from "../../../../statemanager/slices/PlayersInAgencySlice";
 
 const PlayerManagementDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
 
   const { primaryTextColor } = ThemeProvider;
+
+  const selectPlayer = useSelector(
+    selectPlayerSelectedByClubOrScoutInPlayerManagement
+  );
 
   const dummyRecentMessages = [
     {
@@ -113,7 +118,9 @@ const PlayerManagementDashboard = () => {
               <h5>Profile Analytics</h5>
 
               <h6>Total profile views</h6>
-              <h4>12</h4>
+              <h4>
+                {selectPlayer?.views === undefined ? "0" : selectPlayer.views}
+              </h4>
             </div>
 
             {/* /// SUMMARY*/}
@@ -126,8 +133,11 @@ const PlayerManagementDashboard = () => {
             >
               <h6>Summary</h6>
               <h6 className="secondaryTextColor">Last 28 days</h6>
-              <h6>Views</h6>
-              <h6>Watch Time(hours)</h6>
+              <h6>Most viewed video</h6>
+              <h6>-</h6>
+
+              {/* <h6>Watch Time(hours)</h6>
+               */}
             </div>
 
             {/* TOP VIDEOS SECTION */}

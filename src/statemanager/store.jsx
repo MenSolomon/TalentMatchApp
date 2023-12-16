@@ -16,6 +16,8 @@ import DatabaseReducer from "./slices/DatabaseSlice";
 import ClubsInDatabaseReducer from "./slices/ClubsInDatabaseSlice";
 import InternetActivitieReducer from "./slices/InternetActivitiesSlice";
 import NofiticationsReducer from "./slices/NofiticationsSlice";
+import MessagesReducer from "./slices/MessagesSlice";
+import VideosReducer from "./slices/VideosSlice";
 
 const persistConfig = {
   key: "root",
@@ -29,6 +31,7 @@ const persistConfig = {
     // "UserLoginData",
     // "SavedProfiles",
     "OtherComponentStates",
+    "Videos",
     // "Database",
     // "ThemeProviderSlice",
     "TempDatabase",
@@ -44,6 +47,7 @@ const PlayersInAgencySlicePersistConfig = {
   blacklist: [
     "selectedPlayerToCompareArray",
     "playerObjectSampleWithoutBasicInformation",
+    "PlayerSelectedToView",
   ],
   whitelist: [
     "playersInAgencyArray",
@@ -84,6 +88,8 @@ const reducer = combineReducers({
   clubsInTalentMeetDatabase: ClubsInDatabaseReducer,
   InternetActivities: InternetActivitieReducer,
   Notifications: NofiticationsReducer,
+  Messages: MessagesReducer,
+  Videos: VideosReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

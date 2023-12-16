@@ -3,13 +3,32 @@ import leftShot from "../../../../assets/images/leftplayer.png";
 import otherGoals from "../../../../assets/images/otherGoals.png";
 import rightShot from "../../../../assets/images/rightfoot.png";
 import header from "../../../../assets/images/header.png";
+import { selectPlayerSelectedToView } from "../../../../statemanager/slices/PlayersInAgencySlice";
+import { useSelector } from "react-redux";
 
-const Attack = () => {
+const Attack = ({ Period }) => {
+  const PlayerSelectedToViewObject = useSelector(selectPlayerSelectedToView);
+  // Write a snapshot function that receives data updated in realtime
+
+  const { Statistics } = PlayerSelectedToViewObject;
+
+  const filteredSeasonStats = Statistics.find((data) => {
+    return data.Season === Period;
+  });
+
+  console.log(filteredSeasonStats);
+
+  const { Attack } = filteredSeasonStats;
+  console.log(Attack);
+
   return (
     <div className="primaryColor" style={{ display: "flex" }}>
       <div style={{ flex: ".4" }}>
-        {" "}
-        <PlayerGoalDetailsGraph />
+        <PlayerGoalDetailsGraph
+          TotalShots={Attack.Total_shots}
+          ShotsOnTarget={Attack.Shots_on_target}
+          GoalsScored={Attack?.Goals_Scored}
+        />
       </div>
       <div style={{ flex: ".6", display: "flex" }}>
         {/* conversion Rate and minutes per goal area */}
@@ -23,11 +42,11 @@ const Attack = () => {
         >
           <div style={{ flex: ".5", textAlign: "center" }}>
             <span style={{ fontSize: ".75em" }}>Conversion Rate </span> <br />{" "}
-            20%
+            {Attack.Conversion_rate}%
           </div>
           <div style={{ flex: ".5", textAlign: "center" }}>
             <span style={{ fontSize: ".75em" }}>Minutes per goal </span> <br />{" "}
-            69
+            {Attack.Minutes_per_goal}
           </div>
         </div>
 
@@ -42,28 +61,28 @@ const Attack = () => {
           }}
         >
           <DisplayGoalTypeCard
-            NumberOfGoals={2}
+            NumberOfGoals={Attack.Left_goals}
             goalTypeImage={leftShot}
             GoalType={"Left goals"}
             gridArea="first"
           />
 
           <DisplayGoalTypeCard
-            NumberOfGoals={15}
+            NumberOfGoals={Attack.Right_goals}
             goalTypeImage={rightShot}
             GoalType={"Right goals"}
             gridArea="second"
           />
 
           <DisplayGoalTypeCard
-            NumberOfGoals={1}
+            NumberOfGoals={Attack.Header_goals}
             goalTypeImage={header}
             GoalType={"Header goals"}
             gridArea="third"
           />
 
           <DisplayGoalTypeCard
-            NumberOfGoals={2}
+            NumberOfGoals={Attack.Other_goals}
             goalTypeImage={otherGoals}
             GoalType={"Other goals"}
             gridArea="fourth"
@@ -91,7 +110,8 @@ const Attack = () => {
                   display: "inline-block",
                 }}
               >
-                <br /> <h4 style={{ margin: "0" }}> 8</h4>{" "}
+                <br />{" "}
+                <h4 style={{ margin: "0" }}> {Attack.Goals_inside_the_box}</h4>{" "}
                 <span style={{ fontSize: ".7em" }}>Goals inside the box</span>
               </div>
             </div>
@@ -108,7 +128,10 @@ const Attack = () => {
               }}
             >
               {" "}
-              <h4 style={{ margin: "0" }}> 8</h4>{" "}
+              <h4 style={{ margin: "0" }}>
+                {" "}
+                {Attack.Goals_outside_the_box}
+              </h4>{" "}
               <span style={{ fontSize: ".7em" }}>Goals outside the box</span>{" "}
             </div>
             {/* Goals Scored from Free kicks */}
@@ -121,7 +144,10 @@ const Attack = () => {
               }}
             >
               {" "}
-              <h4 style={{ margin: "0" }}> 1</h4>{" "}
+              <h4 style={{ margin: "0" }}>
+                {" "}
+                {Attack.Goals_from_freekicks}
+              </h4>{" "}
               <span style={{ fontSize: ".7em" }}>Goals from freekicks</span>{" "}
             </div>
           </div>

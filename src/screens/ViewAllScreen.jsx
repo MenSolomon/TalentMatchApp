@@ -11,6 +11,7 @@ import ProfileEditTooltipToTrigerCreateProfileModal from "../components/Tooltips
 import CreateProfileModal from "../components/Modals/CreateProfileModal";
 import { useEffect } from "react";
 import FilteredPlayersTable from "../components/Tables/FilterPlayersTable";
+import DeleteProfileModal from "../components/Modals/DeleteProfileModal";
 
 const Players = () => {
   const PlayerArray = useSelector(selectPlayersInAgencyArray);
@@ -38,6 +39,12 @@ const Players = () => {
         <h3 style={{ margin: 0, float: "left" }}>{profileName} Profile</h3>
 
         <CreateProfileModal ProfileType="Edit" />
+
+        {profileName.toLocaleLowerCase() === "default" ? (
+          ""
+        ) : (
+          <DeleteProfileModal profileName={profileName} />
+        )}
       </div>
       {/* /// Matched players display */}
       <div

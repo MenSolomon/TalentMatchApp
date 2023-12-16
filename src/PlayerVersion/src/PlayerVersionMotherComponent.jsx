@@ -20,6 +20,7 @@ import { selectClubsInDatabase } from "../../statemanager/slices/ClubsInDatabase
 import { selectCurrentScreenSize } from "../../statemanager/slices/OtherComponentStatesSlice";
 import SmallScreenPlayerMenuDrawer from "./components/Drawer/SmallScreenPlayerMenuDrawer";
 import { setUserSavedProfiles } from "../../statemanager/slices/SavedProfileSlice";
+import NotificationsMenu from "../../components/Menu/NotificationsMenu";
 
 const PlayerVersionMotherComponent = () => {
   const dispatch = useDispatch();
@@ -297,9 +298,11 @@ const PlayerVersionMotherComponent = () => {
         >
           <LightAndDarkModeSwitch />
 
-          <IconButton sx={{ marginTop: "1vh" }}>
-            <NotificationAdd className="primaryColor" />
-          </IconButton>
+          <div
+            style={{ marginTop: "2vh", marginLeft: "-1vw", marginRight: "1vw" }}
+          >
+            <NotificationsMenu />
+          </div>
           <ProfileMenu
             style={{ borderBottom: "none" }}
             name="Active user name"

@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../statemanager/slices/ThemeProviderSlice";
 import UploadPlayerToAgencyModal from "../components/Modals/UploadPlayerToAgencyModal";
 import NewsCard from "../../../components/Cards/NewsCard/NewsCard";
+import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
+import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
 
 const CoachAgentScoutVersionDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
@@ -45,6 +47,33 @@ const CoachAgentScoutVersionDashboard = () => {
       userName: "Amos Acheampong",
     },
   ];
+
+  const userLoginObject = useSelector(selectUserDetailsObject);
+  const allPlayersInDatabase = useSelector(selectPlayersDatabase);
+
+  const playersInPossessionDetails =
+    userLoginObject?.playersInPossession &&
+    userLoginObject?.playersInPossession.map((player) => {
+      const playerIdToMatch = player.playerId;
+      // Find the player in allPlayersArray based on playerId
+      const matchedPlayer = allPlayersInDatabase.find(
+        (databasePlayer) => databasePlayer.id === playerIdToMatch
+      );
+
+      return matchedPlayer;
+    });
+
+  // Filter out undefined or null values from the array
+  const validPlayers = playersInPossessionDetails.filter(Boolean);
+
+  // Sort the validPlayers array based on the "views" property in descending order
+  const sortedPlayers = validPlayers.sort((a, b) => b.views - a.views);
+
+  // Return the player with the highest views, if any
+  const playerWithHighestViews =
+    sortedPlayers.length > 0 ? sortedPlayers[0] : null;
+
+  console.log(playerWithHighestViews, "arrayWithHeighetView");
 
   return (
     <div
@@ -134,7 +163,7 @@ const CoachAgentScoutVersionDashboard = () => {
               <h5>Profile Analytics</h5>
 
               <h6>Total players under management</h6>
-              <h4>12</h4>
+              <h4> {userLoginObject?.playersInPossession.length} </h4>
             </div>
 
             {/* /// SUMMARY*/}
@@ -148,7 +177,11 @@ const CoachAgentScoutVersionDashboard = () => {
               <h6>Summary</h6>
               <h6 className="secondaryTextColor">Last 28 days</h6>
               <h6>Most viewed player</h6>
-              <h6 className="secondaryTextColor"> Ishak Shaibu </h6>
+              <h6 className="secondaryTextColor">
+                {" "}
+                {playerWithHighestViews &&
+                  `${playerWithHighestViews?.firstName} ${playerWithHighestViews?.surName}`}{" "}
+              </h6>
             </div>
 
             {/* TOP VIDEOS SECTION */}

@@ -9,6 +9,9 @@ export default function BasicSelect({
   widthSize,
   label,
   MenuItemArray,
+  defaultValue,
+  fullWidth,
+  sx,
 }) {
   // const [selectValue, setSelectValue] = useState("");
 
@@ -24,8 +27,10 @@ export default function BasicSelect({
         id="demo-simple-select"
         // value={selectValue}
         label="selectValue"
+        defaultValue={defaultValue}
         // size="small"
-        sx={{ width: widthSize ? widthSize : 200 }}
+        fullWidth={fullWidth}
+        sx={{ ...sx, width: widthSize ? widthSize : 200 }}
         onChange={handleChange}
       >
         {MenuItemArray &&

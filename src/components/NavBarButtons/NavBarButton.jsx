@@ -57,6 +57,20 @@ import Icon from "@mui/material/Icon";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../../statemanager/slices/ThemeProviderSlice";
+import {
+  CompareArrows,
+  DoorBack,
+  Favorite,
+  Help,
+  Home,
+  Newspaper,
+  Settings,
+  Star,
+} from "@mui/icons-material";
+
+const iconStyle = {
+  color: "#5585FE",
+};
 
 const NavBarButton = ({ ButtonName, ButtonImage, path, buttonStyle }) => {
   const navigate = useNavigate();
@@ -83,7 +97,25 @@ const NavBarButton = ({ ButtonName, ButtonImage, path, buttonStyle }) => {
           paddingRight: "5vw",
           // color: buttonColor,
         }}
-        startIcon={<Icon>{ButtonImage}</Icon>}
+        startIcon={
+          ButtonName === "Home" ? (
+            <Home sx={{ color: buttonColor }} />
+          ) : ButtonName === "Favourite" ? (
+            <Favorite sx={{ color: buttonColor }} />
+          ) : ButtonName === "News" ? (
+            <Newspaper sx={{ color: buttonColor }} />
+          ) : ButtonName === "Comparison" ? (
+            <CompareArrows sx={{ color: buttonColor }} />
+          ) : ButtonName === "Help" ? (
+            <Help sx={{ color: buttonColor }} />
+          ) : ButtonName === "Settings" ? (
+            <Settings sx={{ color: buttonColor }} />
+          ) : ButtonName === "Logout" ? (
+            <DoorBack sx={{ color: buttonColor }} />
+          ) : (
+            <Star sx={{ color: buttonColor }} />
+          )
+        }
         onClick={handleNavigate}
       >
         {ButtonName}
@@ -93,3 +125,19 @@ const NavBarButton = ({ ButtonName, ButtonImage, path, buttonStyle }) => {
 };
 
 export default NavBarButton;
+
+// {
+//   path === "/" ?
+
+// }
+//   { name === "Home", icon: "home", path: "/" },
+// // The none values are for the savedFilters which is an accordion and not a button.. skipped over it in the map
+// { name === "none", icon: "none" },
+// { name === "Favourite", icon: "favorite", path: "/favorite" },
+// // { name === "Community", icon: "people", path: "/community" },
+// { name === "News", icon: "comment", path: "/news" },
+// {
+// name === "Comparison",
+// icon: "compare_arrows",
+// path: "/player-compare",
+// },

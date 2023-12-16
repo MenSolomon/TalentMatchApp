@@ -1,31 +1,94 @@
-import { Avatar, Card, Checkbox, FormControlLabel } from "@mui/material";
+import {
+  Avatar,
+  Card,
+  Checkbox,
+  FormControlLabel,
+  Tooltip,
+} from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import BasicButton from "../Buttons/BasicButton";
-import { Star, StarBorder } from "@mui/icons-material";
+import { LocalPolice, Star, StarBorder } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../../statemanager/slices/ThemeProviderSlice";
+import { selectClubsInDatabase } from "../../statemanager/slices/ClubsInDatabaseSlice";
+import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserDataSlice";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  increment,
+  updateDoc,
+} from "firebase/firestore";
+import { db } from "../../Firebase/Firebase";
 
 // Chose to add a margin right to the cards here instead of the calling it when
 
 const MatchedPlayerCard = ({
   PlayerImage,
-  PlayerClub,
+  PlayerClubImage,
+  PlayerClubName,
   PlayerSurName,
   PlayerFirstName,
   MarketValue,
   PlayerPosition,
+  PlayerPositionABR,
   PlayerCountry,
+  PlayerCountryCode,
+  PlayerId,
 }) => {
   const navigate = useNavigate();
-
+  const userLoginObject = useSelector(selectUserDetailsObject);
   // For now all the menu buttons navigate to the homepage
   const handleNavigate = () => {
-    navigate(`/player-details/${PlayerFirstName}${PlayerSurName}`);
+    navigate(`/player-details/${PlayerId}`);
   };
 
   const themeProviderObject = useSelector(selectThemeProviderObject);
   const { primaryTextColor } = themeProviderObject;
+
+  const handlePlayerAddToFavorite = async () => {
+    try {
+      // this is to make sure an owner of account's view doesnt get counted as player view
+      if (userLoginObject.accountId !== PlayerId) {
+        const userObjectRef = doc(db, `users_db/${userLoginObject.accountId}`);
+        await updateDoc(userObjectRef, {
+          favoritePlayers: arrayUnion(PlayerId),
+        });
+
+        // alert("Fav addedd");
+      }
+    } catch (error) {
+      console.error(error);
+      // alert("Fav addedd Error");
+    }
+  };
+
+  const handlePlayerRemoveFromFavorite = async () => {
+    try {
+      // this is to make sure an owner of account's view doesnt get counted as player view
+      if (userLoginObject.accountId !== PlayerId) {
+        const userObjectRef = doc(db, `users_db/${userLoginObject.accountId}`);
+        await updateDoc(userObjectRef, {
+          favoritePlayers: arrayRemove(PlayerId),
+        });
+
+        // alert("Fav removed");
+      }
+    } catch (error) {
+      console.error(error);
+      // alert("Fav removed Error");
+    }
+  };
+
+  const isPlayerInArray = (playerId, playerArr) => {
+    if (playerArr && playerArr.some) {
+      return playerArr.some((player) => player === playerId);
+    } else {
+      // Handle the case where playerArr is undefined
+      return false; // or whatever makes sense in your context
+    }
+  };
 
   return (
     <div>
@@ -49,6 +112,8 @@ const MatchedPlayerCard = ({
           padding: "1vh .7vw",
           gap: "1vh",
           cursor: "pointer",
+          // zIndex: "1000",
+
           // borderBottom: "3px solid white",
           // borderLeft: "3px solid white",
         }}
@@ -82,16 +147,48 @@ const MatchedPlayerCard = ({
               }}
             >
               {" "}
-              {PlayerPosition}
+              <Tooltip
+                style={{
+                  zIndex: "1000",
+                }}
+                onClick={() => {
+                  alert("free");
+                }}
+                title={PlayerPosition}
+              >
+                {PlayerPositionABR}
+              </Tooltip>
             </div>
             {/* Player Country */}
             <div
               style={{
                 flex: ".31",
-                backgroundImage: `url(${PlayerCountry})`,
-                backgroundSize: "cover",
+                // backgroundImage: `url(${PlayerCountry})`,
+                // backgroundSize: "cover",
               }}
-            ></div>
+            >
+              <Tooltip
+                style={{
+                  zIndex: "1000",
+                }}
+                title={PlayerCountry.toString()}
+              >
+                <Avatar
+                  sx={{
+                    width: 46,
+                    zIndex: "1000",
+                    height: 46,
+                    // position: "absolute",
+                    // bottom: "-3vh",
+                    // left: "30%",
+                    // did the positioning Styling in css because wanted the tooltip to move with the avatar
+                  }}
+                  src={`https://flagcdn.com/${PlayerCountryCode.toLowerCase()}.svg`}
+                  alt={PlayerCountryCode}
+                />{" "}
+              </Tooltip>{" "}
+            </div>
+
             {/* Player Club */}
             <div
               style={{
@@ -102,10 +199,44 @@ const MatchedPlayerCard = ({
                 placeContent: "center",
               }}
             >
-              <Avatar
-                src={PlayerClub}
-                style={{ width: "35px", height: "35px", borderRadius: "50%" }}
-              />
+              {/* {PlayerClubName} */}
+              {PlayerClubName === "Free agent" ||
+              PlayerClubImage === undefined ? (
+                <Tooltip
+                  onClick={() => {
+                    alert("Vas");
+                  }}
+                  title="Free agent"
+                >
+                  {" "}
+                  <LocalPolice
+                    style={{
+                      width: "35px",
+                      height: "35px",
+                      borderRadius: "50%",
+                      zIndex: "10000",
+                    }}
+                  />{" "}
+                </Tooltip>
+              ) : (
+                <Tooltip
+                  onClick={() => {
+                    // alert("Vas");
+                  }}
+                  title={PlayerClubName}
+                >
+                  {" "}
+                  <Avatar
+                    src={PlayerClubImage}
+                    style={{
+                      width: "35px",
+                      height: "35px",
+                      borderRadius: "50%",
+                      zIndex: "1000",
+                    }}
+                  />{" "}
+                </Tooltip>
+              )}
             </div>
           </div>
           {/* // Player Image */}
@@ -113,12 +244,24 @@ const MatchedPlayerCard = ({
             style={{
               flex: ".6",
               // used the regex to fix bug of images not displaying (images with white white spaces between names ) .. regex replaces all the spaces with %20 to suit  ES6 imports rules
-              backgroundImage: `url(${PlayerImage.replace(/ /g, "%20")})`,
-              backgroundSize: "cover",
-              borderRadius: "15%",
-              backgroundPosition: "center",
+              // backgroundImage: `url(${PlayerImage.replace(/ /g, "%20")})`,
+              // backgroundSize: "cover",
+              // borderRadius: "15%",
+              // backgroundPosition: "center",
+              // backgroundColor: "red",
             }}
-          ></div>
+          >
+            <Avatar
+              src={PlayerImage}
+              style={{
+                width: "85px",
+                height: "85px",
+                borderRadius: "50%",
+                border: "4px solid #5585FE",
+                zIndex: "1000",
+              }}
+            />
+          </div>
         </div>
         {/*Player Name*/}
         <div
@@ -128,6 +271,7 @@ const MatchedPlayerCard = ({
             fontWeight: "900",
             display: "grid",
             placeContent: "center",
+            zIndex: "1000",
           }}
         >
           {PlayerFirstName} <br />
@@ -138,9 +282,9 @@ const MatchedPlayerCard = ({
           {/* Age : {MarketValue} <br />
           <span>Height: 1.5cm</span> */}
 
-          <FormControlLabel
+          {/* <FormControlLabel
             control={
-              <Checkbox
+              <Checkbox onClick={handlePlayerAddToFavorite}
                 icon={
                   <StarBorder
                     style={{ color: primaryTextColor, zIndex: "1000" }}
@@ -153,18 +297,61 @@ const MatchedPlayerCard = ({
               <span
                 className="primaryTextColor"
                 style={{
-                  fontSize: "0.8em",
+                  fontSize: "0.9em",
                   color: primaryTextColor,
                   zIndex: "1000",
                 }}
               >
-                farvorite
+           
+              </span>
+            }
+            sx={{ fontSize: ".8em" }}
+          /> */}
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={(event) => {
+                  if (event.target.checked) {
+                    handlePlayerAddToFavorite();
+                  } else {
+                    handlePlayerRemoveFromFavorite();
+                  }
+                }}
+                checked={isPlayerInArray(
+                  PlayerId,
+                  userLoginObject?.favoritePlayers
+                )}
+                icon={
+                  <StarBorder
+                    style={{ color: primaryTextColor, zIndex: "1000" }}
+                  />
+                }
+                checkedIcon={<Star style={{ zIndex: "1000" }} />}
+              />
+            }
+            label={
+              <span
+                className="primaryTextColor"
+                style={{
+                  fontSize: "0.9em",
+                  color: primaryTextColor,
+                  zIndex: "1000",
+                }}
+              >
+                {/* Favorite */}
               </span>
             }
             sx={{ fontSize: ".8em" }}
           />
+
           {/* // BUTTON CLICK DIV */}
-          <div onClick={handleNavigate}>
+          <div
+            onClick={() => {
+              handleNavigate();
+              // handleProfileViewUpdate();
+            }}
+          >
             <BasicButton
               style={{
                 textTransform: "none",

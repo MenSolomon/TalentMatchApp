@@ -16,6 +16,8 @@ import {
 } from "../../../statemanager/slices/PlayersInAgencySlice";
 import ConfirmClubExitModal from "../components/Modals/ConfirmClubExitModal";
 import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
+import { collection, onSnapshot, query } from "firebase/firestore";
+import { db } from "../../../Firebase/Firebase";
 
 const CoachAgentScoutVersionPlayerManagement = () => {
   const { playerId } = useParams();
@@ -63,7 +65,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   const subscreensTabArrayScoutAndCoach = [
     "Dashboard",
     "Videos",
-    "Inbox",
+    // "Inbox",
     "Interested Scouts",
     "Analytics",
     // "Settings",
@@ -72,7 +74,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   const subscreensTabArrayClubVersion = [
     "Dashboard",
     "Videos",
-    "Inbox",
+    // "Inbox",
     "Interested Scouts",
     "Analytics",
     "Statistics",
@@ -83,18 +85,35 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   const PlayerArray = useSelector(selectPlayersDatabase);
 
   useEffect(() => {
-    // alert(playerId);
-    const selectedArray = PlayerArray.filter((data) => {
-      const { id } = data;
-      return playerId === id;
-    });
-
-    console.log("playNow", selectedArray);
-
-    dispatch(
-      setPlayerSelectedByClubOrScoutInPlayerManagement(selectedArray[0])
+    const playerObjectRef = collection(
+      db,
+      `players_database/${playerId}/videos`
     );
-    setFilteredPlayerArray(selectedArray);
+
+    const q = query(playerObjectRef);
+    const alldata = onSnapshot(q, (querySnapshot) => {
+      const items = [];
+      querySnapshot.forEach((doc) => {
+        items.push(doc.data());
+      });
+      const selectedArray = PlayerArray.filter((data) => {
+        const { id } = data;
+        return playerId === id;
+      });
+
+      // console.log("playNow", selectedArray);
+
+      dispatch(
+        setPlayerSelectedByClubOrScoutInPlayerManagement({
+          ...selectedArray[0],
+          videos: items,
+        })
+      );
+      setFilteredPlayerArray(selectedArray);
+    });
+    return () => {
+      alldata();
+    };
   }, [playerId]);
 
   useEffect(() => {
@@ -145,6 +164,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
       });
     }
   }, [filteredPlayerArray]);
+
+  // Retriving Videos of
 
   // Destructuring the items of playerData
 

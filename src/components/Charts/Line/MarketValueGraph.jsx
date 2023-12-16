@@ -129,13 +129,13 @@ ChartJs.register(
   PointElement
 );
 
-const MarketValueGraph = () => {
+const MarketValueGraph = ({ marketValueDates, MarketValuePrices }) => {
   const data = {
-    labels: ["Total shots", "Shots on target", "Goals scored"],
+    labels: marketValueDates,
     datasets: [
       {
-        label: "Goals",
-        data: [20, 12, 19, 5],
+        label: "Value",
+        data: MarketValuePrices,
         backgroundColor: "#1A56DB",
         borderColor: "#1A56DB",
         borderRadius: 0,

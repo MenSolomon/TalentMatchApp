@@ -19,6 +19,10 @@ export const OtherComponentStatesSlice = createSlice({
       width: "",
       height: "",
     },
+    currentBrowserSize: {
+      width: "",
+      height: "",
+    },
   },
 
   reducers: {
@@ -64,6 +68,9 @@ export const OtherComponentStatesSlice = createSlice({
     setCurrentScreenSize: (state, action) => {
       state.currentScreenSize = action.payload;
     },
+    setCurrentBrowserSize: (state, action) => {
+      state.currentBrowserSize = action.payload;
+    },
   },
 });
 
@@ -90,6 +97,9 @@ export const selectVideoBelow15mbSelected = (state) =>
 export const selectCurrentScreenSize = (state) =>
   state.OtherComponentStates.currentScreenSize;
 
+export const selectCurrentBrowserSize = (state) =>
+  state.OtherComponentStates.currentBrowserSize;
+
 export const selectContactSupportModalCounter = (state) =>
   state.OtherComponentStates.contactSupportModalCounter;
 export const selectContactSupportModalMessage = (state) =>
@@ -110,5 +120,6 @@ export const {
   setCloseCircularLoadBackdrop,
   setContactSupportModalCounter,
   setContactSupportModalMessage,
+  setCurrentBrowserSize,
 } = OtherComponentStatesSlice.actions;
 export default OtherComponentStatesSlice.reducer;

@@ -310,9 +310,25 @@ const Login = () => {
                   const dateString = dateTimeFormat.format(date);
                   playerData.dateCreated = dateString;
 
-                  dispatch(
-                    setPlayerSelectedByClubOrScoutInPlayerManagement(playerData)
+                  const playerObjectRef = collection(
+                    db,
+                    `players_database/${items[0].accountId}/videos`
                   );
+
+                  const q2 = query(playerObjectRef);
+                  onSnapshot(q2, (querySnapshot) => {
+                    const videosArray = [];
+                    querySnapshot.forEach((doc) => {
+                      videosArray.push(doc.data());
+                    });
+                    // alert("data collected");
+                    dispatch(
+                      setPlayerSelectedByClubOrScoutInPlayerManagement({
+                        ...playerData,
+                        videos: videosArray,
+                      })
+                    );
+                  });
                 }
               } else {
                 console.log("No such document!");

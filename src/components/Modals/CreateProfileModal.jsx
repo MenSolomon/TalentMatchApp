@@ -1032,7 +1032,7 @@ export default function CreateProfileModal({ ProfileType }) {
                 <RangeSlider
                   rangeName={"Height range (m)"}
                   max={2.5}
-                  min={0.5}
+                  min={0.3}
                   editDefaultValue={HeightRangeValue}
                   rangeValue={handleHeightRangeValue}
                 />

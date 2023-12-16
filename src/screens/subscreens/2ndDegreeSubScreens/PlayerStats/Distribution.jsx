@@ -1,6 +1,22 @@
+import { useSelector } from "react-redux";
 import PlayerStatsDoughnut from "../../../../components/Charts/Doughnut/PlayerStatsDoughnut";
+import { selectPlayerSelectedToView } from "../../../../statemanager/slices/PlayersInAgencySlice";
 
-const Distribution = () => {
+const Distribution = ({ Period }) => {
+  const PlayerSelectedToViewObject = useSelector(selectPlayerSelectedToView);
+  // Write a snapshot function that receives data updated in realtime
+
+  const { Statistics } = PlayerSelectedToViewObject;
+
+  const filteredSeasonStats = Statistics.find((data) => {
+    return data.Season === Period;
+  });
+
+  console.log(filteredSeasonStats);
+
+  const { Distribution } = filteredSeasonStats;
+  console.log(Distribution);
+
   return (
     <div
       className="primaryColor"
@@ -18,8 +34,10 @@ const Distribution = () => {
           }}
         >
           {" "}
-          Passes
-          <PlayerStatsDoughnut Percentage2ValuesArray={[50, 10]} />{" "}
+          <PlayerStatsDoughnut
+            PercentageSuccess={Distribution.Pass_success_rate}
+            Label={"Passes Success"}
+          />
         </div>
         <div
           style={{
@@ -29,8 +47,10 @@ const Distribution = () => {
             textAlign: "center",
           }}
         >
-          Long Passes
-          <PlayerStatsDoughnut Percentage2ValuesArray={[50, 10]} />{" "}
+          <PlayerStatsDoughnut
+            PercentageSuccess={Distribution.Long_passes_rate}
+            Label={"Long Passes Success"}
+          />
         </div>
       </div>
       {/* Pass Direction , Passing Area and Other Ball Distribution info */}
@@ -100,7 +120,7 @@ const Distribution = () => {
               }}
             >
               {" "}
-              Top <br /> 10%{" "}
+              Top <br /> {Distribution.Pass_direction_forward_percent} %{" "}
             </span>
             {/* left Direction */}
             <span
@@ -112,7 +132,7 @@ const Distribution = () => {
               }}
             >
               {" "}
-              Left <br /> 10%{" "}
+              Left <br /> {Distribution.Pass_direction_left_percent}%{" "}
             </span>
             {/* Right Direction */}
             <span
@@ -124,7 +144,7 @@ const Distribution = () => {
               }}
             >
               {" "}
-              Right <br /> 10%{" "}
+              Right <br /> {Distribution.Pass_direction_right_percent}%{" "}
             </span>
             {/* Bottom Direction */}
             <span
@@ -136,7 +156,7 @@ const Distribution = () => {
               }}
             >
               {" "}
-              Bottom <br /> 10%{" "}
+              Bottom <br /> {Distribution.Pass_direction_backward_percent}%{" "}
             </span>
             {/* // Line One  */}
             <div
@@ -187,11 +207,24 @@ const Distribution = () => {
             flexWrap: "wrap",
           }}
         >
-          <AttributesToFormat name="Total passes" number="120" />
-          <AttributesToFormat name="Successful passes" number="60" />
+          <AttributesToFormat
+            name="Total passes"
+            number={Distribution.Total_passes}
+          />
+          <AttributesToFormat
+            styles={{ marginLeft: "4vw" }}
+            name="Assists"
+            number={Distribution.Assists}
+          />
 
-          <AttributesToFormat name="Passes per 90mins" number="6" />
-          <AttributesToFormat name="Key passes" number="15" />
+          <AttributesToFormat
+            name="Passes per 90mins"
+            number={Distribution.Total_passes_per_90_mins}
+          />
+          <AttributesToFormat
+            name="Key passes"
+            number={Distribution.Key_passes}
+          />
         </div>
       </div>
     </div>
@@ -200,9 +233,9 @@ const Distribution = () => {
 
 export default Distribution;
 
-export const AttributesToFormat = ({ number, name }) => {
+export const AttributesToFormat = ({ number, name, styles }) => {
   return (
-    <span className="primaryColor" style={{ textAlign: "center" }}>
+    <span className="primaryColor" style={{ textAlign: "center", ...styles }}>
       {" "}
       <span
         style={{

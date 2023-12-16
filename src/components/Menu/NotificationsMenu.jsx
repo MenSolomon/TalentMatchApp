@@ -33,6 +33,7 @@ import { selectUserNotifications } from "../../statemanager/slices/Nofitications
 import { v4 } from "uuid";
 import { faLessThanEqual } from "@fortawesome/free-solid-svg-icons";
 import { setPlayerSelectedByClubOrScoutInPlayerManagement } from "../../statemanager/slices/PlayersInAgencySlice";
+import NotificationsTab from "../Tabs/NotificationsTab";
 
 export default function NotificationsMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -49,6 +50,8 @@ export default function NotificationsMenu() {
 
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
   const notificationsArray = useSelector(selectUserNotifications);
+
+  const NotificationsTabsArray = ["All", "Emails", "Reminders", "Transfers"];
   // const savedProfileSubCollectionRef = doc(
   //   db,
   //   `users_db/${accountId}/SavedProfiles`,
@@ -122,60 +125,23 @@ export default function NotificationsMenu() {
             }}
           >
             {/* // Notification head and Notification type tabs */}
-            <div style={{ flex: ".15" }}>
-              <MenuItem sx={{ width: "35vw" }}>
+            <div style={{ flex: ".1" }}>
+              <div style={{ paddingLeft: "1vw" }}>
                 <div style={{ width: "100%", display: "flex" }}>
                   <h4 style={{ marginRight: "55%" }}>Notifications</h4>{" "}
                   <IconButton sx={{ float: "right" }}>
-                    <Close />
+                    <Close sx={{ color: "black" }} />
                   </IconButton>
                 </div>
-              </MenuItem>
-              <MenuItem onClick={handleClose}>Tabs</MenuItem>
+              </div>
             </div>
             {/* // Menu Items */}
-            <div style={{ flex: ".85", overflowY: "scroll" }}>
-              {notificationsArray.length <= 0 ? (
-                <h5>No notifications yet </h5>
-              ) : (
-                sortedNotificationsArray.map((data, index) => {
-                  const {
-                    dateCreated,
-                    senderAddress,
-                    type,
-                    message,
-                    senderProfileImage,
-                    readStatus,
-                    transferPlayerId,
-                    NotificationId,
-                    transferComplete,
-                  } = data;
-
-                  return (
-                    <MenuItem
-                      key={index}
-                      sx={{ height: "15.5vh" }}
-                      onClick={() => {
-                        handleUpdateReadStatus(NotificationId, readStatus);
-                      }}
-                      // onClick={handleClose}
-                    >
-                      <MenuItemRow
-                        type={type}
-                        readStatus={readStatus}
-                        senderAddress={senderAddress}
-                        transferPlayerId={transferPlayerId}
-                        senderImage={senderProfileImage}
-                        notificationMessage={message}
-                        dateSent={dateCreated}
-                        senderId={data.senderId}
-                        notificationId={NotificationId}
-                        transferCompleteStatus={transferComplete}
-                      />
-                    </MenuItem>
-                  );
-                })
-              )}
+            <div style={{ flex: ".9", overflowY: "scroll" }}>
+              <div>
+                <NotificationsTab
+                  NotificationsTabItemsArray={NotificationsTabsArray}
+                />
+              </div>
             </div>
           </div>
         </Menu>
@@ -184,320 +150,361 @@ export default function NotificationsMenu() {
   );
 }
 
-const MenuItemRow = ({
-  senderImage,
-  notificationMessage,
-  dateSent,
-  type,
-  readStatus,
-  senderAddress,
-  senderId,
-  transferPlayerId,
-  notificationId,
-  transferCompleteStatus,
-}) => {
-  // const handleAcceptPlayerTransfer =async({dateCreated,userId,playerId,readStatus})=>{
-  //   const playerObjectRef = doc(db, `players_database/${playerId}`);
-  //   const userLoginObjectRef = doc(db, `players_database/${userId}`);
+// const MenuItemRow = ({
+//   senderImage,
+//   notificationMessage,
+//   dateSent,
+//   type,
+//   readStatus,
+//   senderAddress,
+//   senderId,
+//   transferPlayerId,
+//   notificationId,
+//   transferCompleteStatus,
+// }) => {
+//   // const handleAcceptPlayerTransfer =async({dateCreated,userId,playerId,readStatus})=>{
+//   //   const playerObjectRef = doc(db, `players_database/${playerId}`);
+//   //   const userLoginObjectRef = doc(db, `players_database/${userId}`);
 
-  //   await updateDoc(playerObjectRef, {
-  //     TransferStatus: deleteField(),
-  //   });
+//   //   await updateDoc(playerObjectRef, {
+//   //     TransferStatus: deleteField(),
+//   //   });
 
-  //   // Remove the player from the old Club (playerSinpossesion Array from the accounts that have the player's old club name)..
+//   //   // Remove the player from the old Club (playerSinpossesion Array from the accounts that have the player's old club name)..
 
-  //   // Bring the player to new club ..
-  //   // Edit Contract Date Values .. Edit Club Name ,
+//   //   // Bring the player to new club ..
+//   //   // Edit Contract Date Values .. Edit Club Name ,
 
-  // }
-  const userLoginDetailsObject = useSelector(selectUserDetailsObject);
-  const dispatch = useDispatch();
-  const relativeDate = moment(dateSent).startOf("hour").fromNow();
-  const allPlayersDatabase = useSelector(selectPlayersDatabase);
-  const allClubsInDatabase = useSelector(selectClubsInDatabase);
-  // moment(dateSent).startOf('hour').fromNow()
+//   // }
+//   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
+//   const dispatch = useDispatch();
+//   const relativeDate = moment(dateSent).startOf("hour").fromNow();
+//   const allPlayersDatabase = useSelector(selectPlayersDatabase);
+//   const allClubsInDatabase = useSelector(selectClubsInDatabase);
+//   // moment(dateSent).startOf('hour').fromNow()
 
-  const handleAcceptClick = async () => {
-    // Update player club
-    // Delelte playerId from sendrs PlayersInPossession Array
-    // Add playerId to loggedIn Club's PlayersInpossession Array
+//   const handleAcceptClick = async () => {
+//     // Update player club
+//     // Delelte playerId from sendrs PlayersInPossession Array
+//     // Add playerId to loggedIn Club's PlayersInpossession Array
 
-    // const savedProfileSubCollectionRef = doc(
-    //   db,
-    //   `users_db/${accountId}/SavedProfiles`,
-    //   uuid
-    // );
+//     // const savedProfileSubCollectionRef = doc(
+//     //   db,
+//     //   `users_db/${accountId}/SavedProfiles`,
+//     //   uuid
+//     // );
 
-    try {
-      const uuid = v4();
-      const playerObjetRef = doc(db, `players_database/${transferPlayerId}`);
-      const LoginUserObjectRef = doc(
-        db,
-        `users_db/${userLoginDetailsObject.accountId}`
-      );
-      const senderObjectRef = doc(db, `users_db`, senderId);
-      const senderNotificationObjectRef = doc(
-        db,
-        `users_db/${senderId}/Notifications`,
-        uuid
-      );
-      const userOldNotificationMessageObjectRef = doc(
-        db,
-        `users_db/${userLoginDetailsObject.accountId}/Notifications`,
-        notificationId
-      );
+//     try {
+//       const uuid = v4();
+//       const playerObjetRef = doc(db, `players_database/${transferPlayerId}`);
+//       const LoginUserObjectRef = doc(
+//         db,
+//         `users_db/${userLoginDetailsObject.accountId}`
+//       );
+//       const senderObjectRef = doc(db, `users_db`, senderId);
+//       const senderNotificationObjectRef = doc(
+//         db,
+//         `users_db/${senderId}/Notifications`,
+//         uuid
+//       );
+//       const userOldNotificationMessageObjectRef = doc(
+//         db,
+//         `users_db/${userLoginDetailsObject.accountId}/Notifications`,
+//         notificationId
+//       );
 
-      await updateDoc(LoginUserObjectRef, {
-        playersInPossession: arrayUnion({ playerId: transferPlayerId }),
-      });
+//       await updateDoc(LoginUserObjectRef, {
+//         playersInPossession: arrayUnion({ playerId: transferPlayerId }),
+//       });
 
-      await updateDoc(senderObjectRef, {
-        playersInPossession: arrayRemove({ playerId: transferPlayerId }),
-      });
+//       await updateDoc(senderObjectRef, {
+//         playersInPossession: arrayRemove({ playerId: transferPlayerId }),
+//       });
 
-      await updateDoc(playerObjetRef, {
-        clubName: userLoginDetailsObject?.club,
-        jerseyNumber: "",
-        TransferStatus: "",
-      });
+//       await updateDoc(playerObjetRef, {
+//         clubName: userLoginDetailsObject?.club,
+//         jerseyNumber: "",
+//         TransferStatus: "",
+//       });
 
-      const playerMatchObject = allPlayersDatabase.find((obj) => {
-        return obj.id === transferPlayerId;
-      });
+//       const playerMatchObject = allPlayersDatabase.find((obj) => {
+//         return obj.id === transferPlayerId;
+//       });
 
-      const senderClub = allClubsInDatabase.filter((data) => {
-        return data.clubName === userLoginDetailsObject.club;
-      });
+//       const senderClub = allClubsInDatabase.filter((data) => {
+//         return data.clubName === userLoginDetailsObject.club;
+//       });
 
-      // update  users's notification as transfer  successful or accepted
+//       // update  users's notification as transfer  successful or accepted
 
-      await updateDoc(userOldNotificationMessageObjectRef, {
-        transferComplete: "accepted",
-      });
+//       await updateDoc(userOldNotificationMessageObjectRef, {
+//         transferComplete: "accepted",
+//       });
 
-      await setDoc(senderNotificationObjectRef, {
-        NotificationId: uuid,
-        dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-        senderAddress: userLoginDetailsObject.email,
-        senderId: userLoginDetailsObject.accountId,
-        type: "Transfer request",
-        message:
-          userLoginDetailsObject.role === "Club"
-            ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${playerMatchObject?.firstName} ${playerMatchObject?.surName}  accepted`
-            : "",
-        senderProfileImage:
-          userLoginDetailsObject.role === "Club"
-            ? senderClub[0]?.clubImage
-            : "",
-        readStatus: false,
-        transferPlayerId: transferPlayerId,
-      });
+//       await setDoc(senderNotificationObjectRef, {
+//         NotificationId: uuid,
+//         dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+//         senderAddress: userLoginDetailsObject.email,
+//         senderId: userLoginDetailsObject.accountId,
+//         type: "Transfer request",
+//         message:
+//           userLoginDetailsObject.role === "Club"
+//             ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${playerMatchObject?.firstName} ${playerMatchObject?.surName}  accepted`
+//             : "",
+//         senderProfileImage:
+//           userLoginDetailsObject.role === "Club"
+//             ? senderClub[0]?.clubImage
+//             : "",
+//         readStatus: false,
+//         transferPlayerId: transferPlayerId,
+//       });
 
-      // THe sender needs to be alerted that the transfer is complete
-      // /.////////
+//       // THe sender needs to be alerted that the transfer is complete
+//       // /.////////
 
-      // alert("updated");
-      dispatch(setSnackbarMessage(`Player's clubName update successfully`));
-      dispatch(setSnackbarTriggerCounterToZero());
+//       // alert("updated");
+//       dispatch(setSnackbarMessage(`Player's clubName update successfully`));
+//       dispatch(setSnackbarTriggerCounterToZero());
 
-      // console.log(data.dateCreated, "Date0", dateCreated);
-      // const readStatusUpdateArray = userLoginDetailsObject?.Notifications.map(
-      //   (data) => {
-      //     // alert(`${data.dateCreated},${dateCreated} == ${readStatus}`);
-      //     if (data.dateCreated === dateCreated) {
-      //       return { ...data, readStatus: true };
-      //     }
-      //     // Leave other seasons unchanged
-      //     return data;
-      //   }
-      // );
-    } catch (error) {
-      console.error(error, "NotifError");
-      alert("Error", error.message);
-    }
-  };
+//       // console.log(data.dateCreated, "Date0", dateCreated);
+//       // const readStatusUpdateArray = userLoginDetailsObject?.Notifications.map(
+//       //   (data) => {
+//       //     // alert(`${data.dateCreated},${dateCreated} == ${readStatus}`);
+//       //     if (data.dateCreated === dateCreated) {
+//       //       return { ...data, readStatus: true };
+//       //     }
+//       //     // Leave other seasons unchanged
+//       //     return data;
+//       //   }
+//       // );
+//     } catch (error) {
+//       console.error(error, "NotifError");
+//       alert("Error", error.message);
+//     }
+//   };
 
-  const handleDeclineClick = async () => {
-    try {
-      const uuid = v4();
-      const playerObjetRef = doc(db, `players_database/${transferPlayerId}`);
+//   const handleDeclineClick = async () => {
+//     try {
+//       const uuid = v4();
+//       const playerObjetRef = doc(db, `players_database/${transferPlayerId}`);
 
-      const senderNotificationObjectRef = doc(
-        db,
-        `users_db/${senderId}/Notifications`,
-        uuid
-      );
+//       const senderNotificationObjectRef = doc(
+//         db,
+//         `users_db/${senderId}/Notifications`,
+//         uuid
+//       );
 
-      const playerMatchObject = allPlayersDatabase.find((obj) => {
-        return obj.id === transferPlayerId;
-      });
+//       const playerMatchObject = allPlayersDatabase.find((obj) => {
+//         return obj.id === transferPlayerId;
+//       });
 
-      const senderClub = allClubsInDatabase.filter((data) => {
-        return data.clubName === userLoginDetailsObject.club;
-      });
+//       const senderClub = allClubsInDatabase.filter((data) => {
+//         return data.clubName === userLoginDetailsObject.club;
+//       });
 
-      const userOldNotificationMessageObjectRef = doc(
-        db,
-        `users_db/${userLoginDetailsObject.accountId}/Notifications`,
-        notificationId
-      );
+//       const userOldNotificationMessageObjectRef = doc(
+//         db,
+//         `users_db/${userLoginDetailsObject.accountId}/Notifications`,
+//         notificationId
+//       );
 
-      await updateDoc(userOldNotificationMessageObjectRef, {
-        transferComplete: "declined",
-      });
+//       await updateDoc(userOldNotificationMessageObjectRef, {
+//         transferComplete: "declined",
+//       });
 
-      await updateDoc(playerObjetRef, {
-        // TransferStatus: "Currently renewed contract",
-        TransferStatus: "",
-      });
+//       await updateDoc(playerObjetRef, {
+//         // TransferStatus: "Currently renewed contract",
+//         TransferStatus: "",
+//       });
 
-      await setDoc(senderNotificationObjectRef, {
-        NotificationId: uuid,
-        dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-        senderAddress: userLoginDetailsObject.email,
-        senderId: userLoginDetailsObject.accountId,
-        type: "Transfer request",
-        message:
-          userLoginDetailsObject.role === "Club"
-            ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${playerMatchObject?.firstName} ${playerMatchObject?.surName}  declined`
-            : "",
-        senderProfileImage:
-          userLoginDetailsObject.role === "Club"
-            ? senderClub[0]?.clubImage
-            : "",
-        readStatus: false,
-        transferPlayerId: transferPlayerId,
-      });
+//       await setDoc(senderNotificationObjectRef, {
+//         NotificationId: uuid,
+//         dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+//         senderAddress: userLoginDetailsObject.email,
+//         senderId: userLoginDetailsObject.accountId,
+//         type: "Transfer request",
+//         message:
+//           userLoginDetailsObject.role === "Club"
+//             ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${playerMatchObject?.firstName} ${playerMatchObject?.surName}  declined`
+//             : "",
+//         senderProfileImage:
+//           userLoginDetailsObject.role === "Club"
+//             ? senderClub[0]?.clubImage
+//             : "",
+//         readStatus: false,
+//         transferPlayerId: transferPlayerId,
+//       });
 
-      // UPDATING THE TRANSFERED PLAYER REALTIME IN REDUX
+//       // UPDATING THE TRANSFERED PLAYER REALTIME IN REDUX
 
-      const docRef = doc(db, "players_database", transferPlayerId);
-      const docSnap = await getDoc(docRef);
+//       const docRef = doc(db, "players_database", transferPlayerId);
+//       const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
-        dispatch(
-          setPlayerSelectedByClubOrScoutInPlayerManagement(docSnap.data())
-        );
-      } else {
-        // docSnap.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+//       if (docSnap.exists()) {
+//         console.log("Document data:", docSnap.data());
+//         dispatch(
+//           setPlayerSelectedByClubOrScoutInPlayerManagement(docSnap.data())
+//         );
+//       } else {
+//         // docSnap.data() will be undefined in this case
+//         console.log("No such document!");
+//       }
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
 
-  return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        fontSize: ".85em",
-        // background: "red",
-      }}
-    >
-      <div
-        style={{
-          flex: "0.95",
-          display: "flex",
-        }}
-      >
-        {/* UserImage */}
-        <div
-          style={{
-            flex: "0.2",
-            // background: "blue",
-            display: "grid",
-            placeContent: "center",
-          }}
-        >
-          <Avatar sx={{ width: 60, height: 60 }} src={senderImage}>
-            sx
-          </Avatar>
-        </div>
-        {/* Texts and Wordings */}
-        <div
-          style={{
-            flex: "0.8",
-            // background: "yellow",
-            // Use "normal" to allow text to wrap
-            display: "flex",
-            flexDirection: "column",
-            // overflow: "hidden", // Remove this line
-          }}
-        >
-          {/* Notification Message */}
-          <div
-            style={{
-              flex: "0.65",
-              maxWidth: "10vw", // Adjust the maximum width as needed
-              fontWeight: readStatus === false ? "bolder" : "",
-            }}
-          >
-            {notificationMessage.substring(0, 50)} <br />
-            {notificationMessage.substring(50, 99)} <br />
-            {notificationMessage.substring(99, 145)}...
-          </div>
+//   return (
+//     <div
+//       style={{
+//         width: "100%",
+//         height: "100%",
+//         display: "flex",
+//         fontSize: ".85em",
+//         // background: "red",
+//       }}
+//     >
+//       <div
+//         style={{
+//           flex: "0.95",
+//           display: "flex",
+//         }}
+//       >
+//         {/* UserImage */}
+//         <div
+//           style={{
+//             flex: "0.2",
+//             // background: "blue",
+//             display: "grid",
+//             placeContent: "center",
+//           }}
+//         >
+//           <Avatar sx={{ width: 60, height: 60 }} src={senderImage}>
+//             sx
+//           </Avatar>
+//         </div>
+//         {/* Texts and Wordings */}
+//         <div
+//           style={{
+//             flex: "0.8",
+//             // background: "yellow",
+//             // Use "normal" to allow text to wrap
+//             display: "flex",
+//             flexDirection: "column",
+//             // overflow: "hidden", // Remove this line
+//           }}
+//         >
+//           {/* Notification Message */}
+//           <div
+//             style={{
+//               flex: "0.65",
+//               maxWidth: "10vw", // Adjust the maximum width as needed
+//               fontWeight: readStatus === false ? "bolder" : "",
+//             }}
+//           >
+//             {notificationMessage.substring(0, 50)} <br />
+//             {notificationMessage.substring(50, 99)} <br />
+//             {notificationMessage.substring(99, 145)}...
+//           </div>
 
-          {/* Date and buttons */}
-          <div
-            style={{
-              flex: "0.35",
-              color: "grey",
-              fontSize: ".95em",
-              // background: "orange",
-            }}
-          >
-            {relativeDate} &nbsp;
-            {type === "Transfer request" &&
-            transferCompleteStatus === "pending" ? (
-              <>
-                <BasicButton
-                  onClick={handleAcceptClick}
-                  innerText="Accept"
-                  style={{
-                    maxHeight: "5vh",
-                    marginLeft: "1vw",
-                    marginRight: ".4vw",
-                  }}
-                />
+//           {/* Date and buttons */}
+//           <div
+//             style={{
+//               flex: "0.35",
+//               color: "grey",
+//               fontSize: ".95em",
+//               // background: "orange",
+//             }}
+//           >
+//             {relativeDate} &nbsp;
+//             {type === "Transfer request" &&
+//             transferCompleteStatus === "pending" ? (
+//               <>
+//                 <BasicButton
+//                   onClick={handleAcceptClick}
+//                   innerText="Accept"
+//                   style={{
+//                     maxHeight: "5vh",
+//                     marginLeft: "1vw",
+//                     marginRight: ".4vw",
+//                   }}
+//                 />
 
-                <BasicButton
-                  innerText="Decline"
-                  onClick={handleDeclineClick}
-                  style={{ maxHeight: "5vh" }}
-                />
-              </>
-            ) : (
-              <b> {transferCompleteStatus}</b>
-            )}
-          </div>
-        </div>
-      </div>
-      <div
-        style={{
-          flex: "0.05",
-          display: "grid",
-          placeContent: "center",
-        }}
-      >
-        {readStatus === false ? (
-          <div
-            style={{
-              width: "5px",
-              height: "5px",
-              background: "blue",
-              borderRadius: "50%",
-            }}
-          >
-            {" "}
-          </div>
-        ) : (
-          ""
-        )}
-      </div>
-    </div>
-  );
-};
+//                 <BasicButton
+//                   innerText="Decline"
+//                   onClick={handleDeclineClick}
+//                   style={{ maxHeight: "5vh" }}
+//                 />
+//               </>
+//             ) : (
+//               <b> {transferCompleteStatus}</b>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+//       <div
+//         style={{
+//           flex: "0.05",
+//           display: "grid",
+//           placeContent: "center",
+//         }}
+//       >
+//         {readStatus === false ? (
+//           <div
+//             style={{
+//               width: "5px",
+//               height: "5px",
+//               background: "blue",
+//               borderRadius: "50%",
+//             }}
+//           >
+//             {" "}
+//           </div>
+//         ) : (
+//           ""
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+// {notificationsArray.length <= 0 ? (
+//   <h5>No notifications yet </h5>
+// ) : (
+//   sortedNotificationsArray.map((data, index) => {
+//     const {
+//       dateCreated,
+//       senderAddress,
+//       type,
+//       message,
+//       senderProfileImage,
+//       readStatus,
+//       transferPlayerId,
+//       NotificationId,
+//       transferComplete,
+//     } = data;
+
+//     return (
+//       <MenuItem
+//         key={index}
+//         sx={{ height: "15.5vh" }}
+//         onClick={() => {
+//           handleUpdateReadStatus(NotificationId, readStatus);
+//         }}
+//         // onClick={handleClose}
+//       >
+//         <MenuItemRow
+//           type={type}
+//           readStatus={readStatus}
+//           senderAddress={senderAddress}
+//           transferPlayerId={transferPlayerId}
+//           senderImage={senderProfileImage}
+//           notificationMessage={message}
+//           dateSent={dateCreated}
+//           senderId={data.senderId}
+//           notificationId={NotificationId}
+//           transferCompleteStatus={transferComplete}
+//         />
+//       </MenuItem>
+//     );
+//   })
+// )}

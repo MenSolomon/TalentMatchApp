@@ -17,6 +17,12 @@ const PlayerManagementVideos = () => {
   const { id, firstName, surName, videos } =
     CurrentPlayerSelectedForClubScoutCoachAndAgentManagement;
 
+  // function objectToArray(inputObject) {
+  //   return Object.values(inputObject);
+  // }
+
+  // const videosArray = objectToArray(videos);
+
   const VideosPerPage = 3;
 
   const [currentPage, setCurrentPage] = useState(1);

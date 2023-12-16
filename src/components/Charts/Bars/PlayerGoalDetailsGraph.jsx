@@ -121,13 +121,13 @@ import { Bar } from "react-chartjs-2";
 
 ChartJs.register(BarElement, CategoryScale, Legend, LinearScale, Tooltip);
 
-const PlayerGoalDetailsGraph = () => {
+const PlayerGoalDetailsGraph = ({ TotalShots, ShotsOnTarget, GoalsScored }) => {
   const data = {
     labels: ["Total shots", "Shots on target", "Goals scored"],
     datasets: [
       {
         label: "Goals",
-        data: [20, 12, 4],
+        data: [TotalShots, ShotsOnTarget, GoalsScored],
         backgroundColor: "#1A56DB",
         borderColor: "#1A56DB",
         borderRadius: 0,

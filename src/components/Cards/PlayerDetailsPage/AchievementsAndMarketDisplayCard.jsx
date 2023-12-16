@@ -5,7 +5,7 @@ import { selectThemeProviderObject } from "../../../statemanager/slices/ThemePro
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-const AchievementAndMarketValueCard = ({ worldCup, BalonDor, uefa }) => {
+const AchievementAndMarketValueCard = ({ marketValue, healthCondition }) => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
   const { cardBackground } = themeProviderObject;
 
@@ -81,50 +81,10 @@ border-box;`;
             color: "white",
             marginLeft: "1vw",
           }}
-          innerText="$10M"
+          innerText={marketValue === "" ? "NA" : `$${marketValue}M`}
         />
       </div>
-      <div style={{ flex: ".4", display: "flex", gap: "1.3vw" }}>
-        <img
-          style={{
-            width: "18%",
-            height: "50px",
-            //   border: "2px solid red",
-            //   backgroundImage: `url(${worldCup})`,
-            //   backgroundSize: "contain",
-          }}
-          src={worldCup}
-        ></img>
-        <img
-          style={{
-            width: "20%",
-            height: "50px",
-            //   border: "2px solid red",
-            //   backgroundImage: `url(${worldCup})`,
-            //   backgroundSize: "contain",
-          }}
-          src={uefa}
-        ></img>
-        <img
-          style={{
-            width: "25%",
-            height: "50px",
-            //   border: "2px solid red",
-            //   backgroundImage: `url(${worldCup})`,
-            //   backgroundSize: "contain",
-          }}
-          src={BalonDor}
-        ></img>
-
-        {/* <img
-        src={uefa}
-        style={{ height: "50%", border: "1px solid red" }}
-      /> */}
-        {/* <img
-        src={worldCup}
-        style={{ height: "50%", border: "1px solid red" }}
-      /> */}
-      </div>
+      <div style={{ flex: ".4", display: "flex", gap: "1.3vw" }}></div>
       <div
         style={{
           flex: ".4",

@@ -1,12 +1,34 @@
-import { Checkbox, Tooltip } from "@mui/material";
+import { Checkbox, IconButton, Tooltip } from "@mui/material";
 import { useSelector } from "react-redux";
 import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
+import { DeleteForever, Edit } from "@mui/icons-material";
+import { useState } from "react";
+import DeleteVideoModal from "../Modals/DeleteVideoModal";
+import EditVideoModal from "../Modals/EditVideoModal";
 
-const VideoComponentRows = ({ url, description, category, date, views }) => {
+const VideoComponentRows = ({
+  url,
+  description,
+  category,
+  date,
+  views,
+  id,
+  uploaderId,
+}) => {
   const userLoginObject = useSelector(selectUserDetailsObject);
 
   const { role } = userLoginObject;
 
+  const [isHovered, setIsHovered] = useState(false);
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    // Additional logic you want to perform on mouse enter
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    // Additional logic you want to perform on mouse leave
+  };
   return (
     <div
       style={{
@@ -17,6 +39,8 @@ const VideoComponentRows = ({ url, description, category, date, views }) => {
         width: "100%",
         height: role === "Player" ? "15vh" : "10vh",
       }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className="VideoComponent"
     >
       {/* // CHeck box */}
@@ -46,16 +70,53 @@ const VideoComponentRows = ({ url, description, category, date, views }) => {
       </div>
 
       {/* Description */}
-      <div style={{ flex: ".25" }}>
+      <div
+        style={{
+          flex: ".25",
+
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         {" "}
-        {description.length >= 50 ? (
-          <Tooltip title={description}>
-            {" "}
-            {description.substring(0, 50)}...{" "}
-          </Tooltip>
-        ) : (
-          description
-        )}{" "}
+        <div style={{ flex: ".5" }}>
+          {description.length >= 50 ? (
+            <Tooltip title={description}>
+              {" "}
+              {description.substring(0, 50)}...{" "}
+            </Tooltip>
+          ) : (
+            description
+          )}{" "}
+        </div>
+        <div
+          style={{
+            flex: ".5",
+
+            display: isHovered === true ? "flex" : "none",
+            gap: ".6vw",
+            paddingLeft: "1vw",
+          }}
+        >
+          <DeleteVideoModal
+            title={category}
+            uploadedDate={date}
+            views={views}
+            url={url}
+            id={id}
+            uploaderId={uploaderId}
+          />
+
+          <EditVideoModal
+            title={category}
+            uploadedDate={date}
+            views={views}
+            url={url}
+            id={id}
+            uploaderId={uploaderId}
+            description={description}
+          />
+        </div>
       </div>
 
       {/* Date uploaded */}

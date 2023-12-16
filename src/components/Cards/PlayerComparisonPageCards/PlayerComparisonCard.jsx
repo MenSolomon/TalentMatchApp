@@ -1,5 +1,5 @@
 import { AccountCircleOutlined, Close, Flag } from "@mui/icons-material";
-import { Avatar, Card, Divider, IconButton } from "@mui/material";
+import { Avatar, Card, Divider, IconButton, Tooltip } from "@mui/material";
 import PlayerComparisonAccordion from "../../Accordions/PlayerComparisonAccordion/PlayerComparisonAccordion";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,7 +15,11 @@ const PlayerComparisonCard = ({
   image,
   age,
   height,
-  playerName,
+  playerId,
+  statistics,
+  clubName,
+  Nationality,
+  CountryCode,
 }) => {
   const dispatch = useDispatch();
   const currentPlayerSelectedArray = useSelector(selectPlayerToCompareArray);
@@ -94,13 +98,19 @@ const PlayerComparisonCard = ({
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               {/* <Flag sx={{ fontSize: "50px" }} /> */}
-              <img src={sourceLogo} style={{ width: "45px" }} />
+              <Tooltip title={Nationality}>
+                {" "}
+                <img
+                  src={`https://flagcdn.com/${CountryCode.toLowerCase()}.svg`}
+                  style={{ width: "45px" }}
+                />{" "}
+              </Tooltip>
             </div>
           </div>
         </div>
         {/* // CLubs Section */}
         <div style={{ flex: ".1", padding: "10px" }}>
-          <h6>Club Name: {playerName}</h6>
+          <h6>Club Name: {clubName}</h6>
           <h6>Age: {age}</h6>
           <h6>Height: {height} </h6>
         </div>
@@ -114,7 +124,13 @@ const PlayerComparisonCard = ({
             padding: "10px",
           }}
         >
-          <PlayerComparisonAccordion />
+          <PlayerComparisonAccordion
+            GeneralObject={statistics[0].General}
+            DefenseObject={statistics[0].Defence}
+            AttackingObject={statistics[0].Attack}
+            DistributionObject={statistics[0].Distribution}
+            Discipline={statistics[0].Discipline}
+          />
         </div>
       </div>
     </Card>

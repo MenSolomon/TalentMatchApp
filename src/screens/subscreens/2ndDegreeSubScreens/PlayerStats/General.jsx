@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { selectPlayerSelectedToView } from "../../../../statemanager/slices/PlayersInAgencySlice";
 
-const Discipline = ({ Period }) => {
+const General = ({ Period }) => {
   const PlayerSelectedToViewObject = useSelector(selectPlayerSelectedToView);
   // Write a snapshot function that receives data updated in realtime
 
@@ -13,37 +13,29 @@ const Discipline = ({ Period }) => {
 
   console.log(filteredSeasonStats);
 
-  const { Discipline } = filteredSeasonStats;
-  console.log(Discipline);
+  const { General } = filteredSeasonStats;
+  console.log(General);
 
   return (
     <div
       className="primaryColor"
       style={{ width: "100%", height: "100%", display: "flex", gap: "5vw" }}
     >
-      <CardDisplay
-        CardName="Yellow Cards"
-        number={Discipline.Yellow_cards}
-        borderColor="yellow"
-        backgroundColor="#FFFAC2"
-      />
-      <CardDisplay
-        CardName="Red Cards"
-        number={Discipline.Red_cards}
-        borderColor="red"
-        backgroundColor="#FCD3C1"
-      />
-
+      <AttributesToFormat name="Match starts" number={General.Starts} />
+      <AttributesToFormat name="Games played" number={General.Games_Played} />
       <AttributesToFormat
-        name="Fouls conceeded"
-        number={Discipline.Fouls_conceeded}
+        name="Minutes played"
+        number={General.Minutes_Played}
       />
-      <AttributesToFormat name="Fouls won" number={Discipline.Fouls_won} />
+      <AttributesToFormat
+        name="Number of times Subbed off"
+        number={General.Subbed_off}
+      />
     </div>
   );
 };
 
-export default Discipline;
+export default General;
 
 export const AttributesToFormat = ({ number, name }) => {
   return (

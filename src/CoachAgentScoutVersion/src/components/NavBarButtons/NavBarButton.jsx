@@ -6,6 +6,19 @@ import { useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../../statemanager/slices/ThemeProviderSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
+import {
+  Analytics,
+  CompareArrows,
+  Dashboard,
+  DoorBack,
+  Help,
+  Home,
+  Inbox,
+  Monitor,
+  MoveToInbox,
+  Settings,
+  Star,
+} from "@mui/icons-material";
 
 const NavBarButton = ({ ButtonName, ButtonImage, path, buttonStyle }) => {
   const navigate = useNavigate();
@@ -34,11 +47,36 @@ const NavBarButton = ({ ButtonName, ButtonImage, path, buttonStyle }) => {
           paddingRight: "5vw",
           // color: buttonColor,
         }}
+        // startIcon={
+        //   ButtonName !== "Players" ? (
+        //     <Icon>{ButtonImage}</Icon>
+        //   ) : (
+        //     <FontAwesomeIcon icon={faPeopleGroup} />
+        //   )
+        // }
+
         startIcon={
-          ButtonName !== "Players" ? (
-            <Icon>{ButtonImage}</Icon>
+          ButtonName === "Home" ? (
+            <Home sx={{ color: buttonColor }} />
+          ) : ButtonName === "Dashboard" ? (
+            <Dashboard sx={{ color: buttonColor }} />
+          ) : ButtonName === "Players" ? (
+            <FontAwesomeIcon
+              icon={faPeopleGroup}
+              style={{ color: buttonColor }}
+            />
+          ) : ButtonName === "Inbox" ? (
+            <MoveToInbox sx={{ color: buttonColor }} />
+          ) : ButtonName === "Analytics" ? (
+            <Monitor sx={{ color: buttonColor }} />
+          ) : ButtonName === "Help" ? (
+            <Help sx={{ color: buttonColor }} />
+          ) : ButtonName === "Settings" ? (
+            <Settings sx={{ color: buttonColor }} />
+          ) : ButtonName === "Logout" ? (
+            <DoorBack sx={{ color: buttonColor }} />
           ) : (
-            <FontAwesomeIcon icon={faPeopleGroup} />
+            <Star sx={{ color: buttonColor }} />
           )
         }
         onClick={handleNavigate}

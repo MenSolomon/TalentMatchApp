@@ -42,6 +42,7 @@ import {
   arrayUnion,
   doc,
   updateDoc,
+  setDoc,
 } from "firebase/firestore";
 import moment from "moment";
 import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
@@ -191,22 +192,51 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
         // Get the download URL
         const url = await getDownloadURL(playerVideoRef);
 
-        const playerObjectRef = doc(db, `players_database/${id}`);
-        await updateDoc(playerObjectRef, {
-          videos: arrayUnion({
-            filename: selectedFile?.name,
-            dateUploaded: moment().format("MMMM D, YYYY HH:mm:ss"),
-            url,
-            description,
-            category,
-            views: 0,
-            // suggestion: thought of making the uploaded by an accountId for specifity instead of names
-            uploadedBy:
-              role === "Club"
-                ? userDetailsObject.club
-                : `${userDetailsObject.accountId}`,
-          }),
+        const VideoUuid = uuidv4();
+
+        const playerObjectRef = doc(
+          db,
+          `players_database/${id}/videos`,
+          VideoUuid
+        );
+        await setDoc(playerObjectRef, {
+          id: VideoUuid,
+          filename: selectedFile?.name,
+          dateUploaded: moment().format("MMMM D, YYYY HH:mm:ss"),
+          url,
+          description,
+          category,
+          views: 0,
+          // suggestion: thought of making the uploaded by an accountId for specifity instead of names
+          uploadedById: id,
+          uploadedBy:
+            role === "Club"
+              ? userDetailsObject.club
+              : `${userDetailsObject.accountId}`,
         });
+
+        // Creating a object in the field of an object
+        // await setDoc(
+        //   playerObjectRef,
+        //   {
+        //     videos: {
+        //       [VideoUuid]: {
+        //         id: VideoUuid,
+        //         filename: selectedFile?.name,
+        //         dateUploaded: moment().format("MMMM D, YYYY HH:mm:ss"),
+        //         url,
+        //         description,
+        //         category,
+        //         views: 0,
+        //         uploadedBy:
+        //           role === "Club"
+        //             ? userDetailsObject.club
+        //             : `${userDetailsObject.accountId}`,
+        //       },
+        //     },
+        //   },
+        //   { merge: true }
+        // );
 
         dispatch(setCloseCircularLoadBackdrop());
 

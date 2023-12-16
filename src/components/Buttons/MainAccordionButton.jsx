@@ -25,9 +25,9 @@ export const MainAccordionNavButton = ({
           position: "relative",
           right: "13%",
           fontSize: ".7em",
-          fontWeight: "700",
-          // color: buttonColor,
           textTransform: "none",
+          fontWeight: "600",
+          // color: buttonColor,
           // textAlign: "left",
           width: "10vw",
         }}

@@ -5,11 +5,20 @@ import { useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../statemanager/slices/ThemeProviderSlice";
 import UploadVideoModal from "../components/Modals/UploadVideosModal";
 import NewsCard from "../../../components/Cards/NewsCard/NewsCard";
+import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
+import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
 
 const PlayerVersionDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
 
   const { primaryTextColor } = ThemeProvider;
+
+  const userLoginDetailsObject = useSelector(selectUserDetailsObject);
+  const playerDatabase = useSelector(selectPlayersDatabase);
+
+  const playerProfileObject = playerDatabase.find((data) => {
+    return data.id === userLoginDetailsObject.accountId;
+  });
 
   const newData = [
     {
@@ -127,7 +136,11 @@ const PlayerVersionDashboard = () => {
               <h5>Profile Analytics</h5>
 
               <h6>Total profile views</h6>
-              <h4>12</h4>
+              <h4>
+                {playerProfileObject?.views === undefined
+                  ? "0"
+                  : playerProfileObject.views}
+              </h4>
             </div>
 
             {/* /// SUMMARY*/}
