@@ -165,7 +165,7 @@ function SettingsSecurity() {
                 background: "wheat",
                 width: "5%",
                 // rotate: "1deg",
-                height: "80%",
+                height: "100%",
               }}
             />
           </div>

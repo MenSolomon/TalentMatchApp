@@ -8,6 +8,7 @@ function HompageSettings() {
     "Security",
     "Billing",
     "Support",
+    "Terms",
   ];
   return (
     <>

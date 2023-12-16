@@ -59,7 +59,7 @@ function SettingsProfile() {
                 // background: "Peru",
               }}
             >
-              <Avatar style={{ width: "20%", height: "50%" }} />
+              <Avatar style={{ width: "20%", height: "80%" }} />
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <div>
                   <b>UserName</b> <br />{" "}
@@ -92,7 +92,7 @@ function SettingsProfile() {
                 display: "flex",
                 gap: "1em",
                 padding: "0px 20px",
-                flex: "0.3",
+                flex: "0.2",
                 // background: "yellow",
                 // alignItems: "center",
                 justifyContent: "center",
@@ -104,6 +104,9 @@ function SettingsProfile() {
                 here* (optional)
               </div>
             </div>
+            <div style={{ flex: "0.1", marginLeft: "15%" }}>
+              <Button>Submit</Button>
+            </div>
           </div>
           {/* Divider */}
         </div>
@@ -114,24 +117,18 @@ function SettingsProfile() {
               background: "wheat",
               width: "5%",
               // rotate: "1deg",
-              height: "80%",
+              height: "100%",
             }}
           />
         </div>
         {/* End of divider */}
         <div className="md:flex md:flex-col" style={{ flex: "0.3" }}>
-          {/* <BasicSelect itemsArray={carouselFilter} label={"saved profile"} /> */}
-          <div style={{ flex: "0.1" }}>
+          {/* select saved profile with filter */}
+          <div style={{ flex: "0.6" }}>
             <small> change home carousel filter here* (optional)</small>
             <BasicSelect itemsArray={carouselFilter} label={"saved profiles"} />
           </div>
-          <div
-            style={{ flex: "0.5", justifySelf: "baseline", display: "flex" }}
-          >
-            <div style={{ paddingTop: "30%" }}>
-              <Button>Submit</Button>
-            </div>
-          </div>
+
           <div style={{ flex: "0.4" }}>
             <div style={{ display: "flex", flexDirection: "column" }}>
               <small>
