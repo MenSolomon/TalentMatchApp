@@ -30,13 +30,15 @@ const FreetrialCard = ({ name, roleImage, imageStyle }) => {
   return (
     <>
       <Card
-        className="chooseARoleCard"
+        className="chooseARoleCard md:w-[17%] md:h-[70%] md:flex md:flex-col 
+        sm:w-[40%] sm:h-[40%] sm:flex sm:flex-col
+        "
         sx={{
           // background: "pink",
-          width: "17%",
-          height: "70%",
-          display: "flex",
-          flexDirection: "column",
+          // width: "17%",
+          // height: "70%",
+          // display: "flex",
+          // flexDirection: "column",
           paddingTop: "2vh",
           color: "black",
           // backgroundImage: `linear-gradient(90deg, rgba(32,32,32,0.975210066936931) 0%, rgba(55,54,54,0.9780111873851103) 34%, rgba(23,21,21,1) 100%),url("${imageBackground}")`,

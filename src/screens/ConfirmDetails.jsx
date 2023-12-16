@@ -174,21 +174,25 @@ const ConfirmDetails = () => {
 
   return (
     <div
+      className="md:w-[100%] md:h-[100%] md:flex md:flex-row     sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
       style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
+        // width: "100%",
+        // height: "100%",
+        // display: "flex",
         padding: "0px 6vw",
+        // background: "red",
+        overflowY: "scroll",
       }}
     >
       {/*MEMEBERSHIP PLAN HEADER and USER DETAILS SUMMARY */}
 
       <div
+        className="md:flex md:flex-col      sm:flex sm:flex-col"
         style={{
           flex: ".7",
           // background: "yellow",
-          display: "flex",
-          flexDirection: "column",
+          // display: "flex",
+          // flexDirection: "column",
         }}
       >
         {/* MEMBERSHIP PLAN HEADER CARD */}
@@ -207,6 +211,7 @@ const ConfirmDetails = () => {
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
+              // background: "red",
             }}
           >
             {/* 
@@ -265,11 +270,13 @@ const ConfirmDetails = () => {
 
         {/* USER DETAILS SUMMARY  */}
         <div
+          className="md:flex md:flex-row    sm:flex sm:flex-col"
           style={{
             flex: "0.7",
             padding: "1vh 3vw",
             // background: "green",
             display: "flex",
+            // flexDirection: "column",
           }}
         >
           {/* // PADDING CONTAINER */}
@@ -388,9 +395,10 @@ const ConfirmDetails = () => {
           }
         />
         <Card
+          className="md:w-[84%] md:h-[68%]   sm:w-[100%] sm:h-[100%]"
           sx={{
-            width: "84%",
-            height: "68%",
+            // width: "84%",
+            // height: "68%",
             padding: ".5vw",
             marginTop: "3vh",
           }}

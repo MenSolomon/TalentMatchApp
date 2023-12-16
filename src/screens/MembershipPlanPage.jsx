@@ -52,17 +52,20 @@ const MembershipPlanPage = () => {
 
   return (
     <div
+      className="md:w-[100%] md:h-[100vh] md:flex md:flex-col  
+      sm:w-[100%] sm:h-[100vh] sm:flex sm:flex-col
+      "
       style={{
-        width: "100%",
-        height: "100vh",
+        // width: "100%",
+        // height: "100vh",
         // backgroundImage: `linear-gradient(0deg, rgba(46,46,46,1) 0%, rgba(255,255,255,1) 100%),url("${imageBackground}")`,
         backgroundImage: `linear-gradient(90deg, rgba(32,32,32,0.975210066936931) 0%, rgba(55,54,54,0.9780111873851103) 34%, rgba(23,21,21,1) 100%),url("${imageBackground}")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         // background: "blue",
         backgroundRepeat: "no-repeat",
-        display: "flex",
-        flexDirection: "column",
+        // display: "flex",
+        // flexDirection: "column",
         // padding: "2vw",
         // paddingLeft: "3vw",
         // padding: "3vw",
@@ -72,6 +75,7 @@ const MembershipPlanPage = () => {
     >
       {/* NAVIGATION AREA */}
       <div
+        className="md:block sm:hidden"
         style={{
           position: "fixed",
           paddingTop: "2.5vh",
@@ -86,6 +90,7 @@ const MembershipPlanPage = () => {
           backgroundRepeat: "no-repeat",
           paddingLeft: "3vw",
           paddingRight: "3vw",
+          // background: "red",
         }}
       >
         {/* LOGO AREA */}
@@ -200,12 +205,17 @@ const MembershipPlanPage = () => {
 
         {/* // Container housiong the header information  */}
         <div
-          style={{
-            height: "60vh",
-            width: "100%",
-            display: "flex",
-            // background: "green",
-          }}
+          className="md:h-[60vh] md:flex-row md:w-[100%] md:flex    
+          sm:h-[50vh] sm:w-[100%] sm:flex sm:flex-col
+          "
+          style={
+            {
+              // height: "60vh",
+              // width: "100%",
+              // display: "flex",
+              // background: "green",
+            }
+          }
         >
           <div
             style={{
@@ -215,9 +225,10 @@ const MembershipPlanPage = () => {
             }}
           >
             <div
+              className="md:h-[100%] md:w-[100%]"
               style={{
-                width: "100%",
-                height: "100%",
+                // width: "100%",
+                // height: "100%",
                 padding: "4vw",
                 paddingLeft: "12vw",
                 //   textAlign: "center",
@@ -232,10 +243,13 @@ const MembershipPlanPage = () => {
                 | Player{" "}
               </h1>
 
-              <h1 style={{ fontSize: "3em" }}>
+              <h1 className="sm:text-[2.2em]  md:text-[3em]">
                 Choose the plan that <br /> best suits your team.
               </h1>
-              <h4 style={{ fontWeight: "lighter" }}>
+              <h4
+                className="sm:font-lighter sm:text-[1em]  md:text-[1.2em] md:font-lighter"
+                // style={{ fontWeight: "lighter" }}
+              >
                 {" "}
                 Our pricing is designed to help you get the most of your talent
                 meet experience.
@@ -249,6 +263,7 @@ const MembershipPlanPage = () => {
 
               display: "flex",
               flexDirection: "column-reverse",
+              // background: "pink",
             }}
           >
             {/* //ICON AREA */}
@@ -258,9 +273,10 @@ const MembershipPlanPage = () => {
         {/* SUBSCRIPTION CARDS */}
 
         <div
+          className="md:w-[100%] md:h-[120vh]    sm:w-[100%] sm:h-[120vh]"
           style={{
-            width: "100%",
-            height: "120vh",
+            // width: "100%",
+            // height: "120vh",
             // background: "red",
             paddingTop: "20vh",
           }}
@@ -275,32 +291,38 @@ const MembershipPlanPage = () => {
           <div
             style={{
               // background: "blue",
-              height: "55vh",
-              width: "100%",
+              // height: "55vh",
+              // width: "100%",
               display: "flex",
               justifyContent: "center",
-              gap: "4vw",
+              // gap: "4vw",
               marginTop: "5vh",
             }}
           >
-            <SubscriptionCard
-              title="Free trial"
-              description="For personal use and exploration of technology "
-              price="0"
-              featuresHighlightArray={BasicFeaturesArray}
-            />
-            <SubscriptionCard
-              title="Starter"
-              description={`For personal use and exploration of technology with variety of access `}
-              price="40"
-              featuresHighlightArray={BasicFeaturesArray}
-            />
-            <SubscriptionCard
-              title="Premium"
-              description="Perfect for professional players with a good variety of football videos and stats "
-              price="100"
-              featuresHighlightArray={BasicFeaturesArray}
-            />
+            <div
+              className="md:flex md:flex-row md:h-[150vh] md:gap-[30px]     
+            sm:flex sm:flex-col sm:h-[100vh] sm:gap-[10px]
+            "
+            >
+              <SubscriptionCard
+                title="Free trial"
+                description="For personal use and exploration of technology "
+                price="0"
+                featuresHighlightArray={BasicFeaturesArray}
+              />
+              <SubscriptionCard
+                title="Starter"
+                description={`For personal use and exploration of technology with variety of access `}
+                price="40"
+                featuresHighlightArray={BasicFeaturesArray}
+              />
+              <SubscriptionCard
+                title="Premium"
+                description="Perfect for professional players with a good variety of football videos and stats "
+                price="100"
+                featuresHighlightArray={BasicFeaturesArray}
+              />
+            </div>
           </div>
         </div>
 
@@ -331,12 +353,14 @@ const SubscriptionCard = ({
 }) => {
   return (
     <Card
-      className="uploadPlayerModalCard"
+      className="uploadPlayerModalCard  md:w-[18vw] md:h-[55vh]   
+      sm:w-[70vw] sm:h-[130vh]
+      "
       style={{
-        width: "18vw",
+        // width: "18vw",
         // background: "red",
 
-        height: "55vh",
+        // height: "55vh",
         borderRadius: "1vw",
         color: "black",
       }}

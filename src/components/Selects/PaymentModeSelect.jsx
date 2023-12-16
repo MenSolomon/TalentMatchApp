@@ -87,6 +87,7 @@ export default function PaymentModeSelect({ paymentType }) {
   ];
 
   const Years = [];
+  console.log(`Years ${Years}`);
 
   for (let i = 23; i < 33; i++) {
     Years.push(`20${i}`);

@@ -75,34 +75,43 @@ const SubscribeTrial = () => {
 
   return (
     <div
+      className="md:w-[100%] md:flex-row md:h-[100%] md:flex   
+      sm:w-[100%] sm:flex-col sm:h-[100%] sm:flex
+      "
       style={{
         // background: "red",
-        width: "100%",
-        height: "100%",
-        display: "flex",
+        // width: "100%",
+        // height: "100%",
+        // display: "flex",
         // gap: "5vw",
         paddingLeft: "4%",
         // flexDirection: "column",
       }}
     >
       <div
+        className="md:flex md:justify-end   sm:flex sm:justify-center"
         style={{
           flex: "0.55",
           // background: "red",
-          display: "flex",
-          justifyContent: "flex-end",
+          // display: "flex",
+          // justifyContent: "flex-end",
           paddingRight: "10px",
         }}
       >
         {/* // LEFT PAPER  */}
 
         <div
-          style={{
-            width: "70%",
-            height: "75%",
-            display: "flex",
-            flexDirection: "column",
-          }}
+          className="md:w-[70%] md:h-[75%] md:flex md:flex-col   
+          sm:w-[90%] sm:h-[75%] sm:flex sm:flex-col
+          "
+          style={
+            {
+              // width: "70%",
+              // height: "75%",
+              // display: "flex",
+              // flexDirection: "column",
+            }
+          }
         >
           <div
             style={{
@@ -233,18 +242,20 @@ const SubscribeTrial = () => {
       </div>
       {/* //  RIGHT PAPER */}
       <div
+        className="md:flex md:justify-start   sm:flex sm:justify-center"
         style={{
           flex: "0.4",
-          display: "flex",
-          justifyContent: "flex-start",
+          // display: "flex",
+          // justifyContent: "flex-start",
           // background: "red",
           padding: "10px 10px",
         }}
       >
         <Card
+          className="md:w-[25vw] md:h-[42vh]    sm:w-[100%] sm:h-[100%]"
           sx={{
-            width: "25vw",
-            height: "42vh",
+            // width: "25vw",
+            // height: "42vh",
             borderRadius: "5px",
             padding: ".5vw",
           }}

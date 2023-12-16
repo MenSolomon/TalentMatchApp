@@ -67,7 +67,7 @@ const BackEndDataCatalog = ({ children }) => {
       });
 
       console.log(items, "Account ID", loginUserObject?.accountId);
-      alert(loginUserObject?.accountId + "Acc Backend");
+      // alert(loginUserObject?.accountId + "Acc Backend");
       if (items.length > 0) {
         // alert(`${accountId} Vas`);
         dispatch(setUsersDatabase(items));

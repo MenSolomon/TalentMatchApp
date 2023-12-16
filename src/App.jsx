@@ -48,6 +48,7 @@ import {
 } from "./statemanager/slices/InternetActivitiesSlice";
 import ContactSupportModal from "./components/Modals/ContactSupportModal";
 import { selectUsersDatabase } from "./statemanager/slices/DatabaseSlice";
+import HompageSettings from "./screens/HompageSettings";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -280,7 +281,7 @@ const App = () => {
   }, [dispatch]); // Include dispatch in the dependency array to avoid lint warnings
 
   useEffect(() => {
-    alert(userLoginObject.accountId + "  from App JSZ");
+    // alert(userLoginObject.accountId + "  from App JSZ");
   }, [usersDatabase]);
 
   return (
@@ -293,7 +294,7 @@ const App = () => {
           <Route path="/" element={<MotherComponent />}>
             <Route path="/favorite" element={<Error404 />} />
             <Route path="/help" element={<Error404 />} />
-            <Route path="/settings" element={<Error404 />} />
+            <Route path="/settings" element={<HompageSettings />} />
 
             <Route path="/" element={<HomePage />} />
             <Route path="/profile/:profileName" element={<ViewAllScreen />} />

@@ -127,19 +127,35 @@ export default function NotificationsMenu() {
           TransitionComponent={Fade}
         >
           <div
-            style={{
-              width: "35vw",
-              height: "80vh",
-              display: "flex",
-              flexDirection: "column",
-            }}
+            className="md:w-[35vw] md:h-[80vh] md:flex md:flex-col     
+            sm:w-[100vw] sm:h-[100vh] sm:flex sm:flex-col
+            "
+            style={
+              {
+                // width: "35vw",
+                // height: "80vh",
+                // display: "flex",
+                // flexDirection: "column",
+              }
+            }
           >
-            {/* // Notification head and Notification type tabs */}
+            {/* // Notification head and Notification type tabs  className="md:mr-[55%]  sm:mr-[90%]" */}
             <div style={{ flex: ".15" }}>
               <MenuItem sx={{ width: "35vw" }}>
-                <div style={{ width: "100%", display: "flex" }}>
-                  <h4 style={{ marginRight: "55%" }}>Notifications</h4>{" "}
-                  <IconButton sx={{ float: "right" }}>
+                <div
+                  className="md:flex md:w-[100%] md:justify-between  md:items-center  sm:flex sm:justify-between sm:w-[100%] sm:items-center"
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    // justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <h4 className="md:mr-[0%] sm:mr-[140%]">Notifications</h4>{" "}
+                  <IconButton
+                    onClick={handleClose}
+                    className="md:float-right sm:float-right "
+                  >
                     <Close />
                   </IconButton>
                 </div>

@@ -34,36 +34,50 @@ height:100%
 
   return (
     <div
+      className="md:w-[100%] md:h-[100vh] md:flex md:flex-col        
+      sm:w-[100%] sm:h-[100vh] sm:flex sm:flex-col
+      "
       style={{
-        width: "100vw",
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        background: "#f7f7f9",
+        // width: "100vw",
+        // height: "100vh",
+        // display: "flex",
+        // flexDirection: "column",
+        // background: "#f7f7f9",
+        background: "peru",
       }}
     >
-      <div style={{ flex: ".12", paddingTop: "1.5vh", paddingLeft: "1vw" }}>
+      <div
+        className="md:basis-[12%] sm:basis-[12%] md:pt-[1.5vh] md:pl-[1vw]  sm:pt-[1.5vh] sm:pl-[1vw]"
+        // style={{ flex: ".12" }}
+        // style={{ background: "red" }}
+      >
         <img
           onClick={() => {
             navigate("/login");
           }}
-          style={{ width: "120px" }}
+          // style={{ width: "120px" }}
+          className="md:w-[120px]  sm:w-[100px]"
           src={logoImage}
         />
       </div>
       <div
-        style={{
-          flex: "0.15",
-          // background: "yellow",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          // padding: "20px",
-        }}
+        className=" md:basis-[15%] sm:basis-[15%]  md:flex md:justify-center 
+        sm:flex sm:justify-start sm:flex-shrink-0  md:flex-shrink-0
+        "
+        style={
+          {
+            // flex: "0.15",
+            // background: "yellow",
+            // display: "flex",
+            // justifyContent: "space-between",
+            // alignItems: "center",
+            // padding: "20px",
+          }
+        }
       >
-        <FreetrialStepper />
+        <FreetrialStepper />{" "}
       </div>
-      <div style={{ flex: ".73", overflowY: "scroll" }}>
+      <div className="md:basis-[73%]  sm:basis-[73%]">
         {" "}
         <Outlet />{" "}
       </div>
