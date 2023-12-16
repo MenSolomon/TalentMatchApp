@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --gradient: linear-gradient(
+    90deg,
+    hsla(280, 81%, 58%, 1) 0%,
+    hsla(279, 81%, 59%, 1) 3%,
+    hsla(276, 79%, 60%, 1) 9%,
+    hsla(274, 79%, 60%, 1) 15%,
+    hsla(269, 76%, 61%, 1) 15%,
+    hsla(271, 77%, 61%, 1) 23%,
+    hsla(259, 72%, 62%, 1) 32%,
+    hsla(246, 68%, 64%, 1) 49%,
+    hsla(226, 67%, 60%, 1) 56%,
+    hsla(194, 96%, 42%, 1) 74%,
+    hsla(196, 80%, 79%, 1) 100%
+  );
+  --border-width: 1px;
+  --border-radius: 5px;
+  --scrollbar-width: 8px;
+  --background: #f7f7f9; /* Replace 'initial' with the default value or leave it as is */
+  --cardBackground: white;
+  --primaryTextColor: black;
+  --buttonColor: #5585fe;
+  --secondaryTextColor: black;
+}
+
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -10,12 +35,99 @@
   margin: 0;
 }
 
+.playerCard {
+  /* border: 0;
+  background: var(--gradient); */
+  position: relative;
+  /* border-bottom: 2px solid transparent; */
+  border: 1px solid transparent;
+
+  background: linear-gradient(#141c3f, #141c3f) padding-box,
+    linear-gradient(
+        90deg,
+        hsla(280, 81%, 58%, 1) 0%,
+        hsla(279, 81%, 59%, 1) 3%,
+        hsla(276, 79%, 60%, 1) 9%,
+        hsla(274, 79%, 60%, 1) 15%,
+        hsla(269, 76%, 61%, 1) 15%,
+        hsla(271, 77%, 61%, 1) 23%,
+        hsla(259, 72%, 62%, 1) 32%,
+        hsla(246, 68%, 64%, 1) 49%,
+        hsla(226, 67%, 60%, 1) 56%,
+        hsla(194, 96%, 42%, 1) 74%,
+        hsla(196, 80%, 79%, 1) 100%
+      )
+      border-box;
+}
+
+.playerCard::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  left: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    90deg,
+    hsla(280, 81%, 58%, 1) 0%,
+    hsla(279, 81%, 59%, 1) 3%,
+    hsla(276, 79%, 60%, 1) 9%,
+    hsla(274, 79%, 60%, 1) 15%,
+    hsla(269, 76%, 61%, 1) 15%,
+    hsla(271, 77%, 61%, 1) 23%,
+    hsla(259, 72%, 62%, 1) 32%,
+    hsla(246, 68%, 64%, 1) 49%,
+    hsla(226, 67%, 60%, 1) 56%,
+    hsla(194, 96%, 42%, 1) 74%,
+    hsla(196, 80%, 79%, 1) 100%
+  );
+  z-index: -2;
+  filter: blur(8px);
+}
+/* .playerCard::before,
+.playerCard::after {
+  content: "";
+  border-radius: inherit;
+  background-color: red;
+  inset: -0.5rem;
+  z-index: -1;
+  position: absolute;
+} */
+
+/* .playerCard {
+  border: 1px solid;
+  border-top-left-radius: 10vw;
+  border-image-slice: 1;
+  border-width: 3px;
+  border-image-source: linear-gradient(
+    90deg,
+    hsla(280, 81%, 58%, 1) 0%,
+    hsla(279, 81%, 59%, 1) 3%,
+    hsla(276, 79%, 60%, 1) 9%,
+    hsla(274, 79%, 60%, 1) 15%,
+    hsla(269, 76%, 61%, 1) 15%,
+    hsla(271, 77%, 61%, 1) 23%,
+    hsla(259, 72%, 62%, 1) 32%,
+    hsla(246, 68%, 64%, 1) 49%,
+    hsla(226, 67%, 60%, 1) 56%,
+    hsla(194, 96%, 42%, 1) 74%,
+    hsla(196, 80%, 79%, 1) 100%
+  );
+} */
+
 body {
+  width: 100vw;
   height: 100vh;
   font-size: clamp(1rem, 1.5vw, 1.2rem);
   overflow: hidden;
   color: var(--primary-color2);
-  background: linear-gradient(
+
+  /* // *** LIGHT THEME BACKGROUNDCOLOR   */
+  /* background-color: #f7f7f9; */
+  /* background: #09142d; */
+  /* 141C3F */
+
+  /* background: linear-gradient(
     121deg,
     rgba(209, 228, 228, 1) 20%,
     rgba(210, 228, 224, 1) 28%,
@@ -37,7 +149,8 @@ body {
     rgba(201, 204, 230, 1) 91%,
     rgba(199, 200, 230, 1) 94%,
     rgba(191, 185, 225, 1) 97%
-  );
+  ); */
+
   /* background: linear-gradient(
     121deg,
     rgba(25, 28, 36, 1) 20%,
@@ -71,7 +184,7 @@ li {
   width: 100%;
   height: 100%;
   border-radius: 1vw;
-  background: rgb(7, 127, 141);
+  /* background: rgb(7, 127, 141);
   background: linear-gradient(
     133deg,
     rgba(7, 127, 141, 1) 0%,
@@ -80,19 +193,49 @@ li {
     rgba(13, 129, 142, 1) 55%,
     rgba(35, 141, 153, 1) 73%,
     rgba(66, 157, 167, 1) 100%
-  );
+  ); */
+  position: relative;
+  /* border-bottom: 2px solid transparent; */
+  border: 1px solid transparent;
+
   display: flex;
   flex-direction: column; /* Stack children vertically */
   justify-content: flex-end; /* Place children at the bottom on the y-axis */
   align-items: center;
-  border-bottom: 5px solid #becbcc;
-  border-right: 5px solid #becbcc;
+  border-bottom: 1px solid #5585fe;
+  border-right: 2px solid #5585fe;
+  /* z-index: 3; */
+}
+
+.field::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  left: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    90deg,
+    hsla(280, 81%, 58%, 1) 0%,
+    hsla(279, 81%, 59%, 1) 3%,
+    hsla(276, 79%, 60%, 1) 9%,
+    hsla(274, 79%, 60%, 1) 15%,
+    hsla(269, 76%, 61%, 1) 15%,
+    hsla(271, 77%, 61%, 1) 23%,
+    hsla(259, 72%, 62%, 1) 32%,
+    hsla(246, 68%, 64%, 1) 49%,
+    hsla(226, 67%, 60%, 1) 56%,
+    hsla(194, 96%, 42%, 1) 74%,
+    hsla(196, 80%, 79%, 1) 100%
+  );
+  z-index: -2;
+  filter: blur(8px);
 }
 
 .keeperBox {
   width: 60%;
   height: 25%;
-  border: 2px solid white;
+  border: 2px solid #5585fe;
   border-bottom: none;
   margin-top: auto;
   display: flex;
@@ -105,14 +248,14 @@ li {
 .keeperMiniBox {
   width: 40%;
   height: 30%;
-  border: 2px solid white;
+  border: 2px solid #5585fe;
   border-bottom: none;
   margin-top: auto;
   /* z-index: 130; */
 }
 
 .kepperCirle {
-  border-top: 2px solid white;
+  border-top: 2px solid #5585fe;
   width: 7%;
   height: 10%;
   border-radius: 50%;
@@ -122,11 +265,16 @@ li {
 }
 
 .halfSemiCirlce {
-  border: 2px solid white;
+  border: 2px solid #5585fe;
   width: 30%;
   height: 20%;
   border-radius: 50%;
   margin-top: -7vh;
+  /* color: rgba(54, 54, 54, 0.671); */
+}
+
+table {
+  /* background-color: #9fa5b2; */
 }
 
 table thead tr th {
@@ -137,6 +285,178 @@ table tbody tr td {
   padding-top: 5px;
   font-size: 0.9em;
 }
+
+/* SCROLL BAR SETTINS */
+
+div::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+div::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+div:not(:hover)::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+div::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+  /* color: rgba(255, 255, 255, 0.466); */
+}
+
+/* FOR MOZILLA */
+div::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+div::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+div:not(:hover)::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+div::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+  /* color: rgba(255, 255, 255, 0.466); */
+}
+
+/* Webkit (Safari, Chrome, and other Webkit-based browsers) */
+
+div {
+  scrollbar-width: thin;
+}
+
+div {
+  scrollbar-color: #888 transparent;
+  /* overflow-y: scroll; or overflow-y: auto; */
+}
+
+div:hover {
+  scrollbar-color: #555 transparent;
+}
+/* SCROLL BAR SETTINS */
+
+.newsText:hover {
+  text-decoration: underline;
+}
+
+.css-6hp17o-MuiList-root-MuiMenu-list {
+  background-color: rgba(255, 0, 0, 0);
+  padding-top: 0;
+}
+
+.css-6hp17o-MuiList-root-MuiMenu-list > li {
+  font-size: 0.9em;
+}
+
+.chooseARoleCard:hover {
+  background-color: #e0fa55;
+  color: #09142d;
+  cursor: pointer;
+}
+
+/* // PHONE NUMBER IN CREATE ACCOUNT FORM  */
+.react-international-phone-input-container,
+.react-international-phone-input {
+  background-color: transparent;
+  border: none;
+  width: 100%;
+}
+
+/* react-international-phone-input-container */
+
+.react-international-phone-input {
+  height: 100%;
+  background-color: red;
+  border: 1px solid;
+}
+
+div.react-international-phone-country-selector {
+  background-color: transparent;
+}
+
+.react-international-phone-country-selector-button {
+  background-color: red;
+}
+
+/* CSS FROM COACH AGENT AND SCOUT VERSION */
+
+.VideoComponent:hover {
+  background: grey;
+}
+
+tbody tr {
+  height: 6vh;
+}
+
+.messageCard:hover {
+  border-left: 3px solid #5585fe;
+}
+
+.messageCard {
+  border-left: 3px solid transparent;
+}
+
+.uploadPlayerModalCard:hover {
+  background-color: #e0fa55;
+  color: #09142d;
+  cursor: pointer;
+}
+
+ul {
+  list-style-type: none;
+}
+
+/* //ACTIBE LINK */
+
+/* button.MuiButtinBase-root.MuiButtin-root.MuiButton-text.MuiButton-textPrimary */
+
+/* .MuiBox-root css-hxfpyy */
+/* div {
+  overflow-y: scroll;
+  scrollbar-gutter: stable both-edges;
+} */
+
+/* 
+.MuiFormControl-root,
+.MuiTextField-root,
+.css-1u3bzj6-MuiFormControl-root-MuiTextField-root {
+  border-radius: 10px;
+  background-color: #313543;
+  color: white;
+}
+
+.MuiInputBase-input,
+.MuiOutlinedInput-input,
+.MuiInputBase-inputAdornedEnd,
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+  color: white;
+}
+
+#outlined-adornment-password {
+  color: white;
+}
+
+.MuiFormLabel-root,
+.MuiInputLabel-root,
+.MuiInputLabel-formControl,
+.MuiInputLabel-animated,
+.MuiInputLabel-sizeMedium,
+.MuiInputLabel-outlined,
+.MuiFormLabel-colorPrimary,
+.MuiInputLabel-root,
+.MuiInputLabel-formControl,
+.MuiInputLabel-animated,
+.MuiInputLabel-sizeMedium,
+.MuiInputLabel-outlined,
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+  color: white;
+
+  text-emphasis-color: white;
+} */
 
 /* 
 .kepperCirle {
@@ -149,4 +469,372 @@ table tbody tr td {
   margin: auto;
   position: absolute;
   top: 41.5vh;
+} */
+
+/* Css for support page */
+
+.body_container {
+  /* width: 100vw;
+  height: 100vh; */
+  overflow-x: hidden;
+  background: #141c3f;
+}
+.container {
+  /* width: 100vw; */
+  height: 100vh;
+  display: grid;
+  /* background: red; */
+  grid-template-rows: 10% 90%;
+  grid-template-columns: 100%;
+  grid-template-areas: "header" "body";
+}
+.header_container {
+  grid-area: header;
+  /* background: yellow; */
+}
+.main_container {
+  grid-area: body;
+  /* background: blue; */
+  height: 200vh;
+  display: grid;
+  grid-template-rows: 25% 55% 10%;
+  grid-template-columns: 100%;
+  grid-template-areas: "header" "cards" "footer";
+}
+.head {
+  width: 84.6%;
+  height: 15vh;
+  background: #141c3f;
+  position: fixed;
+  z-index: 50;
+}
+/* ============ */
+.title_search {
+  grid-area: header;
+  background: #141c3f;
+}
+.cards {
+  grid-area: cards;
+  /* background: yellow; */
+}
+/* ================== */
+.footer {
+  grid-area: footer;
+  /* background: green; */
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 70% 30%;
+  grid-template-columns: 100%;
+  grid-template-areas: "header" "cards";
+}
+.email {
+  grid-area: header;
+  /* background: pink; */
+}
+.foot {
+  grid-area: cards;
+  /* background: peru; */
+}
+/* ====================== */
+
+/* Support Settings */
+video {
+  border-radius: 10px; /* Adjust the value to your desired border radius */
+}
+
+/* carousel-control-next-icon, .carousel-control-prev-icon */
+.carousel-control-next-icon {
+  margin-left: 4.5vw;
+  /* background-color: red; */
+}
+
+.carousel-control-prev-icon {
+  margin-right: 4.5vw;
+  /* background-color: red; */
+}
+
+/* // turn of the squared dashes for all bootstrap carousels */
+.carousel-indicators {
+  display: none;
+}
+
+div .carousel-indicators {
+  display: none;
+  color: #5b88fa;
+}
+
+tbody tr {
+  height: 1vh;
+}
+
+tbody {
+  overflow-y: scroll;
+}
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input:focus {
+  background: white;
+}
+
+.carousel-control-next-icon,
+.carousel-control-prev-icon {
+  border-radius: 50%;
+  background-color: #5585fe;
+  opacity: 0.5;
+  z-index: 1000;
+}
+
+.MatchedPlayers .carousel-control-next {
+  /* background: red; */
+  /* width: 6vw; */
+}
+
+.MatchedPlayers .carousel-control-prev {
+  /* background: red; */
+}
+
+video {
+  border-radius: 10px; /* Adjust the value to your desired border radius */
+  height: 40vh;
+  object-fit: cover;
+}
+
+.tableVideo video {
+  border-radius: 10px; /* Adjust the value to your desired border radius */
+  height: 28vh;
+  object-fit: cover;
+}
+
+/* /// Mother Container CSS STYLES */
+.playerCard,
+.field {
+  border: 1px solid transparent;
+
+  background: linear-gradient(var(--cardBackground), var(--cardBackground))
+      padding-box,
+    linear-gradient(
+        90deg,
+        hsla(280, 81%, 58%, 1) 0%,
+        hsla(279, 81%, 59%, 1) 3%,
+        hsla(276, 79%, 60%, 1) 9%,
+        hsla(274, 79%, 60%, 1) 15%,
+        hsla(269, 76%, 61%, 1) 15%,
+        hsla(271, 77%, 61%, 1) 23%,
+        hsla(259, 72%, 62%, 1) 32%,
+        hsla(246, 68%, 64%, 1) 49%,
+        hsla(226, 67%, 60%, 1) 56%,
+        hsla(194, 96%, 42%, 1) 74%,
+        hsla(196, 80%, 79%, 1) 100%
+      )
+      border-box;
+}
+
+.playerCard {
+  color: var(--primaryTextColor);
+}
+
+.primaryColor {
+  color: var(--primaryTextColor);
+}
+
+.primaryTextColor {
+  color: var(--primaryTextColor);
+}
+.secondaryTextColor {
+  color: var(--secondaryTextColor);
+}
+.styleTextColor {
+  color: var(--buttonColor);
+}
+
+.background {
+  background-color: var(--background);
+}
+
+.cardBackground {
+  background-color: var(--cardBackground);
+}
+
+/* .cardBorder{
+  border-right:  .2px solid ${
+    primaryTextColor !== "black"
+      ? "rgba(19, 19, 19, 0.849)"
+      : "rgba(54, 54, 54, 0.671)"
+  }  ;
+  border-bottom: .2px solid ${
+    primaryTextColor !== "black"
+      ? "rgba(19, 19, 19, 0.849)"
+      : "rgba(54, 54, 54, 0.671)"
+  }  ;
+ 
+} */
+
+.cardBorder {
+  border-right: 0.2px solid rgba(19, 19, 19, 0.849);
+  border-bottom: 0.2px solid rgba(19, 19, 19, 0.849);
+}
+
+.newsGradient {
+  background: linear-gradient(
+    270deg,
+    hsla(280, 81%, 58%, 1) 0%,
+    hsla(279, 81%, 59%, 1) 3%,
+    hsla(276, 79%, 60%, 1) 9%,
+    hsla(274, 79%, 60%, 1) 15%,
+    hsla(269, 76%, 61%, 1) 15%,
+    hsla(271, 77%, 61%, 1) 23%,
+    hsla(259, 72%, 62%, 1) 32%,
+    hsla(246, 68%, 64%, 1) 49%,
+    hsla(226, 67%, 60%, 1) 56%,
+    hsla(194, 96%, 42%, 1) 74%,
+    hsla(196, 80%, 79%, 1) 100%
+  );
+
+  opacity: 0.5;
+}
+
+.css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root {
+  color: var(--primaryTextColor);
+}
+
+.nav-link.active {
+  color: red;
+  font-weight: bold;
+}
+
+.NavBarBtns {
+  color: var(--buttonColor);
+}
+
+.active .NavBarBtns {
+  color: white;
+  border-radius: 0.5vw;
+  background: #5585fe;
+}
+
+ul li {
+  color: black;
+}
+
+ol {
+  list-style-type: none;
+}
+
+.PlayerManagementNationalityTooltip span {
+  position: absolute;
+  color: "red";
+  top: 17vh;
+  left: 28%;
+}
+
+@media (min-width: 1000px) {
+  .motherComponentContentArea {
+    overflow-y: scroll;
+  }
+}
+
+.splash-screen img {
+  width: 400px; /* Initial width */
+  transition: width 3s ease; /* Smoothly transition the width property over 3 seconds */
+}
+
+@keyframes increaseWidth {
+  0% {
+    width: 400px; /* Initial width */
+  }
+
+  100% {
+    width: calc(400px + 15px); /* Increase width by 15px */
+  }
+}
+
+/* ol */
+
+/* 
+.css-sh22l5-MuiButtonBase-root-MuiAccordionSummary-root {
+  background-color: red;
+}
+
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+  color: var(--primaryTextColor);
+  background: var(--cardBackground);
+}
+
+.css-7cyndw-MuiFormControl-root-MuiTextField-root {
+  border: 1px solidvar(--primaryTextColor);
+  border-radius: 0.3vw;
+}
+
+.css-i4bv87-MuiSvgIcon-root {
+  color: var(--primaryTextColor);
+}
+.css-1ua80n0-MuiInputBase-input-MuiOutlinedInput-input {
+  color: var(--primaryTextColor);
+}
+
+.css-1hxdtko-MuiFormLabel-root-MuiInputLabel-root {
+  color: var(--primaryTextColor);
+}
+
+.css-1wuilmg-MuiAutocomplete-root
+  .MuiOutlinedInput-root
+  .MuiAutocomplete-input {
+  color: var(--primaryTextColor);
+}
+
+.css-1xrtpas-MuiAutocomplete-root
+  .MuiOutlinedInput-root
+  .MuiAutocomplete-input {
+  color: var(--primaryTextColor);
+}
+
+.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  color: var(--primaryTextColor);
+}
+
+.css-1jfokfp-MuiFormLabel-root {
+  color: var(--primaryTextColor);
+}
+
+.css-114y07-MuiFormLabel-root-MuiInputLabel-root,
+.css-1hxdtko-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+  color: var(--primaryTextColor);
+}
+
+.css-13bx8ye-MuiTableCell-root {
+  border-bottom: none;
+}
+
+.css-18mmw2g-MuiTableCell-root {
+  border-bottom: none;
+}
+
+.css-13bx8ye-MuiTableCell-root {
+  border-bottom: none;
+}
+
+.css-trft4d-MuiTableCell-root {
+  color: var(--primaryTextColor);
+}
+
+.css-18mmw2g-MuiTableCell-root {
+  color: var(--primaryTextColor);
+}
+.css-15cg2ol-MuiTableCell-root {
+  color: var(--primaryTextColor);
+}
+.css-1cjzt9h-MuiTableCell-root {
+  color: var(--primaryTextColor);
+}
+
+.css-1hsflyn-MuiTableCell-root,
+.css-1arwt0a-MuiTableCell-root,
+.css-1v0znwy-MuiTableCell-root {
+  color: var(--primaryTextColor);
+}
+
+.css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input {
+  color: var(--primaryTextColor);
+}
+
+.css-17at8t4-MuiFormLabel-root-MuiInputLabel-root {
+  color: var(--primaryTextColor);
 } */

@@ -1,243 +1,467 @@
-import { Add, Menu, NotificationAdd } from "@mui/icons-material";
-import { Button, Card, IconButton } from "@mui/material";
-import React from "react";
-import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
-import SeachBarTextField from "./components/SeachBarTextField";
-import Avatar from "@mui/material/Avatar";
-import avatarImage from "./assets/images/avatar.jpg";
-import ProfileMenu from "./components/Menu/ProfileMenu";
-import SavedFilters from "./components/MenuButtons/SavedFilters";
-import LightAndDarkModeSwitch from "./components/Switch/LightAndDarkModeSwitch";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import HomePage from "./screens/HomePage";
-import NavBarButton from "./components/NavBarButtons/NavBarButton";
 import PlayerDetails from "./screens/PlayerDetails";
+import ViewAllScreen from "./screens/ViewAllScreen";
+import MotherComponent from "./MotherComponent";
+import Login from "./screens/Login";
+import Signup from "./screens/Signup";
+import Community from "./screens/Community";
+import PlayerComparison from "./screens/PlayerComparison";
+import News from "./screens/News";
+import MembershipPlanPage from "./screens/MembershipPlanPage";
+import FreeTrial from "./screens/FreeTrial";
+import SubscribeTrial from "./screens/SubscribeTrial";
+import ConfirmDetails from "./screens/ConfirmDetails";
+import SignupFormsMotherComponent from "./screens/SignupFormsMotherComponent";
+import CreateAccount from "./screens/CreateAccount";
+import PlayerVersionMotherComponent from "./PlayerVersion/src/PlayerVersionMotherComponent";
+import PlayerVersionDashboard from "./PlayerVersion/src/screens/PlayerVersionDashboard";
+import PlayerVersionVideos from "./PlayerVersion/src/screens/PlayerVersionVideos";
+import PlayerVersionStatistics from "./PlayerVersion/src/screens/PlayerVersionStatistics";
+import PlayerVersionFavorites from "./PlayerVersion/src/screens/PlayerVersionFavorites";
+import PlayerVersionAnalytics from "./PlayerVersion/src/screens/PlayerVersionAnalytics";
+import PlayerVersionInbox from "./PlayerVersion/src/screens/PlayerVersionInbox";
+import CoachAgentScoutVersionMotherComponent from "./CoachAgentScoutVersion/src/CoachAgentScoutVersionMotherComponent";
+import CoachAgentScoutVersionDashboard from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionDashboard";
+import CoachAgentScoutVersionPlayers from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionPlayers";
+import CoachAgentScoutVersionStatistics from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionStatistics";
+import CoachAgentScoutVersionFavorites from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionFavorites";
+import CoachAgentScoutVersionInbox from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionInbox";
+import CoachAgentScoutVersionAnalytics from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionAnalytics";
+import CoachAgentScoutVersionPlayerManagement from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionPlayerManagement";
+import PrivateRoutes from "./utilities/PrivateRoute";
+import Support from "./screens/Support";
+import SupportSettings from "./screens/SupportSettings";
+import WarningAlertModal from "./components/Modals/WarningAlertModal";
+import { createTheme, ThemeProvider, Button, CssBaseline } from "@mui/material";
+import Error404 from "./screens/Error404";
+import ErrorPageNotFound from "./screens/ErrorPageNotFound";
+import { useDispatch, useSelector } from "react-redux";
+import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
+import { selectUserDetailsObject } from "./statemanager/slices/LoginUserDataSlice";
+import { useEffect, useState } from "react";
+import {
+  setCurrentBrowserSize,
+  setCurrentScreenSize,
+} from "./statemanager/slices/OtherComponentStatesSlice";
+import BasicBackdrop from "./components/Backdrops/BasicBackdrop";
+import {
+  setInternetConnectionOffline,
+  setInternetConnectionOnline,
+} from "./statemanager/slices/InternetActivitiesSlice";
+import ContactSupportModal from "./components/Modals/ContactSupportModal";
+import { selectUsersDatabase } from "./statemanager/slices/DatabaseSlice";
+import Favorites from "./screens/Favorites";
 
 const App = () => {
-  const menuButtonsArray = [
-    { name: "Home", icon: "home" },
-    // The none values are for the savedFilters which is an accordion and not a button.. skipped over it in the map
-    { name: "none", icon: "none" },
-    { name: "Favourite", icon: "favorite" },
-    { name: "Community", icon: "people" },
-    { name: "News", icon: "comment" },
-  ];
+  const themeProviderObject = useSelector(selectThemeProviderObject);
+  const usersDatabase = useSelector(selectUsersDatabase);
 
-  const menuButtonsArrayTWO2 = [
-    { name: "Help", icon: "help" },
-    { name: "Settings", icon: "settings" },
-    { name: "Logout", icon: "door_back" },
-  ];
+  const { primaryTextColor } = themeProviderObject;
 
+  const theme = createTheme({
+    palette: {
+      text: {
+        // primary: "#000000",
+        // alternate : `${primaryTextColor}`, // Set your desired text color
+        // secondary: "#000000",
+      },
+    },
+    typography: {
+      fontFamily: "Nunito, sans-serif",
+    },
+
+    overrides: {
+      MuiStepLabel: {
+        label: {
+          "&.Mui-completed": {
+            color: "black", // Set the color for completed StepLabel to black
+          },
+        },
+      },
+      MuiFormControl: {
+        root: {
+          "&.MuiTextField-root": {
+            color: "black", // Set your desired text color for MuiTextField
+            // Add other styles as needed
+          },
+        },
+      },
+      MuiSvgIcon: {
+        root: {
+          color: "black", // Set your desired color for MuiSvgIcon
+          // Add other styles as needed
+        },
+      },
+      MuiInputBase: {
+        input: {
+          "&.MuiOutlinedInput-input": {
+            color: "black", // Set your desired text color for MuiInputBase input
+            // Add other styles as needed
+          },
+        },
+      },
+      MuiFormLabel: {
+        root: {
+          "& .MuiFormLabel-root-MuiInputLabel-root": {
+            color: "black", // Set your desired text color for MuiFormLabel
+            background: "black",
+          },
+        },
+      },
+      MuiInputLabel: {
+        root: {
+          "&.Mui-focused": {
+            color: "black", // Set your desired text color for focused MuiInputLabel
+            // Add other styles as needed
+          },
+          color: "black",
+        },
+      },
+      MuiAutocomplete: {
+        root: {
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "black",
+            // Add other styles as needed
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "black",
+            // Add other styles as needed
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "black",
+            // Add other styles as needed
+          },
+          "& .MuiOutlinedInput-root .MuiAutocomplete-input": {
+            color: "black", // Set your desired text color for MuiAutocomplete input
+            // Add other styles as needed
+          },
+        },
+      },
+      MuiSelect: {
+        select: {
+          "& .MuiInputBase-input.MuiOutlinedInput-input": {
+            color: "black", // Set your desired text color for MuiSelect input
+            // Add other styles as needed
+          },
+        },
+        outlined: {
+          "&:hover:not($disabled):not($focused):not($error) $notchedOutline": {
+            borderColor: "black",
+            // Add other styles as needed
+          },
+          "&$focused $notchedOutline": {
+            borderColor: "blue",
+            // Add other styles as needed
+          },
+        },
+        notchedOutline: {
+          borderColor: "yellow",
+          // Add other styles as needed
+        },
+      },
+      MuiTable: {
+        root: {
+          color: "black", // Set your desired text color
+        },
+      },
+      MuiTableCell: {
+        root: {
+          color: "black", // Set your desired text color for MuiTableCell
+          // Add other styles as needed
+        },
+      },
+      "-MuiFormLabel-root-MuiInputLabel-root.Mui-focused": {
+        color: "purple", // Set your desired text color for focused MuiFormLabel with MuiInputLabel
+        // Add other styles as needed
+      },
+    },
+    components: {
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            "&:hover $notchedOutline": {
+              borderColor: "green",
+              // Set your desired color for hover
+            },
+            "& .MuiInputBase-input.MuiOutlinedInput-input:focus": {
+              background: "white",
+              color: "black",
+            },
+            "&.Mui-focused $notchedOutline": {
+              background: "white", // Set your desired color for focus
+              color: "black",
+            },
+          },
+        },
+      },
+      MuiInputLabel: {
+        styleOverrides: {
+          root: {
+            color: `${primaryTextColor}`, // Set your desired label color
+          },
+        },
+      },
+    },
+  });
+
+  const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { pathname, search, hash } = location;
+  const userLoginObject = useSelector(selectUserDetailsObject);
+
+  // this use effect is to redirect studio for the desired role on user change
+  useEffect(() => {
+    if (
+      userLoginObject?.role === "Player" &&
+      pathname.includes("multiStudio") === true
+    ) {
+      navigate("/studio/dashboard");
+    } else if (
+      userLoginObject?.role === "Club" ||
+      userLoginObject?.role === "Scout" ||
+      userLoginObject?.role === "Agent" ||
+      userLoginObject?.role === "Coach"
+    ) {
+      if (pathname.includes("/studio/") === true) {
+        navigate("/multiStudio/dashboard");
+      }
+    }
+  }, [userLoginObject]);
+
+  const [screenSize, setScreenSize] = useState({
+    width: window.screen.width,
+    height: window.screen.height,
+  });
+
+  const [browserSize, setBrowserSize] = useState({
+    width:
+      window.innerWidth ||
+      document.documentElement.clientWidth ||
+      document.body.clientWidth,
+    height:
+      window.innerHeight ||
+      document.documentElement.clientHeight ||
+      document.body.clientHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenSize({
+        width: window.screen.width,
+        height: window.screen.height,
+      });
+    };
+
+    // Attach the event listener
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []); // Empty dependency array means this effect runs once after the initial render
+
+  // GETTING THE SIZE OF THE WINDOW
+
+  useEffect(() => {
+    const handleResize = () => {
+      setBrowserSize({
+        width:
+          window.innerWidth ||
+          document.documentElement.clientWidth ||
+          document.body.clientWidth,
+        height:
+          window.innerHeight ||
+          document.documentElement.clientHeight ||
+          document.body.clientHeight,
+      });
+    };
+
+    console.log(browserSize, "Deava");
+    // Attach the event listener
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // useEffect to handle setting browser size
+  useEffect(() => {
+    console.log(`${browserSize.width} ,width`, `${browserSize.height} ,height`);
+
+    const { width, height } = browserSize;
+
+    dispatch(setCurrentBrowserSize({ width, height }));
+  }, [browserSize]);
+
+  /// Useeffect to handle screen size
+
+  useEffect(() => {
+    console.log(`${screenSize.width} ,width`, `${screenSize.height} ,height`);
+
+    const { width, height } = screenSize;
+
+    dispatch(setCurrentScreenSize({ width, height }));
+  }, [screenSize]);
+
+  /// Listen wherther or not internet is connected
+
+  useEffect(() => {
+    const handleOnline = () => {
+      dispatch(setInternetConnectionOnline());
+    };
+
+    const handleOffline = () => {
+      dispatch(setInternetConnectionOffline());
+    };
+
+    // Add event listeners
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    // Cleanup event listeners on component unmount
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [dispatch]); // Include dispatch in the dependency array to avoid lint warnings
+
+  // useEffect(() => {
+  //   alert(userLoginObject.accountId + "  from App JSZ");
+  // }, [usersDatabase]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        width: "100vw",
-      }}
-    >
-      {/* //=====  NAVBAR ======= \\ */}
-      <div style={{ flex: ".11", display: "flex" }}>
-        {/* // Logo Area */}
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Routes>
+        {/* PROTECTED ROUTES  */}
 
-        <div
-          style={{
-            flex: ".18",
-            paddingTop: "1%",
-            display: "flex",
-          }}
-        >
-          <Avatar
-            sx={{
-              // marginLeft: "2vw",
-              width: 62,
-              height: 62,
-              border: "4px solid blue",
-              marginLeft: ".4vw",
-              marginRight: ".4vw",
-            }}
-            src={avatarImage}
-          ></Avatar>
-          <h4 style={{ marginTop: "2vh" }}>Talent Match</h4>
-        </div>
-        {/* // Search Area? */}
-        <div style={{ flex: ".45", paddingTop: "1%", paddingLeft: "4vw" }}>
-          {/* "#3D2A2F */}
-          <SeachBarTextField label={"Search Player"} marginLeft="3vw" />{" "}
-        </div>
-        {/* // profile details Area */}
-        <div
-          style={{
-            // Should be 37
-            flex: ".34",
-            // background: "yellow",
-            paddingTop: "1%",
-            paddingRight: "1.5%",
-            // display: "flex",
-          }}
-        >
-          {/* sx={{ float: "right", marginLeft: "1vw", borderBottom: "none" }} */}
+        <Route element={<PrivateRoutes />}>
+          <Route path="/" element={<MotherComponent />}>
+            <Route path="/favorite" element={<Favorites />} />
+            <Route path="/help" element={<Error404 />} />
+            <Route path="/settings" element={<Error404 />} />
 
-          <ProfileMenu
-            style={{ float: "right", marginLeft: "1vw", borderBottom: "none" }}
-            name="Michael Solomon"
+            <Route path="/" element={<HomePage />} />
+            <Route path="/profile/:profileName" element={<ViewAllScreen />} />
+
+            <Route
+              path="player-details/:playerId"
+              element={<PlayerDetails />}
+            />
+            <Route path="/community" element={<Community />} />
+            <Route path="/player-compare" element={<PlayerComparison />} />
+            <Route path="/news" element={<News />} />
+          </Route>
+
+          {/* //PLayerVersion */}
+
+          <Route path="/studio" element={<PlayerVersionMotherComponent />}>
+            <Route path="/studio/favorite" element={<Error404 />} />
+            <Route path="/studio/help" element={<Error404 />} />
+            <Route path="/studio/settings" element={<Error404 />} />
+
+            <Route
+              path="/studio/dashboard"
+              element={<PlayerVersionDashboard />}
+            />
+            <Route path="/studio/videos" element={<PlayerVersionVideos />} />
+            <Route
+              path="/studio/Statistics"
+              element={<PlayerVersionStatistics />}
+            />
+            <Route
+              path="/studio/favorites"
+              element={<PlayerVersionFavorites />}
+            />
+            <Route path="/studio/inbox" element={<PlayerVersionInbox />} />
+
+            <Route
+              path="/studio/analytics"
+              element={<PlayerVersionAnalytics />}
+            />
+          </Route>
+          {/* End of Player Version */}
+
+          {/* COACH AGENT AND SCOUT VERSION */}
+          <Route
+            path="/multiStudio"
+            element={<CoachAgentScoutVersionMotherComponent />}
+          >
+            <Route path="/multiStudio/favorite" element={<Error404 />} />
+            <Route path="/multiStudio/help" element={<Error404 />} />
+            <Route path="/multiStudio/settings" element={<Error404 />} />
+
+            <Route
+              path="/multiStudio/dashboard"
+              element={<CoachAgentScoutVersionDashboard />}
+            />
+            {/* <Route path="/videos" element={<Videos />} /> */}
+            <Route
+              path="/multiStudio/players"
+              element={<CoachAgentScoutVersionPlayers />}
+            />
+            <Route
+              path="/multiStudio/Statistics"
+              element={<CoachAgentScoutVersionStatistics />}
+            />
+            <Route
+              path="/multiStudio/favorites"
+              element={<CoachAgentScoutVersionFavorites />}
+            />
+            <Route
+              path="/multiStudio/inbox"
+              element={<CoachAgentScoutVersionInbox />}
+            />
+            <Route
+              path="/multiStudio/analytics"
+              element={<CoachAgentScoutVersionAnalytics />}
+            />
+            <Route
+              path="/multiStudio/players/:playerId"
+              element={<CoachAgentScoutVersionPlayerManagement />}
+            />
+          </Route>
+        </Route>
+
+        {/* END OF PROTECTED ROUTES */}
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        <Route path="/membership-plans" element={<MembershipPlanPage />} />
+        {/* <Route path="/spt" element={<Support />} />
+        <Route path="/sptss" element={<SupportSettings />} /> */}
+
+        {/* // CREATE ACCOUNT STEPPER URLS */}
+        <Route path="/create-account" element={<SignupFormsMotherComponent />}>
+          <Route path="/create-account/freetrial" element={<FreeTrial />} />
+          <Route
+            path="/create-account/subscribeTrial"
+            element={<SubscribeTrial />}
           />
 
-          <IconButton sx={{ float: "right", marginLeft: ".5vw" }}>
-            <NotificationAdd />
-          </IconButton>
-          <Avatar
-            sx={{
-              // marginLeft: "2vw",
-              width: 55,
-              height: 55,
-              border: "4px solid blue",
-              marginLeft: ".4vw",
-              marginRight: ".4vw",
-              float: "right",
-            }}
-            src={avatarImage}
-          ></Avatar>
+          <Route
+            path="/create-account/confirm-details"
+            element={<ConfirmDetails />}
+          />
 
-          <LightAndDarkModeSwitch style={{ float: "right" }} />
-        </div>
-      </div>
-      {/* // ======  PAGE CONTENT ===== \\ */}
-      <div style={{ flex: ".89", display: "flex" }}>
-        {/* // NAV ARAEA */}
-        <div
-          style={{
-            flex: ".18",
-            display: "flex",
-            flexDirection: "column",
-            paddingTop: "5vh",
-          }}
-        >
-          {/* // USE A MAP FOR THIS */}
-          {/* // NavBAR FIRST HALF */}
-          <div style={{ flex: ".65", overflowY: "scroll", maxHeight: "45vh" }}>
-            <ul style={{ listStyleType: "none", marginLeft: "2vw" }}>
-              {menuButtonsArray &&
-                menuButtonsArray.map((data) => {
-                  const { name, icon } = data;
+          <Route path="/create-account/user-form" element={<CreateAccount />} />
+        </Route>
 
-                  if (name === "none") {
-                    // this is to display the accordion list
-                    return (
-                      <li>
-                        <SavedFilters />
-                      </li>
-                    );
-                  } else if (name == "Home") {
-                    // This is to add the button which collapses the navbar
-                    return (
-                      <li style={{ display: "flex" }}>
-                        <NavBarButton
-                          ButtonName={name}
-                          ButtonImage={icon}
-                          buttonStyle={{
-                            background:
-                              "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
-                            // width: "14vw",
-                            marginRight: "1vw",
-                            borderRadius: ".5vw",
-                            color: "white",
-                          }}
-                        />
+        <Route path="*" element={<ErrorPageNotFound />} />
+      </Routes>
+      {/* //// Alert Modal to display error messages */}
+      <WarningAlertModal />
 
-                        {/* <IconButton sx={{ marginLeft: "9vw" }}>
-                          <Menu />
-                        </IconButton> */}
-                      </li>
-                    );
-                  } else {
-                    return (
-                      <li>
-                        <NavBarButton
-                          ButtonName={name}
-                          ButtonImage={icon}
-                          buttonStyle={{ color: "#095F68" }}
-                        />
-                      </li>
-                    );
-                  }
-                })}
-            </ul>
-          </div>
-
-          {/* // Navbar Second HALF */}
-
-          <div style={{ flex: ".35" }}>
-            <ul style={{ listStyleType: "none", marginLeft: "2vw" }}>
-              {menuButtonsArrayTWO2 &&
-                menuButtonsArrayTWO2.map((data) => {
-                  const { name, icon } = data;
-                  return (
-                    <li>
-                      <NavBarButton ButtonName={name} ButtonImage={icon} />
-                    </li>
-                  );
-                })}
-            </ul>
-
-            <Card
-              sx={{
-                width: 145,
-                height: 80,
-                marginLeft: "4.6vw",
-                paddingTop: "1vh",
-                paddingLeft: ".6vw",
-                paddingRight: ".6vw",
-                display: "flex",
-                background:
-                  "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
-                // background: "#1B1E2B",
-                color: "white",
-              }}
-            >
-              <div
-                style={{
-                  flex: ".93",
-                  fontSize: ".85em",
-                  display: "grid",
-                  placeItems: "center",
-                }}
-              >
-                {" "}
-                Friend Chat or Group Chat{" "}
-              </div>
-              <div
-                style={{
-                  flex: ".07",
-                  display: "flex",
-                }}
-              >
-                {" "}
-                <Add sx={{ marginTop: "4.4vh", color: "gold" }} />{" "}
-              </div>
-            </Card>
-          </div>
-        </div>
-
-        {/* // ROUTES SECTION */}
-        <div
-          style={{
-            flex: ".82",
-            padding: "2vh 1.5vw",
-            // background: "blue",
-          }}
-        >
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/player-details" element={<PlayerDetails />} />
-          </Routes>
-        </div>
-      </div>
-    </div>
+      <BasicBackdrop />
+      <ContactSupportModal />
+    </ThemeProvider>
   );
 };
 

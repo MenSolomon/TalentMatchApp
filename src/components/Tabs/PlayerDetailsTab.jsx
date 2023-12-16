@@ -4,6 +4,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import { CircularProgress } from "@mui/material";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -18,7 +19,9 @@ function CustomTabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography sx={{ fontWeight: "bolder" }}>{children}</Typography>
+          <Typography sx={{ fontWeight: "bolder", color: "white" }}>
+            {children}
+          </Typography>
         </Box>
       )}
     </div>
@@ -38,7 +41,16 @@ function a11yProps(index) {
   };
 }
 
-export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
+export default function PlayerDetailsMenuTab({
+  PlayerTabItemsArray,
+  Nationality,
+  PlaceOfBirth,
+  DateOfBirth,
+  clubName,
+  contractStartDate,
+  contactEndDate,
+  Position,
+}) {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -55,10 +67,11 @@ export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
           sx={{
             background: "transparent",
             borderRadius: "1vw",
-            borderBottom: "3px solid #0d818e",
-            borderRight: "3px solid #0d818e",
+            // border: "2px solid #5585fe",
+            color: "white",
+            // borderRight: "1px solid #0d818e",
             fontWeight: "bolder",
-            // border: "3px solid green",
+            // border: "1px solid green",
           }}
         >
           {/* REMIND ME TO ADD NAVIGATE BASED ON THE NAME OF THE SCREEN  */}
@@ -68,8 +81,14 @@ export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
           {PlayerTabItemsArray.map((data, key) => {
             return (
               <Tab
+                key={key}
+                className="primaryColor"
                 label={data}
-                sx={{ width: "10vw", marginRight: "2vw", fontWeight: "bold" }}
+                sx={{
+                  width: "10vw",
+                  // marginRight: "2vw",
+                  fontWeight: "bold",
+                }}
                 {...a11yProps(key)}
               />
             );
@@ -84,7 +103,7 @@ export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
 
       {PlayerTabItemsArray.map((data, index) => {
         let TaskBarComponent = lazy(() =>
-          import(`../../screens/subscreens/Player${data}`)
+          import(`../../screens/subscreens/Player${data}.jsx`)
         );
 
         return (
@@ -92,8 +111,28 @@ export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
             <CustomTabPanel value={value} index={index} key={index}>
               {/* {data} */}
 
-              <Suspense fallback={<div> ...Loading </div>}>
-                <TaskBarComponent />
+              <Suspense
+                fallback={
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <CircularProgress />
+                  </div>
+                }
+              >
+                <TaskBarComponent
+                  Nationality={Nationality}
+                  PlaceOfBirth={PlaceOfBirth}
+                  DateOfBirth={DateOfBirth}
+                  clubName={clubName}
+                  contractStartDate={contractStartDate}
+                  contactEndDate={contactEndDate}
+                  Position={Position}
+                />
               </Suspense>
             </CustomTabPanel>
           </>

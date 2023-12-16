@@ -1,4 +1,3 @@
-import React, { useEffect, useRef } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJs, ArcElement, Tooltip, Legend } from "chart.js";
 // import ChartDataLabels from "chartjs-plugin-datalabels";
@@ -7,22 +6,20 @@ ChartJs.register(ArcElement, Tooltip, Legend);
 
 // ChartJs.register(ArcElement, Tooltip);
 
-const PlayerStatsDoughnut = ({ Percentage2ValuesArray }) => {
+const PlayerStatsDoughnut = ({ PercentageSuccess, Label }) => {
   const data = {
     labels: ["Yes", "No"],
     datasets: [
       {
         label: "Player Attributes",
-        data: Percentage2ValuesArray,
-        backgroundColor: ["#0C7580", "transparent"],
-        borderColor: ["#0C7580", "transparent"],
+        data: [PercentageSuccess, 100 - PercentageSuccess],
+        backgroundColor: ["#5585fe", "transparent"],
+        borderColor: ["#5585fe", "transparent"],
         borderWidth: 0,
         borderRadius: 10,
       },
     ],
   };
-
-  let successRate = Percentage2ValuesArray[0] / Percentage2ValuesArray[1];
 
   const options = {
     cutout: "80%", // Adjust this value to control the width
@@ -38,21 +35,24 @@ const PlayerStatsDoughnut = ({ Percentage2ValuesArray }) => {
 
   return (
     <div style={{ position: "relative" }}>
+      {/* <span> Solomon </span> */}
+
       <Doughnut
         data={data}
         options={options}
         style={{ width: "50%", height: "10vh" }}
       />
       <div
+        className="primaryColor"
         style={{
           position: "absolute",
           bottom: "32%",
-          left: "28%",
+          left: Label === "Interceptions" ? "15%" : "26%",
           textAlign: "center",
         }}
       >
         {" "}
-        {successRate && successRate}0% <br /> success{" "}
+        {PercentageSuccess}% <br /> {Label}{" "}
       </div>
     </div>
   );

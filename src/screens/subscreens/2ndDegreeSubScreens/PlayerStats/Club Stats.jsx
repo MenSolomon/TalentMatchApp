@@ -1,5 +1,3 @@
-import React from "react";
-
 const ClubStatisticsTable = () => {
   return (
     <>
@@ -20,7 +18,7 @@ const ClubStatisticsTable = () => {
           <div style={{ float: "right", color: "blue" }}>See all</div>{" "}
         </div>
         <div>
-          <table style={{ width: "80%" }}>
+          <table className="primaryColor" style={{ width: "80%" }}>
             <thead style={{ height: "3vh" }}>
               <tr>
                 {" "}
@@ -49,7 +47,7 @@ const ClubStatisticsTable = () => {
         </div>
       </div>
 
-      {/* Div for housing the last 5 Club Matches Statisitcs
+      {/* Div for housing the last 5 Club Matches Statistics
        */}
       <div
         style={{

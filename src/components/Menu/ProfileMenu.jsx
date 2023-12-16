@@ -3,6 +3,17 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { KeyboardArrowDown } from "@mui/icons-material";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectUserDetailsObject,
+  setLoginStatus,
+  setUserDetailsObject,
+} from "../../statemanager/slices/LoginUserDataSlice";
+
+import avatarImage from "../../assets/images/avatar.jpg";
+import { Avatar } from "@mui/material";
+import { setUserSavedProfiles } from "../../statemanager/slices/SavedProfileSlice";
 
 export default function ProfileMenu({ style, name }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -15,10 +26,15 @@ export default function ProfileMenu({ style, name }) {
   };
 
   let importStyle = style;
+  const dispatch = useDispatch();
+  const Navigate = useNavigate();
+  const loginUserDetails = useSelector(selectUserDetailsObject);
+  const { firstName, surname } = loginUserDetails;
 
   return (
     <div style={importStyle}>
-      <Button
+      {/* <Button
+        className="primaryColor"
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
@@ -27,8 +43,22 @@ export default function ProfileMenu({ style, name }) {
         sx={{ color: "black", width: "15vw", fontWeight: "800" }}
         onClick={handleClick}
       >
-        {name && name.substring(0, 16)}
-      </Button>
+        {firstName.substring(0, 10) + " " + surname.substring(0, 10)}
+      </Button> */}
+
+      <Avatar
+        sx={{
+          // marginLeft: "2vw",
+          width: 55,
+          height: 55,
+          border: "4px solid blue",
+          marginLeft: ".4vw",
+          marginRight: ".4vw",
+          float: "right",
+        }}
+        src={avatarImage}
+        onClick={handleClick}
+      ></Avatar>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
@@ -38,9 +68,28 @@ export default function ProfileMenu({ style, name }) {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem
+          sx={{ color: "black" }}
+          color="secondary"
+          onClick={handleClose}
+        >
+          Profile
+        </MenuItem>
+        <MenuItem sx={{ color: "black" }} onClick={handleClose}>
+          My account
+        </MenuItem>
+        <MenuItem
+          sx={{ color: "black" }}
+          onClick={() => {
+            handleClose();
+            Navigate("/login");
+            dispatch(setLoginStatus(false));
+            dispatch(setUserDetailsObject({}));
+            dispatch(setUserSavedProfiles([]));
+          }}
+        >
+          Logout
+        </MenuItem>
       </Menu>
     </div>
   );

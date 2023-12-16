@@ -1,24 +1,28 @@
-import { MenuItem, TextField } from "@mui/material";
+import { CircularProgress, MenuItem, TextField } from "@mui/material";
 import React, { Suspense, lazy, useEffect, useState } from "react";
 // import ClubStatisticsTable from "./2ndDegreeSubScreens/PlayerStats/ClubStatisticsTable";
 
-const PlayerStats = () => {
+const PlayerStats = ({ Statistics }) => {
   const statisticsMenu = [
+    // {
+    //   value: "Club Stats",
+    //   label: "Club Stats",
+    // },
+    // {
+    //   value: "Country Stats",
+    //   label: "Country Stats",
+    // },
     {
-      value: "Club Stats",
-      label: "Club Stats",
-    },
-    {
-      value: "Country Stats",
-      label: "Country Stats",
-    },
-    {
-      value: "Defense",
-      label: "Defense",
+      value: "General",
+      label: "General",
     },
     {
       value: "Attack",
       label: "Attack",
+    },
+    {
+      value: "Defense",
+      label: "Defense",
     },
     {
       value: "Distribution",
@@ -30,6 +34,10 @@ const PlayerStats = () => {
     },
   ];
   const seasonsMenu = [
+    {
+      value: "Overall",
+      label: "Overall",
+    },
     {
       value: "23/24",
       label: "23/24",
@@ -52,7 +60,8 @@ const PlayerStats = () => {
     },
   ];
 
-  const [statsCategory, setStatsCategory] = useState("Club Stats");
+  const [statsCategory, setStatsCategory] = useState("Attack");
+  const [statsSeason, setStatsSeason] = useState("Overall");
 
   const handleCategoryChange = (e) => {
     setStatsCategory(e.target.value);
@@ -70,7 +79,7 @@ const PlayerStats = () => {
 
     if (statsCategory === value) {
       TaskBarComponent = lazy(() =>
-        import(`./2ndDegreeSubScreens/PlayerStats/${value}`)
+        import(`./2ndDegreeSubScreens/PlayerStats/${value}.jsx`)
       );
       break;
     }
@@ -95,8 +104,14 @@ const PlayerStats = () => {
           select
           onChange={handleCategoryChange}
           // label="Select"
-          defaultValue="Club Stats"
-          style={{ width: "15%", marginRight: "1vw" }}
+          defaultValue="Attack"
+          style={{
+            width: "15%",
+            marginRight: "1vw",
+
+            border: ".6px solid white",
+            borderRadius: ".3vw",
+          }}
         >
           {statisticsMenu.map((option) => (
             <MenuItem key={option.value} value={option.value}>
@@ -109,8 +124,12 @@ const PlayerStats = () => {
           size="small"
           select
           // label="Select"
-          defaultValue="23/24"
+          defaultValue="Overall"
           style={{ width: "15%" }}
+          onChange={(e) => {
+            // alert(e.target.value);
+            setStatsSeason(e.target.value);
+          }}
         >
           {seasonsMenu.map((option) => (
             <MenuItem key={option.value} value={option.value}>
@@ -125,11 +144,26 @@ const PlayerStats = () => {
             <TaskBarComponent />
           </Suspense>
         } */}
-        {
-          <Suspense fallback={<div> ...Loading </div>}>
-            <TaskBarComponent />
+        {TaskBarComponent ? (
+          <Suspense
+            fallback={
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <CircularProgress />
+              </div>
+            }
+          >
+            <TaskBarComponent
+              Statistics={Statistics}
+              Period={statsSeason.toString()}
+            />
           </Suspense>
-        }
+        ) : null}
       </div>
     </div>
   );

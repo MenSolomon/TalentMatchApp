@@ -1,142 +1,182 @@
-import { Button, Card } from "@mui/material";
-import React from "react";
+import { Avatar, Button, Card } from "@mui/material";
 import { Carousel } from "react-bootstrap";
+import CreateShowInterestModal from "../Modals/CreateShowInterestModal";
+import BasicButton from "../Buttons/BasicButton";
+// import ClubLogo from "../../../public/Medeama_SC_logo.png";
+import BasicControlledRating from "../Ratings/BasicControlledRating";
+import BasicButtonWithEndIcon from "../Buttons/BasicButtonWithEndIcon";
+import { useSelector } from "react-redux";
+import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInAgencySlice";
 
-const Top10PlayerPicksOfTheWeek = ({ PlayerImage, PlayerCountry }) => {
+const Top10PlayerPicksOfTheWeek = ({
+  PlayerImage,
+  PlayerCountry,
+  firstname,
+  surname,
+  position,
+  rank,
+}) => {
+  const overlayStyle = {
+    content: "",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0, 0, 0, 0.15)",
+    borderRadius: "1vw",
+  };
+
+  // const playerPicksArray = ["1", "1", "1", "1", "1"];
+
+  const playerPicksArray = useSelector(selectPlayersInAgencyArray);
+
   return (
     <Carousel
-      interval={200000}
-      controls={false}
+      interval={10000}
+      // controls={true}
       style={{
         // background: "black",
         height: "100%",
         borderRadius: "1vw",
       }}
     >
-      <Carousel.Item>
-        {/* // Player Picks of the  weel card area */}
-        <Card
-          sx={{
-            height: "34.5vh",
-            background: "teal",
-            padding: "1vh 1vw",
-            borderRadius: "1vw",
-            background:
-              "linear-gradient(133deg, rgba(218,233,234,1) 0%, rgba(189,202,203,1) 35%, rgba(221,234,235,1) 73%, rgba(218,233,234,1) 100%)",
-            color: "white",
-            borderBottom: "3px solid #0d818e",
-            borderRight: "3px solid #0d818e",
-          }}
-        >
-          <div
-            style={{
-              // flex: "1",
-              display: "flex",
-              color: "black",
+      {/* // Player Picks of the  weel card area */}
 
-              // background: "white",
-            }}
-          >
-            {" "}
-            {/* // Image Of player */}
-            <div
-              style={{
-                flex: ".25",
-                borderRadius: ".7vw",
-                backgroundImage: `url(${PlayerImage})`,
-                backgroundSize: "cover",
-              }}
-            ></div>
-            {/* Player information */}
-            <div
-              style={{
-                flex: ".55",
-                // background: "blue",
-                display: "flex",
-                flexDirection: "column",
-                paddingLeft: ".5vw",
-              }}
-            >
-              <div
-                style={{
-                  flex: ".15",
-                  display: "flex",
-                  color: "black",
-                  fontWeight: "900",
-                }}
-              >
-                {" "}
-                Cristiano Ronaldo{" "}
-              </div>
-              <div style={{ flex: ".4" }}>
-                {" "}
-                <span style={{ fontWeight: "900" }}> market value: </span>{" "}
-                $15.00m
-                <br /> <span style={{ fontWeight: "900" }}>
-                  {" "}
-                  Position :{" "}
-                </span>{" "}
-                Striker{" "}
-              </div>
-            </div>
-            {/* // Rank Number */}
-            <div
-              style={{
-                flex: ".2",
-                fontWeight: "900",
-                fontSize: "2em",
-              }}
-            >
-              {" "}
-              #1{" "}
-              <img
-                src={PlayerCountry}
-                style={{ width: "60px", height: "45px" }}
-              />
-            </div>
-          </div>
-          {/* // View Profile Button Area */}
-          <div
-            style={{
-              // flex: ".35",
-              paddingTop: "3vh",
+      {playerPicksArray.map((data, index) => {
+        const {
+          firstName,
+          surName,
+          position,
+          Nationality,
+          image,
+          clubName,
+          clubLogo,
+        } = data;
 
-              // background: "white",
-            }}
-          >
-            <Button
-              sx={{
-                textTransform: "none",
-                background: "black",
-                fontWeight: "900",
-                marginRight: "1vw",
-                color: "white",
-                background:
-                  "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
-              }}
-            >
-              {" "}
-              Show Interest{" "}
-            </Button>
-            <Button
-              sx={{
-                textTransform: "none",
-                background: "black",
-                fontWeight: "900",
-                color: "white",
-                background:
-                  "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
-              }}
-            >
-              {" "}
-              View Profile{" "}
-            </Button>
-          </div>{" "}
-        </Card>
-      </Carousel.Item>
-      {/* <Carousel.Item>JEad</Carousel.Item> */}
+        return (
+          <Carousel.Item key={index}>
+            <PickedPlayerCard
+              PlayerImage={image}
+              PlayerCountry={Nationality}
+              firstname={firstName}
+              surname={surName}
+              position={position}
+              clubLogo={clubLogo}
+              clubName={clubName}
+            />
+          </Carousel.Item>
+        );
+      })}
     </Carousel>
   );
 };
 
 export default Top10PlayerPicksOfTheWeek;
+
+const PickedPlayerCard = ({
+  PlayerImage,
+  PlayerCountry,
+  clubLogo,
+  clubName,
+  firstname,
+  surname,
+  position,
+  rank,
+}) => {
+  return (
+    <Card
+      className="cardBorder"
+      sx={{
+        height: "37.5vh",
+        padding: "2vh .4vw",
+        // paddingTop: "2vh",
+        borderRadius: "1vw",
+        color: "white",
+        // backgroundImage: `linear-gradient(90deg, rgba(32,32,32,0.8747099767981439) 0%, rgba(55,54,54,0.8538283062645011) 28%, rgba(23,21,21,0.7540603248259861) 44%, rgba(14,50,142,0.8120649651972158) 100%),url("${ClubLogo}")`,
+
+        backgroundImage: `linear-gradient(90deg, rgba(32,32,32,0.9582366589327146) 0%, rgba(55,54,54,0.9535962877030162) 31%, rgba(23,21,21,0.7540603248259861) 44%, rgba(14,50,142,0.8120649651972158) 100%),url("${clubLogo}")`,
+
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "right",
+
+        borderBottom: "1px solid #0d818e",
+        borderRight: "1px solid #0d818e",
+        display: "flex",
+        gap: ".5vw",
+      }}
+    >
+      {/* // Logo AREA */}
+      <div
+        style={{
+          flex: ".35",
+          display: "flex",
+          // background: "green",
+          flexDirection: "column",
+        }}
+      >
+        {/* // watch video button area */}
+        <div
+          style={{
+            flex: ".2",
+            display: "flex",
+            // justifyContent: "flex-end",
+            paddingLeft: ".6vw",
+          }}
+        >
+          {" "}
+          <BasicButtonWithEndIcon
+            style={{ width: "6.5vw", height: "4vh" }}
+            innerText="Watch"
+            endIcon="play_circle"
+          />
+        </div>
+
+        {/* // Avatar area */}
+        <div style={{ flex: ".8", display: "flex", justifyContent: "center" }}>
+          <Avatar
+            src={PlayerImage}
+            sx={{ width: 80, height: 80, border: "3px solid #5585FE" }}
+          />
+        </div>
+      </div>
+
+      {/* // Player information */}
+      <div
+        style={{
+          flex: ".65",
+
+          // backgroundImage: `url(${ClubLogo})`,
+          display: "flex",
+          flexDirection: "column",
+          backgroundRepeat: "no-repeat",
+          // position: "relative",
+        }}
+      >
+        {/* <div style={overlayStyle}></div> */}
+
+        <div style={{ flex: ".25" }}>
+          {" "}
+          <h5>
+            {" "}
+            {firstname} {surname}{" "}
+          </h5>
+          <BasicControlledRating />
+        </div>
+        <div style={{ flex: ".5" }}>
+          {" "}
+          {firstname} {surname} is a player from {PlayerCountry} name who playes
+          as {position} for {clubName}
+        </div>
+
+        <div style={{ flex: ".25" }}>
+          {" "}
+          3 Goals <span style={{ marginLeft: ".6vw" }}>
+            2 Total attempts
+          </span>{" "}
+          <BasicButton innerText="See more" />{" "}
+        </div>
+      </div>
+    </Card>
+  );
+};
