@@ -122,6 +122,7 @@ const PlayerDetails = () => {
         style={{
           gridArea: "CardDisplay",
           display: isCardsCollapsedVariable === false ? "flex" : "none",
+          // background: "red",
         }}
       >
         {/* // Image And Name Area */}
