@@ -26,11 +26,15 @@ import BasicSlider from "../CoachAgentScoutVersion/src/components/slider/BasicSl
 import GroupedRadio from "../components/Radio/GroupedRadio";
 import BasicSelect from "../components/Selects/BasicSelect";
 import {
+  selectCurrentBrowserSize,
   setWarningAlertModalCounter,
   setWarningAlertModalMessage,
 } from "../statemanager/slices/OtherComponentStatesSlice";
 
 const CreateAccount = () => {
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
+
   const soccerPositions = [
     "Goalkeeper (GK)",
     "Defender (D)",
@@ -286,20 +290,26 @@ const CreateAccount = () => {
       {/* FORM AREA */}
 
       <div
+        className="md:pt-[7vh]     sm:pt-[55vh] "
         style={{
           flex: "0.7",
           display: "grid",
           placeContent: "center",
+          overflowY: "scroll",
           //   background: "red",
           alignItems: "center",
           paddingLeft: "5%",
+          // paddingTop: "25vh", sm
         }}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div style={{ display: "flex", gap: "2vw", marginBottom: "1.5vh" }}>
+          <div
+            className="md:flex md:flex-row      sm:flex sm:flex-col"
+            style={{ gap: "2vw", marginBottom: "1.5vh" }}
+          >
             <div>
               <TextField
-                sx={{ width: "15vw" }}
+                className="md:w-[15vw] sm:w-[80vw]"
                 color="primary"
                 id="outlined-basic"
                 label="First Name"
@@ -318,7 +328,7 @@ const CreateAccount = () => {
             {/* SURNAME */}
             <div>
               <TextField
-                sx={{ width: "15vw" }}
+                className="md:w-[15vw] sm:w-[80vw]"
                 id="outlined-basic"
                 label="Surname"
                 variant="outlined"
@@ -333,7 +343,7 @@ const CreateAccount = () => {
             {/* DATE OF BIRTH */}
             <div>
               <DatePickerTool
-                style={{ width: "15vw" }}
+                style={{ width: browserWidth >= 1024 ? "15vw" : "80vw" }}
                 containerStyle={{ marginTop: "-1vh" }}
                 label="Date of birth"
                 defaultValue={userData.DOB}
@@ -351,10 +361,13 @@ const CreateAccount = () => {
             </div>
           </div>
           {/* EMAIL AND PHONE NUMBER */}
-          <div style={{ display: "flex", gap: "2vw", marginBottom: "1.5vh" }}>
+          <div
+            className="md:flex md:flex-row      sm:flex sm:flex-col"
+            style={{ gap: "2vw", marginBottom: "1.5vh" }}
+          >
             <div>
               <TextField
-                sx={{ width: "15vw" }}
+                className="md:w-[15vw] sm:w-[80vw]"
                 id="outlined-basic"
                 label="Email"
                 variant="outlined"
@@ -373,7 +386,7 @@ const CreateAccount = () => {
                 // label="Phone Number"
 
                 variant="outlined"
-                sx={{ width: "15vw" }}
+                className="md:w-[15vw] sm:w-[80vw]"
                 InputProps={{
                   startAdornment: "",
                   inputComponent: PhoneInputComponent,
@@ -391,7 +404,7 @@ const CreateAccount = () => {
 
             <div>
               <CountrySelect
-                styles={{ width: "15vw" }}
+                styles={{ width: browserWidth >= 1024 ? "15vw" : "80vw" }}
                 selectLabel="Nationality"
                 // defaultValue={userData.Nationality}
                 selectValue={(e) => {
@@ -414,12 +427,15 @@ const CreateAccount = () => {
           </div>
 
           {/*ORGANIZATION/CLUB NAME AND PASSWORDS*/}
-          <div style={{ display: "flex", gap: "2vw", marginBottom: "1vh" }}>
+          <div
+            className="md:flex md:flex-row      sm:flex sm:flex-col"
+            style={{ gap: "2vw", marginBottom: "1vh" }}
+          >
             {roleSelected === "Club" ? (
               <ClubAutoComplete
                 ListArray={clubsInDatabase}
                 label="Select a club"
-                style={{ width: "15vw" }}
+                style={{ width: browserWidth >= 1024 ? "15vw" : "80vw" }}
                 onClubSelect={handleClubSelect}
               />
             ) : roleSelected === "Player" ? (
@@ -427,7 +443,7 @@ const CreateAccount = () => {
                 <BasicAutoComplete
                   style={{
                     // ...inputStyles,
-                    width: "15vw",
+                    width: browserWidth >= 1024 ? "15vw" : "80vw",
                     marginBottom: "2.5vh",
                     color: "black",
                   }}
@@ -449,7 +465,7 @@ const CreateAccount = () => {
               </div>
             ) : (
               <TextField
-                sx={{ width: "15vw" }}
+                className="md:w-[15vw] sm:w-[80vw]"
                 id="outlined-basic"
                 label="Organization Name"
                 variant="outlined"
@@ -461,7 +477,7 @@ const CreateAccount = () => {
             {/* {PASSWORDS} */}
             <div>
               <TextField
-                sx={{ width: "15vw" }}
+                className="md:w-[15vw] sm:w-[80vw]"
                 id="outlined-basic"
                 label="Password"
                 variant="outlined"
@@ -476,7 +492,9 @@ const CreateAccount = () => {
             {/* CONFIRM PASSWORD */}
             <div>
               <TextField
-                sx={{ width: "15vw" }}
+                className="md:w-[15vw] sm:w-[80vw]"
+                //                   className='md:w-[15vw] sm:w-[80vw]'
+
                 id="outlined-basic"
                 label="Confirm Password"
                 variant="outlined"
@@ -495,8 +513,9 @@ const CreateAccount = () => {
 
           {roleSelected === "Player" ? (
             <div
+              className="md:flex md:flex-row      sm:flex sm:flex-col"
               style={{
-                display: "flex",
+                // display: "flex",
                 gap: "2vw",
                 marginBottom: "1vh",
                 // alignItems: "center",
@@ -506,7 +525,7 @@ const CreateAccount = () => {
             >
               <div>
                 <BasicSelect
-                  inputStyle={{ width: "15vw" }}
+                  inputStyle={{ width: browserWidth >= 1024 ? "15vw" : "80vw" }}
                   label={"Preferred foot *"}
                   itemsArray={preferredFootArray}
                   selectedValue={(e) => {
@@ -524,7 +543,10 @@ const CreateAccount = () => {
 
               <div>
                 <BasicSlider
-                  style={{ width: "15vw", color: "black" }}
+                  style={{
+                    width: browserWidth >= 1024 ? "15vw" : "80vw",
+                    color: "black",
+                  }}
                   rangeName="Height (m) *"
                   max={2.5}
                   min={0.3}
@@ -547,13 +569,14 @@ const CreateAccount = () => {
           )}
 
           <Button
+            className="md:w-[37vw] sm:w-[50vw]"
             type="submit"
             sx={{
               background: "#5585FE",
               borderRadius: ".5vw",
               color: "white",
               textTransform: "none",
-              width: "37vw",
+              // width: "37vw",
               marginLeft: "13%",
               marginTop: "1vh",
 
@@ -562,6 +585,7 @@ const CreateAccount = () => {
           >
             Create Account
           </Button>
+          <div className="md:hidden sm:h-[3vh] "></div>
         </form>
       </div>
     </div>
@@ -571,6 +595,8 @@ const CreateAccount = () => {
 export default CreateAccount;
 
 function PhoneInputComponent() {
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
   const userData = useSelector(selectUserSignUpData);
   const dispatch = useDispatch();
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -589,7 +615,8 @@ function PhoneInputComponent() {
       style={{
         height: "8.5vh",
         position: "relative",
-        width: "14vw",
+        width: browserWidth >= 1024 ? "14vw" : "80vw",
+
         // width: "30%",
         // border: "2px solid ",
         borderRadius: "5px",

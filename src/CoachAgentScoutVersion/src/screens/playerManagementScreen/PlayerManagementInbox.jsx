@@ -2,7 +2,10 @@ import CoachAgentScoutVersionInbox from "../CoachAgentScoutVersionInbox";
 
 const PlayerManagementInbox = () => {
   return (
-    <div style={{ height: "48vh", width: "100%", fontSize: ".75em" }}>
+    <div
+      className="md:w-[100%] md:h-[48vh] sm:w-[100%] sm:h-[100vh]"
+      style={{ fontSize: ".75em" }}
+    >
       <CoachAgentScoutVersionInbox />
     </div>
   );

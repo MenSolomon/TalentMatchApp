@@ -18,8 +18,8 @@ const Discipline = ({ Period }) => {
 
   return (
     <div
-      className="primaryColor"
-      style={{ width: "100%", height: "100%", display: "flex", gap: "5vw" }}
+      className="primaryColor  sm:flex sm:flex-col sm:gap-[7vh]  md:gap-[5vw] "
+      style={{ width: "100%", height: "100%", display: "flex" }}
     >
       <CardDisplay
         CardName="Yellow Cards"
@@ -78,8 +78,9 @@ export const CardDisplay = ({
       style={{ textAlign: "center", display: "grid", placeContent: "center" }}
     >
       <div
+        className=" md:w-[6vw] sm:w-[25vw] "
         style={{
-          width: "6vw",
+          // width: "6vw",
           height: "18vh",
           border: `1px solid ${borderColor}`,
           background: backgroundColor,

@@ -3,11 +3,16 @@ import FreetrialCard from "../components/Cards/FreetrialCard";
 const FreeTrial = () => {
   return (
     <div
+      className="md:w-[100%] md:h-[100%] md:flex md:flex-col 
+    sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col
+    "
       style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
+        // width: "100%",
+        // height: "100%",
+        // display: "flex",
+        // flexDirection: "column",
+        // paddingBottom: "3vh",
+        overflowY: "scroll",
         color: "black",
       }}
     >
@@ -28,14 +33,17 @@ const FreeTrial = () => {
       </div>
       {/* Subscribe free trial cards */}
       <div
+        className="sm:flex sm:items-center sm:gap-[10px] sm:justify-center  sm:flex-wrap        
+       md:flex md:items-center md:gap-[10px] md:justify-center  md:flex-wrap md:h-[100%]  sm:h-[100%] sm:mb-[5vh]
+       "
         style={{
           flex: "0.7",
           // background: "red",
-          justifyContent: "center",
-          display: "flex",
-          gap: "10px",
-          alignItems: "center",
-          flexWrap: "wrap",
+          // justifyContent: "center",
+          // display: "flex",
+          // gap: "10px",
+          // alignItems: "center",
+          // flexWrap: "wrap",
         }}
       >
         <FreetrialCard name="Coach" roleImage="/CoachBlue.png" />
@@ -54,12 +62,19 @@ const FreeTrial = () => {
           roleImage="/ScoutBlue.png"
           imageStyle={{ maxWidth: "75px", height: "89px" }}
         />
+
         <FreetrialCard
           name="Club"
           roleImage="/ClubIconBlue.png"
-          imageStyle={{ maxWidth: "95px", height: "89px" }}
+          imageStyle={{
+            maxWidth: "95px",
+            height: "89px",
+            // marginBottom: "100vh",
+          }}
+          className="sm:mb-[5vh] md:mb-[0vh] "
         />
       </div>
+      {/* /// */}
     </div>
   );
 };

@@ -214,26 +214,31 @@ const CoachAgentScoutVersionInbox = () => {
 
   return (
     <div
-      className="primaryTextColor"
-      style={{ display: "flex", width: "100%", height: "100%" }}
+      className="primaryTextColor md:gap-[1em] md:flex-row md:flex md:w-[100%] md:h-[100%]    sm:flex sm:w-[100%] sm:gap-[3.5em] sm:flex-col sm:h-[100%]"
+      // style={{ display: "flex", width: "100%", height: "100%" }}
     >
       {/* MESSAGE OVERVIEW SECTION */}
       <div
-        style={{
-          flex: ".35",
-          display: "flex",
-          flexDirection: "column",
-        }}
+        className="md:flex md:flex-col md:basis-[35%]    sm:basis-[35%] sm:flex sm:flex-col"
+        style={
+          {
+            // flex: ".35",
+            // display: "flex",
+            // flexDirection: "column",background
+            // background: "peru",
+          }
+        }
       >
         {/* // INBOX HEADER */}
-        <div style={{ flex: ".2" }}>
+        <div className="md:basis-[20%]  sm:basis-[20%]">
           <h5 style={{ fontWeight: "bolder", margin: "0" }}>Messages</h5>
-          <span style={{ fontSize: ".8em" }}>
+          {/* <span style={{ fontSize: ".8em" }}>
             102Messages <Circle sx={{ width: 7 }} /> 40 unread
-          </span>
+          </span> */}
           {/* // SEARCH INBOX */}
           <TextField
             id="input-with-icon-textfield"
+            className="sm:w-[100%] md:w-[90%]"
             label="Search"
             InputProps={{
               startAdornment: (
@@ -249,7 +254,10 @@ const CoachAgentScoutVersionInbox = () => {
         </div>
 
         {/* // MESSAGE SUMMARY */}
-        <div style={{ flex: ".8", overflowY: "scroll" }}>
+        <div
+          className="md:basis-[80%] sm:flex-col  sm:flex sm:flex-shrink-0 sm:basis-[80%]"
+          style={{ overflowY: "scroll" }}
+        >
           {AllUsersAndMessages?.length === 0 ? (
             <h4 className="primaryTextColor" style={{ textAlign: "center" }}>
               No contacts yet
@@ -282,23 +290,23 @@ const CoachAgentScoutVersionInbox = () => {
 
       {/* INBOX CONTENT SECTION */}
       <div
-        className="cardBackground"
+        className="cardBackground md:flex md:flex-col md:pl-[1.5vw] md:basis-[65%]  sm:basis-[65%]      sm:flex sm:flex-shrink-0 sm:flex-col sm:pl-[0vw]"
         style={{
-          flex: ".65",
+          // flex: ".65",
           // background: "red",
-          display: "flex",
-          flexDirection: "column",
-          paddingLeft: "1.5vw",
+          // display: "flex",
+          // flexDirection: "column",
+          // paddingLeft: "1.5vw",
           borderRadius: "1vw",
         }}
       >
         {/* // Pagination and delete message area */}
-
+        {/* style={{ flex: "1", display: "grid", placeContent: "center" }} */}
         {selectedUser.length === 0 ? (
-          <div style={{ flex: "1", display: "grid", placeContent: "center" }}>
+          <div className="md:basis-[100%] md:grid md:place-content-center    sm:basis-[100%] sm:grid sm:place-content-center">
             {" "}
-            <h5>
-              Send and reveive messages withouf keepong your phone online
+            <h5 style={{ textAlign: "center" }}>
+              Send and reveive messages without keeping your phone online
             </h5>{" "}
           </div>
         ) : (
@@ -306,7 +314,7 @@ const CoachAgentScoutVersionInbox = () => {
             <div
               style={{
                 flex: ".12",
-                // background: "white",
+                background: "yellow",
                 borderBottom: "1px solid #f2f2f2",
                 display: "flex",
               }}
@@ -464,11 +472,12 @@ export default CoachAgentScoutVersionInbox;
 const OtherUserMessage = ({ message, dateSent, profileImage }) => {
   return (
     <li
+      className="md:flex md:flex-col  sm:flex sm:flex-col"
       style={{
         padding: "0vh 1vw",
-        display: "flex",
-        flexDirection: "column",
-        // background: "red",
+        // display: "flex",
+        // flexDirection: "column",
+        background: "red",
       }}
     >
       <div
@@ -515,10 +524,11 @@ const OtherUserMessage = ({ message, dateSent, profileImage }) => {
 const LoginUserMessage = ({ message, dateSent, profileImage }) => {
   return (
     <li
+      className="md:flex md:flex-col  sm:flex sm:flex-col"
       style={{
         padding: "0vh 1vw",
-        display: "flex",
-        flexDirection: "column",
+        // display: "flex",
+        // flexDirection: "column",
         // background: "red",
       }}
     >

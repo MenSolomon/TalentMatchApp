@@ -36,7 +36,7 @@ const CoachAgentScoutVersionMotherComponent = () => {
     { name: "Players", icon: "people-group", path: "/multiStudio/players" },
     // { name: "Statistics", icon: "bar_chart_4_bars", path: "/Statistics" },
     // { name: "Favourites", icon: "favorite", path: "/favorites" },
-    { name: "Inbox", icon: "move_to_inbox", path: "/multiStudio/inbox" },
+    { name: "Messages", icon: "move_to_inbox", path: "/multiStudio/messages" },
     { name: "Analytics", icon: "monitoring", path: "/multiStudio/analytics" },
   ];
 
@@ -220,13 +220,14 @@ const CoachAgentScoutVersionMotherComponent = () => {
 
   return (
     <div
-      className="md:flex md:flex-col md:h-[100vh] md:w-[100vw] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw]"
+      className="md:flex md:flex-col md:h-[100vh] md:w-[100vw] md:pb-[0vh] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw] sm:pb-[10vh]"
       style={{
         // display: "flex",
         // flexDirection: "column",
         // height: "100vh",
         // width: "100vw",
         // background: background,
+        // paddingBottom: "10vh",
         color: primaryTextColor,
         // zIndex: "-3",
       }}
@@ -295,7 +296,11 @@ const CoachAgentScoutVersionMotherComponent = () => {
         >
           <LightAndDarkModeSwitch />
           <div
-            style={{ marginTop: "2vh", marginLeft: "-1vw", marginRight: "1vw" }}
+            style={{
+              marginTop: "1.5vh",
+              marginLeft: "-1vw",
+              marginRight: "1vw",
+            }}
           >
             <NotificationsMenu />
           </div>

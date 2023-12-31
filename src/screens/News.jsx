@@ -34,7 +34,128 @@ const News = () => {
   }, []);
 
   // API FOR NEWS
+
   const newData = [
+    {
+      title:
+        "🦁 Premier League Player of the Week: There's a new starboy in town",
+      url: "https://onefootball.com/en/news/premier-league-player-of-the-week-theres-a-new-starboy-in-town-38749332",
+      img: "https://image-service.onefootball.com/transform?w=335&h=188&dpr=2&image=https%3A%2F%2Fwp-images.onefootball.com%2Fwp-content%2Fuploads%2Fsites%2F10%2F2023%2F12%2FWest-Ham-United-v-Wolverhampton-Wanderers-Premier-League-1702979573-1000x667.jpg",
+    },
+    {
+      title:
+        "La Liga and RFEF will publish conversations between referees and VAR room",
+      url: "https://onefootball.com/en/news/la-liga-and-rfef-will-publish-conversations-between-referees-and-var-room-38749511",
+      img: "https://image-service.onefootball.com/transform?w=64&h=64&dpr=2&image=https%3A%2F%2Ficdn.football-espana.net%2Fwp-content%2Fuploads%2F2023%2F08%2FXavi-walks-VAR.jpeg",
+    },
+    {
+      title:
+        "No Chelsea, Liverpool or Manchester United deals in the top ten Premier League signings of 2023",
+      url: "https://onefootball.com/en/news/no-chelsea-liverpool-or-manchester-united-deals-in-the-top-ten-premier-league-signings-of-2023-38749170",
+      img: "https://image-service.onefootball.com/transform?w=64&h=64&dpr=2&image=https%3A%2F%2Fimages.ps-aws.com%2Fc%3Furl%3Dhttps%253A%252F%252Fd2x51gyc4ptf2q.cloudfront.net%252Fcontent%252Fuploads%252F2023%252F12%252F19015512%252FAnthony-Gordon-Enzo-Fernandez-James-Maddison.jpg",
+    },
+    {
+      title: "How Mary Earps seized a moment and ‘changed the world’ in 2023",
+      url: "https://onefootball.com/en/news/how-mary-earps-seized-a-moment-and-changed-the-world-in-2023-38748862",
+      img: "https://image-service.onefootball.com/transform?w=64&h=64&dpr=2&image=https%3A%2F%2Fstatic.independent.co.uk%2F2023%2F12%2F18%2F16%2FGettyImages-1627088933.jpg%3Fquality%3D75%26width%3D1200%26auto%3Dwebp",
+    },
+    {
+      title: "Manchester United eye Sancho swap-deal with Barcelona",
+      url: "https://onefootball.com/en/news/manchester-united-eye-sancho-swap-deal-with-barcelona-38749003",
+      img: "https://image-service.onefootball.com/transform?w=64&h=64&dpr=2&image=https%3A%2F%2Fi0.wp.com%2Fthefootballfaithful.com%2Fwp-content%2Fuploads%2F2023%2F12%2FRaphinha.png%3Ffit%3D1000%252C500%26ssl%3D1",
+    },
+    {
+      title:
+        "Transfer gossip: Man Utd seek to sell four to Saudi, Liverpool out of midfielder race",
+      url: "https://onefootball.com/en/news/transfer-gossip-man-utd-seek-to-sell-four-to-saudi-liverpool-out-of-midfielder-race-38749301",
+      img: "https://image-service.onefootball.com/transform?w=64&h=64&dpr=2&image=https%3A%2F%2Fimages.ps-aws.com%2Fc%3Furl%3Dhttps%253A%252F%252Fd2x51gyc4ptf2q.cloudfront.net%252Fcontent%252Fuploads%252F2023%252F12%252F19085021%252FRaphael-Varane-Jadon-Sancho-Anthony-Martial-Casemiro-1.jpg",
+    },
+    {
+      title: "5 Things - UCL Round of 16 Draw",
+      url: "https://onefootball.com/en/video/5-things-ucl-round-of-16-draw-38748126",
+      img: "https://image-service.onefootball.com/transform?w=64&h=64&dpr=2&image=https%253A%252F%252Fcdn.jwplayer.com%252Fv2%252Fmedia%252FRi7nVo86%252Fposter.jpg%253Fwidth%253D720",
+    },
+
+    {
+      url: "https://www.fourfourtwo.com/features/how-to-watch-sky-sports-live-streams-dont-miss-a-minute-of-the-action-on-the-broadcaster",
+      title:
+        "How to watch Sky Sports live streams: Don't miss a minute of the action on the broadcaster",
+      img: "https://cdn.mos.cms.futurecdn.net/tEzeTYPgYPvEeLznZNwR9o-320-80.jpg",
+      short_desc:
+        "Learn how to watch Sky Sports live streams, so that you never miss a moment when a game is on",
+    },
+    {
+      url: "https://www.fourfourtwo.com/news/wont-be-boring-bayern-munich-to-target-barcelona-stars-in-busy-transfer-window",
+      title:
+        "'Won't be boring' – Bayern Munich to target Barcelona stars in busy transfer window",
+      img: "https://cdn.mos.cms.futurecdn.net/3ZxeZrQza27VN9Tp2vpDJQ-320-80.jpg",
+      short_desc:
+        "The Bundesliga giants, reeling from Saturday's 5-1 defeat against Eintracht Frankfurt, are targeting several new players in January",
+    },
+    {
+      url: "https://www.fourfourtwo.com/news/manchester-united-in-talks-with-the-new-robert-lewandowski-to-solve-goalscoring-woes-report",
+      title:
+        "Manchester United in talks with 'the new Robert Lewandowski' to solve goalscoring woes: report",
+      img: "https://cdn.mos.cms.futurecdn.net/aq68sCcRSJ9jPn2XFTnyaF-320-80.jpg",
+      short_desc:
+        "Manchester United are targeting an electric striker in a bid to improve fortunes in front of goal",
+    },
+    {
+      url: "https://www.fourfourtwo.com/blogs/in-the-mag-awards-we-celebrate-the-players-managers-and-cyborgs-who-dominated-2023-plus-mctominay-winterburn-samways-and-more",
+      title:
+        "In the mag: Awards! We celebrate the players, managers and cyborgs who dominated 2023! PLUS McTominay! Winterburn! Samways and MORE!",
+      img: "https://cdn.mos.cms.futurecdn.net/M6CRVpxzLQkNgeCkzFF7MH-320-80.png",
+      short_desc:
+        "Get your hands on the latest issue of FourFourTwo magazine – available in print or on your device – from Thursday 7 December",
+    },
+    {
+      url: "https://www.fourfourtwo.com/news/it-intrigued-me-harry-kane-reveals-the-german-tradition-he-dived-into",
+      title:
+        '"It intrigued me": Harry Kane reveals the German tradition he dived into',
+      img: "https://cdn.mos.cms.futurecdn.net/EQCzWS3w3Qop5ndYy6qx6b-320-80.jpg",
+      short_desc:
+        "The England captain has taken the Bundesliga by storm while settling in quickly away from the pitch too",
+    },
+    {
+      url: "https://www.fourfourtwo.com/news/la-liga-star-rejects-manchester-united-transfer-amid-bayern-munich-interest-report",
+      title:
+        "La Liga star REJECTS Manchester United transfer amid Bayern Munich interest: report",
+      img: "https://cdn.mos.cms.futurecdn.net/kSMRTCd4jE6zecmgaavJqY-320-80.jpg",
+      short_desc:
+        "Things aren't going well for Man United on the pitch at the moment – and they could find it's the same case in the transfer market",
+    },
+    {
+      url: "https://www.fourfourtwo.com/news/exclusive-harry-kane-reveals-what-itll-be-like-to-face-germany-at-euro-2024",
+      title:
+        "EXCLUSIVE: Harry Kane reveals what it'll be like to face Germany at Euro 2024",
+      img: "https://cdn.mos.cms.futurecdn.net/DgJwEur2ujeE2txdwehq94-320-80.jpg",
+      short_desc:
+        "The England skipper spoke to FourFourTwo about life at Bayern Munich and his hopes for next summer's Euros",
+    },
+    {
+      url: "https://www.fourfourtwo.com/news/manchester-united-interest-welcomed-by-in-form-bundesliga-forward-ahead-of-possible-pound15-million-transfer",
+      title:
+        "Manchester United interest welcomed by in-form Bundesliga forward ahead of possible £15 million transfer",
+      img: "https://cdn.mos.cms.futurecdn.net/ST4XNHfKgqKS9wWJFuZFcg-320-80.jpg",
+      short_desc:
+        "Stuttgart striker Serhou Guirassy is available for a cut-price fee and would reportedly be interested in a January move to Old Trafford",
+    },
+    {
+      url: "https://www.fourfourtwo.com/news/watch-hamburgs-daniel-heuer-fernandes-scores-one-of-the-craziest-own-goals-ever-in-derby-clash-against-st-pauli",
+      title:
+        "WATCH: Hamburg's Daniel Heuer Fernandes scores one of the craziest own goals ever in derby clash against St. Pauli",
+      img: "https://cdn.mos.cms.futurecdn.net/5iQwEKpQxf7eXGVpoPFZ93-320-80.jpg",
+      short_desc:
+        "The former Portugual Under-21 goalkeeper made a horrific howler in Friday night's Bundesliga 2 match away to his side's local rivals",
+    },
+    {
+      url: "https://www.fourfourtwo.com/news/it-was-a-bit-of-a-mad-experience-to-be-honest-exclusive-harry-kane-reveals-what-really-happened-the-day-he-left-tottenham-hotspur-for-bayern-munich",
+      title:
+        '“It was a bit of a mad experience to be honest" EXCLUSIVE: Harry Kane reveals what REALLY happened the day he left Tottenham Hotspur for Bayern Munich',
+      img: "https://cdn.mos.cms.futurecdn.net/r38qFiezaafG6TB2sZKvaV-320-80.jpg",
+      short_desc:
+        "Harry Kane has opened up about what really happened the day he packed his bags and left for Munich, during an exclusive interview with FourFourTwo",
+    },
     {
       title:
         "India vs Kuwait: Chhetri and co. aim to regain form in tricky World Cup qualifier",

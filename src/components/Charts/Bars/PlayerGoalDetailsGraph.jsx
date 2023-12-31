@@ -150,13 +150,16 @@ const PlayerGoalDetailsGraph = ({ TotalShots, ShotsOnTarget, GoalsScored }) => {
 
   return (
     <div
-      style={{ marginTop: "1vh", paddingLeft: ".6vw", paddingRight: ".6vw" }}
+      className="md:mt-[1vh] md:pl-[.6vw] md:pr-[.6vw]    sm:mt-[1vh] sm:pl-[.6vw] sm:pr-[.6vw]"
+      // style={{ marginTop: "1vh", paddingLeft: ".6vw", paddingRight: ".6vw" }}
     >
       {/* <h6 style={{ fontWeight: "bolder" }}>Last 5 matches G/A ratio</h6> */}
       <Bar
         data={data}
         options={options}
-        style={{ width: "20%", marginTop: "0vh", height: "15vh" }}
+        style={{ marginTop: "0vh" }}
+        className="md:w-[20%] md:h-[15vh] sm:w-[100%] sm:h-[35vh]"
+
         // style={{ background: "transparent" ,padding:"1px"}}
       ></Bar>
     </div>

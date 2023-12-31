@@ -22,7 +22,10 @@ const Attack = ({ Period }) => {
   console.log(Attack);
 
   return (
-    <div className="primaryColor" style={{ display: "flex" }}>
+    <div
+      className="primaryColor md:gap-[0em] md:flex md:flex-row sm:flex sm:flex-col sm:gap-[1em] sm:overflow-y-scroll "
+      // style={{  overflowY: "scroll" }}
+    >
       <div style={{ flex: ".4" }}>
         <PlayerGoalDetailsGraph
           TotalShots={Attack.Total_shots}
@@ -30,7 +33,10 @@ const Attack = ({ Period }) => {
           GoalsScored={Attack?.Goals_Scored}
         />
       </div>
-      <div style={{ flex: ".6", display: "flex" }}>
+      <div
+        className="md:flex md:flex-row sm:flex sm:flex-col"
+        style={{ flex: ".6" }}
+      >
         {/* conversion Rate and minutes per goal area */}
         <div
           style={{

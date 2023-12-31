@@ -18,7 +18,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "30vw",
+  // width: "30vw",
   height: "50vh",
   bgcolor: "background.paper",
   border: "2px solid #000",
@@ -66,7 +66,15 @@ export default function WarningAlertModal() {
         }}
       >
         <Fade s in={open}>
-          <Box sx={{ ...style, display: "flex", flexDirection: "column" }}>
+          <Box
+            className="sm:w-[85vw] md:w-[30vw]"
+            sx={{
+              ...style,
+
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
             <div
               style={{
                 flex: ".45",
@@ -97,11 +105,12 @@ export default function WarningAlertModal() {
               <h6>{message}</h6>
               <Button
                 onClick={handleClose}
+                className="sm:w-[35vw] md:w-[10vw]"
                 sx={{
                   background: "red",
                   borderRadius: "2vw",
                   color: "white",
-                  width: "10vw",
+                  // width: "10vw",
                   marginTop: "8%",
                 }}
                 endIcon={<Close sx={{ color: "white" }} />}

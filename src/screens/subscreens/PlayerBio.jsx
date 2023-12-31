@@ -21,14 +21,21 @@ const PlayerBio = ({
 
   return (
     <div
-      style={{
-        width: "100%",
-        height: "40vh",
-        // background: "teal",
-        display: "flex",
-      }}
+      className="md:flex md:flex-row md:w-[100%] md:h-[40vh]  sm:flex sm:w-[100%] sm:h-[100%] sm:flex-col"
+      style={
+        {
+          // width: "100%",
+          // height: "40vh",
+          // background: "teal",
+          // display: "flex",
+          // background: "red",
+        }
+      }
     >
-      <div style={{ flex: ".23", padding: ".3vw" }}>
+      <div
+        className="sm:hidden md:block"
+        style={{ flex: ".23", padding: ".3vw" }}
+      >
         <FootBallPitch />
       </div>
 
@@ -41,11 +48,12 @@ const PlayerBio = ({
         }}
       >
         <div
+          className="md:flex md:w-[100%] md:h-[100%] md:flex-row     sm:flex-col md:gap-[.5vw]  sm:gap-[10vw] sm:flex sm:w-[100%] sm:h-[100%]"
           style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            gap: ".5vw",
+            // width: "100%",
+            // height: "100%",
+            // display: "flex",
+            // gap: ".5vw",
             background: "transparent",
           }}
         >

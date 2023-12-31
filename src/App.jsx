@@ -52,6 +52,7 @@ import {
 import ContactSupportModal from "./components/Modals/ContactSupportModal";
 import { selectUsersDatabase } from "./statemanager/slices/DatabaseSlice";
 import Favorites from "./screens/Favorites";
+import Settings from "./screens/Settings";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -345,7 +346,7 @@ const App = () => {
           <Route path="/" element={<MotherComponent />}>
             <Route path="/favorite" element={<Favorites />} />
             <Route path="/help" element={<Error404 />} />
-            <Route path="/settings" element={<Error404 />} />
+            <Route path="/settings" element={<Settings />} />
 
             <Route path="/" element={<HomePage />} />
             <Route path="/profile/:profileName" element={<ViewAllScreen />} />
@@ -364,7 +365,7 @@ const App = () => {
           <Route path="/studio" element={<PlayerVersionMotherComponent />}>
             <Route path="/studio/favorite" element={<Error404 />} />
             <Route path="/studio/help" element={<Error404 />} />
-            <Route path="/studio/settings" element={<Error404 />} />
+            <Route path="/studio/settings" element={<Settings />} />
 
             <Route
               path="/studio/dashboard"
@@ -379,7 +380,10 @@ const App = () => {
               path="/studio/favorites"
               element={<PlayerVersionFavorites />}
             />
-            <Route path="/studio/inbox" element={<PlayerVersionInbox />} />
+            <Route
+              path="/studio/messages"
+              element={<CoachAgentScoutVersionInbox />}
+            />
 
             <Route
               path="/studio/analytics"
@@ -395,7 +399,7 @@ const App = () => {
           >
             <Route path="/multiStudio/favorite" element={<Error404 />} />
             <Route path="/multiStudio/help" element={<Error404 />} />
-            <Route path="/multiStudio/settings" element={<Error404 />} />
+            <Route path="/multiStudio/settings" element={<Settings />} />
 
             <Route
               path="/multiStudio/dashboard"
@@ -415,7 +419,7 @@ const App = () => {
               element={<CoachAgentScoutVersionFavorites />}
             />
             <Route
-              path="/multiStudio/inbox"
+              path="/multiStudio/messages"
               element={<CoachAgentScoutVersionInbox />}
             />
             <Route

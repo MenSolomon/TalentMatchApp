@@ -612,16 +612,19 @@ const ConfirmDetails = () => {
 
   return (
     <div
+      className="md:w-[100%] md:h-[100%] md:flex md:flex-row     sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
       style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
+        // width: "100%",
+        // height: "100%",
+        // display: "flex",
         padding: "0px 6vw",
+        overflowY: "scroll",
       }}
     >
       {/*MEMEBERSHIP PLAN HEADER and USER DETAILS SUMMARY */}
 
       <div
+        className="md:flex md:flex-col      sm:flex sm:flex-col"
         style={{
           flex: ".7",
           // background: "yellow",
@@ -667,10 +670,11 @@ const ConfirmDetails = () => {
           </div>
           {/* FREE TRIAL HEADER AND CHANGE MEMBERSHIP OPTION AREA */}
           <div
+            className="md:flex md:flex-row    sm:flex sm:flex-col"
             style={{
               flex: "0.7",
               display: "flex",
-              justifyContent: "flex-start",
+              // justifyContent: "flex-start",
               alignItems: "center",
             }}
           >
@@ -682,7 +686,7 @@ const ConfirmDetails = () => {
             >
               <div>
                 <h5 style={{ fontWeight: "bold" }}>
-                  Start your free trial for 90 <br /> days
+                  Start your free trial for 30 <br /> days
                 </h5>
                 <h5 style={{ fontWeight: "bold" }}>{roleSelected}</h5>
                 <small>
@@ -703,11 +707,12 @@ const ConfirmDetails = () => {
 
         {/* USER DETAILS SUMMARY  */}
         <div
+          className="md:flex md:flex-row      sm:flex sm:flex-col"
           style={{
             flex: "0.7",
             padding: "1vh 3vw",
             // background: "green",
-            display: "flex",
+            // display: "flex",
           }}
         >
           {/* // PADDING CONTAINER */}
@@ -884,9 +889,10 @@ const ConfirmDetails = () => {
           }
         />
         <Card
+          className="md:w-[84%] md:h-[70%]   sm:w-[100%] sm:h-[100%]"
           sx={{
-            width: "84%",
-            height: "68%",
+            // width: "84%",
+            // height: "68%",
             padding: ".5vw",
             marginTop: "3vh",
           }}

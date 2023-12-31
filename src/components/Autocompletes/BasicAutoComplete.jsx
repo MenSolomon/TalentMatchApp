@@ -39,6 +39,7 @@ export default function BasicAutoComplete({
 
   return (
     <Autocomplete
+      className="md:w-[23vw] sm:w-[100%]"
       disablePortal
       id="combo-box-demo"
       options={ListArray}

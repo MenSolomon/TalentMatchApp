@@ -5,6 +5,7 @@ import { CircularProgress, Pagination } from "@mui/material";
 import { useEffect, useState } from "react";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../Firebase/Firebase";
+import { selectCurrentBrowserSize } from "../../statemanager/slices/OtherComponentStatesSlice";
 
 const PlayerGallery = () => {
   // const videosArray = [
@@ -25,6 +26,10 @@ const PlayerGallery = () => {
   //     videoCategory: "Passing",
   //   },
   // ];
+
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
+  // const PlayersPerPage = browserWidth <= 1024 ? 4 : 9;
 
   const [videos, setVideos] = useState([]);
   const [circularLoader, setCircularLoader] = useState(true);
@@ -53,7 +58,7 @@ const PlayerGallery = () => {
     };
   }, [PlayerSelectedToViewObject.id]);
 
-  const VideosPerPage = 3;
+  const VideosPerPage = browserWidth >= 1024 ? 3 : 2;
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -71,15 +76,16 @@ const PlayerGallery = () => {
 
   return (
     <div
-      style={{
-        width: "100%",
-        height: "40vh",
-        display: "flex",
-        gap: "2vw",
-        flexWrap: "wrap",
-        overflowY: "scroll",
-      }}
-      className="primaryTextColor"
+      className="primaryTextColor md:w-[100%] md:h-[40vh] md:flex md:gap-[2vw] md:overflow-y-scroll md:justify-start   sm:overflow-y-scroll  sm:w-[100%] sm:h-[50vh] sm:flex  sm:justify-center sm:gap-[2vw]"
+      // style={{
+      //   width: "100%",
+      //   height: "40vh",
+      //   display: "flex",
+      //   gap: "2vw",
+      //   flexWrap: "wrap",
+      //   overflowY: "scroll",
+      // }}
+      // className=""
     >
       {circularLoader === true ? (
         <div
@@ -101,7 +107,10 @@ const PlayerGallery = () => {
           }}
         >
           {/* // Videos area */}
-          <div style={{ flex: ".7", display: "flex", gap: "2.5vw" }}>
+          <div
+            className="md:flex md:flex-row md:gap-[2.5vw] md:basis-[90%]    sm:gap-[2.5vw] sm:flex sm:flex-col sm:basis-[80%] sm:items-center "
+            // style={{ flex: ".9" }}
+          >
             {getVideosForPage().map((data, key) => {
               const { url, category, id } = data;
 
@@ -116,7 +125,16 @@ const PlayerGallery = () => {
             })}
           </div>
           {/* // Pagination Area */}
-          <div style={{ flex: ".3", display: "grid", placeContent: "center" }}>
+          <div
+            className="md:basis-[10%]
+          sm:basis-[20%]"
+            style={{
+              // flex: ".1",
+              display: "grid",
+              placeContent: "center",
+              alignContent: "center",
+            }}
+          >
             <Pagination
               className="primaryTextColor"
               sx={{ color: "white" }}

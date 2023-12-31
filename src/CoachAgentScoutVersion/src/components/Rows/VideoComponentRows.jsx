@@ -44,13 +44,13 @@ const VideoComponentRows = ({
       className="VideoComponent"
     >
       {/* // CHeck box */}
-      <div style={{ flex: ".05" }}>
+      {/* <div style={{ flex: ".05" }}>
         <Checkbox />
-      </div>
+      </div> */}
       {/* Videos */}
       <div
         style={{
-          flex: ".15",
+          flex: ".2",
           //   background: "white",
           display: "grid",
           placeItems: "center",

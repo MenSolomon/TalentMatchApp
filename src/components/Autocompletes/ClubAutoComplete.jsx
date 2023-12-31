@@ -34,6 +34,7 @@ export default function ClubAutoComplete({
   return (
     <Autocomplete
       freeSolo
+      className="md:w-[23vw]  sm:w-[100%]"
       style={style}
       disablePortal
       id="club-autocomplete"

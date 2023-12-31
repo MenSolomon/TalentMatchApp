@@ -7,6 +7,7 @@ import { selectThemeProviderObject } from "../../statemanager/slices/ThemeProvid
 import {
   Dashboard,
   DoorBack,
+  Forum,
   Help,
   Home,
   Monitor,
@@ -48,8 +49,8 @@ const NavBarButton = ({ ButtonName, ButtonImage, path, buttonStyle }) => {
             <Dashboard sx={{ color: buttonColor }} />
           ) : ButtonName === "Videos" ? (
             <VideoCameraFront sx={{ color: buttonColor }} />
-          ) : ButtonName === "Inbox" ? (
-            <MoveToInbox sx={{ color: buttonColor }} />
+          ) : ButtonName === "Messages" ? (
+            <Forum sx={{ color: buttonColor }} />
           ) : ButtonName === "Analytics" ? (
             <Monitor sx={{ color: buttonColor }} />
           ) : ButtonName === "Help" ? (

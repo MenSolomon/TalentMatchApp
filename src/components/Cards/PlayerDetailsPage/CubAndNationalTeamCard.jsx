@@ -14,17 +14,17 @@ const ClubandNationalTeamDisplayCard = ({
 }) => {
   return (
     <div
-      className="playerCard"
+      className="playerCard md:w-[100%] md:h-[100%] md:flex md:flex-col  sm:w-[50%] sm:h-[100%] sm:flex sm:flex-col"
       style={{
-        width: "100%",
-        height: "100%",
+        // width: "100%",
+        // height: "100%",
         // background:
         //   "linear-gradient(59deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
         // background: "white",
         // position: "relative",
         padding: "1.5vw",
-        display: "flex",
-        flexDirection: "column",
+        // display: "flex",
+        // flexDirection: "column",
         // borderBottom: "1px solid ",
         // borderRight: "1px solid #BECBCC",
         borderRadius: "1vw",

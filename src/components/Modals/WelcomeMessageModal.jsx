@@ -17,8 +17,8 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "92.5%",
-  height: "97%",
+  // width: "92.5%",
+  // height: "97%",
   bgcolor: "background.paper",
   border: "transparent",
   boxShadow: 24,
@@ -72,10 +72,14 @@ export default function WelcomeMessageModal() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <div className="cardBackground primaryTextColor" style={style}>
-          {/* // Container DIV */}
+        <div
+          className="cardBackground primaryTextColor md:w-[92.5%] md:h-[97%]  sm:w-[100%] sm:h-[100%]"
+          style={style}
+        >
+          {/* // Container DIV   width: "92.5%",
+  height: "97%",*/}
 
-          <div style={{ width: "100%", height: "100%", display: "flex" }}>
+          <div className="md:w-[100%] md:h-[100%] md:flex md:flex-row md:overflow-y-hidden   sm:overflow-y-scroll sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col">
             {/* MEssage Area */}
             <div style={{ flex: ".4" }}>
               <img
@@ -118,6 +122,7 @@ export default function WelcomeMessageModal() {
             </div>
             {/* IMAGE AREA */}
             <div
+              className="md:block sm:hidden"
               style={{
                 flex: ".6",
                 // background: "red",

@@ -184,7 +184,7 @@ const HomePage = () => {
         // gridTemplateRows: "14vh 93vh 5vh",
         gridTemplateAreas: "'flicks''PlayerContent''empty' ",
       }}
-      className="md:w-[100%] md:h-[100%] md:flex md:flex-col md:gap-[1vh]  sm:w-[100%] sm:h-[130%] sm:grid sm:grid-cols-1 sm:grid-rows-[14vh,93vh,5vh] sm:gap-[1vh] "
+      className="md:w-[100%] md:h-[100%] md:flex md:flex-col md:gap-[1vh]  sm:w-[100%] sm:h-[130%] sm:grid sm:grid-cols-1 sm:grid-rows-[14vh,93vh,5vh] sm:gap-[3vh] "
     >
       {/* // FIRST SECTION`` */}
       <div

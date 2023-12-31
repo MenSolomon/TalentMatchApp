@@ -3,13 +3,13 @@ import { Avatar, Checkbox, Tooltip } from "@mui/material";
 const MessageContactCard = ({ profileImage, message, time, profileName }) => {
   return (
     <div
-      className="messageCard cardBackground"
+      className="messageCard cardBackground md:w-[100%] md:h-[100%] md:flex md:gap-[.5em]   sm:w-[100%] sm:h-[100%] sm:flex sm:gap-[.5em]"
       style={{
-        width: "100%",
-        height: "20%",
+        // width: "100%",
+        // height: "20%",
         marginBottom: "1%",
         // background: "blue",
-        display: "flex",
+        // display: "flex",
         padding: ".2vw",
         borderRadius: ".5vw",
         paddingTop: "1vh",

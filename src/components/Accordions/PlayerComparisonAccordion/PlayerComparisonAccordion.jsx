@@ -2,6 +2,8 @@ import { Accordion, AccordionSummary } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
 import AccordionDetails from "@mui/material/AccordionDetails";
+import { useSelector } from "react-redux";
+import { selectCurrentBrowserSize } from "../../../statemanager/slices/OtherComponentStatesSlice";
 
 export default function PlayerComparisonAccordion({
   GeneralObject,
@@ -10,6 +12,8 @@ export default function PlayerComparisonAccordion({
   DistributionObject,
   Discipline,
 }) {
+  // width: browserWidth >= 1024 ? "9vw" : "40vw",
+
   return (
     <div>
       <PlayerComparisonAccordionDetails
@@ -82,9 +86,19 @@ function PlayerComparisonAccordionDetails({
   ThirdRowName,
   FourthRowName,
 }) {
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
+
   return (
     <>
-      <Accordion className="cardBackground primaryTextColor">
+      <Accordion
+        sx={
+          {
+            // height: browserWidth >= 1024 ? "1" : "4.4vh",
+          }
+        }
+        className="cardBackground primaryTextColor"
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"

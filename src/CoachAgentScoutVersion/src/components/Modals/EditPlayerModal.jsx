@@ -56,6 +56,7 @@ import {
 import { db, storage } from "../../../../Firebase/Firebase";
 import BasicSlider from "../slider/BasicSlider";
 import {
+  selectCurrentBrowserSize,
   setCloseCircularLoadBackdrop,
   setContactSupportModalCounter,
   setContactSupportModalMessage,
@@ -69,6 +70,8 @@ import moment from "moment";
 import { selectPlayersDatabase } from "../../../../statemanager/slices/DatabaseSlice";
 import BasicButtonWithEndIcon from "../../../../components/Buttons/BasicButtonWithEndIcon";
 import BasicAutoCompleteForEditPlayerModal from "../AutoComplete/BasicAutoCompleteForEditPlayerModal";
+import DatePickerTool from "../../../../components/DatePicker/DatePicker";
+
 import DatePickerForEditPlayerModal from "../DatePicker/DatePickerForUploadPlayerModal";
 import { selectClubsInDatabase } from "../../../../statemanager/slices/ClubsInDatabaseSlice";
 
@@ -77,13 +80,14 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "65%",
-  height: "94%",
+  // width: "65%",
+  // height: "94%",
   bgcolor: "background.paper",
   border: "transparent",
   boxShadow: 24,
   borderRadius: "1vw",
   padding: "0vw 1vw",
+
   display: "flex",
   flexDirection: "column",
   paddingTop: "3vh",
@@ -96,6 +100,9 @@ const inputStyles = {
 // MODAL TO CREATE A new profile
 
 const EditPlayerProfileModal = () => {
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
+
   const {
     register,
     handleSubmit,
@@ -704,7 +711,11 @@ const EditPlayerProfileModal = () => {
       <div onClick={handleOpen}>
         <BasicButtonWithEndIcon
           innerText="Edit Profile"
-          style={{ width: "9vw", height: "6vh", marginBottom: "1.5vh" }}
+          style={{
+            width: browserWidth >= 1024 ? "9vw" : "40vw",
+            height: "6vh",
+            marginBottom: "1.5vh",
+          }}
           endIcon={"edit"}
         />
       </div>
@@ -715,125 +726,140 @@ const EditPlayerProfileModal = () => {
         aria-describedby="child-modal-description"
       >
         <Box
-          className="cardBackground primaryTextColor"
-          sx={{ ...style, width: 1000 }}
+          className="cardBackground primaryTextColor md:overflow-y-hidden md:flex md:flex-col md:h-[94%] md:w-[80%] sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col sm:overflow-y-scroll"
+          sx={{ ...style, paddingBottom: "2vh" }}
         >
-          <h2 id="child-modal-title">Edit a player profile</h2>
-          <Button
-            sx={{ width: "10%", marginLeft: "80%", marginBottom: "1vh" }}
-            onClick={handleClose}
-          >
-            Back
-          </Button>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {/* {...register("firstName", { required: true })} */}
-            <div
-              style={{
-                width: "100%",
-                height: "80%",
-                display: "flex",
-                gap: "1vw",
-              }}
-            >
-              {/* LEFT INPUT PLAYER DETAILS */}
+          <div style={{ flex: ".2" }}>
+            <h2 id="child-modal-title">
+              Edit a player profile{" "}
+              <Button
+                sx={{ width: "10%", float: "right" }}
+                onClick={handleClose}
+              >
+                Back
+              </Button>{" "}
+            </h2>
+          </div>
+          <div style={{ flex: ".6" }}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              {/* {...register("firstName", { required: true })} */}
               <div
+                className="md:w-[100%] md:h-[100%]  md:basis-[80%]   md:flex md:flex-row  sm:basis-[80%] sm:w-[100%] sm:h-[100vh]] sm:flex sm:flex-col"
                 style={{
-                  flex: ".35",
-                  display: "flex",
-                  flexDirection: "column",
+                  // width: "100%",
+                  // height: "80%",
+                  // display: "flex",
+                  gap: "1vw",
                 }}
               >
+                {/* LEFT INPUT PLAYER DETAILS */}
                 <div
-                  style={{
-                    flex: "0.9",
-                    display: "flex",
-                    gap: "20px",
-                    alignItems: "center",
-                    flexDirection: "column",
-                  }}
+                  className="md:w-[100%]  md:flex md:flex-col md:basis-[35%]    sm:w-[100%]  sm:flex sm:flex-col sm:basis-[35%]"
+                  style={
+                    {
+                      // flex: ".35", sm:h-[70vh] md:h-[70vh]
+                      // display: "flex",
+                      // flexDirection: "column",
+                      // background: "red",
+                    }
+                  }
                 >
-                  {/* <CustomTextField placeholder={"First Name"} />
+                  <div
+                    style={{
+                      flex: "1",
+                      display: "flex",
+                      gap: "20px",
+                      alignItems: "center",
+                      flexDirection: "column",
+                    }}
+                  >
+                    {/* <CustomTextField placeholder={"First Name"} />
                 <CustomTextField placeholder={"Surname"} /> */}
+                    <div className="md:w-[23vw] sm:w-[100%]">
+                      <TextField
+                        required
+                        id="outlined-basic"
+                        label="First Name"
+                        variant="outlined"
+                        fullWidth={true}
+                        // sx={{ width: "23vw" }}
+                        // className="md:w-[23vw] sm:w-[100%]"
+                        value={FirstName}
+                        onChange={(e) => {
+                          setFirstName(e.target.value);
+                        }}
+                        // {...register("FirstName", { required: true })}
+                      />
+                    </div>
+                    <div className="md:w-[23vw] sm:w-[100%]">
+                      <TextField
+                        required
+                        id="outlined-basic"
+                        label="Surname"
+                        variant="outlined"
+                        fullWidth={true}
+                        // sx={{ width: "23vw" }}
+                        // className="md:w-[23vw] sm:w-[100%]"
+                        value={SurName}
+                        onChange={(e) => {
+                          setSurName(e.target.value);
+                        }}
+                        // {...register("Surname", { required: true })}
+                      />
+                    </div>
+                    <DatePickerForEditPlayerModal
+                      style={{ width: browserWidth >= 1024 ? "23vw" : "40vw" }}
+                      containerStyle={{ marginTop: "-1vh" }}
+                      label="Date of birth *"
+                      defaultValue={DOB}
+                      dateValue={(e) => {
+                        setDOB(
+                          e.$d.toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })
+                        );
+                        console.log(
+                          e.$d.toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })
+                        );
+                      }}
+                    />
 
-                  <TextField
-                    required
-                    id="outlined-basic"
-                    label="First Name"
-                    variant="outlined"
-                    fullWidth={true}
-                    sx={{ width: "23vw" }}
-                    value={FirstName}
-                    onChange={(e) => {
-                      setFirstName(e.target.value);
-                    }}
-                    // {...register("FirstName", { required: true })}
-                  />
-                  <TextField
-                    required
-                    id="outlined-basic"
-                    label="Surname"
-                    variant="outlined"
-                    fullWidth={true}
-                    sx={{ width: "23vw" }}
-                    value={SurName}
-                    onChange={(e) => {
-                      setSurName(e.target.value);
-                    }}
-                    // {...register("Surname", { required: true })}
-                  />
-                  <DatePickerForEditPlayerModal
-                    style={{ width: "23vw" }}
-                    containerStyle={{ marginTop: "-1vh" }}
-                    label="Date of birth *"
-                    defaultValue={DOB}
-                    dateValue={(e) => {
-                      setDOB(
-                        e.$d.toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })
-                      );
-                      console.log(
-                        e.$d.toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })
-                      );
-                    }}
-                  />
+                    <CountrySelect
+                      defaultCountry={{
+                        label: CountryName,
+                        code: CountryCode,
+                      }}
+                      countryCode={(e) => {
+                        setCountryCode(e);
+                      }}
+                      countryName={(e) => {
+                        setCountryName(e);
+                      }}
+                      selectLabel="Nationality *"
+                      styles={{
+                        minWidth: "23vw",
+                        marginLeft: "-0.5vw",
+                        marginTop: "1vh",
+                      }}
+                    />
 
-                  <CountrySelect
-                    defaultCountry={{
-                      label: CountryName,
-                      code: CountryCode,
-                    }}
-                    countryCode={(e) => {
-                      setCountryCode(e);
-                    }}
-                    countryName={(e) => {
-                      setCountryName(e);
-                    }}
-                    selectLabel="Nationality *"
-                    styles={{
-                      minWidth: "23vw",
-                      marginLeft: "-0.5vw",
-                      marginTop: "1vh",
-                    }}
-                  />
-
-                  <BasicSlider
-                    defaultValue={height}
-                    rangeName="Height *"
-                    max={2.5}
-                    min={0.3}
-                    steps={0.1}
-                    sliderValue={(e) => {
-                      setHeight(e);
-                    }}
-                  />
-                  {/* <TextField
+                    <BasicSlider
+                      defaultValue={height}
+                      rangeName="Height *"
+                      max={2.5}
+                      min={0.3}
+                      steps={0.1}
+                      sliderValue={(e) => {
+                        setHeight(e);
+                      }}
+                    />
+                    {/* <TextField
                     required
                     id="outlined-basic"
                     label="Height"
@@ -844,47 +870,30 @@ const EditPlayerProfileModal = () => {
                     sx={{ width: "23vw" }}
                     {...register("Height", { required: true })}
                   /> */}
+                  </div>
                 </div>
-                <div style={{ flex: "0.1" }}>
-                  {/* BTN */}
-                  <Button
-                    type="submit"
-                    disabled={submitBtnEnabler}
-                    sx={{
-                      width: "23vw",
-                      background: "blue",
-                      color: "white",
-                      border: ".5vw",
-                      position: "absolute",
-                      bottom: 50,
-                    }}
-                    variant="contained"
-                  >
-                    Edit
-                  </Button>
-                </div>
-              </div>
-              {/* MIDDLE INPUT PLAYER DETAILS */}
-              <div
-                style={{
-                  flex: ".35",
-                  display: "flex",
-                  gap: "20px",
-                  alignItems: "center",
-                  flexDirection: "column",
-                }}
-              >
-                <BasicSlider
-                  defaultValue={marketValue}
-                  rangeName="Market value 000,000 (optional)"
-                  max={50}
-                  min={0}
-                  steps={1}
-                  sliderValue={(e) => {
-                    setMarketValue(e);
+                {/* MIDDLE INPUT PLAYER DETAILS */}
+                <div
+                  className="md:items-center md:flex md:flex-col md:basis-[35%]  sm:items-center sm:flex sm:flex-col sm:basis-[35%]"
+                  style={{
+                    // flex: ".35",
+                    // display: "flex",
+                    gap: "20px",
+                    // alignItems: "center",
+                    // flexDirection: "column",
                   }}
-                />
-                {/* <TextField
+                >
+                  <BasicSlider
+                    defaultValue={marketValue}
+                    rangeName="Market value 000,000 (optional)"
+                    max={50}
+                    min={0}
+                    steps={1}
+                    sliderValue={(e) => {
+                      setMarketValue(e);
+                    }}
+                  />
+                  {/* <TextField
                   // required
                   id="outlined-basic"
                   label="Market value(optional)"
@@ -894,218 +903,245 @@ const EditPlayerProfileModal = () => {
                   sx={{ width: "23vw" }}
                   {...register("MarketValue", { required: true })}
                 /> */}
-                {clubSelected !== "" ? (
-                  <BasicSelect
-                    label="Contract status"
-                    itemsArray={contractStatusArray}
-                    inputStyle={{ width: "23vw" }}
-                  />
-                ) : (
-                  ""
-                )}
-                <BasicAutoCompleteForEditPlayerModal
-                  defaultValue={PlayerPosition}
-                  // defaultValue={PlayerPositionAutoCompleteValue}
+                  {clubSelected !== "" ? (
+                    <BasicSelect
+                      label="Contract status"
+                      itemsArray={contractStatusArray}
+                      inputStyle={{ width: "23vw" }}
+                    />
+                  ) : (
+                    ""
+                  )}
+                  <BasicAutoCompleteForEditPlayerModal
+                    defaultValue={PlayerPosition}
+                    // defaultValue={PlayerPositionAutoCompleteValue}
 
-                  AutoCompleteValue={(e) => {
-                    setPlayerPosition(e);
-                  }}
-                  style={{ width: "23vw" }}
-                  ListArray={soccerPositions}
-                  label="Main Position *"
-                />{" "}
-                {/* <CustomTextField placeholder={"Market value(optional)"} /> */}
-                <GroupedRadio
-                  radioDefault={PreferredFoot}
-                  radioArray={preferredFootArray}
-                  labelName="Preferred foot *"
-                  selectedValue={(e) => {
-                    setPreferredFoot(e);
-                  }}
-                />
-                {/* SOCIAL MEDIAL HANDLES*/}
-                <TextField
-                  id="outlined-basic"
-                  label="Instagram Handle"
-                  value={InstagramHandle}
-                  onChange={(e) => {
-                    setInstagramHandle(e.target.value);
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Instagram />
-                      </InputAdornment>
-                    ),
-                  }}
-                  variant="outlined"
-                  sx={{ width: "23vw" }}
-                  // {...register("InstagramHandle")}
-                />
-                <TextField
-                  id="outlined-basic"
-                  label="Facebook Username"
-                  value={FacebookHandle}
-                  onChange={(e) => {
-                    setFacebookHandle(e.target.value);
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Facebook />
-                      </InputAdornment>
-                    ),
-                  }}
-                  variant="outlined"
-                  sx={{ width: "23vw" }}
-                  // {...register("FacebookHandle")}
-                />
-              </div>
-              {/* RIGHT SELECT IMAGES FROM FILES */}
-              <div style={{ flex: ".3" }}>
-                {/* MARKET VALUE RANGE */}
-
-                {userLoginObject.role == "Club" ? (
-                  ""
-                ) : userLoginObject.role == "Scout" ||
-                  userLoginObject.role == "Coach" ? (
-                  <ClubAutoComplete
-                    ListArray={clubsInDatabase}
-                    label="Select a club"
-                    style={{ width: "23vw" }}
-                    onClubSelect={handleClubSelect}
-                  />
-                ) : (
-                  ""
-                )}
-
-                <BasicSlider
-                  defaultValue={jerseyNumber}
-                  rangeName="Jersey Number *"
-                  max={99}
-                  min={1}
-                  steps={1}
-                  sliderValue={(e) => {
-                    // alert(e);
-                    setJerseyNumber(e);
-                  }}
-                />
-
-                {fileName.length === 0 ? (
-                  <div
-                    style={{
-                      border: "2px dotted",
-                      borderRadius: "1vw",
-                      width: "23vw",
-                      height: "15vh",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignSelf: "center",
-                      alignItems: "center",
-                      marginTop: "3vh",
+                    AutoCompleteValue={(e) => {
+                      setPlayerPosition(e);
                     }}
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
-                    onClick={() => fileInputRef.current.click()}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyItems: "baseline",
-                        gap: 10,
-                      }}
-                    >
-                      <AddAPhoto />
-                      <Typography sx={{ fontWeight: "600" }}>
-                        Select or drag profile Image
-                      </Typography>
-                    </div>
+                    style={{ width: browserWidth >= 1024 ? "23vw" : "100%" }}
+                    ListArray={soccerPositions}
+                    label="Main Position *"
+                  />{" "}
+                  {/* <CustomTextField placeholder={"Market value(optional)"} /> */}
+                  <GroupedRadio
+                    radioDefault={PreferredFoot}
+                    radioArray={preferredFootArray}
+                    labelName="Preferred foot *"
+                    selectedValue={(e) => {
+                      setPreferredFoot(e);
+                    }}
+                  />
+                  {/* SOCIAL MEDIAL HANDLES*/}
+                  <TextField
+                    id="outlined-basic"
+                    label="Instagram Handle"
+                    className="md:w-[23vw]  sm:w-[100%]"
+                    value={InstagramHandle}
+                    onChange={(e) => {
+                      setInstagramHandle(e.target.value);
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Instagram />
+                        </InputAdornment>
+                      ),
+                    }}
+                    variant="outlined"
+                    // sx={{ width: "23vw" }}
+                    // {...register("InstagramHandle")}
+                  />
+                  <TextField
+                    id="outlined-basic"
+                    label="Facebook Username"
+                    className="md:w-[23vw]  sm:w-[100%]"
+                    value={FacebookHandle}
+                    onChange={(e) => {
+                      setFacebookHandle(e.target.value);
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Facebook />
+                        </InputAdornment>
+                      ),
+                    }}
+                    variant="outlined"
+                    // sx={{ width: "23vw" }}
+                    // {...register("FacebookHandle")}
+                  />
+                </div>
+                {/* RIGHT SELECT IMAGES FROM FILES */}
+                <div
+                  className="md:h-[70vh] md:flex md:flex-col md:basis-[30%]  sm:h-[60vh] sm:flex sm:flex-col sm:basis-[30%]"
+                  // style={{ flex: ".3" }}
+                >
+                  {/* MARKET VALUE RANGE */}
 
-                    {/* ref input */}
-                    <div>
-                      <input
-                        type="file"
-                        accept=".jpg, .jpeg, .png"
-                        // multiple
-                        ref={fileInputRef}
-                        onChange={handleFileSelect}
-                        style={{ display: "none" }}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  fileName.map((data, i) => (
+                  {userLoginObject.role == "Club" ? (
+                    ""
+                  ) : userLoginObject.role == "Scout" ||
+                    userLoginObject.role == "Coach" ? (
+                    <ClubAutoComplete
+                      ListArray={clubsInDatabase}
+                      label="Select a club"
+                      // style={{ width: "23vw" }}
+                      onClubSelect={handleClubSelect}
+                    />
+                  ) : (
+                    ""
+                  )}
+
+                  <BasicSlider
+                    defaultValue={jerseyNumber}
+                    rangeName="Jersey Number *"
+                    max={99}
+                    min={1}
+                    steps={1}
+                    sliderValue={(e) => {
+                      // alert(e);
+                      setJerseyNumber(e);
+                    }}
+                  />
+
+                  {fileName.length === 0 ? (
                     <div
-                      key={i}
+                      className="md:w-[23vw] md:flex md:justify-center md:items-center md:self-center md:h-[20vh]      sm:flex sm:justify-center sm:items-center sm:self-center  sm:h-[10vh] sm:w-[100%]"
                       style={{
-                        width: "9vw",
-                        height: "15vh",
-                        marginTop: "3vh",
-                        backgroundImage: `url(${data.url})`,
-                        backgroundSize: "cover",
-                        borderRadius: "5%",
-                        marginBottom: "1%",
-                        marginRight: "1.65vw",
+                        border: "2px dotted",
+                        borderRadius: "1vw",
+                        // width: "23vw",
+                        // height: "15vh",
+                        // display: "flex",
+                        // justifyContent: "center",
+                        // alignSelf: "center",
+                        // alignItems: "center",
+                        marginTop: "2.5vh",
                       }}
-                      // key={index}
+                      onDragOver={handleDragOver}
+                      onDrop={handleDrop}
+                      onClick={() => fileInputRef.current.click()}
                     >
-                      <IconButton
-                        onClick={() => {
-                          handleRemoveImageSelected(i);
-                          // alert(`clicked ${i}`);
-                        }}
-                        sx={{
-                          postion: "absolute",
-                          width: 20,
-                          height: 20,
-                          color: "red",
-                          // backgroundColor: "white",
-                          left: "10vw",
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyItems: "baseline",
+                          gap: 10,
                         }}
                       >
-                        <Close />
-                      </IconButton>
-                    </div>
-                  ))
-                )}
+                        <AddAPhoto />
+                        <Typography sx={{ fontWeight: "600" }}>
+                          Select or drag profile Image
+                        </Typography>
+                      </div>
 
-                {/* // Start Date`` */}
-                <h6 style={{ marginTop: "5.5vh" }}>Contract period</h6>
-                <DatePickerForEditPlayerModal
-                  defaultValue={contractStartDate}
-                  style={{ width: "23vw" }}
-                  containerStyle={{ marginTop: "-1vh", marginBottom: "3vh" }}
-                  label="Start date *"
-                  dateValue={(e) => {
-                    setContractStartDate(
-                      e.$d.toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })
-                    );
-                  }}
-                />
-                {/* End Date */}
-                <DatePickerForEditPlayerModal
-                  defaultValue={contractEndDate}
-                  style={{ width: "23vw" }}
-                  containerStyle={{ marginTop: "-1vh" }}
-                  label="End date *"
-                  dateValue={(e) => {
-                    setContractEndDate(
-                      e.$d.toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })
-                    );
-                  }}
-                />
+                      {/* ref input */}
+                      <div>
+                        <input
+                          type="file"
+                          accept=".jpg, .jpeg, .png"
+                          // multiple
+                          ref={fileInputRef}
+                          onChange={handleFileSelect}
+                          style={{ display: "none" }}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    fileName.map((data, i) => (
+                      <div
+                        key={i}
+                        className="sm:w-[35vw] md:w-[9vw] "
+                        style={{
+                          // width: "9vw",
+                          height: "15vh",
+                          marginTop: "3vh",
+                          backgroundImage: `url(${data.url})`,
+                          backgroundSize: "cover",
+                          borderRadius: "5%",
+                          marginBottom: "1%",
+                          marginRight: "1.65vw",
+                        }}
+                        // key={index}
+                      >
+                        <IconButton
+                          className="sm:left-[30vw] md:left-[10vw] "
+                          onClick={() => {
+                            handleRemoveImageSelected(i);
+                            // alert(`clicked ${i}`);
+                          }}
+                          sx={{
+                            postion: "absolute",
+                            width: 20,
+                            height: 20,
+                            color: "red",
+                            // backgroundColor: "white",
+                            // left: "10vw",
+                          }}
+                        >
+                          <Close />
+                        </IconButton>
+                      </div>
+                    ))
+                  )}
+
+                  {/* // Start Date`` */}
+                  <h6 style={{ marginTop: "1.5vh" }}>Contract period</h6>
+                  <DatePickerForEditPlayerModal
+                    defaultValue={contractStartDate}
+                    // style={{ width: "23vw" }}
+                    containerStyle={{ marginTop: "-1vh", marginBottom: "3vh" }}
+                    label="Start date *"
+                    dateValue={(e) => {
+                      setContractStartDate(
+                        e.$d.toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })
+                      );
+                    }}
+                  />
+                  {/* End Date */}
+                  <DatePickerForEditPlayerModal
+                    defaultValue={contractEndDate}
+                    style={{ width: "23vw" }}
+                    containerStyle={{ marginTop: "-1vh" }}
+                    label="End date *"
+                    dateValue={(e) => {
+                      setContractEndDate(
+                        e.$d.toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })
+                      );
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          </form>
+
+              <div className="md:flex md:justify-start md:basis-[20%]   sm:basis-[20%]  sm:flex sm:justify-center">
+                <Button
+                  className="md:w-[23vw]  md:mt-[2vh]  sm:w-[43vw] sm:mt-[2vh] "
+                  type="submit"
+                  disabled={submitBtnEnabler}
+                  sx={{
+                    background: "blue",
+                    color: "white",
+                    marginBottom: "2vh",
+                    border: ".5vw",
+                    // position: "absolute",
+                  }}
+                  variant="contained"
+                >
+                  Edit
+                </Button>
+              </div>
+            </form>
+          </div>
         </Box>
       </Modal>
     </React.Fragment>

@@ -4,6 +4,10 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { useSelector } from "react-redux";
+import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserDataSlice";
+import { db } from "../../Firebase/Firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
 export default function BasicSelect({
   label,
@@ -13,11 +17,24 @@ export default function BasicSelect({
   defaultSelect,
 }) {
   const [age, setAge] = React.useState("");
+  const userLoginDetailsObject = useSelector(selectUserDetailsObject);
 
   const handleChange = (event) => {
     setAge(event.target.value);
     // alert(event.target.value);
-    selectedValue(event.target.value);
+    // alert(event.target.value);
+    if (label === "saved profiles") {
+      const userRef = doc(db, `users_db`, userLoginDetailsObject?.accountId);
+
+      updateDoc(userRef, {
+        carouselProfileName: event.target.value,
+      });
+
+      // alert("Saved");
+      selectedValue(event.target.value);
+    } else {
+      selectedValue(event.target.value);
+    }
   };
 
   return (

@@ -272,7 +272,10 @@ function Row(props) {
                     </div>
                   </div>
                   {/* Sample Video */}
-                  <div style={{ flex: ".2" }}>
+                  <div
+                    className="sm:basis-[80%] md:basis-[20%] "
+                    // style={{ flex: ".2" }}
+                  >
                     <div
                       style={{
                         width: "90%",
@@ -287,6 +290,7 @@ function Row(props) {
                         // id={`video-${index}`}
                         src="/believerJuggling.mp4"
                         width="100%"
+                        // className="cardBackground md:w-[30vw] md:h-[90%] md:flex md:flex-col   sm:w-[90vw] sm:h-[100%] sm:flex sm:flex-col"
                         // height="10vh"
                         style={{ position: "absolute" }}
                         // autoPlay={true}
@@ -677,7 +681,8 @@ export default function FilteredPlayersTable() {
                   </TableCell>
                   <TableCell>
                     {" "}
-                    &nbsp; &nbsp; Personal {PossiblePlayerMatch?.length}
+                    &nbsp; &nbsp; Personal
+                    {/* {PossiblePlayerMatch?.length} */}
                   </TableCell>
                   <TableCell />
 

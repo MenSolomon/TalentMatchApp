@@ -10,6 +10,7 @@ import { deleteObject, getStorage, ref } from "firebase/storage";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../../Firebase/Firebase";
 import {
+  selectCurrentBrowserSize,
   setCloseCircularLoadBackdrop,
   setOpenCircularLoadBackdrop,
 } from "../../../../statemanager/slices/OtherComponentStatesSlice";
@@ -23,13 +24,13 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "40vw",
-  height: "62vh",
+  // width: "40vw",
+  // height: "62vh",
   border: "2px solid #000",
   borderRadius: "1vw",
   bgcolor: "background.paper",
   boxShadow: 24,
-  //   p: 3,
+  p: 3,
 };
 
 const htagStyle = { margin: 0 };
@@ -43,6 +44,10 @@ export default function EditVideoModal({
   uploaderId,
   description,
 }) {
+  const browserSize = useSelector(selectCurrentBrowserSize);
+
+  let browserWidth = parseInt(browserSize?.width, 10);
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -88,7 +93,7 @@ export default function EditVideoModal({
 
   const handleEditVideo = async () => {
     try {
-      alert(selectedPlayer?.id + id);
+      // alert(selectedPlayer?.id + id);
       const videoRef = doc(
         db,
         `players_database/${selectedPlayer?.id}/videos`,
@@ -116,9 +121,12 @@ export default function EditVideoModal({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box
+          className="cardBackground primaryTextColor md:w-[40vw] md:h-[62vh] sm:w-[90vw] sm:h-[65vh] "
+          sx={style}
+        >
           <div
-            className="cardBackground primaryTextColor"
+            className="sm:w-[100%]  sm:h-[100%]"
             style={{
               width: "100%",
               height: "100%",
@@ -141,7 +149,8 @@ export default function EditVideoModal({
                 fullWidth={true}
                 label={"Category"}
                 MenuItemArray={CategorySelectArray}
-                widthSize={400}
+                // className="sm:w-[0vw] "
+                widthSize={browserWidth >= 1024 ? 500 : 253}
                 selectedValue={(e) => {
                   // alert(e);
                   setCategory(e);
@@ -171,7 +180,7 @@ export default function EditVideoModal({
                   setDescription(e.target.value);
                 }}
                 size="medium"
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
               />
             </div>
             <div
@@ -187,14 +196,15 @@ export default function EditVideoModal({
                 onClick={() => {
                   handleClose();
                 }}
-                style={{ width: "10vw" }}
+                // className="sm:basis-[10%] md:basis-[25%] "
+                className="sm:w-[30vw] sm:h-[5vh] md:w-[10vw] "
                 innerText="Cancel"
               />
               <BasicButton
                 onClick={() => {
                   handleEditVideo();
                 }}
-                style={{ width: "10vw" }}
+                className="sm:w-[30vw] sm:h-[5vh] md:w-[10vw] "
                 innerText="Save"
               />
             </div>

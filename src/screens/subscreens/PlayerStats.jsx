@@ -87,17 +87,23 @@ const PlayerStats = ({ Statistics }) => {
 
   return (
     <div
-      style={{
-        // background: "yellow",
-        width: "100%",
-        height: "40vh",
-        display: "flex",
-        flexDirection: "column",
-        overflowY: "scroll",
-      }}
+      className="md:w-[100%] md:flex md:overflow-y-hidden md:flex-col md:h-[40vh]  sm:w-[100%] sm:flex sm:flex-col sm:overflow-y-scroll sm:h-[40vh] sm:gap-[2vh]"
+      style={
+        {
+          // background: "yellow",
+          // width: "100%",
+          // height: "40vh",
+          // display: "flex",
+          // flexDirection: "column",
+          // overflowY: "scroll",
+        }
+      }
     >
       {/* // Select Category area */}
-      <div style={{ flex: ".18" }}>
+      <div
+        className="md:flex md:flex-row md:gap-[0em]  sm:gap-[1em] sm:flex sm:flex-col"
+        style={{ flex: ".18" }}
+      >
         <TextField
           id="outlined-select-currency"
           size="small"
@@ -105,8 +111,9 @@ const PlayerStats = ({ Statistics }) => {
           onChange={handleCategoryChange}
           // label="Select"
           defaultValue="Attack"
+          className="md:w-[15%] sm:w-[90%]"
           style={{
-            width: "15%",
+            // width: "15%",
             marginRight: "1vw",
 
             border: ".6px solid white",
@@ -125,7 +132,8 @@ const PlayerStats = ({ Statistics }) => {
           select
           // label="Select"
           defaultValue="Overall"
-          style={{ width: "15%" }}
+          className="md:w-[15%] sm:w-[90%]"
+          // style={{ width: "15%" }}
           onChange={(e) => {
             // alert(e.target.value);
             setStatsSeason(e.target.value);
@@ -139,7 +147,7 @@ const PlayerStats = ({ Statistics }) => {
         </TextField>
       </div>
       <div style={{ flex: "82", paddingTop: "3vh" }}>
-        {/* {
+        {/* 
           <Suspense fallback={<div> ...Loading </div>}>
             <TaskBarComponent />
           </Suspense>
@@ -148,6 +156,7 @@ const PlayerStats = ({ Statistics }) => {
           <Suspense
             fallback={
               <div
+                // className="sm:flex md:flex-col"
                 style={{
                   width: "100%",
                   display: "flex",

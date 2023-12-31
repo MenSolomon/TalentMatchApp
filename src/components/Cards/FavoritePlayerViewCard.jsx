@@ -75,15 +75,15 @@ const FavoritePlayerViewCard = ({
 
   return (
     <div
-      style={{ width: "24.7vw", height: "20vh", marginRight: "1.2vw" }}
+      // style={{ width: "24.7vw", height: "20vh", marginRight: "1.2vw" }}
       onClick={handlePlayerNavigation}
     >
       <Card
-        className="cardBackground primaryTextColor"
+        className="cardBackground primaryTextColor md:flex md:w-[24.7vw] md:h-[23.5vh]    sm:flex sm:w-[95vw] sm:h-[15vh]"
         style={{
-          display: "flex",
-          width: "100%",
-          height: "100%",
+          // display: "flex",
+          // width: "100%",
+          // height: "100%",
           borderRadius: "1vw",
           padding: ".7vw",
           gap: ".4vw",

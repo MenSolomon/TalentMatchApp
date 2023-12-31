@@ -90,7 +90,7 @@ export default function SmallScreenMenuDrawer() {
 
       {/* //Search and Filter Sections */}
       <div style={{ flex: ".93", display: "flex", flexDirection: "column" }}>
-        <div style={{ flex: ".35", overflowY: "scroll", maxHeight: "45vh" }}>
+        <div style={{ flex: ".55", overflowY: "scroll", maxHeight: "45vh" }}>
           <ul style={{ listStyleType: "none", marginLeft: "1vw" }}>
             {menuButtonsArray &&
               menuButtonsArray.map((data, index) => {
@@ -102,14 +102,18 @@ export default function SmallScreenMenuDrawer() {
                   // onClick={toggleDrawer(anchor, false)}
                   // write a destructuring function that will close the drawer on click oof the buttons in the accordion
                   return (
-                    <li key={index}>
+                    <li style={{ marginBottom: "2.5vh" }} key={index}>
                       {" "}
                       <SavedFilters />
                     </li>
                   );
                 } else {
                   return (
-                    <li key={index} onClick={toggleDrawer(anchor, false)}>
+                    <li
+                      key={index}
+                      style={{ marginBottom: "2.5vh" }}
+                      onClick={toggleDrawer(anchor, false)}
+                    >
                       <NavBarButton
                         ButtonName={name}
                         path={path}
@@ -124,7 +128,7 @@ export default function SmallScreenMenuDrawer() {
 
         {/* // Navbar Second HALF */}
 
-        <div style={{ flex: ".65" }}>
+        <div style={{ flex: ".45" }}>
           <ul style={{ listStyleType: "none", marginLeft: "1vw" }}>
             {menuButtonsArrayTWO2 &&
               menuButtonsArrayTWO2.map((data, index) => {
@@ -150,7 +154,11 @@ export default function SmallScreenMenuDrawer() {
                 // }
 
                 return (
-                  <li key={index} onClick={toggleDrawer(anchor, false)}>
+                  <li
+                    key={index}
+                    style={{ marginBottom: "2.5vh" }}
+                    onClick={toggleDrawer(anchor, false)}
+                  >
                     <NavBarButton
                       ButtonName={name}
                       ButtonImage={icon}
@@ -161,7 +169,10 @@ export default function SmallScreenMenuDrawer() {
                 );
               })}
           </ul>
-          <div onClick={toggleDrawer(anchor, false)}>
+          <div
+            style={{ marginTop: "2vh" }}
+            // onClick={toggleDrawer(anchor, false)}
+          >
             <CreateProfileModal />{" "}
           </div>
         </div>

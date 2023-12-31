@@ -12,26 +12,28 @@ import avatarImage from "../assets/images/avatar.jpg";
 const PlayerVersionInbox = () => {
   return (
     <div
-      className="primaryTextColor"
-      style={{ display: "flex", width: "100%", height: "100%" }}
+      className="primaryTextColor md:gap-[1em] md:flex-row md:flex md:w-[100%] md:h-[100%]    sm:flex sm:w-[100%] sm:gap-[3.5em] sm:flex-col sm:h-[100%]"
+      // style={{ display: "flex", width: "100%", height: "100%" }}
     >
       {/* MESSAGE OVERVIEW SECTION */}
       <div
-        style={{
-          flex: ".35",
-          display: "flex",
-          flexDirection: "column",
-        }}
+        className="md:flex md:flex-col md:basis-[35%]    sm:basis-[35%] sm:flex sm:flex-col"
+        // style={{
+        //   flex: ".35",
+        //   display: "flex",
+        //   flexDirection: "column",
+        // }}
       >
         {/* // INBOX HEADER */}
-        <div style={{ flex: ".2" }}>
+        <div className="md:basis-[20%]  sm:basis-[20%]">
           <h5 style={{ fontWeight: "bolder", margin: "0" }}>Inbox</h5>
-          <span style={{ fontSize: ".8em" }}>
+          {/* <span style={{ fontSize: ".8em" }}>
             102Messages <Circle sx={{ width: 7 }} /> 40 unread
-          </span>
+          </span> */}
           {/* // SEARCH INBOX */}
           <TextField
             id="input-with-icon-textfield"
+            className="sm:w-[100%] md:w-[90%]"
             label="Search"
             InputProps={{
               startAdornment: (
@@ -47,7 +49,10 @@ const PlayerVersionInbox = () => {
         </div>
 
         {/* // MESSAGE SUMMARY */}
-        <div style={{ flex: ".8", overflowY: "scroll" }}>
+        <div
+          className="md:basis-[80%] sm:flex-col  sm:flex sm:flex-shrink-0  sm:basis-[80%]"
+          style={{ overflowY: "scroll" }}
+        >
           <InboxMessageCard />
           <InboxMessageCard />
           <InboxMessageCard />
@@ -61,24 +66,13 @@ const PlayerVersionInbox = () => {
 
       {/* INBOX CONTENT SECTION */}
       <div
-        className="cardBackground"
+        className="cardBackground md:flex md:flex-col md:pl-[1.5vw] md:basis-[65%]  sm:basis-[65%]      sm:flex sm:flex-shrink-0 sm:flex-col sm:pl-[0vw]"
         style={{
-          flex: ".65",
-          // background: "red",
-          display: "flex",
-          flexDirection: "column",
-          paddingLeft: "1.5vw",
           borderRadius: "1vw",
         }}
       >
         {/* // Pagination and delete message area */}
-        <div
-          style={{
-            flex: ".08",
-            // background: "white",
-            display: "flex",
-          }}
-        >
+        <div className="md:basis-[8%] md:flex  sm:flex sm:basis-[8%]">
           <div
             style={{
               flex: "1",
@@ -104,7 +98,7 @@ const PlayerVersionInbox = () => {
         </div>
 
         {/* // Sender details Area area */}
-        <div style={{ flex: ".12", display: "flex" }}>
+        <div className="md:basis-[12%] md:flex sm:flex  sm:basis-[12%]">
           {/* AVATAR AREA      */}
           <div
             style={{
@@ -155,9 +149,10 @@ const PlayerVersionInbox = () => {
         </div>
         {/* // Message Content area */}
         <div
+          className="md:basis-[8%]  sm:basis-[8%]"
           style={{
-            flex: ".8",
-            // background: "yellow",
+            // flex: ".8",
+            // // background: "yellow",
             paddingTop: "2vh",
           }}
         >

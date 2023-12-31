@@ -36,9 +36,17 @@ const PlayerFilter = () => {
   const playerData = useSelector(selectPlayersDatabase);
 
   return (
-    <div style={{ height: "77vh", display: "flex", flexDirection: "column" }}>
+    <div
+      style={{
+        height: "77vh",
+        display: "flex",
+        flexDirection: "column",
+        // background: "red",
+      }}
+    >
       {/* // FILTER OPTIONS AREA */}
       <div style={{ flex: ".5" }}>
+        {" "}
         <BasicAutoComplete
           style={inputStyles}
           ListArray={soccerPositions}

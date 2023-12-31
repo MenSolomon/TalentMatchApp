@@ -22,8 +22,8 @@ export default function BasicSlider({
 
   return (
     <Box
-      className="primaryTextColor"
-      sx={{ color: "white", width: 300, ...style }}
+      className="primaryTextColor md:w-[23vw]  sm:w-[100%]"
+      sx={{ color: "white", ...style }}
     >
       <Typography sx={{ textAlign: "center", fontWeight: "700" }}>
         {rangeName}

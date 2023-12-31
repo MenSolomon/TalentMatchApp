@@ -34,7 +34,7 @@ const SocialAndContactAreaCard = ({
   const handlePlayerAddToFavorite = async () => {
     try {
       // this is to make sure an owner of account's view doesnt get counted as player view
-      if (userLoginObject.accountId !== playerToViewObject.id) {
+      if (userLoginObject.accountId !== playerToViewObject?.id) {
         const userObjectRef = doc(db, `users_db/${userLoginObject.accountId}`);
         await updateDoc(userObjectRef, {
           favoritePlayers: arrayUnion(playerToViewObject.id),
@@ -76,10 +76,10 @@ const SocialAndContactAreaCard = ({
 
   return (
     <div
-      className="playerCard"
+      className="playerCard md:w-[100%] md:h-[100%]   sm:w-[50%] sm:h-[100%]"
       style={{
-        width: "100%",
-        height: "100%",
+        // width: "100%",
+        // height: "100%",
         borderRadius: "1vw",
         paddingTop: "1.5vw",
         paddingLeft: "1.5vw",
@@ -132,7 +132,7 @@ const SocialAndContactAreaCard = ({
           }
         }}
         checked={isPlayerInArray(
-          playerToViewObject.id,
+          playerToViewObject?.id,
           userLoginObject?.favoritePlayers
         )}
         control={
