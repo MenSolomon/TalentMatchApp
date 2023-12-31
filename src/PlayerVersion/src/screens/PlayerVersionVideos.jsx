@@ -10,8 +10,12 @@ import { selectPlayerSelectedByClubOrScoutInPlayerManagement } from "../../../st
 import VideoComponentRows from "../../../CoachAgentScoutVersion/src/components/Rows/VideoComponentRows";
 import { db } from "../../../Firebase/Firebase";
 import { collection, onSnapshot, query } from "firebase/firestore";
+import { selectCurrentBrowserSize } from "../../../statemanager/slices/OtherComponentStatesSlice";
 
 const PlayerVersionVideos = () => {
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
+
   const userDetailsObject = useSelector(selectUserDetailsObject);
 
   const [videos, setVideos] = useState([]);
@@ -62,6 +66,7 @@ const PlayerVersionVideos = () => {
         height: "100%",
         width: "100%",
       }}
+      className="sm:text-[.8em]"
     >
       {/* // Heading Area */}
       <div style={{ flex: ".1" }}>
@@ -110,10 +115,10 @@ const PlayerVersionVideos = () => {
                   fontWeight: "bolder",
                 }}
               >
-                <div style={{ flex: ".05" }}>
+                {/* <div style={{ flex: ".05" }}>
                   <Checkbox />
-                </div>
-                <div style={{ flex: ".15" }}>Video</div>
+                </div> */}
+                <div style={{ flex: ".2" }}>Video</div>
                 <div style={{ flex: ".25" }}>Description</div>
                 <div style={{ flex: ".25" }}>Date uploaded</div>
                 <div style={{ flex: ".2" }}>Category</div>
@@ -134,7 +139,7 @@ const PlayerVersionVideos = () => {
                     dateUploaded,
                     url,
                     views,
-                    uploadedBy,
+                    uploadedById,
                     id,
                   } = data;
 

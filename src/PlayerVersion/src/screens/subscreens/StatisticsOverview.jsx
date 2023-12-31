@@ -46,7 +46,9 @@ const StatisticsCurrentOverview = () => {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div
+      style={{ display: "flex", flexDirection: "column", background: "red" }}
+    >
       {/* <div style={{ flex: ".1", background: "red" }}>
         {" "}
         StatisticsCurrentOverview

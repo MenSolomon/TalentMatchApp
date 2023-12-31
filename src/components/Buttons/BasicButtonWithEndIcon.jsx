@@ -9,10 +9,13 @@ const BasicButtonWithEndIcon = ({
   endIcon,
   disabled,
   onClick,
+  className,
 }) => {
   return (
     <Button
+      className={className}
       onClick={onClick}
+      // className={``}
       type={type}
       disabled={disabled}
       endIcon={<Icon>{endIcon}</Icon>}

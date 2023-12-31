@@ -13,13 +13,14 @@ import { db } from "../../Firebase/Firebase";
 import { selectUserSavedProfiles } from "../../statemanager/slices/SavedProfileSlice";
 import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserDataSlice";
 import { useNavigate } from "react-router-dom";
+import { selectCurrentBrowserSize } from "../../statemanager/slices/OtherComponentStatesSlice";
 
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "50vw",
+  // width: "50vw",
   height: "52vh",
   border: "2px solid #000",
   borderRadius: "1vw",
@@ -31,6 +32,10 @@ const style = {
 const htagStyle = { margin: 0 };
 
 export default function DeleteProfileModal({ profileName }) {
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
+  // width: browserWidth >= 1024 ? "9vw" : "40vw",
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -78,7 +83,7 @@ export default function DeleteProfileModal({ profileName }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box className="sm:w-[85vw] md:w-[50vw]" sx={style}>
           <div
             style={{
               width: "100%",
@@ -94,7 +99,10 @@ export default function DeleteProfileModal({ profileName }) {
             </div>
             {/* // Video and descriotion area */}
             <div style={{ flex: ".55", padding: "1vw" }}>
-              <h2>{profileName}</h2>
+              <h2>
+                {" "}
+                <b> {profileName} </b>{" "}
+              </h2>
             </div>
             {/* // Confirmation buttons */}
             <div
@@ -110,14 +118,22 @@ export default function DeleteProfileModal({ profileName }) {
                 onClick={() => {
                   handleClose();
                 }}
-                style={{ width: "10vw" }}
+                // className="sm:w-[35vw] md:w-[10vw]"
+                style={{
+                  width: browserWidth >= 1024 ? "10vw" : "40vw",
+                  height: browserWidth >= 1024 ? "10vh" : "5vh",
+                }}
                 innerText="Cancel"
               />
               <BasicButton
                 onClick={() => {
                   handleDeleteProfile();
                 }}
-                style={{ width: "10vw" }}
+                style={{
+                  width: browserWidth >= 1024 ? "10vw" : "40vw",
+                  height: browserWidth >= 1024 ? "10vh" : "5vh",
+                }}
+                // className="sm:w-[35vw] md:w-[10vw]"
                 innerText="Delete"
               />
             </div>

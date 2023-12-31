@@ -26,6 +26,7 @@ import {
   setPlayerSelectedByClubOrScoutInPlayerManagement,
 } from "../../../../statemanager/slices/PlayersInAgencySlice";
 import {
+  selectCurrentBrowserSize,
   setSnackbarMessage,
   setSnackbarTriggerCounter,
   setWarningAlertModalCounter,
@@ -52,8 +53,8 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "50vw",
-  height: "70vh",
+  // width: "50vw",
+  // height: "70vh",
   bgcolor: "background.paper",
   border: "2px solid #000",
   borderRadius: "1vw",
@@ -63,6 +64,10 @@ const style = {
 };
 
 export default function TransferPlayerModal() {
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
+  // width: browserWidth >= 1024 ? "9vw" : "40vw",
+
   const [open, setOpen] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -335,7 +340,11 @@ export default function TransferPlayerModal() {
           //     : false
           // }
           innerText="Transfer "
-          style={{ width: "9vw", height: "6vh", marginBottom: "1.5vh" }}
+          style={{
+            width: browserWidth >= 1024 ? "9vw" : "40vw",
+            height: "6vh",
+            marginBottom: "1.5vh",
+          }}
           endIcon={"swap_horiz"}
         />
       </div>
@@ -356,13 +365,23 @@ export default function TransferPlayerModal() {
       >
         <Fade s in={open}>
           <div
-            className="cardBackground primaryTextColor"
-            style={{ ...style, display: "flex", flexDirection: "column" }}
+            className="cardBackground primaryTextColor md:w-[50%] md:h-[76vh] md:flex md:flex-col     sm:w-[100%] sm:h-[90vh] sm:flex sm:flex-col"
+            style={{ ...style }}
           >
+            <div
+              className="cardBackground md:flex md:justify-end  sm:flex sm:justify-end"
+              style={{
+                flex: ".01",
+              }}
+            >
+              <Button onClick={handleClose}>
+                <Close sx={{ fontSize: "30px" }} />
+              </Button>
+            </div>
             <div
               className="cardBackground"
               style={{
-                flex: ".45",
+                flex: ".44",
                 // #DD717B
                 borderTopLeftRadius: "1vw",
                 borderTopRightRadius: "1vw",
@@ -506,12 +525,13 @@ export default function TransferPlayerModal() {
                       ? true
                       : false
                   }
+                  className="md:h-[8vh] md:w-[20vw]     sm:h-[8vh] sm:w-[60vw]"
                   sx={{
                     background: "#5585FE",
                     borderRadius: "2vw",
                     color: "white",
-                    height: "8vh",
-                    width: "20vw",
+                    // height: "8vh",
+                    // width: "20vw",
                     padding: "0 2vw",
                     // marginTop: "8%",
                   }}

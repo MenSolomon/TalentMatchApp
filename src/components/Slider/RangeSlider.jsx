@@ -92,7 +92,10 @@ export default function RangeSlider({
   };
 
   return (
-    <Box className="primaryTextColor" sx={{ ...style, width: 300 }}>
+    <Box
+      className="primaryTextColor md:w-[90%] sm:w-[90%] md:ml-[0%]  sm:ml-[5%]"
+      sx={{ ...style }}
+    >
       <Typography sx={{ textAlign: "center", fontWeight: "700" }}>
         {rangeName}
         {/* {positionChangeCounter} */}

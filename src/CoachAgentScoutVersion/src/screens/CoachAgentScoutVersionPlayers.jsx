@@ -8,9 +8,13 @@ import { selectPlayersInAgencyArray } from "../../../statemanager/slices/Players
 import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
 import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
 import { useState } from "react";
+import { selectCurrentBrowserSize } from "../../../statemanager/slices/OtherComponentStatesSlice";
 
 const CoachAgentScoutVersionPlayers = () => {
   // const PlayerArray = useSelector(selectPlayersInAgencyArray);
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
+
   const allPlayersInDatabase = useSelector(selectPlayersDatabase);
 
   const userLoginObject = useSelector(selectUserDetailsObject);
@@ -35,7 +39,7 @@ const CoachAgentScoutVersionPlayers = () => {
   );
 
   // Pagination settings
-  const PlayersPerPage = 9;
+  const PlayersPerPage = browserWidth <= 1024 ? 4 : 9;
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -54,18 +58,22 @@ const CoachAgentScoutVersionPlayers = () => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
+      className="
+    md:flex md:flex-col md:h-[100%] md:w-[100%]    sm:flex sm:flex-col sm:h-[100%] sm:w-[100%]"
+      style={
+        {
+          // display: "flex",
+          // flexDirection: "column",
+          // height: "100%",
+          // width: "100%",
+        }
+      }
     >
-      <div style={{ flex: ".1" }}>
+      <div className="md:basis-[10%] sm:basis-[10%]">
         <h3 style={{ margin: 0, float: "left" }}>Players</h3>{" "}
       </div>
 
-      <div style={{ flex: ".8", flexWrap: "wrap", display: "flex" }}>
+      <div className="md:flex md:flex-row md:gap-[0em] md:flex-wrap md:basis-[70%]  sm:flex sm:flex-col sm:gap-[1em] sm:basis-[70%]">
         {playersInPossessionDetails === undefined ||
         playersInPossessionDetails?.length === 0 ? (
           <div> No players for this club yet </div>
@@ -108,7 +116,10 @@ const CoachAgentScoutVersionPlayers = () => {
       </div>
       {/* // Pagination Area  */}
 
-      <div style={{ flex: ".1", display: "grid", placeContent: "center" }}>
+      <div
+        className="md:basis-[10%]   sm:basis-[10%]"
+        style={{ display: "grid", placeContent: "center" }}
+      >
         {playersInPossessionDetails === undefined ? (
           ""
         ) : (

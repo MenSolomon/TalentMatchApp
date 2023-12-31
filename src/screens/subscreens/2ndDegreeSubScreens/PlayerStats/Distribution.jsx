@@ -19,7 +19,8 @@ const Distribution = ({ Period }) => {
 
   return (
     <div
-      className="primaryColor"
+      // className=""
+      className="primaryColor md:flex md:flex-row sm:flex sm:flex-col sm:gap-[5vh]"
       style={{ display: "flex", width: "100%", height: "100%" }}
     >
       {/* PASS SUCCESS GRAPHS */}

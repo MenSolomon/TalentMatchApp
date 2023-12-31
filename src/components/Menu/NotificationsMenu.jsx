@@ -51,7 +51,9 @@ export default function NotificationsMenu() {
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
   const notificationsArray = useSelector(selectUserNotifications);
 
-  const NotificationsTabsArray = ["All", "Emails", "Reminders", "Transfers"];
+  const NotificationsTabsArray = ["All",
+  //  "Emails",
+    "Reminders", "Transfers"];
   // const savedProfileSubCollectionRef = doc(
   //   db,
   //   `users_db/${accountId}/SavedProfiles`,
@@ -118,18 +120,19 @@ export default function NotificationsMenu() {
         >
           <div
             style={{
-              width: "35vw",
+              // width: "",
               height: "80vh",
               display: "flex",
               flexDirection: "column",
             }}
+            className="sm:w-[85vw] md:w-[35vw]"
           >
             {/* // Notification head and Notification type tabs */}
             <div style={{ flex: ".1" }}>
               <div style={{ paddingLeft: "1vw" }}>
                 <div style={{ width: "100%", display: "flex" }}>
                   <h4 style={{ marginRight: "55%" }}>Notifications</h4>{" "}
-                  <IconButton sx={{ float: "right" }}>
+                  <IconButton onClick={handleClose} sx={{ float: "right" }}>
                     <Close sx={{ color: "black" }} />
                   </IconButton>
                 </div>

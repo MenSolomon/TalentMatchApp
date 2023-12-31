@@ -30,7 +30,8 @@ export default function SmallScreenCoachAgentClubMenuDrawer() {
     { name: "Players", icon: "people-group", path: "/multiStudio/players" },
     // { name: "Statistics", icon: "bar_chart_4_bars", path: "/Statistics" },
     // { name: "Favourites", icon: "favorite", path: "/favorites" },
-    { name: "Inbox", icon: "move_to_inbox", path: "/multiStudio/inbox" },
+    { name: "Messages", icon: "move_to_inbox", path: "/multiStudio/messages" },
+
     { name: "Analytics", icon: "monitoring", path: "/multiStudio/analytics" },
   ];
 
@@ -79,7 +80,7 @@ export default function SmallScreenCoachAgentClubMenuDrawer() {
       {/* //Search and Filter Sections */}
       <div style={{ flex: ".93", display: "flex", flexDirection: "column" }}>
         {/* // NavBAR FIRST HALF */}
-        <div style={{ flex: ".35", overflowY: "scroll", maxHeight: "45vh" }}>
+        <div style={{ flex: ".45", overflowY: "scroll", maxHeight: "45vh" }}>
           <ul style={{ listStyleType: "none", marginLeft: "2vw" }}>
             {menuButtonsArray &&
               menuButtonsArray.map((data, index) => {
@@ -87,7 +88,11 @@ export default function SmallScreenCoachAgentClubMenuDrawer() {
 
                 {
                   return (
-                    <li key={index} onClick={toggleDrawer(anchor, false)}>
+                    <li
+                      key={index}
+                      style={{ marginBottom: "2.5vh" }}
+                      onClick={toggleDrawer(anchor, false)}
+                    >
                       <NavBarButton
                         ButtonName={name}
                         path={path}
@@ -102,14 +107,18 @@ export default function SmallScreenCoachAgentClubMenuDrawer() {
 
         {/* // Navbar Second HALF */}
 
-        <div style={{ flex: ".65" }}>
+        <div style={{ flex: ".55" }}>
           <ul style={{ listStyleType: "none", marginLeft: "2vw" }}>
             {menuButtonsArrayTWO2 &&
               menuButtonsArrayTWO2.map((data, index) => {
                 const { name, icon, path } = data;
 
                 return (
-                  <li key={index} onClick={toggleDrawer(anchor, false)}>
+                  <li
+                    key={index}
+                    style={{ marginBottom: "2.5vh" }}
+                    onClick={toggleDrawer(anchor, false)}
+                  >
                     <NavBarButton
                       ButtonName={name}
                       path={path}

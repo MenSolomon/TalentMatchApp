@@ -315,7 +315,7 @@ const MotherComponent = () => {
 
   return (
     <div
-      className="md:flex md:flex-col md:h-[112vh] md:w-[100vw] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw]"
+      className="md:flex md:flex-col md:h-[112vh] md:w-[100vw] md:pb-[0vh] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw] sm:pb-[10vh]"
       style={{
         visibility:
           usersSavedProfile && usersSavedProfile.length > 0
@@ -419,7 +419,11 @@ const MotherComponent = () => {
 
           {/* <IconButton sx={{ marginTop: "1vh" }}> */}
           <div
-            style={{ marginTop: "2vh", marginLeft: "-1vw", marginRight: "1vw" }}
+            style={{
+              marginTop: "1.5vh",
+              marginLeft: "-1vw",
+              marginRight: "1vw",
+            }}
           >
             <NotificationsMenu />
           </div>

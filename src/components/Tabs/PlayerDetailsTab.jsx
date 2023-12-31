@@ -5,6 +5,8 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { CircularProgress } from "@mui/material";
+import { useSelector } from "react-redux";
+import { selectCurrentBrowserSize } from "../../statemanager/slices/OtherComponentStatesSlice";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -50,6 +52,7 @@ export default function PlayerDetailsMenuTab({
   contractStartDate,
   contactEndDate,
   Position,
+  Statistics,
 }) {
   const [value, setValue] = useState(0);
 
@@ -57,8 +60,11 @@ export default function PlayerDetailsMenuTab({
     setValue(newValue);
   };
 
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
+
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box className="md:w-[100%]  sm:w-[90%]">
       <Box sx={{ borderColor: "divider" }}>
         <Tabs
           value={value}
@@ -83,11 +89,14 @@ export default function PlayerDetailsMenuTab({
               <Tab
                 key={key}
                 className="primaryColor"
-                label={data}
+                label={browserWidth >= 1024 ? data : `${data.slice(0, 3)}..`}
+                // label={`${data.slice(0, 1)}..`}
                 sx={{
-                  width: "10vw",
+                  maxWidth: browserWidth >= 1024 ? "10vw" : "0.5vw",
+                  // width: "10vw",
                   // marginRight: "2vw",
                   fontWeight: "bold",
+                  // textTransform: "none",
                 }}
                 {...a11yProps(key)}
               />
@@ -114,11 +123,15 @@ export default function PlayerDetailsMenuTab({
               <Suspense
                 fallback={
                   <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
+                    className="md:w-[100%] md:flex md:justify-center  sm:w-[100%]  sm:flex sm:justify-center"
+                    style={
+                      {
+                        // overflowY: "scroll",
+                        // width: "100%",
+                        // display: "flex",
+                        // justifyContent: "center",
+                      }
+                    }
                   >
                     <CircularProgress />
                   </div>
@@ -132,6 +145,7 @@ export default function PlayerDetailsMenuTab({
                   contractStartDate={contractStartDate}
                   contactEndDate={contactEndDate}
                   Position={Position}
+                  Statistics={Statistics}
                 />
               </Suspense>
             </CustomTabPanel>

@@ -7,6 +7,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import store from "./statemanager/store.jsx";
 import BackEndDataCatalog from "./statemanager/BackEndDataCatalog.jsx";
+import MobileVideoDisplayCarousel from "./components/Carousel/MobileVideoDisplayCarousel.jsx";
 
 let persistor = persistStore(store);
 
@@ -16,7 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Provider store={store}>
         <PersistGate persistor={persistor}>
           <BackEndDataCatalog>
-            <App />{" "}
+            <App /> {/* <MobileVideoDisplayCarousel /> */}
           </BackEndDataCatalog>
         </PersistGate>
       </Provider>

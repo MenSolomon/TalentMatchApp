@@ -35,8 +35,9 @@ const PlayerVersionMotherComponent = () => {
     //   icon: "bar_chart_4_bars",
     //   path: "/studio/Statistics",
     // },
-    { name: "Favourites", icon: "favorite", path: "/studio/favorites" },
-    { name: "Inbox", icon: "move_to_inbox", path: "/studio/inbox" },
+    // { name: "Favourites", icon: "favorite", path: "/studio/favorites" },
+    { name: "Messages", icon: "move_to_inbox", path: "/studio/messages" },
+
     { name: "Analytics", icon: "monitoring", path: "/studio/analytics" },
   ];
 
@@ -215,7 +216,7 @@ const PlayerVersionMotherComponent = () => {
 
   return (
     <div
-      className="md:flex md:flex-col md:h-[112vh] md:w-[100vw] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw]"
+      className="md:flex md:flex-col md:h-[112vh] md:w-[100vw] md:pb-[0vh] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw] md:pb-[10vh]"
       style={{
         // display: "flex",
         // flexDirection: "column",
@@ -299,7 +300,11 @@ const PlayerVersionMotherComponent = () => {
           <LightAndDarkModeSwitch />
 
           <div
-            style={{ marginTop: "2vh", marginLeft: "-1vw", marginRight: "1vw" }}
+            style={{
+              marginTop: "1.5vh",
+              marginLeft: "-1vw",
+              marginRight: "1vw",
+            }}
           >
             <NotificationsMenu />
           </div>
@@ -310,7 +315,7 @@ const PlayerVersionMotherComponent = () => {
         </div>
       </div>
       {/* // ======  PAGE CONTENT ===== \\ */}
-      <div className="md:flex md:basis-[89%]  sm:flex sm:basis-[92%] sm:overflow-y-scroll sm:width-[100vw] ">
+      <div className="md:flex md:basis-[89%]  sm:flex sm:basis-[92%] sm:overflow-y-scroll sm:width-[100vw] sm:pb-[10vh] ">
         {/* // NAV ARAEA */}
         <div className="md:basis-[18%] md:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:block sm:hidden">
           {/* // USE A MAP FOR THIS */}

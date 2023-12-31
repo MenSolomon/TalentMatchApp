@@ -1,17 +1,22 @@
 import { Avatar, CircularProgress } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   selectCurrentBrowserSize,
   selectCurrentScreenSize,
+  setCarouselVideoIndex,
 } from "../../statemanager/slices/OtherComponentStatesSlice";
-import { selectAllPlayersVideos } from "../../statemanager/slices/VideosSlice";
+import {
+  selectAllPlayersVideos,
+  setRandomizedVideosArray,
+} from "../../statemanager/slices/VideosSlice";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "../../Firebase/Firebase";
 import { selectPlayersDatabase } from "../../statemanager/slices/DatabaseSlice";
+import MobileVideoDisplayCarousel from "./MobileVideoDisplayCarousel";
 
 const MatchedPlayersCarousel = () => {
   const responsive = {
@@ -35,6 +40,8 @@ const MatchedPlayersCarousel = () => {
       slidesToSlide: 1,
     },
   };
+
+  const dispatch = useDispatch();
 
   const [AllVideos, setAllVideos] = useState([]);
 
@@ -63,6 +70,7 @@ const MatchedPlayersCarousel = () => {
     //   setOnOpen(true);
     const shuffledVideos = shuffleArray([...AllVideos]);
     setRandomizedVideos(shuffledVideos);
+    dispatch(setRandomizedVideosArray(shuffledVideos));
     // }
   }, [AllVideos, onOpen]);
 
@@ -142,6 +150,10 @@ const MatchedPlayersCarousel = () => {
 
   let screenWidth = parseInt(screenSize?.width, 10);
 
+  //
+
+  // Set up a ref to the Carousel component
+
   return (
     <>
       {randomizedVideos.length === 0 ? (
@@ -182,12 +194,20 @@ const MatchedPlayersCarousel = () => {
                   // }}
                   key={index}
                 >
-                  <VideoCard
-                    publisherImg={playerProfileImage}
-                    video={url}
-                    vidIndex={id}
-                    playerId={playerId}
-                  />{" "}
+                  <span
+                    onClick={() => {
+                      // alert(index);
+
+                      dispatch(setCarouselVideoIndex(index));
+                    }}
+                  >
+                    <VideoCard
+                      publisherImg={playerProfileImage}
+                      video={url}
+                      vidIndex={id}
+                      playerId={playerId}
+                    />{" "}
+                  </span>
                 </div>
               );
             })}
@@ -278,21 +298,23 @@ const VideoCard = ({ publisherImg, video, vidIndex, playerId }) => {
             borderRadius: "1vw",
             position: "relative",
             paddingTop: "1vh",
+            paddingLeft: "1.3vw",
             height: "20vh",
             width: "6vw",
           }}
         >
-          <Avatar
+          {/* <Avatar
             className="cardBackground"
             src={publisherImg}
             sx={{
               width: 80,
               height: 80,
-              border: "7px solid #5585FE",
+              border: "4px solid #5585FE",
               cursor: "pointer",
               // right: "1vw",
             }}
-          />
+          /> */}
+          <MobileVideoDisplayCarousel publisherImg={publisherImg} />
         </div>
       )}
     </>

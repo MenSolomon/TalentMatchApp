@@ -5,7 +5,7 @@ import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
-import { Add, Settings } from "@mui/icons-material";
+import { Add, Close, Settings } from "@mui/icons-material";
 import { Card, Divider, TextField, IconButton, Tooltip } from "@mui/material";
 import CountrySelect from "../Autocompletes/CountrySelect";
 import IconTooltip from "../Tooltips/IconToolTip";
@@ -54,25 +54,25 @@ import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
+  // position: "absolute",
+  // top: "50%",
+  // left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "85%",
-  height: "94%",
+  // width: "85%",
+  // height: "94%",
   bgcolor: "background.paper",
   border: "transparent",
   boxShadow: 24,
   borderRadius: "1vw",
-  padding: "2vw",
-  display: "flex",
-  flexDirection: "column",
-  paddingTop: "3vh",
+  // padding: "2vw",
+  // display: "flex",
+  // flexDirection: "column",
+  // paddingTop: "3vh",
 };
 
-const inputStyles = {
-  width: "85%",
-};
+// const inputStyles = {
+//   width: "85%",
+// };
 
 // const selectFieldStyle ={
 //   width:130
@@ -148,35 +148,35 @@ export default function CreateProfileModal({ ProfileType }) {
     "Clean sheet",
     "Saves",
     "Long pass accuracy ",
-    "Blocked shots ",
-    "Aerial duels",
-    "Penalty stop success",
-    "Sweeping success",
+    // "Blocked shots ",
+    // "Aerial duels",
+    // "Penalty stop success",
+    // "Sweeping success",
   ];
 
   const DefendersTextFieldArray = [
-    "Clearance",
+    // "Clearance",
     "Interception",
     "Blocks",
-    "Clean sheets per season",
+    // "Clean sheets per season",
     "Successful tackles rate %",
   ];
   const MidfieldersTextFieldArray = [
     "Pass success",
     "Total passes",
     "assists",
-    "Key passes per game",
-    "Interceptions",
-    "Successful tackles rate",
-    "Successful crosses",
+    // "Key passes per game",
+    // "Interceptions",
+    // "Successful tackles rate",
+    // "Successful crosses",
   ];
   const AttackerTextFieldArray = [
     "Goals",
     "Goal/match played ratio",
     "Assists",
-    "Shots per game",
-    "Goal conversion rate",
-    "Offside range",
+    // "Shots per game",
+    // "Goal conversion rate",
+    // "Offside range",
   ];
 
   const AnyTextFieldArray = [];
@@ -210,12 +210,13 @@ export default function CreateProfileModal({ ProfileType }) {
   selectAutoCompletePlayerPosition;
   const filterModalType = useSelector(selectFilterModalType);
   const {
-    PlaceOfBirth,
+    // PlaceOfBirth,
     NationalityValue,
     AgeRangeValue,
     HeightRangeValue,
     PlayerPositionAutoCompleteValue,
     MarketValue,
+    SalaryExpectationValue,
     ClubCountryValue,
     CaptainRadioValue,
     PrefferedFootRadioValue,
@@ -326,36 +327,39 @@ export default function CreateProfileModal({ ProfileType }) {
       : PlayerPositionAutoCompleteValue === "" ||
         PlayerPositionAutoCompleteValue === null ||
         PlayerPositionAutoCompleteValue === "Any"
-      ? dispatch(
+      ? // "Blocked shots ",
+        // "Aerial duels",
+        // "Penalty stop success",
+        // "Sweeping success",
+        // "Clearance",
+        // "Clean sheets per season",
+        // "Key passes per game",
+        // "Interceptions",
+        // "Successful tackles rate",
+        // "Successful crosses",
+        // "Shots per game",
+        // "Goal conversion rate",
+        // "Offside range",
+
+        dispatch(
           setCurrentProfileFilterObject({
             ...currentProfileFilterObject,
             positionRangeSliderValues: {
               "Clean sheet": [0, 100],
               Saves: [0, 100],
               "Long pass accuracy": [0, 100],
-              "Blocked shots": [0, 100],
-              "Aerial duels": [0, 100],
-              "Penalty stop success": [0, 100],
-              "Sweeping success": [0, 100],
-              Clearance: [0, 100],
-
               Interception: [0, 100],
+
               Blocks: [0, 100],
-              "Clean sheets per season": [0, 100],
               "Successful tackles rate %": [0, 100],
               "pass success": [0, 100],
               "total passes": [0, 100],
               assists: [0, 100],
-              "key passes per game": [0, 100],
-              interceptions: [0, 100],
-              "successful tackles rate": [0, 100],
-              "successful crosses": [0, 100],
+
               Goals: [0, 100],
               "Goal/match played ratio": [0, 100],
               Assists: [0, 100],
-              "Shots per game": [0, 100],
-              "Goal conversion rate %": [0, 100],
-              "Offside range": [0, 100],
+              // "Shots per game": [0, 100],
             },
           })
         )
@@ -396,7 +400,7 @@ export default function CreateProfileModal({ ProfileType }) {
       /// REset the filter object after createion
       dispatch(
         setCurrentProfileFilterObject({
-          PlaceOfBirth: "Any",
+          // PlaceOfBirth: "Any",
           NationalityValue: "Any",
           AgeRangeValue: [0, 40],
           HeightRangeValue: [0, 2.5],
@@ -404,30 +408,21 @@ export default function CreateProfileModal({ ProfileType }) {
             "Clean sheet": [0, 100],
             Saves: [0, 100],
             "Long pass accuracy": [0, 100],
-            "Blocked shots": [0, 100],
-            "Aerial duels": [0, 100],
-            "Penalty stop success": [0, 100],
-            "Sweeping success": [0, 100],
-            Clearance: [0, 100],
             Interception: [0, 100],
+
             Blocks: [0, 100],
-            "Clean sheets per season": [0, 100],
             "Successful tackles rate %": [0, 100],
-            "Pass success": [0, 100],
-            "Total passes": [0, 100],
-            Assists: [0, 100],
-            "Key passes per game": [0, 100],
-            Interceptions: [0, 100],
-            "Successful tackles rate": [0, 100],
-            "Successful crosses": [0, 100],
+            "pass success": [0, 100],
+            "total passes": [0, 100],
+            assists: [0, 100],
+
             Goals: [0, 100],
             "Goal/match played ratio": [0, 100],
-            assists: [0, 100],
-            "Shots per game": [0, 100],
-            "Goal conversion rate %": [0, 100],
-            "Offside range": [0, 100],
+            Assists: [0, 100],
+            // "Shots per game": [0, 100],
           },
           MarketValue: [0, 40],
+          SalaryExpectationValue: [0, 40],
           ClubCountryValue: "Any",
           CaptainRadioValue: "Any",
           PrefferedFootRadioValue: "Any",
@@ -477,7 +472,7 @@ export default function CreateProfileModal({ ProfileType }) {
           handleClose();
           dispatch(
             setCurrentProfileFilterObject({
-              PlaceOfBirth: "Any",
+              // PlaceOfBirth: "Any",
               NationalityValue: "Any",
               AgeRangeValue: [0, 40],
               HeightRangeValue: [0, 2.5],
@@ -485,29 +480,20 @@ export default function CreateProfileModal({ ProfileType }) {
                 "Clean sheet": [0, 100],
                 Saves: [0, 100],
                 "Long pass accuracy": [0, 100],
-                "Blocked shots": [0, 100],
-                "Aerial duels": [0, 100],
-                "Penalty stop success": [0, 100],
-                "Sweeping success": [0, 100],
-                Clearance: [0, 100],
                 Interception: [0, 100],
+
                 Blocks: [0, 100],
-                "Clean sheets per season": [0, 100],
                 "Successful tackles rate %": [0, 100],
-                "Pass success": [0, 100],
-                "Total passes": [0, 100],
-                Assists: [0, 100],
-                "Key passes per game": [0, 100],
-                Interceptions: [0, 100],
-                "Successful tackles rate": [0, 100],
-                "Successful crosses": [0, 100],
+                "pass success": [0, 100],
+                "total passes": [0, 100],
+                assists: [0, 100],
+
                 Goals: [0, 100],
                 "Goal/match played ratio": [0, 100],
-                assists: [0, 100],
-                "Shots per game": [0, 100],
-                "Goal conversion rate %": [0, 100],
-                "Offside range": [0, 100],
+                Assists: [0, 100],
+                // "Shots per game": [0, 100],
               },
+              SalaryExpectationValue: [0, 40],
               MarketValue: [0, 40],
               ClubCountryValue: "Any",
               CaptainRadioValue: "Any",
@@ -551,13 +537,15 @@ export default function CreateProfileModal({ ProfileType }) {
   // FUNCTION FOR CREATING PROFILE
   const handleSaveProfile = () => {
     const {
-      PlaceOfBirth,
+      // PlaceOfBirth,
       NationalityValue,
       AgeRangeValue,
       HeightRangeValue,
       PlayerPositionAutoCompleteValue,
       ClubCountryValue,
       MarketValue,
+      SalaryExpectationValue,
+
       CaptainRadioValue,
       PrefferedFootRadioValue,
       PlayerDivisionValue,
@@ -590,13 +578,15 @@ export default function CreateProfileModal({ ProfileType }) {
         updateDoc(selectedProfileRef, {
           label: profileName,
           filter: {
-            PlaceOfBirth,
+            // PlaceOfBirth,
             NationalityValue,
             AgeRangeValue,
             HeightRangeValue,
             PlayerPositionAutoCompleteValue: PlayerPositionAutoCompleteValue,
             ClubCountryValue,
             MarketValue,
+            SalaryExpectationValue,
+
             CaptainRadioValue,
             PrefferedFootRadioValue,
             PlayerDivisionValue,
@@ -713,6 +703,17 @@ export default function CreateProfileModal({ ProfileType }) {
     );
   };
 
+  const handleSalaryExpectation = (value) => {
+    console.log(value, "Salary Expectation Values");
+    // setMarketValue(value);
+    dispatch(
+      setCurrentProfileFilterObject({
+        ...currentProfileFilterObject,
+        SalaryExpectationValue: value,
+      })
+    );
+  };
+
   const handelClubCountryValue = (value) => {
     console.log(value, "Club COuntryb");
     dispatch(
@@ -787,13 +788,15 @@ export default function CreateProfileModal({ ProfileType }) {
 
       dispatch(
         setCurrentProfileFilterObject({
-          PlaceOfBirth: filter.PlaceOfBirth,
+          // PlaceOfBirth: filter.PlaceOfBirth,
           NationalityValue: filter.NationalityValue,
           AgeRangeValue: filter.AgeRangeValue,
           HeightRangeValue: filter.HeightRangeValue,
           PlayerPositionAutoCompleteValue:
             filter.PlayerPositionAutoCompleteValue,
           MarketValue: filter.MarketValue,
+          SalaryExpectationValue: filter?.SalaryExpectationValue,
+
           ClubCountryValue: filter.ClubCountryValue,
           CaptainRadioValue: filter.CaptainRadioValue,
           PrefferedFootRadioValue: filter.PrefferedFootRadioValue,
@@ -807,12 +810,13 @@ export default function CreateProfileModal({ ProfileType }) {
     } else if (filterModalType === "Create") {
       dispatch(
         setCurrentProfileFilterObject({
-          PlaceOfBirth: "Any",
+          // PlaceOfBirth: "Any",
           NationalityValue: "Any",
           AgeRangeValue: [0, 40],
           HeightRangeValue: [0, 2.5],
           PlayerPositionAutoCompleteValue: "Any",
           MarketValue: [0, 40],
+          SalaryExpectationValue: [0, 40],
           ClubCountryValue: "Any",
           CaptainRadioValue: "Any",
           PrefferedFootRadioValue: "Any",
@@ -830,28 +834,18 @@ export default function CreateProfileModal({ ProfileType }) {
             "Clean sheet": [0, 100],
             Saves: [0, 100],
             "Long pass accuracy": [0, 100],
-            "Blocked shots": [0, 100],
-            "Aerial duels": [0, 100],
-            "Penalty stop success": [0, 100],
-            "Sweeping success": [0, 100],
-            Clearance: [0, 100],
             Interception: [0, 100],
+
             Blocks: [0, 100],
-            "Clean sheets per season": [0, 100],
             "Successful tackles rate %": [0, 100],
             "pass success": [0, 100],
             "total passes": [0, 100],
             assists: [0, 100],
-            "key passes per game": [0, 100],
-            interceptions: [0, 100],
-            "successful tackles rate": [0, 100],
-            "successful crosses": [0, 100],
+
             Goals: [0, 100],
             "Goal/match played ratio": [0, 100],
             Assists: [0, 100],
-            "Shots per game": [0, 100],
-            "Goal conversion rate %": [0, 100],
-            "Offside range": [0, 100],
+            // "Shots per game": [0, 100],
           },
         })
       );
@@ -887,7 +881,7 @@ export default function CreateProfileModal({ ProfileType }) {
           {/* // CHANING THE MODAL ENTRY ICON / CARD */}
           <BasicButton
             innerText="Get started"
-            style={{ width: "15vw", marginBottom: "3vh" }}
+            style={{ width: "25vw", marginBottom: "3vh" }}
           />{" "}
         </div>
       ) : (
@@ -951,14 +945,20 @@ export default function CreateProfileModal({ ProfileType }) {
         }}
       >
         <Fade in={open}>
-          <div className="cardBackground primaryTextColor" style={style}>
+          <div
+            className="cardBackground primaryTextColor md:flex md:flex-col md:pt-[3vh]
+            md:w-[85%] md:h-[97%] md:p-[2vw] md:absolute     sm:flex sm:flex-col sm:pt-[3vh]
+            sm:w-[100%] sm:h-[100%] sm:p-[2vw] sm:absolute md:top-[50%] md:left-[50%]    sm:top-[50%] sm:left-[50%]"
+            style={style}
+          >
             {/* HEader MEssage */}
             <div
+              className="md:flex md:flex-row md:gap-[4vw]  sm:flex sm:flex-col sm:gap-[4vw]"
               style={{
                 flex: ".1",
                 // background: "green",
-                display: "flex",
-                gap: "4vw",
+                // display: "flex",
+                // gap: "4vw",
               }}
             >
               <h2 className="secondaryTextColor">
@@ -969,7 +969,10 @@ export default function CreateProfileModal({ ProfileType }) {
                   ? "Default Profile"
                   : "Search Profile"}{" "}
               </h2>{" "}
-              <h6>Who are you looking for? </h6>{" "}
+              <h6>
+                {/* Who are you looking for? */}
+                Profile name
+              </h6>{" "}
               <div style={{ justifySelf: "flex-end" }}>
                 {" "}
                 {userSavedProfiles.length <= 0 ? (
@@ -980,6 +983,7 @@ export default function CreateProfileModal({ ProfileType }) {
                 ) : (
                   <TextField
                     size="small"
+                    className="sm:w-[95%] md:w-[100%]"
                     id="outlined-basic"
                     label="Profile Name"
                     variant="outlined"
@@ -993,17 +997,36 @@ export default function CreateProfileModal({ ProfileType }) {
                   />
                 )}
               </div>
+              <div
+                className="md:hidden sm:block md:pl-[92%] sm:pl-[80%]"
+                style={{
+                  display: "flex",
+                  justifyContent: "end",
+                  // alignItems: "end",
+                  // paddingLeft: "92%",
+                  fontSize: "2em",
+                  position: "absolute",
+                }}
+              >
+                {/* <IconButton size="small" sx={{ background: "#5585FE" }}> */}
+                <Close onClick={handleClose} style={{ color: "white" }} />{" "}
+                {/* </IconButton> */}
+              </div>
             </div>
-            <div style={{ flex: ".9", display: "flex" }}>
+            <div
+              className="md:flex md:flex-row md:overflow-y-hidden md:gap-[0%] sm:flex-col  sm:gap-[2vh] sm:flex sm:overflow-y-scroll"
+              style={{ flex: ".85" }}
+            >
               {/* // Personal information */}
               <div
+                className="md:flex md:flex-col md:relative md:gap-[2vh] md:ml-[2%]  sm:ml-[0%] sm:flex sm:flex-col  sm:relative sm:gap-[2vh] "
                 style={{
                   flex: ".33",
-                  display: "flex",
-                  gap: "2vh",
-                  flexDirection: "column",
+                  // display: "flex",
+                  // gap: "2vh",
+                  // flexDirection: "column",
                   paddingRight: "1.5vw",
-                  position: "relative",
+                  // position: "relative",
                 }}
               >
                 {" "}
@@ -1017,11 +1040,11 @@ export default function CreateProfileModal({ ProfileType }) {
                   />{" "}
                 </h4>{" "}
                 {/* Place of birth */}
-                <CountrySelect
+                {/* <CountrySelect
                   selectValue={handelePlaceOfBirth}
                   selectLabel="Place of birth"
                   defaultValue={PlaceOfBirth}
-                />
+                /> */}
                 {/* Nationality  */}
                 <CountrySelect
                   selectValue={handelNationalityValue}
@@ -1045,33 +1068,26 @@ export default function CreateProfileModal({ ProfileType }) {
                   min={0}
                   editDefaultValue={AgeRangeValue}
                 />
-                <Button
-                  sx={{
-                    width: "23vw",
-                    background: "blue",
-                    color: "white",
-                    border: ".5vw",
-                    position: "absolute",
-                    bottom: 50,
-                  }}
-                  onClick={
-                    ProfileType === "Edit"
-                      ? handleSaveProfile
-                      : handleCreateProfile
-                  }
-                >
-                  {ProfileType === "Edit" ? "Save" : "Create"}
-                </Button>{" "}
+                {/* // Preffered foot */}
+                <GroupedRadio
+                  radioDefault={PrefferedFootRadioValue}
+                  selectedValue={handlePrefferedFootRadioValue}
+                  radioArray={preferredFootArray}
+                  labelName="Preferred foot"
+                />
               </div>
               {/* Player Data */}
               <div
+                className="md:flex md:flex-col sm:flex sm:flex-col md:mr-[4%] sm:mr-[0%]"
                 style={{
                   flex: ".34",
-                  display: "flex",
-                  flexDirection: "column",
+                  // display: "flex",
+                  // flexDirection: "column",
+                  // background: "yellow",
                 }}
               >
                 <div
+                  className="sm:ml-[2%]"
                   style={{
                     flex: ".1",
                   }}
@@ -1101,7 +1117,7 @@ export default function CreateProfileModal({ ProfileType }) {
                 >
                   <BasicAutoComplete
                     style={{
-                      ...inputStyles,
+                      // ...inputStyles,
                       marginBottom: "2.5vh",
                       color: "black",
                     }}
@@ -1219,29 +1235,32 @@ export default function CreateProfileModal({ ProfileType }) {
                     rangeValue={handleMarketValue}
                     editDefaultValue={MarketValue}
                   />
+                  {/* MARKET VALUE RANGE */}
+                  <RangeSlider
+                    rangeName={"Salary Expectation ($ 000) per month"}
+                    max={50}
+                    min={0}
+                    rangeValue={handleSalaryExpectation}
+                    editDefaultValue={SalaryExpectationValue}
+                  />
                   {/* Captiain Selection */}
-                  <GroupedRadio
+                  {/* <GroupedRadio
                     radioDefault={CaptainRadioValue}
                     selectedValue={handleCaptainRadioValue}
                     radioArray={captainArray}
                     labelName="Captain"
-                  />
-                  {/* // Preffered foot */}
-                  <GroupedRadio
-                    radioDefault={PrefferedFootRadioValue}
-                    selectedValue={handlePrefferedFootRadioValue}
-                    radioArray={preferredFootArray}
-                    labelName="Preferred foot"
-                  />
+                  /> */}
                 </div>
               </div>
               {/* Extra Info Data */}
               <div
+                className="md:flex md:flex-col  md:gap-[2vh]  sm:flex sm:flex-col sm:gap-[2vh]"
                 style={{
                   flex: ".33",
-                  display: "flex",
-                  gap: "2vh",
-                  flexDirection: "column",
+                  // display: "flex",
+                  // gap: "2vh",
+                  // flexDirection: "column",
+                  // background: "green",
                 }}
               >
                 <h4 className="secondaryTextColor">
@@ -1274,6 +1293,31 @@ export default function CreateProfileModal({ ProfileType }) {
                   checkboxArray={contractStatusArray}
                 />
               </div>
+            </div>
+
+            {/* // Button Area */}
+            <div
+              // className="md:flex md:flex-row md:overflow-y-hidden md:gap-[0%] sm:flex-col-reverse   sm:gap-[2vh] sm:flex sm:overflow-y-scroll"
+              style={{ flex: ".05" }}
+            >
+              <Button
+                className="md:absolute md:bottom-[-6%] md:w-[23vw] sm:w-[100%] sm:absolute sm:bottom-[2%]"
+                sx={{
+                  // width: "23vw",
+                  background: "blue",
+                  color: "white",
+                  border: ".5vw",
+                  // position: "absolute",
+                  // bottom: 50,
+                }}
+                onClick={
+                  ProfileType === "Edit"
+                    ? handleSaveProfile
+                    : handleCreateProfile
+                }
+              >
+                {ProfileType === "Edit" ? "Save" : "Create"}
+              </Button>{" "}
             </div>
           </div>
         </Fade>

@@ -9,8 +9,9 @@ const PlayerMarketValue = () => {
 
   return (
     <div
-      className="primaryTextColor"
-      style={{ width: "100%", height: "40vh", display: "flex" }}
+      className="primaryTextColor md:w-[95%] md:h-[40vh] md:flex md:flex-row md:overflow-y-hidden           sm:w-[100%] sm:h-[40vh] sm:flex sm:flex-col sm:overflow-y-scroll "
+      // style={{ width: "100%", height: "40vh", display: "flex" }}
+      style={{ overflowY: "scroll" }}
     >
       <div style={{ flex: ".15", padding: "1vw", paddingTop: "4vh" }}>
         <h6> Current Value </h6>
@@ -23,7 +24,7 @@ const PlayerMarketValue = () => {
         <h5> {Market_Value_History.length === 0 ? "NA" : "Oct 2, 2022"} </h5>
       </div>
 
-      <div style={{ flex: ".5" }}>
+      <div style={{ flex: ".85" }}>
         {" "}
         <MarketValueGraph
           marketValueDates={Market_Value_History}

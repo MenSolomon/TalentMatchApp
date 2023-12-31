@@ -11,9 +11,9 @@ const SplashScreen = ({ progressPercentage }) => {
 
   return (
     <div
-      className="splash-screen"
+      className="splash-screen sm:w-[85vw] sm:ml-[5vw] md:w-[100vw] md:ml-[0vw] "
       style={{
-        width: "100vw",
+        // width: "100vw",
         height: "100vh",
         background: "white",
         color: "black",

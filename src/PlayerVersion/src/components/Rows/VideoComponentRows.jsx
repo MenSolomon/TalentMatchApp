@@ -11,16 +11,16 @@ const VideoComponentRows = ({ url, description, category, date, views }) => {
         width: "100%",
         height: "25%",
       }}
-      className="VideoComponent"
+      className="VideoComponent sm:text-[.5em] "
     >
       {/* // CHeck box */}
-      <div style={{ flex: ".05" }}>
+      {/* <div style={{ flex: ".05" }}>
         <Checkbox />
-      </div>
+      </div> */}
       {/* Videos */}
       <div
         style={{
-          flex: ".15",
+          flex: ".2",
           //   background: "white",
           display: "grid",
           placeItems: "center",

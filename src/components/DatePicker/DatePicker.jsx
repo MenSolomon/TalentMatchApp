@@ -30,6 +30,7 @@ export default function DatePickerTool({
           onChange={handleDateChange}
           sx={{ ...style }}
           label={label}
+          className="md:w-[23vw] sm:w-[100%]"
         />
       </DemoContainer>
     </LocalizationProvider>

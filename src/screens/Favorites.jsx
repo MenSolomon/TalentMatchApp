@@ -5,8 +5,12 @@ import { Pagination } from "@mui/material";
 import FavoritePlayerViewCard from "../components/Cards/FavoritePlayerViewCard";
 import { selectPlayersDatabase } from "../statemanager/slices/DatabaseSlice";
 import { selectUserDetailsObject } from "../statemanager/slices/LoginUserDataSlice";
+import { selectCurrentBrowserSize } from "../statemanager/slices/OtherComponentStatesSlice";
 
 const Favorites = () => {
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
+
   const allPlayersInDatabase = useSelector(selectPlayersDatabase);
 
   const userLoginObject = useSelector(selectUserDetailsObject);
@@ -31,7 +35,8 @@ const Favorites = () => {
   );
 
   // Pagination settings
-  const PlayersPerPage = 9;
+
+  const PlayersPerPage = browserWidth <= 1024 ? 4 : 9;
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -50,18 +55,14 @@ const Favorites = () => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
+      className="
+    md:flex md:flex-col md:h-[100%] md:w-[100%]    sm:flex sm:flex-col sm:h-[100%] sm:w-[100%]"
     >
-      <div style={{ flex: ".05" }}>
+      <div className="md:basis-[10%] sm:basis-[10%]">
         <h3 style={{ margin: 0, float: "left" }}>Favourites</h3>{" "}
       </div>
 
-      <div style={{ flex: ".75", flexWrap: "wrap", display: "flex" }}>
+      <div className="md:flex md:flex-row md:gap-[1em] md:flex-wrap md:basis-[70%]  sm:flex sm:flex-col sm:gap-[1em] sm:basis-[70%]">
         {playersInFavoriteArray === undefined ||
         playersInFavoriteArray?.length === 0 ? (
           <div> No players for this club yet </div>
@@ -85,6 +86,8 @@ const Favorites = () => {
             // Check if there are matches and get the value inside parentheses
             var result = positionABR ? positionABR[1] : null;
 
+            // Similar card from players page in multiStudio systtem
+
             return (
               <FavoritePlayerViewCard
                 key={index}
@@ -104,7 +107,10 @@ const Favorites = () => {
       </div>
       {/* // Pagination Area  */}
 
-      <div style={{ flex: ".1", display: "grid", placeContent: "center" }}>
+      <div
+        className="md:basis-[10%]   sm:basis-[10%]"
+        style={{ display: "grid", placeContent: "center" }}
+      >
         {userLoginObject?.favoritePlayers === undefined ? (
           ""
         ) : (

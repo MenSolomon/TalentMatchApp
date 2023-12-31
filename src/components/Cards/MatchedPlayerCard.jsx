@@ -93,12 +93,13 @@ const MatchedPlayerCard = ({
   return (
     <div>
       <div
-        className="primaryColor"
+        // className="primaryColor"
         // className="concave"
         style={{
           // position: "relative",
           width: "100%",
           height: "43vh",
+          // background: "peru",
           // background:
           //   "linear-gradient(133deg, rgba(7,127,141,1) 0%, rgba(37,142,154,1) 19%, rgba(54,164,176,1) 37%, rgba(13,129,142,1) 55%, rgba(35,141,153,1) 73%, rgba(66,157,167,1) 100%)",
           // background: "#1B1E2B",
@@ -197,6 +198,7 @@ const MatchedPlayerCard = ({
                 paddingTop: ".4vh",
                 display: "grid",
                 placeContent: "center",
+                paddingRight: "1vw",
               }}
             >
               {/* {PlayerClubName} */}

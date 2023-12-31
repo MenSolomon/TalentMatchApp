@@ -44,41 +44,47 @@ const PlayerManagementDashboard = () => {
 
   return (
     <div
+      className="md:flex md:flex-col md:h-[100%] md:w-[100%]    sm:flex sm:flex-col sm:h-[100%] sm:w-[100%]"
       style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
+        // display: "flex",
+        // flexDirection: "column",
+        // height: "100%",
+        // width: "100%",
         fontSize: ".8em",
       }}
     >
       {/* // Heading Area */}
 
       {/* // Cards  (upload video card , analytics summary card and other information card) */}
-      <div style={{ flex: ".5", display: "flex", gap: "1.5vw" }}>
+      <div
+        className="md:flex md:flex-row md:gap-[1.5vw]   sm:flex sm:flex-col sm:gap-[4.5vw]"
+        style={{ flex: ".5" }}
+      >
         <div style={{ flex: ".33" }}>
           {/* // DRAG AND DROP VIDEO CARD*/}
           <div
-            className="cardBackground"
+            className="cardBackground md:w-[100%] md:h-[120%] md:grid md:place-items-center md:relative       sm:w-[100%] sm:h-[120%] sm:grid sm:place-items-center sm:relative"
             style={{
-              width: "100%",
-              height: "120%",
+              // width: "100%",
+              // height: "120%",
               borderRadius: "1vw",
-              display: "grid",
-              placeItems: "center",
-              position: "relative",
+              // display: "grid",
+              // placeItems: "center",
+              // position: "relative",
             }}
           >
             {/* // DASHED BORDER DIV */}
             <div
+              className="cardBackground md:w-[88%] md:h-[90%] md:grid md:place-items-center md:absolute       sm:w-[100%] sm:h-[40vh] sm:grid sm:place-items-center sm:relative"
               style={{
-                width: "88%",
-                height: "90%",
+                // width: "88%",
+                // height: "90%",
                 borderRadius: ".7vw",
                 border: `1px dashed ${primaryTextColor}`,
-                position: "absolute",
-                display: "grid",
-                placeItems: "center",
+                // position: "absolute",
+                // display: "grid",
+                // placeItems: "center",
+                // background: "red",
               }}
             >
               <img src={VideoImage} style={{ width: "150px", color: "red" }} />
@@ -94,18 +100,19 @@ const PlayerManagementDashboard = () => {
         <div style={{ flex: ".33" }}>
           {/* PROFILE ANALYTICS */}
           <div
-            className="cardBackground"
+            className="cardBackground md:w-[100%] md:gap-[.5vh] md:pt-[3vh] md:pb-[2vh] md:pr-[2vw] md:pl-[2vw] md:h-[120%] md:flex md:flex-col     sm:w-[100%] sm:h-[120%] sm:flex sm:flex-col  sm:gap-[.5vh] sm:pt-[3vh] sm:pb-[2vh] sm:pr-[2vw] sm:pl-[2vw]"
             style={{
-              width: "100%",
-              height: "120%",
+              // width: "100%",
+              // height: "120%",
               borderRadius: "1vw",
-              display: "flex",
-              flexDirection: "column",
-              gap: ".5vh",
-              paddingLeft: "2vw",
-              paddingRight: "2vw",
-              paddingTop: "3vh",
-              paddingBottom: "2vh",
+              // display: "flex",
+              // flexDirection: "column",
+              // gap: ".5vh",
+              // paddingLeft: "2vw",
+              // paddingRight: "2vw",
+              // paddingTop: "3vh",
+              // paddingBottom: "2vh",
+              // background: "green",
             }}
           >
             {/* // PROFILE ANALYTICS TOTAL VIEWS */}
@@ -216,10 +223,11 @@ export default PlayerManagementDashboard;
 const RecentMessageCard = ({ message, userAvatar, date, userName }) => {
   return (
     <div
+      className="md:w-[17vw] md:h-[10vh] md:flex    sm:w-[100%] sm:h-[8vh] sm:flex "
       style={{
         // position: "absolute",
-        width: "17vw",
-        height: "10vh",
+        // width: "17vw",
+        // height: "10vh",
         // background: "yellow",
         display: "flex",
         padding: ".3vw",

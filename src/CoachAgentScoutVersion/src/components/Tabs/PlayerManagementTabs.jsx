@@ -5,6 +5,8 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { CircularProgress } from "@mui/material";
+import { selectCurrentBrowserSize } from "../../../../statemanager/slices/OtherComponentStatesSlice";
+import { useSelector } from "react-redux";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -48,14 +50,20 @@ export default function PlayerManagementTabs({
     setValue(newValue);
   };
 
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
+
   return (
     <Box
-      sx={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-      }}
+      className="md:w-[100%] md:flex md:flex-col md:h-[100%]   sm:w-[100%] sm:flex sm:flex-col sm:h-[100%]"
+      sx={
+        {
+          // width: "100%",
+          // height: "100%",
+          // display: "flex",
+          // flexDirection: "column",
+        }
+      }
     >
       <Box sx={{ borderColor: "divider", flex: ".1" }}>
         <Tabs
@@ -79,10 +87,12 @@ export default function PlayerManagementTabs({
           {PlayerManagementTabItemsArray.map((data, key) => {
             return (
               <Tab
+                key={key}
                 className="primaryColor"
-                label={data}
+                label={browserWidth >= 1024 ? data : `${data.slice(0, 3)}..`}
                 sx={{
-                  minWidth: "7vw",
+                  // minWidth: "7vw",
+                  minWidth: browserWidth >= 1024 ? "7vw" : "7vw",
                   // marginRight: "2vw",
                   fontWeight: "bold",
                 }}

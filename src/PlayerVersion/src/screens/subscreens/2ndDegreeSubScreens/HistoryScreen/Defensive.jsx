@@ -6,7 +6,7 @@ const Defensive = () => {
         // height: "100%",
         display: "flex",
         flexDirection: "column",
-        // background: "blue",
+        // background: "red",
       }}
     >
       {/* <div style={{ flex: ".15", width: "80%", paddingTop: "2vh" }}>

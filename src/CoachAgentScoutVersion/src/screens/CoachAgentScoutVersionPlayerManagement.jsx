@@ -66,7 +66,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     "Dashboard",
     "Videos",
     // "Inbox",
-    "Interested Scouts",
+    // "Interested Scouts",
     "Analytics",
     // "Settings",
   ];
@@ -75,7 +75,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     "Dashboard",
     "Videos",
     // "Inbox",
-    "Interested Scouts",
+    // "Interested Scouts",
     "Analytics",
     "Statistics",
     // "Settings",
@@ -188,35 +188,42 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   };
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
+      className="md:w-[100%] md:h-[100%] md:flex md:flex-col md:gap-[0px]   sm:gap-[50px]   sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
+      style={
+        {
+          // display: "flex",
+          // flexDirection: "column",
+          // height: "100%",
+          // width: "100%",
+          // background: "red",
+        }
+      }
     >
       {/* // Player Name , Image an jerseyNumber */}
       <div style={{ flex: ".25", display: "flex" }}>
         {/* Player Image */}
         <div
+          className="md:relative sm:relative"
           style={{
             flex: ".25",
             // background: "red",
             paddingTop: "1.5vh",
-            position: "relative",
+            // position: "relative",
           }}
         >
           {/* // Image Canvas */}
           <Card
+            className="md:w-[8.5vw] md:h-[18vh] md:float-right  sm:float-left sm:w-[30vw] sm:h-[18vh]"
             style={{
-              float: "right",
-              width: "8.5vw",
-              height: "18vh",
+              // float: "right",
+              // width: "8.5vw",
+              // height: "18vh",
               // background: "blue",
               marginRight: ".5vw",
               borderRadius: "1vw",
               backgroundImage: `url('${player_profile_image}')`,
               backgroundSize: "cover",
+              backgroundPosition: "center",
             }}
           ></Card>
 
@@ -224,6 +231,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
           <div className="PlayerManagementNationalityTooltip">
             <Tooltip title={Nationality}>
               <Avatar
+                className="md:absolute md:left-[30%] md:bottom-[-1vh]    sm:absolute sm:left-[250%] sm:bottom-[-6vh]"
                 sx={{
                   width: 56,
                   height: 56,
@@ -239,7 +247,10 @@ const CoachAgentScoutVersionPlayerManagement = () => {
           </div>
         </div>
         {/* Player Name */}
-        <div style={{ flex: ".6", padding: "1vw", paddingLeft: "1vw" }}>
+        <div
+          className="md:pl-[1vw] sm:pl-[-100%]"
+          style={{ flex: ".6", paddingLeft: "1vw" }}
+        >
           <h2 style={{ margin: "0" }}> {firstName} </h2>
           <h1 style={{ margin: "0" }}>{surName} </h1>
         </div>
@@ -250,28 +261,32 @@ const CoachAgentScoutVersionPlayerManagement = () => {
       </div>
 
       {/* // Player details */}
-      <div style={{ flex: ".75", display: "flex" }}>
+      <div
+        className="md:flex md:basis-[75%]  md:flex-row   sm:flex sm:flex-col sm:basis-[75%]"
+        // style={{ background: "red" }}
+      >
         {/* Player basic information */}
 
         <div
+          className=" sm:basis-[22%]  md:basis-[22%]"
           style={{
-            flex: ".22",
+            // flex: ".22",
             // background: "white",
             paddingTop: "6vh",
-            // background: "red",
+            // background: "green",
             padding: ".8vw",
           }}
         >
           <Card
-            className="cardBackground primaryTextColor"
+            className="cardBackground primaryTextColor md:w-[100%] md:h-[100%] md:flex md:flex-col md:p-[1.4vw]   sm:p-[2vw] sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
             style={{
-              width: "100%",
-              height: "100%",
+              // width: "100%",
+              // height: "100%",
               //   background: "red",
-              display: "flex",
-              flexDirection: "column",
+              // display: "flex",
+              // flexDirection: "column",
               borderRadius: "1vw",
-              padding: "1.4vw",
+              // padding: "1.4vw",
               paddingTop: "8vh",
             }}
           >
@@ -365,7 +380,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         </div>
 
         {/* // TABS AND SUBSCREEMS SECTION */}
-        <div style={{ flex: ".78" }}>
+        <div className="md:basis-[78%] sm:basis-[78%]">
           <PlayerManagementTabs
             PlayerManagementTabItemsArray={
               userLoginObject?.role === "Club"

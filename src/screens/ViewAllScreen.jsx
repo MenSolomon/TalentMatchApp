@@ -83,7 +83,7 @@ const Players = () => {
         <FilteredPlayersTable />
       </div>
       {/* // Pagination Area  */}
-      <div
+      {/* <div
         style={{
           flex: "0.1",
           display: "flex",
@@ -99,7 +99,7 @@ const Players = () => {
           color="primary"
         />
         <div>Matched players: 11</div>
-      </div>
+      </div> */}
     </div>
   );
 };

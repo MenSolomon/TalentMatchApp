@@ -13,6 +13,7 @@ import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUs
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../../Firebase/Firebase";
 import {
+  selectCurrentBrowserSize,
   setSnackbarMessage,
   setSnackbarTriggerCounter,
 } from "../../../../statemanager/slices/OtherComponentStatesSlice";
@@ -22,7 +23,6 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "35vw",
   height: "54vh",
   bgcolor: "background.paper",
   border: "2px solid #000",
@@ -32,6 +32,10 @@ const style = {
 };
 
 export default function ConfirmClubExitModal() {
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
+  // width: browserWidth >= 1024 ? "9vw" : "40vw",
+
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -96,7 +100,11 @@ export default function ConfirmClubExitModal() {
       <div onClick={handleOpen}>
         <BasicButtonWithEndIcon
           innerText="Exit club "
-          style={{ width: "9vw", height: "6vh", marginBottom: "1.5vh" }}
+          style={{
+            width: browserWidth >= 1024 ? "9vw" : "40vw",
+            height: "6vh",
+            marginBottom: "1.5vh",
+          }}
           endIcon={"logout"}
         />
       </div>
@@ -115,7 +123,9 @@ export default function ConfirmClubExitModal() {
         }}
       >
         <Fade s in={open}>
+          {/* width: "35vw", */}
           <Box
+            className="sm:w-[85vw] md:w-[35vw]"
             sx={{
               ...style,
               display: "flex",
@@ -179,6 +189,7 @@ export default function ConfirmClubExitModal() {
               }}
             >
               <Button
+                className="sm:w-[35vw] md:w-[10vw]"
                 onClick={() => {
                   handleConfirmPlayerExit();
                   handleClose();
@@ -187,7 +198,7 @@ export default function ConfirmClubExitModal() {
                   background: "green",
                   borderRadius: "2vw",
                   color: "white",
-                  width: "10vw",
+                  // width: "10vw",
                   marginTop: "8%",
                 }}
                 endIcon={<Close sx={{ color: "white" }} />}
@@ -196,12 +207,13 @@ export default function ConfirmClubExitModal() {
               </Button>
 
               <Button
+                className="sm:w-[35vw] md:w-[10vw]"
                 onClick={handleClose}
                 sx={{
                   background: "red",
                   borderRadius: "2vw",
                   color: "white",
-                  width: "10vw",
+                  // width: "10vw",
                   marginTop: "8%",
                 }}
                 endIcon={<Close sx={{ color: "white" }} />}

@@ -7,6 +7,7 @@ import { Notifications } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserDataSlice";
 import { selectUserNotifications } from "../../statemanager/slices/NofiticationsSlice";
+import { selectThemeProviderObject } from "../../statemanager/slices/ThemeProviderSlice";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -18,6 +19,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 export default function NotificationBadge({ onClick }) {
+  const themeProviderObject = useSelector(selectThemeProviderObject);
+  const { buttonColor, primaryTextColor } = themeProviderObject;
+
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
   const notificationsArray = useSelector(selectUserNotifications);
 
@@ -44,7 +48,10 @@ export default function NotificationBadge({ onClick }) {
         }
         color="secondary"
       >
-        <Notifications />
+        <Notifications
+          // className="cardBackground"
+          sx={{ color: primaryTextColor }}
+        />
       </StyledBadge>
     </IconButton>
   );

@@ -7,13 +7,15 @@ import ScoutsDisplayCard from "../components/Cards/ScoutsDisplayCard";
 const PlayerVersionFavorites = () => {
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
-      className="primaryTextColor"
+      style={
+        {
+          // display: "flex",
+          // flexDirection: "column",
+          // height: "100%",
+          // width: "100%",
+        }
+      }
+      className="primaryTextColor md:flex md:flex-col md:w-[100%] md:h-[100%]   sm:flex sm:flex-col sm:w-[100%] sm:h-[100%]"
     >
       {/* // Heading Area */}
       <div style={{ flex: ".1" }}>
@@ -21,11 +23,12 @@ const PlayerVersionFavorites = () => {
       </div>
       {/* Video DISPLAY AREA */}
       <div
+        className="md:flex md:flex-wrap  sm:flex sm:flex-wrap"
         style={{
           flex: ".9",
-          display: "flex",
+          // display: "flex",
           gap: "5%",
-          flexWrap: "wrap",
+          // flexWrap: "wrap",
         }}
       >
         <ScoutsDisplayCard

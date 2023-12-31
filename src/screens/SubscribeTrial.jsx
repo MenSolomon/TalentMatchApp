@@ -38,8 +38,12 @@ import {
   selectUserSignUpData,
   setUserSignUpData,
 } from "../statemanager/slices/UserDataSlice";
+import { selectCurrentBrowserSize } from "../statemanager/slices/OtherComponentStatesSlice";
 
 const SubscribeTrial = () => {
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
+
   // RIGHT PAPER FUNCTIONS
 
   const navigate = useNavigate();
@@ -70,39 +74,48 @@ const SubscribeTrial = () => {
   // }, [packageValue]);
 
   const ulStyle = {
-    fontSize: ".8em",
+    fontSize: ".9em",
   };
 
   return (
     <div
+      className="md:w-[100%] md:flex-row md:h-[100%] md:flex   
+      sm:w-[100%] sm:flex-col sm:h-[100%] sm:flex
+      "
       style={{
         // background: "red",
-        width: "100%",
-        height: "100%",
-        display: "flex",
+        // width: "100%",
+        // height: "100%",
+        // display: "flex",
         // gap: "5vw",
         paddingLeft: "4%",
         // flexDirection: "column",
       }}
     >
       <div
+        className="md:flex md:justify-end md:basis-[55%]   sm:flex sm:justify-center sm:basis-[0.5] "
         style={{
-          flex: "0.55",
+          // flex: "0.55",
           // background: "red",
-          display: "flex",
-          justifyContent: "flex-end",
+          // display: "flex",
+          // justifyContent: "flex-end",
           paddingRight: "10px",
         }}
       >
         {/* // LEFT PAPER  */}
 
         <div
-          style={{
-            width: "70%",
-            height: "75%",
-            display: "flex",
-            flexDirection: "column",
-          }}
+          className="md:w-[70%] md:h-[75%] md:flex md:flex-col   
+          sm:w-[90%] sm:h-[75%] sm:flex sm:flex-col
+          "
+          style={
+            {
+              // width: "70%",
+              // height: "75%",
+              // display: "flex",
+              // flexDirection: "column",
+            }
+          }
         >
           <div
             style={{
@@ -154,7 +167,7 @@ const SubscribeTrial = () => {
               >
                 <div>
                   <h5 style={{ fontWeight: "bold" }}>
-                    Start your free trial for 90 <br /> days
+                    Start your free trial for 30 <br /> days
                   </h5>
                   <h5 style={{ fontWeight: "bold" }}>{roleSelected}</h5>
                   <small>
@@ -233,19 +246,22 @@ const SubscribeTrial = () => {
       </div>
       {/* //  RIGHT PAPER */}
       <div
+        className="md:flex md:justify-start   md:basis-[0.5]  sm:flex sm:justify-center"
         style={{
           flex: "0.4",
-          display: "flex",
-          justifyContent: "flex-start",
+          // display: "flex",
+          // justifyContent: "flex-start",
           // background: "red",
           padding: "10px 10px",
         }}
       >
         <Card
+          className="md:w-[25vw] md:h-[42vh]    sm:w-[100%] sm:h-[30vh] sm:pb-[1.5vh] sm:text-[.85em] "
           sx={{
-            width: "25vw",
-            height: "42vh",
+            // width: "25vw",
+            // height: "42vh",
             borderRadius: "5px",
+            paddingBottom: "2vh",
             padding: ".5vw",
           }}
         >
@@ -294,6 +310,9 @@ const SubscribeTrial = () => {
             <BasicButton
               style={{
                 width: "90%",
+                height: browserWidth >= 1024 ? "" : "4.5vh",
+                marginBottom: browserWidth >= 1024 ? "" : "1.5vh",
+
                 marginLeft: "5%",
               }}
               innerText="Start Trial"
@@ -302,6 +321,7 @@ const SubscribeTrial = () => {
             </BasicButton>
           </div>
         </Card>
+        <div className="md:hidden sm:h-[9vh] "></div>
       </div>
     </div>
   );

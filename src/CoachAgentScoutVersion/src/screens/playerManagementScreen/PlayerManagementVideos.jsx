@@ -41,12 +41,13 @@ const PlayerManagementVideos = () => {
 
   return (
     <div
+      className="md:flex md:flex-col md:w-[100%] md:h-[48vh]  sm:flex sm:flex-col sm:w-[100%] sm:h-[48vh]"
       style={{
-        display: "flex",
-        flexDirection: "column",
+        // display: "flex",
+        // flexDirection: "column",
         fontSize: ".8em",
-        width: "100%",
-        height: "48vh",
+        // width: "100%",
+        // height: "48vh",
       }}
     >
       {/* Video DISPLAY AREA */}
@@ -84,11 +85,11 @@ const PlayerManagementVideos = () => {
               }}
             >
               {/* // CHeck box */}
-              <div style={{ flex: ".05" }}>
+              {/* <div style={{ flex: ".05" }}>
                 <Checkbox />
-              </div>
+              </div> */}
               {/* Videos */}
-              <div style={{ flex: ".15" }}>Video</div>
+              <div style={{ flex: ".2" }}>Video</div>
 
               {/* Description */}
               <div style={{ flex: ".25" }}>Description</div>
@@ -117,17 +118,20 @@ const PlayerManagementVideos = () => {
                   dateUploaded,
                   url,
                   views,
-                  uploadedBy,
+                  uploadedById,
+                  id,
                 } = data;
 
                 return (
                   <VideoComponentRows
                     key={index}
                     url={url}
+                    id={id}
                     description={description}
                     category={category}
                     views={views}
                     date={dateUploaded}
+                    uploaderId={data?.uploadedById}
                   />
                 );
               })}

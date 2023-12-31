@@ -574,14 +574,6 @@ tbody {
   background: white;
 }
 
-.carousel-control-next-icon,
-.carousel-control-prev-icon {
-  border-radius: 50%;
-  background-color: #5585fe;
-  opacity: 0.5;
-  z-index: 1000;
-}
-
 .MatchedPlayers .carousel-control-next {
   /* background: red; */
   /* width: 6vw; */
@@ -728,6 +720,22 @@ ol {
 @media (min-width: 1000px) {
   .motherComponentContentArea {
     overflow-y: scroll;
+  }
+}
+@media (min-width: 1024px) {
+  .carousel-control-next-icon,
+  .carousel-control-prev-icon {
+    border-radius: 50%;
+    background-color: #5585fe;
+    opacity: 0.5;
+    z-index: 1000;
+  }
+}
+
+@media (max-width: 1023px) {
+  .carousel-control-next-icon,
+  .carousel-control-prev-icon {
+    opacity: 0;
   }
 }
 

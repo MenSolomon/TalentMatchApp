@@ -4,12 +4,12 @@ import { Button, Card } from "@mui/material";
 const ProfileAnalyticsCard = () => {
   return (
     <Card
-      className="cardBackground primaryTextColor "
+      className="cardBackground primaryTextColor md:w-[90%] md:h-[95%] md:flex md:flex-col    sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
       style={{
-        width: "90%",
-        height: "79%",
-        display: "flex",
-        flexDirection: "column",
+        // width: "90%",
+        // height: "79%",
+        // display: "flex",
+        // flexDirection: "column",
         padding: ".8vw",
       }}
     >

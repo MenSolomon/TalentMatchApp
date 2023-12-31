@@ -23,6 +23,7 @@ export const OtherComponentStatesSlice = createSlice({
       width: "",
       height: "",
     },
+    carouselVideoIndex: 0,
   },
 
   reducers: {
@@ -71,6 +72,9 @@ export const OtherComponentStatesSlice = createSlice({
     setCurrentBrowserSize: (state, action) => {
       state.currentBrowserSize = action.payload;
     },
+    setCarouselVideoIndex: (state, action) => {
+      state.carouselVideoIndex = action.payload;
+    },
   },
 });
 
@@ -104,6 +108,8 @@ export const selectContactSupportModalCounter = (state) =>
   state.OtherComponentStates.contactSupportModalCounter;
 export const selectContactSupportModalMessage = (state) =>
   state.OtherComponentStates.contactSupportModalMessage;
+export const selectCarouselVideoIndex = (state) =>
+  state.OtherComponentStates.carouselVideoIndex;
 
 export const {
   setAutoCompletePlayerPosition,
@@ -121,5 +127,6 @@ export const {
   setContactSupportModalCounter,
   setContactSupportModalMessage,
   setCurrentBrowserSize,
+  setCarouselVideoIndex,
 } = OtherComponentStatesSlice.actions;
 export default OtherComponentStatesSlice.reducer;

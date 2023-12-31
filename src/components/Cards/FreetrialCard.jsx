@@ -7,8 +7,12 @@ import {
   setRoleSelected,
 } from "../../statemanager/slices/SignupStepperSlice";
 import imageBackground from "../../assets/images/FootballLogo.jpg";
+import { selectCurrentBrowserSize } from "../../statemanager/slices/OtherComponentStatesSlice";
 
-const FreetrialCard = ({ name, roleImage, imageStyle }) => {
+const FreetrialCard = ({ name, roleImage, imageStyle, className }) => {
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
+  // width: browserWidth >= 1024 ? "9vw" : "40vw",
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -30,59 +34,74 @@ const FreetrialCard = ({ name, roleImage, imageStyle }) => {
   return (
     <>
       <Card
-        className="chooseARoleCard"
+        className={`" md:w-[17%] md:h-[80%] 
+        sm:w-[40%] sm:h-[21.5vh] 
+          ${className} "`}
         sx={{
-          // background: "pink",
-          width: "17%",
-          height: "70%",
-          display: "flex",
-          flexDirection: "column",
-          paddingTop: "2vh",
           color: "black",
-          // backgroundImage: `linear-gradient(90deg, rgba(32,32,32,0.975210066936931) 0%, rgba(55,54,54,0.9780111873851103) 34%, rgba(23,21,21,1) 100%),url("${imageBackground}")`,
           borderRadius: "10px",
         }}
       >
         <div
+          className="chooseARoleCard md:flex md:flex-col sm:flex sm:flex-col "
+          onClick={() => {
+            handleStepOneCompleted();
+            handleTrialNavigation();
+            handleDispatchRoleSelectedToSlice();
+          }}
           style={{
-            flex: "0.4",
-            // background: "yellow",
-            display: "grid",
-            placeContent: "center",
+            position: "relative",
+            width: "100%",
+            height: "100%",
+            paddingTop: "1vh",
+            paddingBottom: "1vh",
           }}
         >
-          <img src={roleImage} style={{ ...imageStyle, width: "120px" }} />
-        </div>
-        <div
-          style={{
-            flex: "0.3",
-            display: "grid",
-            placeContent: "center",
-            // color: "white",
-          }}
-        >
-          <h4>{name}</h4>
-        </div>
-        <div
-          style={{
-            flex: "0.3",
-            // background: "peru",
-            display: "grid",
-            placeContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Button
-            onClick={() => {
-              handleStepOneCompleted();
-              handleTrialNavigation();
-              handleDispatchRoleSelectedToSlice();
+          <div
+            style={{
+              flex: "0.4",
+              // background: "yellow",
+              display: "grid",
+              placeContent: "center",
             }}
-            variant="outlined"
-            // sx={{ color: "white" }}
           >
-            Start Trial
-          </Button>
+            <img src={roleImage} style={{ ...imageStyle, width: "120px" }} />
+          </div>
+          <div
+            style={{
+              flex: "0.3",
+              display: "grid",
+              placeContent: "center",
+              // color: "white",
+            }}
+          >
+            <h4>{name}</h4>
+          </div>
+          <div
+            style={{
+              flex: "0.3",
+              // background: "peru",
+              display: "grid",
+              placeContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Button
+              onClick={() => {
+                handleStepOneCompleted();
+                handleTrialNavigation();
+                handleDispatchRoleSelectedToSlice();
+              }}
+              variant="outlined"
+              className="sm:h-[3.5vh] sm:mb-[2.4vh] "
+              sx={{
+                height: browserWidth >= 1024 ? "6vh" : "3.5vh",
+                marginBottom: browserWidth >= 1024 ? "" : "3vh",
+              }}
+            >
+              Start Trial
+            </Button>
+          </div>
         </div>
       </Card>
     </>

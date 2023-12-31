@@ -11,6 +11,7 @@ import {
   CompareArrows,
   Dashboard,
   DoorBack,
+  Forum,
   Help,
   Home,
   Inbox,
@@ -65,8 +66,8 @@ const NavBarButton = ({ ButtonName, ButtonImage, path, buttonStyle }) => {
               icon={faPeopleGroup}
               style={{ color: buttonColor }}
             />
-          ) : ButtonName === "Inbox" ? (
-            <MoveToInbox sx={{ color: buttonColor }} />
+          ) : ButtonName === "Messages" ? (
+            <Forum sx={{ color: buttonColor }} />
           ) : ButtonName === "Analytics" ? (
             <Monitor sx={{ color: buttonColor }} />
           ) : ButtonName === "Help" ? (

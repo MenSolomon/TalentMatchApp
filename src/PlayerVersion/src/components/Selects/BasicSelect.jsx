@@ -12,6 +12,7 @@ export default function BasicSelect({
   defaultValue,
   fullWidth,
   sx,
+  className,
 }) {
   // const [selectValue, setSelectValue] = useState("");
 
@@ -23,6 +24,7 @@ export default function BasicSelect({
     <FormControl>
       <InputLabel id="demo-simple-select-label">{label} </InputLabel>
       <Select
+        className={className}
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         // value={selectValue}

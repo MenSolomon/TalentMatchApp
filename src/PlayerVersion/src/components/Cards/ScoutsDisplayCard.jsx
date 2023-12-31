@@ -9,12 +9,12 @@ const ScoutsDisplayCard = ({
 }) => {
   return (
     <Card
-      className="cardBackground primaryTextColor"
+      className="cardBackground primaryTextColor md:flex md:flex-col md:w-[20vw] md:h-[23vh]   sm:flex sm:flex-col sm:w-[100%] sm:h-[23vh]"
       style={{
-        display: "flex",
-        flexDirection: "column",
-        width: "20vw",
-        height: "23vh",
+        // display: "flex",
+        // flexDirection: "column",
+        // width: "20vw",
+        // height: "23vh",
         borderRadius: "1vw",
       }}
     >
