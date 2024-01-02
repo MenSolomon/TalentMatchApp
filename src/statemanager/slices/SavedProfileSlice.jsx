@@ -43,6 +43,7 @@ export const SavedProfileSlice = createSlice({
       ],
       // REview below
       PlayerPositionAutoCompleteValue: "Any",
+      PlayerAlternatePositionAutoCompleteValue: "None",
     },
     previousProfile: "",
   },

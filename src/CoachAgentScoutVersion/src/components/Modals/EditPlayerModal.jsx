@@ -57,6 +57,7 @@ import { db, storage } from "../../../../Firebase/Firebase";
 import BasicSlider from "../slider/BasicSlider";
 import {
   selectCurrentBrowserSize,
+  selectSoccerPostions,
   setCloseCircularLoadBackdrop,
   setContactSupportModalCounter,
   setContactSupportModalMessage,
@@ -219,23 +220,8 @@ const EditPlayerProfileModal = () => {
   };
 
   const preferredFootArray = ["Left", "Right", "Both"];
-  const soccerPositions = [
-    "Any",
-    "Goalkeeper (GK)",
-    "Defender (D)",
-    "Center Back (CB)",
-    "Full-back (FB)",
-    "Wing-back (WB)",
-    "Midfielder (MF)",
-    "Central Midfielder (CM)",
-    "Defensive Midfielder (CDM)",
-    "Attacking Midfielder (CAM)",
-    "Wide Midfielder (WM)",
-    "Forward (F)",
-    "Striker (ST)",
-    "Center Forward (CF)",
-    "Winger (W)",
-  ];
+  const soccerPositions = useSelector(selectSoccerPostions);
+
   const contractStatusArray = [
     "Transfer Listed",
     "Loan Listed",

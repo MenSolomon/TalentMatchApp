@@ -5,25 +5,10 @@ import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInA
 import { useSelector } from "react-redux";
 import RangeSlider from "../../components/Slider/RangeSlider";
 import { selectPlayersDatabase } from "../../statemanager/slices/DatabaseSlice";
+import { selectSoccerPostions } from "../../statemanager/slices/OtherComponentStatesSlice";
 
 const PlayerFilter = () => {
-  const soccerPositions = [
-    "Any",
-    "Goalkeeper (GK)",
-    "Defender (D)",
-    "Center Back (CB)",
-    "Full-back (FB)",
-    "Wing-back (WB)",
-    "Midfielder (MF)",
-    "Central Midfielder (CM)",
-    "Defensive Midfielder (CDM)",
-    "Attacking Midfielder (CAM)",
-    "Wide Midfielder (WM)",
-    "Forward (F)",
-    "Striker (ST)",
-    "Center Forward (CF)",
-    "Winger (W)",
-  ];
+  const soccerPositions = useSelector(selectSoccerPostions);
 
   const inputStyles = {
     width: "85%",

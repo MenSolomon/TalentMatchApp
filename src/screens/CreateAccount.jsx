@@ -27,6 +27,7 @@ import GroupedRadio from "../components/Radio/GroupedRadio";
 import BasicSelect from "../components/Selects/BasicSelect";
 import {
   selectCurrentBrowserSize,
+  selectSoccerPostions,
   setWarningAlertModalCounter,
   setWarningAlertModalMessage,
 } from "../statemanager/slices/OtherComponentStatesSlice";
@@ -35,22 +36,7 @@ const CreateAccount = () => {
   const browserSize = useSelector(selectCurrentBrowserSize);
   let browserWidth = parseInt(browserSize?.width, 10);
 
-  const soccerPositions = [
-    "Goalkeeper (GK)",
-    "Defender (D)",
-    "Center Back (CB)",
-    "Full-back (FB)",
-    "Wing-back (WB)",
-    "Midfielder (MF)",
-    "Central Midfielder (CM)",
-    "Defensive Midfielder (CDM)",
-    "Attacking Midfielder (CAM)",
-    "Wide Midfielder (WM)",
-    "Forward (F)",
-    "Striker (ST)",
-    "Center Forward (CF)",
-    "Winger (W)",
-  ];
+  const soccerPositions = useSelector(selectSoccerPostions);
 
   const preferredFootArray = ["Left", "Right", "Both"];
 
