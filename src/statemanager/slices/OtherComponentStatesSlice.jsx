@@ -24,6 +24,19 @@ export const OtherComponentStatesSlice = createSlice({
       height: "",
     },
     carouselVideoIndex: 0,
+    playerPositions: [
+      // "Any",
+      "Goalkeeper (GK)",
+      "Center Back (CB)",
+      "Right Back (RB)",
+      "Left Back (LB)",
+      "Wing Back (WB) ",
+      "Defensive Midfielder (DM)",
+      "Central Midfielder (CM)",
+      "Attacking Midfielder (AM)",
+      "Winger (W)",
+      "Striker (ST)",
+    ],
   },
 
   reducers: {
@@ -110,6 +123,8 @@ export const selectContactSupportModalMessage = (state) =>
   state.OtherComponentStates.contactSupportModalMessage;
 export const selectCarouselVideoIndex = (state) =>
   state.OtherComponentStates.carouselVideoIndex;
+export const selectSoccerPostions = (state) =>
+  state.OtherComponentStates.playerPositions;
 
 export const {
   setAutoCompletePlayerPosition,

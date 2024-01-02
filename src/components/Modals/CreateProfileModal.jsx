@@ -39,6 +39,7 @@ import {
   selectEditFilterModalButtonClicked,
   selectFilterModalType,
   selectSnackbarMessage,
+  selectSoccerPostions,
   setAutoCompletePlayerPosition,
   setEditFilterModalButtonClicked,
   setFilterModalType,
@@ -126,23 +127,7 @@ export default function CreateProfileModal({ ProfileType }) {
     "Juvenile league",
   ];
 
-  const soccerPositions = [
-    "Any",
-    "Goalkeeper (GK)",
-    "Defender (D)",
-    "Center Back (CB)",
-    "Full-back (FB)",
-    "Wing-back (WB)",
-    "Midfielder (MF)",
-    "Central Midfielder (CM)",
-    "Defensive Midfielder (CDM)",
-    "Attacking Midfielder (CAM)",
-    "Wide Midfielder (WM)",
-    "Forward (F)",
-    "Striker (ST)",
-    "Center Forward (CF)",
-    "Winger (W)",
-  ];
+  const soccerPositions = useSelector(selectSoccerPostions);
 
   const GKTextFieldArray = [
     "Clean sheet",
@@ -215,6 +200,7 @@ export default function CreateProfileModal({ ProfileType }) {
     AgeRangeValue,
     HeightRangeValue,
     PlayerPositionAutoCompleteValue,
+    PlayerAlternatePositionAutoCompleteValue,
     MarketValue,
     SalaryExpectationValue,
     ClubCountryValue,
@@ -437,6 +423,7 @@ export default function CreateProfileModal({ ProfileType }) {
           ],
           // REview below
           PlayerPositionAutoCompleteValue: "Any",
+          PlayerAlternatePositionAutoCompleteValue: "None",
 
           previousProfile: "",
         })
@@ -509,7 +496,7 @@ export default function CreateProfileModal({ ProfileType }) {
               ],
               // REview below
               PlayerPositionAutoCompleteValue: "Any",
-
+              PlayerAlternatePositionAutoCompleteValue: "None",
               previousProfile: "",
             })
           );
@@ -542,6 +529,7 @@ export default function CreateProfileModal({ ProfileType }) {
       AgeRangeValue,
       HeightRangeValue,
       PlayerPositionAutoCompleteValue,
+      PlayerAlternatePositionAutoCompleteValue,
       ClubCountryValue,
       MarketValue,
       SalaryExpectationValue,
@@ -583,6 +571,8 @@ export default function CreateProfileModal({ ProfileType }) {
             AgeRangeValue,
             HeightRangeValue,
             PlayerPositionAutoCompleteValue: PlayerPositionAutoCompleteValue,
+            PlayerAlternatePositionAutoCompleteValue:
+              PlayerAlternatePositionAutoCompleteValue,
             ClubCountryValue,
             MarketValue,
             SalaryExpectationValue,
@@ -679,6 +669,31 @@ export default function CreateProfileModal({ ProfileType }) {
     // PlayerPositionAutoCompleteValue,
 
     console.log(value, "Player Position auto complete value");
+  };
+
+  const handlePlayerAlternatePositionAutoCompleteValue = (value) => {
+    // setPlayerPositionAutoCompleteValue(value);
+
+    if (value === null) {
+      dispatch(
+        setCurrentProfileFilterObject({
+          ...currentProfileFilterObject,
+          PlayerAlternatePositionAutoCompleteValue: "None",
+        })
+      );
+    }
+    {
+      dispatch(
+        setCurrentProfileFilterObject({
+          ...currentProfileFilterObject,
+          PlayerAlternatePositionAutoCompleteValue: value,
+        })
+      );
+    }
+
+    // PlayerPositionAutoCompleteValue,
+
+    console.log(value, "Player Alternate Position  auto complete value");
   };
 
   // useEffect(() => {
@@ -794,6 +809,9 @@ export default function CreateProfileModal({ ProfileType }) {
           HeightRangeValue: filter.HeightRangeValue,
           PlayerPositionAutoCompleteValue:
             filter.PlayerPositionAutoCompleteValue,
+          PlayerAlternatePositionAutoCompleteValue:
+            filter.PlayerAlternatePositionAutoCompleteValue,
+
           MarketValue: filter.MarketValue,
           SalaryExpectationValue: filter?.SalaryExpectationValue,
 
@@ -815,6 +833,7 @@ export default function CreateProfileModal({ ProfileType }) {
           AgeRangeValue: [0, 40],
           HeightRangeValue: [0, 2.5],
           PlayerPositionAutoCompleteValue: "Any",
+          PlayerAlternatePositionAutoCompleteValue: "None",
           MarketValue: [0, 40],
           SalaryExpectationValue: [0, 40],
           ClubCountryValue: "Any",
@@ -1121,7 +1140,7 @@ export default function CreateProfileModal({ ProfileType }) {
                       marginBottom: "2.5vh",
                       color: "black",
                     }}
-                    ListArray={soccerPositions}
+                    ListArray={["Any", ...soccerPositions]}
                     label="Main Position"
                     AutoCompleteValue={handlePlayerPositionAutoCompleteValue}
                     defaultValue={PlayerPositionAutoCompleteValue}
@@ -1152,8 +1171,9 @@ export default function CreateProfileModal({ ProfileType }) {
                     : // DEFEMDERS
                     PlayerPositionAutoCompleteValue === "Defender (D)" ||
                       PlayerPositionAutoCompleteValue === "Center Back (CB)" ||
-                      PlayerPositionAutoCompleteValue === "Full-back (FB)" ||
-                      PlayerPositionAutoCompleteValue === "Wing-back (WB)"
+                      PlayerPositionAutoCompleteValue === "Right Back (RB)" ||
+                      PlayerPositionAutoCompleteValue === "Left Back (LB)" ||
+                      PlayerPositionAutoCompleteValue === "Wing back (WB)"
                     ? DefendersTextFieldArray.map((data, index) => {
                         return (
                           <RangeSlider
@@ -1173,10 +1193,9 @@ export default function CreateProfileModal({ ProfileType }) {
                       PlayerPositionAutoCompleteValue ===
                         "Central Midfielder (CM)" ||
                       PlayerPositionAutoCompleteValue ===
-                        "Defensive Midfielder (CDM)" ||
+                        "Defensive Midfielder (DM)" ||
                       PlayerPositionAutoCompleteValue ===
-                        "Attacking Midfielder (CAM)" ||
-                      PlayerPositionAutoCompleteValue === "Wide Midfielder (WM)"
+                        "Attacking Midfielder (CM)"
                     ? MidfieldersTextFieldArray.map((data, index) => {
                         return (
                           <RangeSlider
@@ -1191,10 +1210,11 @@ export default function CreateProfileModal({ ProfileType }) {
                           />
                         );
                       }) // Attackers
-                    : PlayerPositionAutoCompleteValue === "Forward (F)" ||
-                      PlayerPositionAutoCompleteValue === "Striker (ST)" ||
-                      PlayerPositionAutoCompleteValue ===
-                        "Center Forward (CF)" ||
+                    : // PlayerPositionAutoCompleteValue === "Forward (F)" ||
+                    PlayerPositionAutoCompleteValue === "Striker (ST)" ||
+                      //  ||
+                      // PlayerPositionAutoCompleteValue ===
+                      //   "Center Forward (CF)"
                       PlayerPositionAutoCompleteValue === "Winger (W)"
                     ? AttackerTextFieldArray.map((data, index) => {
                         return (
@@ -1227,6 +1247,19 @@ export default function CreateProfileModal({ ProfileType }) {
                       //     );
                       //   })
                       ""}
+                  <BasicAutoComplete
+                    style={{
+                      // ...inputStyles,
+                      marginBottom: "2.5vh",
+                      color: "black",
+                    }}
+                    ListArray={["None", ...soccerPositions]}
+                    label="Alternate Position"
+                    AutoCompleteValue={
+                      handlePlayerAlternatePositionAutoCompleteValue
+                    }
+                    defaultValue={PlayerAlternatePositionAutoCompleteValue}
+                  />{" "}
                   {/* MARKET VALUE RANGE */}
                   <RangeSlider
                     rangeName={"Market Value ($ 000,000)"}
