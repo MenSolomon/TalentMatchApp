@@ -113,17 +113,28 @@ export default function CreateProfileModal({ ProfileType }) {
 
   const leagueDivisions = [
     "Any",
-    "Top-Flight Division",
-    "Women's league",
-    "Second Division",
-    "Third Division",
-    "Regional Leagues",
-    "Semi-Professional Leagues",
-    "University and College Leagues",
-    "Recreational and Social Leagues",
-    "Youth Leagues",
-    "Grassroots and Mini Leagues",
-    "Juvenile league",
+    "First tier (male)",
+    "Second tier (male)",
+    "Third tier (male)",
+    "First tier (female)",
+    "Second tier (female)",
+  ];
+
+  const marketValue$ = [
+    "0 - 99,999",
+    "100,000 - 499,999",
+    "500,000 - 999,999",
+    "1,000,000 - 4,999,999",
+    "5,000,000 - 9,999,999",
+    "10,000,000 +",
+  ];
+  const salaryExpectation = [
+    "0 - 4,999",
+    "5,000 - 9,999",
+    "10,000 - 19,999",
+    "20,000 - 49,999",
+    "50,000 - 99,999",
+    "100,000 +",
   ];
 
   const soccerPositions = [
@@ -189,12 +200,9 @@ export default function CreateProfileModal({ ProfileType }) {
   const captainArray = ["Yes", "No", "Any"];
 
   const contractStatusArray = [
-    "Transfer Listed",
-    "Loan Listed",
-    "Free Agent",
-    "Youth Player",
+    "Free agent",
     "Contract Expiring less than 6 months",
-    "Currently renewed contract",
+    "Contract more than 6 months",
   ];
   const editFilterModalButtonClicked = useSelector(
     selectEditFilterModalButtonClicked
@@ -1113,6 +1121,10 @@ export default function CreateProfileModal({ ProfileType }) {
                     paddingLeft: "1vw",
                     paddingTop: "3vh",
                     overflowY: "scroll",
+                    // background: "red",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "3vh",
                   }}
                 >
                   <BasicAutoComplete
@@ -1120,12 +1132,13 @@ export default function CreateProfileModal({ ProfileType }) {
                       // ...inputStyles,
                       marginBottom: "2.5vh",
                       color: "black",
+                      // background: "red",
                     }}
                     ListArray={soccerPositions}
                     label="Main Position"
                     AutoCompleteValue={handlePlayerPositionAutoCompleteValue}
                     defaultValue={PlayerPositionAutoCompleteValue}
-                  />{" "}
+                  />
                   {/* <BasicAutoComplete
                     style={inputStyles}
                     ListArray={soccerPositions}
@@ -1228,21 +1241,45 @@ export default function CreateProfileModal({ ProfileType }) {
                       //   })
                       ""}
                   {/* MARKET VALUE RANGE */}
-                  <RangeSlider
+                  <BasicAutoComplete
+                    style={{
+                      // ...inputStyles,
+                      marginBottom: "2.5vh",
+                      color: "black",
+                      // background: "red",
+                    }}
+                    ListArray={marketValue$}
+                    label="Market Value ($)"
+                    AutoCompleteValue={handlePlayerPositionAutoCompleteValue}
+                    defaultValue={"0 - 99,999"}
+                  />
+                  {/* <RangeSlider
                     rangeName={"Market Value ($ 000,000)"}
                     max={50}
                     min={0}
                     rangeValue={handleMarketValue}
                     editDefaultValue={MarketValue}
-                  />
+                  /> */}
                   {/* MARKET VALUE RANGE */}
-                  <RangeSlider
+                  <BasicAutoComplete
+                    style={{
+                      // ...inputStyles,
+                      marginBottom: "2.5vh",
+                      color: "black",
+                      // background: "red",
+                    }}
+                    ListArray={salaryExpectation}
+                    label="Salary Expectation ($ 000) per month"
+                    AutoCompleteValue={handlePlayerPositionAutoCompleteValue}
+                    defaultValue={"0 - 4,999"}
+                  />
+                  {/* <RangeSlider
                     rangeName={"Salary Expectation ($ 000) per month"}
                     max={50}
                     min={0}
                     rangeValue={handleSalaryExpectation}
                     editDefaultValue={SalaryExpectationValue}
-                  />
+                  /> */}
                   {/* Captiain Selection */}
                   {/* <GroupedRadio
                     radioDefault={CaptainRadioValue}
@@ -1254,7 +1291,7 @@ export default function CreateProfileModal({ ProfileType }) {
               </div>
               {/* Extra Info Data */}
               <div
-                className="md:flex md:flex-col  md:gap-[2vh]  sm:flex sm:flex-col sm:gap-[2vh]"
+                className="md:flex md:flex-col  md:gap-[4.5vh]  sm:flex sm:flex-col sm:gap-[2vh]"
                 style={{
                   flex: ".33",
                   // display: "flex",
@@ -1287,10 +1324,17 @@ export default function CreateProfileModal({ ProfileType }) {
                   defaultSelect={PlayerDivisionValue}
                 />
 
-                <CheckboxesGroup
+                {/* <CheckboxesGroup
                   checkBoxesSelected={handleContractStatusCheckBoxes}
                   CheckboxLabel="Contract Status"
                   checkboxArray={contractStatusArray}
+                /> */}
+                <BasicSelect
+                  label={"Contract Status"}
+                  inputStyle={{ width: 300 }}
+                  itemsArray={contractStatusArray}
+                  selectedValue={handlePlayerDivisionValue}
+                  defaultSelect={"Any"}
                 />
               </div>
             </div>
