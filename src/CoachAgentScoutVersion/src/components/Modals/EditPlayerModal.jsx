@@ -222,13 +222,19 @@ const EditPlayerProfileModal = () => {
   const preferredFootArray = ["Left", "Right", "Both"];
   const soccerPositions = useSelector(selectSoccerPostions);
 
+  // const contractStatusArray = [
+  //   "Transfer Listed",
+  //   "Loan Listed",
+  //   "Free Agent",
+  //   "Youth Player",
+  //   "Contract Expiring less than 6 months",
+  //   "Currently renewed contract",
+  // ];
+
   const contractStatusArray = [
-    "Transfer Listed",
-    "Loan Listed",
-    "Free Agent",
-    "Youth Player",
-    "Contract Expiring less than 6 months",
-    "Currently renewed contract",
+    "Free agent",
+    "Contract Expiring in less than 6 months",
+    "Contract Expiring in more than 6 months",
   ];
 
   const clubSelected = "";

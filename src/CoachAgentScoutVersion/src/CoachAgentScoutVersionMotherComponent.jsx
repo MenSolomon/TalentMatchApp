@@ -5,7 +5,6 @@ import { Outlet } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import avatarImage from "./assets/images/avatar.jpg";
 import logoImage from "./assets/images/AppLogoBlue.png";
-import ProfileMenu from "./components/Menu/ProfileMenu";
 import LightAndDarkModeSwitch from "./components/Switch/LightAndDarkModeSwitch";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavBarButton from "./components/NavBarButtons/NavBarButton";
@@ -23,6 +22,7 @@ import SmallScreenCoachAgentClubMenuDrawer from "./components/Drawer/SmallScreen
 import { selectCurrentScreenSize } from "../../statemanager/slices/OtherComponentStatesSlice";
 import NotificationsMenu from "../../components/Menu/NotificationsMenu";
 import { setUserSavedProfiles } from "../../statemanager/slices/SavedProfileSlice";
+import ProfileMenu from "../../components/Menu/ProfileMenu";
 
 const CoachAgentScoutVersionMotherComponent = () => {
   const dispatch = useDispatch();

@@ -10,7 +10,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import NavBarButton from "./components/NavBarButtons/NavBarButton";
 import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
-import ProfileMenu from "../../components/Menu/ProfileMenu";
 import {
   setLoginStatus,
   setUserDetailsObject,
@@ -21,6 +20,7 @@ import { selectCurrentScreenSize } from "../../statemanager/slices/OtherComponen
 import SmallScreenPlayerMenuDrawer from "./components/Drawer/SmallScreenPlayerMenuDrawer";
 import { setUserSavedProfiles } from "../../statemanager/slices/SavedProfileSlice";
 import NotificationsMenu from "../../components/Menu/NotificationsMenu";
+import ProfileMenu from "../../components/Menu/ProfileMenu";
 
 const PlayerVersionMotherComponent = () => {
   const dispatch = useDispatch();

@@ -462,12 +462,12 @@ const VideoCard = ({
             position: "absolute",
             right: 0,
             top: "4%",
-
+            color: "white",
             zIndex: 10000,
           }}
         >
           {" "}
-          <Close style={{ color: "white" }} />{" "}
+          <Close sx={{ color: "white" }} />{" "}
         </IconButton>
         <video
           id={`carouselVideo-${vidIndex}`}

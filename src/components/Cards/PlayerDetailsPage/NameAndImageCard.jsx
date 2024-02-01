@@ -1,4 +1,5 @@
-import { Avatar } from "@mui/material";
+import { Verified } from "@mui/icons-material";
+import { Avatar, Tooltip } from "@mui/material";
 
 const NameAndImageCard = ({
   hTagStyle,
@@ -28,6 +29,9 @@ const NameAndImageCard = ({
           className="sm:w-[80%] md:w-[100%]"
           style={{ borderRadius: "5%" }}
         />{" "}
+        <Tooltip title="Verified">
+          <Verified sx={{ color: "#5585FE", marginLeft: "1vw" }} />{" "}
+        </Tooltip>
       </div>
       {/* // names flex area */}
       <div

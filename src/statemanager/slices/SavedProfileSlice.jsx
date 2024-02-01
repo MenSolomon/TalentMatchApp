@@ -27,20 +27,16 @@ export const SavedProfileSlice = createSlice({
         Assists: [0, 100],
         // "Shots per game": [0, 100],
       },
-      MarketValue: [0, 40],
-      SalaryExpectationValue: [0, 40],
+      MarketValue: "0 - 99,999",
+
+      SalaryExpectationValue: "0 - 4,999",
+
       ClubCountryValue: "Any",
-      CaptainRadioValue: "Any",
+      // CaptainRadioValue: "Any",
       PrefferedFootRadioValue: "Any",
       PlayerDivisionValue: "Any",
-      ContractStatusCheckBoxes: [
-        "Free Agent",
-        "Loan Listed",
-        "Youth Player",
-        "Transfer Listed",
-        "Contract Expiring less than 6 months",
-        "Currently renewed contract",
-      ],
+      ContractStatusCheckBoxes: "Any",
+
       // REview below
       PlayerPositionAutoCompleteValue: "Any",
       PlayerAlternatePositionAutoCompleteValue: "None",

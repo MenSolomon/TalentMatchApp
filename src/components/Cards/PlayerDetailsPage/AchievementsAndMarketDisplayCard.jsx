@@ -1,5 +1,5 @@
-import { Details, Favorite } from "@mui/icons-material";
-import { Avatar, Card, Icon } from "@mui/material";
+import { Details, Favorite, Verified } from "@mui/icons-material";
+import { Avatar, Card, Icon, Tooltip } from "@mui/material";
 import BasicButton from "../../Buttons/BasicButton";
 import { selectThemeProviderObject } from "../../../statemanager/slices/ThemeProviderSlice";
 import { useState } from "react";
@@ -59,7 +59,7 @@ border-box;`;
 
   return (
     <div
-    className="playerCard md:w-[100%] md:h-[100%] md:flex md:flex-col  sm:w-[50%] sm:h-[100%] sm:flex sm:flex-col"
+      className="playerCard md:w-[100%] md:h-[100%] md:flex md:flex-col  sm:w-[50%] sm:h-[100%] sm:flex sm:flex-col"
       style={{
         // width: "100%",
         // height: "100%",
