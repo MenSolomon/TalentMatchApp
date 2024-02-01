@@ -8,7 +8,7 @@ import {
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import BasicButton from "../Buttons/BasicButton";
-import { LocalPolice, Star, StarBorder } from "@mui/icons-material";
+import { LocalPolice, Star, StarBorder, Verified } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../../statemanager/slices/ThemeProviderSlice";
 import { selectClubsInDatabase } from "../../statemanager/slices/ClubsInDatabaseSlice";
@@ -341,7 +341,10 @@ const MatchedPlayerCard = ({
                   zIndex: "1000",
                 }}
               >
-                {/* Favorite */}
+                <Tooltip title="Verified">
+                  <Verified sx={{ color: "#5585FE" }} />{" "}
+                </Tooltip>{" "}
+                {/* Verified */}
               </span>
             }
             sx={{ fontSize: ".8em" }}

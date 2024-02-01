@@ -1,17 +1,35 @@
 import { Circle } from "@mui/icons-material";
 import { Avatar, Button, Divider, Select, TextField } from "@mui/material";
 import BasicSelect from "../../components/Selects/BasicSelect";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUserSavedProfiles } from "../../statemanager/slices/SavedProfileSlice";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserDataSlice";
-import { selectCurrentBrowserSize } from "../../statemanager/slices/OtherComponentStatesSlice";
+import {
+  selectCurrentBrowserSize,
+  setCloseCircularLoadBackdrop,
+  setImageBelow500kbSelected,
+  setOpenCircularLoadBackdrop,
+  setSnackbarMessage,
+  setSnackbarTriggerCounter,
+  setWarningAlertModalCounter,
+  setWarningAlertModalMessage,
+} from "../../statemanager/slices/OtherComponentStatesSlice";
+import { v4 as uuidv4 } from "uuid";
+import { doc, updateDoc } from "firebase/firestore";
+import moment from "moment";
+import { db, storage } from "../../Firebase/Firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+
 // import React from "react";
 
 function SettingsProfile() {
   const carouselFilter = ["Berekum Chelsea", "Kotoko", "AUE"];
 
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
+  const [firstName, setFirstName] = useState(userLoginDetailsObject?.firstName);
+  const [surName, setSurName] = useState(userLoginDetailsObject?.surname);
+
   const carouselProfileName =
     userLoginDetailsObject?.carouselProfileName === undefined
       ? "Default"
@@ -33,6 +51,126 @@ function SettingsProfile() {
   const browserSize = useSelector(selectCurrentBrowserSize);
   let browserWidth = parseInt(browserSize?.width, 10);
   //
+
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
+  const [imageObject, setImageObject] = useState({});
+  const [imageUrl, setImageUrl] = useState(
+    userLoginDetailsObject?.profileImage
+  );
+
+  const dispatch = useDispatch();
+  const fileInputRef = useRef(null);
+  const handleClick = () => {
+    fileInputRef.current.click();
+  };
+  const handleFileSelect = (event) => {
+    const selectedFiles = event.target.files;
+
+    if (selectedFiles.length > 0) {
+      // Assuming you want to handle each selected file
+      const file = selectedFiles[0]; // Take the first file
+
+      const imageBlob = URL.createObjectURL(file);
+
+      if (file.type.startsWith("image/")) {
+        const maxSizeInBytes = 0.5 * 1024 * 1024; // 15 MB
+
+        if (file.size <= maxSizeInBytes) {
+          console.log("File accepted:", file);
+          setImageObject(file); // Store the file itself
+
+          dispatch(setImageBelow500kbSelected(true));
+          setImageUrl(imageBlob);
+          // alert(imageBlob);
+          // console.log(imageUrl);
+
+          // Reset the value of the file input element
+          event.target.value = [];
+        } else {
+          triggerWarningAlertModal("File size exceeds the limit (500 KB).");
+        }
+      } else {
+        triggerWarningAlertModal("Please select an image file.");
+      }
+    }
+  };
+
+  const profileEditSubmit = async () => {
+    const uuid = uuidv4();
+
+    {
+      try {
+        if (imageObject?.name === undefined) {
+          dispatch(setOpenCircularLoadBackdrop());
+
+          const playerObjectRef = doc(
+            db,
+            `users_db`,
+            userLoginDetailsObject?.accountId
+          );
+          await updateDoc(playerObjectRef, {
+            firstName: firstName,
+            surname: surName,
+          });
+
+          dispatch(setCloseCircularLoadBackdrop());
+          dispatch(setSnackbarMessage("Proile settings saved"));
+          dispatch(setSnackbarTriggerCounter());
+        } else {
+          const playerVideoRef = ref(
+            storage,
+            `profileImages/${userLoginDetailsObject?.firstName}${
+              userLoginDetailsObject?.surname
+            }${userLoginDetailsObject?.accountId}/${
+              imageObject?.name + "-" + uuid
+            }`
+          );
+
+          dispatch(setOpenCircularLoadBackdrop());
+          // Upload the image
+          await uploadBytes(playerVideoRef, imageObject);
+
+          // Get the download URL
+          const url = await getDownloadURL(playerVideoRef);
+
+          // const VideoUuid = uuidv4();
+
+          const playerObjectRef = doc(
+            db,
+            `users_db`,
+            userLoginDetailsObject?.accountId
+          );
+          await updateDoc(playerObjectRef, {
+            profileImage: url,
+            profileImageLastUpdated: moment().format("MMMM D, YYYY HH:mm:ss"),
+            firstName: firstName,
+            surname: surName,
+          });
+
+          // alert("Saved");
+          dispatch(setCloseCircularLoadBackdrop());
+
+          dispatch(setSnackbarMessage("Proile settings saved"));
+
+          dispatch(setSnackbarTriggerCounter());
+        }
+      } catch (error) {
+        console.error("failu", error);
+        // alert(error);
+        dispatch(setCloseCircularLoadBackdrop());
+        triggerWarningAlertModal(
+          "Something went wrong ... please try again after a while"
+        );
+      }
+    }
+  };
+
+  // <Button onClick={handleClick} variant="contained">
+  //                     select Files
+  //                   </Button>
 
   return (
     <div
@@ -88,19 +226,31 @@ function SettingsProfile() {
               }}
             >
               <Avatar
+                src={imageUrl}
                 style={{
-                  width: browserWidth >= 1024 ? "4.5vw" : "18%",
-                  height: "90%",
+                  width: browserWidth >= 1024 ? "5.5vw" : "18%",
+                  height: browserWidth >= 1024 ? "11.5vh" : "90%",
                 }}
 
                 // className="md:w-[20%] md:h-[80%] sm:w-[15%"
               />
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <div>
-                  <b>UserName</b> <br />{" "}
-                  <Button style={{ fontWeight: "lighter" }}>
+                  {/* <b>UserName</b> <br />{" "} */}
+                  <Button
+                    onClick={handleClick}
+                    style={{ fontWeight: "lighter" }}
+                  >
                     change profile photo
                   </Button>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                    onChange={handleFileSelect}
+                    accept="image/*" // Limit to video files
+                    // multiple
+                  />
                 </div>
               </div>
             </div>
@@ -118,7 +268,13 @@ function SettingsProfile() {
               }}
             >
               <div style={{ display: "flex", flexDirection: "column-reverse" }}>
-                <TextField size="small" value={" first name"} />
+                <TextField
+                  size="small"
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                  }}
+                  value={firstName}
+                />
                 <br style={{ fontWeight: "lighter" }} /> Change user first Name
                 here* (optional)
               </div>
@@ -136,13 +292,19 @@ function SettingsProfile() {
               }}
             >
               <div style={{ display: "flex", flexDirection: "column-reverse" }}>
-                <TextField size="small" value={" surname"} />
+                <TextField
+                  size="small"
+                  onChange={(e) => {
+                    setSurName(e.target.value);
+                  }}
+                  value={surName}
+                />
                 <br style={{ fontWeight: "lighter" }} /> Change user surname
                 here* (optional)
               </div>
             </div>
             <div style={{ flex: "0.1", marginLeft: "15%" }}>
-              <Button>Submit</Button>
+              <Button onClick={profileEditSubmit}>Submit</Button>
             </div>
           </div>
           {/* Divider */}

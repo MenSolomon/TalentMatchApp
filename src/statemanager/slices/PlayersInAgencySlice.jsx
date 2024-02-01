@@ -479,6 +479,7 @@ export const PlayersInAgencySlice = createSlice({
         },
       ],
     },
+    PlayersFromApi: [],
   },
 
   reducers: {
@@ -493,6 +494,9 @@ export const PlayersInAgencySlice = createSlice({
     },
     setPlayerSelectedToView: (state, action) => {
       state.PlayerSelectedToView = action.payload;
+    },
+    setPlayersFromApi: (state, action) => {
+      state.PlayersFromApi = action.payload;
     },
 
     // setplayerObjectSampleWithoutBasicInformation: (state, action) => {
@@ -515,11 +519,15 @@ export const selectPlayerObjectSampleWithoutBasicInformation = (state) =>
 export const selectPlayerSelectedToView = (state) =>
   state.PlayersInAgencySlice.PlayerSelectedToView;
 
+export const selectPlayersFromApi = (state) =>
+  state.PlayersInAgencySlice.PlayersFromApi;
+
 export const {
   setPlayersInAgencyArray,
   setSelectedPlayerToCompareArray,
   setPlayerSelectedByClubOrScoutInPlayerManagement,
   setPlayerSelectedToView,
+  setPlayersFromApi,
   // setplayerObjectSampleWithoutBasicInformation,
 } = PlayersInAgencySlice.actions;
 export default PlayersInAgencySlice.reducer;

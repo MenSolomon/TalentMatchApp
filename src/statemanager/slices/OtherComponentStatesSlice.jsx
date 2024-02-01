@@ -15,6 +15,7 @@ export const OtherComponentStatesSlice = createSlice({
     circularLoadBackdropCounter: 0,
     circularLoadBackdropTrigger: false,
     videoBelow15mbSelected: false,
+    imageBelow500kbSelected: false,
     currentScreenSize: {
       width: "",
       height: "",
@@ -79,6 +80,9 @@ export const OtherComponentStatesSlice = createSlice({
     setVideoBelow15mbSelected: (state, action) => {
       state.videoBelow15mbSelected = action.payload;
     },
+    setImageBelow500kbSelected: (state, action) => {
+      state.imageBelow500kbSelected = action.payload;
+    },
     setCurrentScreenSize: (state, action) => {
       state.currentScreenSize = action.payload;
     },
@@ -111,6 +115,8 @@ export const selectCircularLoadBackdropTriggerState = (state) =>
 //   state.OtherComponentStates.circularLoadBackdropCounter;
 export const selectVideoBelow15mbSelected = (state) =>
   state.OtherComponentStates.videoBelow15mbSelected;
+export const selectImageBelow500kbSelected = (state) =>
+  state.OtherComponentStates.imageBelow500kbSelected;
 export const selectCurrentScreenSize = (state) =>
   state.OtherComponentStates.currentScreenSize;
 
@@ -136,6 +142,7 @@ export const {
   setWarningAlertModalMessage,
   setWarningAlertModalCounter,
   setVideoBelow15mbSelected,
+  setImageBelow500kbSelected,
   setCurrentScreenSize,
   setOpenCircularLoadBackdrop,
   setCloseCircularLoadBackdrop,

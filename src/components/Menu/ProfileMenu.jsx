@@ -51,12 +51,12 @@ export default function ProfileMenu({ style, name }) {
           // marginLeft: "2vw",
           width: 55,
           height: 55,
-          border: "4px solid blue",
+          border: "3px solid #5585FE",
           marginLeft: ".4vw",
           marginRight: ".4vw",
           float: "right",
         }}
-        src={avatarImage}
+        src={loginUserDetails?.profileImage && loginUserDetails?.profileImage}
         onClick={handleClick}
       ></Avatar>
       <Menu
@@ -71,13 +71,16 @@ export default function ProfileMenu({ style, name }) {
         <MenuItem
           sx={{ color: "black" }}
           color="secondary"
-          onClick={handleClose}
+          onClick={() => {
+            handleClose();
+            Navigate("/settings");
+          }}
         >
           Profile
         </MenuItem>
-        <MenuItem sx={{ color: "black" }} onClick={handleClose}>
+        {/* <MenuItem sx={{ color: "black" }} onClick={handleClose}>
           My account
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem
           sx={{ color: "black" }}
           onClick={() => {

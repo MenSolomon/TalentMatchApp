@@ -117,11 +117,15 @@ export default function CreateProfileModal({ ProfileType }) {
     "First tier (male)",
     "Second tier (male)",
     "Third tier (male)",
+    "Below Third tier (male)",
     "First tier (female)",
     "Second tier (female)",
+    "Second tier (female)",
+    "Below Second tier (female)",
   ];
 
   const marketValue$ = [
+    "Any",
     "0 - 99,999",
     "100,000 - 499,999",
     "500,000 - 999,999",
@@ -130,6 +134,7 @@ export default function CreateProfileModal({ ProfileType }) {
     "10,000,000 +",
   ];
   const salaryExpectation = [
+    "Any",
     "0 - 4,999",
     "5,000 - 9,999",
     "10,000 - 19,999",
@@ -185,9 +190,10 @@ export default function CreateProfileModal({ ProfileType }) {
   const captainArray = ["Yes", "No", "Any"];
 
   const contractStatusArray = [
+    "Any",
     "Free agent",
-    "Contract Expiring less than 6 months",
-    "Contract more than 6 months",
+    "Contract Expiring in less than 6 months",
+    "Contract Expiring in more than 6 months",
   ];
   const editFilterModalButtonClicked = useSelector(
     selectEditFilterModalButtonClicked
@@ -415,20 +421,15 @@ export default function CreateProfileModal({ ProfileType }) {
             Assists: [0, 100],
             // "Shots per game": [0, 100],
           },
-          MarketValue: [0, 40],
-          SalaryExpectationValue: [0, 40],
+          MarketValue: "0 - 99,999",
+          SalaryExpectationValue: "0 - 4,999",
+
           ClubCountryValue: "Any",
-          CaptainRadioValue: "Any",
+          // CaptainRadioValue: "Any",
           PrefferedFootRadioValue: "Any",
           PlayerDivisionValue: "Any",
-          ContractStatusCheckBoxes: [
-            "Free Agent",
-            "Loan Listed",
-            "Youth Player",
-            "Transfer Listed",
-            "Contract Expiring less than 6 months",
-            "Currently renewed contract",
-          ],
+          ContractStatusCheckBoxes: "Any",
+
           // REview below
           PlayerPositionAutoCompleteValue: "Any",
           PlayerAlternatePositionAutoCompleteValue: "None",
@@ -488,20 +489,15 @@ export default function CreateProfileModal({ ProfileType }) {
                 Assists: [0, 100],
                 // "Shots per game": [0, 100],
               },
-              SalaryExpectationValue: [0, 40],
-              MarketValue: [0, 40],
+              SalaryExpectationValue: "0 - 4,999",
+
+              MarketValue: "0 - 99,999",
+
               ClubCountryValue: "Any",
-              CaptainRadioValue: "Any",
+              // CaptainRadioValue: "Any",
               PrefferedFootRadioValue: "Any",
               PlayerDivisionValue: "Any",
-              ContractStatusCheckBoxes: [
-                "Free Agent",
-                "Loan Listed",
-                "Youth Player",
-                "Transfer Listed",
-                "Contract Expiring less than 6 months",
-                "Currently renewed contract",
-              ],
+              ContractStatusCheckBoxes: "Any",
               // REview below
               PlayerPositionAutoCompleteValue: "Any",
               PlayerAlternatePositionAutoCompleteValue: "None",
@@ -542,7 +538,7 @@ export default function CreateProfileModal({ ProfileType }) {
       MarketValue,
       SalaryExpectationValue,
 
-      CaptainRadioValue,
+      // CaptainRadioValue,
       PrefferedFootRadioValue,
       PlayerDivisionValue,
       ContractStatusCheckBoxes,
@@ -585,7 +581,7 @@ export default function CreateProfileModal({ ProfileType }) {
             MarketValue,
             SalaryExpectationValue,
 
-            CaptainRadioValue,
+            // CaptainRadioValue,
             PrefferedFootRadioValue,
             PlayerDivisionValue,
             ContractStatusCheckBoxes,
@@ -755,7 +751,7 @@ export default function CreateProfileModal({ ProfileType }) {
     dispatch(
       setCurrentProfileFilterObject({
         ...currentProfileFilterObject,
-        CaptainRadioValue: value,
+        // CaptainRadioValue: value,
       })
     );
   };
@@ -824,7 +820,7 @@ export default function CreateProfileModal({ ProfileType }) {
           SalaryExpectationValue: filter?.SalaryExpectationValue,
 
           ClubCountryValue: filter.ClubCountryValue,
-          CaptainRadioValue: filter.CaptainRadioValue,
+          // CaptainRadioValue: filter.CaptainRadioValue,
           PrefferedFootRadioValue: filter.PrefferedFootRadioValue,
           PlayerDivisionValue: filter.PlayerDivisionValue,
           ContractStatusCheckBoxes: filter.ContractStatusCheckBoxes,
@@ -842,20 +838,16 @@ export default function CreateProfileModal({ ProfileType }) {
           HeightRangeValue: [0, 2.5],
           PlayerPositionAutoCompleteValue: "Any",
           PlayerAlternatePositionAutoCompleteValue: "None",
-          MarketValue: [0, 40],
-          SalaryExpectationValue: [0, 40],
+          MarketValue: "0 - 99,999",
+
+          SalaryExpectationValue: "0 - 4,999",
+
           ClubCountryValue: "Any",
-          CaptainRadioValue: "Any",
+          // CaptainRadioValue: "Any",
           PrefferedFootRadioValue: "Any",
           PlayerDivisionValue: "Any",
-          ContractStatusCheckBoxes: [
-            "Free Agent",
-            "Loan Listed",
-            "Youth Player",
-            "Transfer Listed",
-            "Contract Expiring less than 6 months",
-            "Currently renewed contract",
-          ],
+          ContractStatusCheckBoxes: "Any",
+
           // REview below
           positionRangeSliderValues: {
             "Clean sheet": [0, 100],
@@ -1274,17 +1266,12 @@ export default function CreateProfileModal({ ProfileType }) {
                     defaultValue={PlayerAlternatePositionAutoCompleteValue}
                   />{" "}
                   {/* MARKET VALUE RANGE */}
-                  <BasicAutoComplete
-                    style={{
-                      // ...inputStyles,
-                      marginBottom: "2.5vh",
-                      color: "black",
-                      // background: "red",
-                    }}
-                    ListArray={marketValue$}
+                  <BasicSelect
                     label="Market Value ($)"
-                    AutoCompleteValue={handlePlayerPositionAutoCompleteValue}
-                    defaultValue={"0 - 99,999"}
+                    inputStyle={{ width: 300 }}
+                    itemsArray={marketValue$}
+                    selectedValue={handleMarketValue}
+                    defaultSelect={MarketValue}
                   />
                   {/* <RangeSlider
                     rangeName={"Market Value ($ 000,000)"}
@@ -1293,18 +1280,13 @@ export default function CreateProfileModal({ ProfileType }) {
                     rangeValue={handleMarketValue}
                     editDefaultValue={MarketValue}
                   /> */}
-                  {/* MARKET VALUE RANGE */}
-                  <BasicAutoComplete
-                    style={{
-                      // ...inputStyles,
-                      marginBottom: "2.5vh",
-                      color: "black",
-                      // background: "red",
-                    }}
-                    ListArray={salaryExpectation}
+                  {/* SALARY EXPECTATION VALUE RANGE */}
+                  <BasicSelect
                     label="Salary Expectation ($ 000) per month"
-                    AutoCompleteValue={handlePlayerPositionAutoCompleteValue}
-                    defaultValue={"0 - 4,999"}
+                    inputStyle={{ width: 300 }}
+                    itemsArray={salaryExpectation}
+                    selectedValue={handleSalaryExpectation}
+                    defaultSelect={SalaryExpectationValue}
                   />
                   {/* <RangeSlider
                     rangeName={"Salary Expectation ($ 000) per month"}
@@ -1366,8 +1348,8 @@ export default function CreateProfileModal({ ProfileType }) {
                   label={"Contract Status"}
                   inputStyle={{ width: 300 }}
                   itemsArray={contractStatusArray}
-                  selectedValue={handlePlayerDivisionValue}
-                  defaultSelect={"Any"}
+                  selectedValue={handleContractStatusCheckBoxes}
+                  defaultSelect={ContractStatusCheckBoxes}
                 />
               </div>
             </div>
