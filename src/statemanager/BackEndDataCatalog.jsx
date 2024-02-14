@@ -694,7 +694,7 @@ const BackEndDataCatalog = ({ children }) => {
           })
         );
 
-        console.log("Players Data:", playersData);
+        // console.log("Players Data:", playersData);
         dispatch(setPlayersDatabase(playersData));
       } catch (error) {
         console.error("Error fetching players:", error);
