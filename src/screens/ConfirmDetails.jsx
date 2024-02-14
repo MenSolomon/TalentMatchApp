@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   selectRoleSelected,
   setCompletedSteps,
@@ -29,7 +29,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
-import { db } from "../Firebase/Firebase";
+import { auth, db } from "../Firebase/Firebase";
 import {
   selectPlayersDatabase,
   selectUsersDatabase,
@@ -39,6 +39,11 @@ import {
   setWarningAlertModalMessage,
 } from "../statemanager/slices/OtherComponentStatesSlice";
 import { setThemeProviderToLightMode } from "../statemanager/slices/ThemeProviderSlice";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  setCredentials,
+  setLoginStatus,
+} from "../statemanager/slices/LoginUserDataSlice";
 
 const ConfirmDetails = () => {
   //
@@ -49,12 +54,20 @@ const ConfirmDetails = () => {
   const allUsers = useSelector(selectUsersDatabase);
   const allPlayersInDatabase = useSelector(selectPlayersDatabase);
   const today = moment();
-  //
+
+  //state to manage user id
   const [agreement, setAgreement] = useState(false);
   const [privacy, setPrivacy] = useState(false);
 
-  const { firstName, surname, DateOfBirth, phoneNumber, email, Nationality } =
-    userData;
+  const {
+    firstName,
+    surname,
+    DateOfBirth,
+    phoneNumber,
+    email,
+    Nationality,
+    password,
+  } = userData;
   // Add one month to the current date
   const oneMonthLater = today.add(1, "months");
 
@@ -81,8 +94,34 @@ const ConfirmDetails = () => {
   };
 
   // ... (existing code above)
+  const handleGoogleLogin = async (auth, email, password) => {
+    alert("triggered");
+    // invoke google createUserWithEmailAndPassword method
+    await createUserWithEmailAndPassword(auth, email, password)
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+        // save credentials
+        dispatch(setCredentials(user.uid));
 
+        // set login status to true
+        dispatch(setLoginStatus(true));
+        console.log(email);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("errorCode", errorCode, "errorMessage", errorMessage);
+
+        // consitions
+        if (errorCode == "auth/email-already-in-use") {
+          triggerWarningAlertModal("G-Account Exists");
+        }
+      });
+    await navigate("/login");
+  };
   const handleStartFreeTrial = async () => {
+    // const email = location.state.email;
+    // const password = location.state.password;
     try {
       const uuid = uuidv4();
       if (roleSelected === "") {
@@ -189,408 +228,463 @@ const ConfirmDetails = () => {
                 givenDate.year() -
                 (hasBirthdayOccurred ? 0 : 1);
               var currentAge = Math.round(ageDifference);
+              // trigger handleGoogleLogin
+              // await handleGoogleLogin(auth, email, password);
+              // // Set the document in the database
+              alert("triggered");
+              // invoke google createUserWithEmailAndPassword method
+              await createUserWithEmailAndPassword(auth, email, password)
+                .then(async (userCredential) => {
+                  const user = userCredential.user;
+                  // save credentials
+                  dispatch(setCredentials(user.uid));
+                  // set login status to true
+                  dispatch(setLoginStatus(true));
 
-              // Set the document in the database
-              await setDoc(doc(db, `players_database`, uuid), {
-                id: uuid,
-                Account_creator_id: uuid,
-                player_profile_image: "",
-                firstName: userData?.firstName,
-                surName: userData?.surname,
-                CountryCode: userData?.CountryCode,
-                Nationality: userData?.Nationality,
-                dateCreated: serverTimestamp(),
-                Age: currentAge,
-                position: userData?.PlayerPosition,
-                date_of_birth: userData?.DateOfBirth,
-                jerseyNumber: "",
-                clubName: "Free agent",
-                preferredFoot: userData?.preferredFoot,
-                height: userData?.height,
-                marketValue: "",
-                contractStartDate: "",
-                contractEndDate: "",
-                Social_media: [
-                  {
-                    Facebook: `https://web.facebook.com/`,
-                    Instagram: `https://www.instagram.com//`,
-                  },
-                ],
-                current_health: "Match Fit",
-                videos: [],
-                Achievements: [],
-                Market_Value_History: [],
-                Club_History: [],
-                Statistics: [
-                  {
-                    Season: "Overall",
-                    General: {
-                      Games_Played: 0,
-                      Minutes_Played: 0,
-                      Starts: 0,
-                      Subbed_off: 0,
-                    },
-                    Defence: {
-                      Clearance: 0,
-                      Tackles: 0,
-                      Duels: 0,
-                      Aeriel_duels: 0,
-                      Blocks: 0,
-                      Interceptions: 0,
-                    },
-                    Attack: {
-                      Total_shots: 0,
-                      Shots_on_target: 0,
-                      Goals_Scored: 0,
-                      Conversion_rate: 0,
-                      Minutes_per_goal: 0,
-                      Header_goals: 0,
-                      Left_goals: 0,
-                      Right_goals: 0,
-                      Other_goals: 0,
-                      Goals_outside_the_box: 0,
-                      Goals_inside_the_box: 0,
-                      Goals_from_freekicks: 0,
-                    },
-                    Discipline: {
-                      Fouls_conceeded: 0,
-                      Fouls_won: 0,
-                      Yellow_cards: 0,
-                      Red_cards: 0,
-                    },
-                    Distribution: {
-                      Assists: 0,
-                      Pass_success_rate: 0,
-                      Long_passes_rate: 0,
-                      Opponent_half_pass_accuracy: 0,
-                      Own_half_pass_accuracy: 0,
-                      Pass_direction_forward_percent: 0,
-                      Pass_direction_backward_percent: 0,
-                      Pass_direction_left_percent: 0,
-                      Pass_direction_right_percent: 0,
-                      Total_passes: 0,
-                      Successful_passes: 0,
-                      Key_passes: 0,
-                      Total_passes_per_90_mins: 0,
-                    },
-                  },
-                  {
-                    Season: "23/24",
-                    General: {
-                      Games_Played: 0,
-                      Minutes_Played: 0,
-                      Starts: 0,
-                      Subbed_off: 0,
-                    },
-                    Defence: {
-                      Clearance: 0,
-                      Tackles: 0,
-                      Duels: 0,
-                      Aeriel_duels: 0,
-                      Blocks: 0,
-                      Interceptions: 0,
-                    },
-                    Attack: {
-                      Total_shots: 0,
-                      Shots_on_target: 0,
-                      Goals_Scored: 0,
-                      Conversion_rate: 0,
-                      Minutes_per_goal: 0,
-                      Header_goals: 0,
-                      Left_goals: 0,
-                      Right_goals: 0,
-                      Other_goals: 0,
-                      Goals_outside_the_box: 0,
-                      Goals_inside_the_box: 0,
-                      Goals_from_freekicks: 0,
-                    },
-                    Discipline: {
-                      Fouls_conceeded: 0,
-                      Fouls_won: 0,
-                      Yellow_cards: 0,
-                      Red_cards: 0,
-                    },
-                    Distribution: {
-                      Assists: 0,
-                      Pass_success_rate: 0,
-                      Long_passes_rate: 0,
-                      Opponent_half_pass_accuracy: 0,
-                      Own_half_pass_accuracy: 0,
-                      Pass_direction_forward_percent: 0,
-                      Pass_direction_backward_percent: 0,
-                      Pass_direction_left_percent: 0,
-                      Pass_direction_right_percent: 0,
-                      Total_passes: 0,
-                      Successful_passes: 0,
-                      Key_passes: 0,
-                      Total_passes_per_90_mins: 0,
-                    },
-                  },
-                  {
-                    Season: "22/23",
-                    General: {
-                      Games_Played: 0,
-                      Minutes_Played: 0,
-                      Starts: 0,
-                      Subbed_off: 0,
-                    },
-                    Defence: {
-                      Clearance: 0,
-                      Tackles: 0,
-                      Duels: 0,
-                      Aeriel_duels: 0,
-                      Blocks: 0,
-                      Interceptions: 0,
-                    },
-                    Attack: {
-                      Total_shots: 0,
-                      Shots_on_target: 0,
-                      Goals_Scored: 0,
-                      Conversion_rate: 0,
-                      Minutes_per_goal: 0,
-                      Header_goals: 0,
-                      Left_goals: 0,
-                      Right_goals: 0,
-                      Other_goals: 0,
-                      Goals_outside_the_box: 0,
-                      Goals_inside_the_box: 0,
-                      Goals_from_freekicks: 0,
-                    },
-                    Discipline: {
-                      Fouls_conceeded: 0,
-                      Fouls_won: 0,
-                      Yellow_cards: 0,
-                      Red_cards: 0,
-                    },
-                    Distribution: {
-                      Assists: 0,
-                      Pass_success_rate: 0,
-                      Long_passes_rate: 0,
-                      Opponent_half_pass_accuracy: 0,
-                      Own_half_pass_accuracy: 0,
-                      Pass_direction_forward_percent: 0,
-                      Pass_direction_backward_percent: 0,
-                      Pass_direction_left_percent: 0,
-                      Pass_direction_right_percent: 0,
-                      Total_passes: 0,
-                      Successful_passes: 0,
-                      Key_passes: 0,
-                      Total_passes_per_90_mins: 0,
-                    },
-                  },
-                  {
-                    Season: "21/22",
-                    General: {
-                      Games_Played: 0,
-                      Minutes_Played: 0,
-                      Starts: 0,
-                      Subbed_off: 0,
-                    },
-                    Defence: {
-                      Clearance: 0,
-                      Tackles: 0,
-                      Duels: 0,
-                      Aeriel_duels: 0,
-                      Blocks: 0,
-                      Interceptions: 0,
-                    },
-                    Attack: {
-                      Total_shots: 0,
-                      Shots_on_target: 0,
-                      Goals_Scored: 0,
-                      Conversion_rate: 0,
-                      Minutes_per_goal: 0,
-                      Header_goals: 0,
-                      Left_goals: 0,
-                      Right_goals: 0,
-                      Other_goals: 0,
-                      Goals_outside_the_box: 0,
-                      Goals_inside_the_box: 0,
-                      Goals_from_freekicks: 0,
-                    },
-                    Discipline: {
-                      Fouls_conceeded: 0,
-                      Fouls_won: 0,
-                      Yellow_cards: 0,
-                      Red_cards: 0,
-                    },
-                    Distribution: {
-                      Assists: 0,
-                      Pass_success_rate: 0,
-                      Long_passes_rate: 0,
-                      Opponent_half_pass_accuracy: 0,
-                      Own_half_pass_accuracy: 0,
-                      Pass_direction_forward_percent: 0,
-                      Pass_direction_backward_percent: 0,
-                      Pass_direction_left_percent: 0,
-                      Pass_direction_right_percent: 0,
-                      Total_passes: 0,
-                      Successful_passes: 0,
-                      Key_passes: 0,
-                      Total_passes_per_90_mins: 0,
-                    },
-                  },
-                  {
-                    Season: "20/21",
-                    General: {
-                      Games_Played: 0,
-                      Minutes_Played: 0,
-                      Starts: 0,
-                      Subbed_off: 0,
-                    },
-                    Defence: {
-                      Clearance: 0,
-                      Tackles: 0,
-                      Duels: 0,
-                      Aeriel_duels: 0,
-                      Blocks: 0,
-                      Interceptions: 0,
-                    },
-                    Attack: {
-                      Total_shots: 0,
-                      Shots_on_target: 0,
-                      Goals_Scored: 0,
-                      Conversion_rate: 0,
-                      Minutes_per_goal: 0,
-                      Header_goals: 0,
-                      Left_goals: 0,
-                      Right_goals: 0,
-                      Other_goals: 0,
-                      Goals_outside_the_box: 0,
-                      Goals_inside_the_box: 0,
-                      Goals_from_freekicks: 0,
-                    },
-                    Discipline: {
-                      Fouls_conceeded: 0,
-                      Fouls_won: 0,
-                      Yellow_cards: 0,
-                      Red_cards: 0,
-                    },
-                    Distribution: {
-                      Assists: 0,
-                      Pass_success_rate: 0,
-                      Long_passes_rate: 0,
-                      Opponent_half_pass_accuracy: 0,
-                      Own_half_pass_accuracy: 0,
-                      Pass_direction_forward_percent: 0,
-                      Pass_direction_backward_percent: 0,
-                      Pass_direction_left_percent: 0,
-                      Pass_direction_right_percent: 0,
-                      Total_passes: 0,
-                      Successful_passes: 0,
-                      Key_passes: 0,
-                      Total_passes_per_90_mins: 0,
-                    },
-                  },
-                  {
-                    Season: "19/20",
-                    General: {
-                      Games_Played: 0,
-                      Minutes_Played: 0,
-                      Starts: 0,
-                      Subbed_off: 0,
-                    },
-                    Defence: {
-                      Clearance: 0,
-                      Tackles: 0,
-                      Duels: 0,
-                      Aeriel_duels: 0,
-                      Blocks: 0,
-                      Interceptions: 0,
-                    },
-                    Attack: {
-                      Total_shots: 0,
-                      Shots_on_target: 0,
-                      Goals_Scored: 0,
-                      Conversion_rate: 0,
-                      Minutes_per_goal: 0,
-                      Header_goals: 0,
-                      Left_goals: 0,
-                      Right_goals: 0,
-                      Other_goals: 0,
-                      Goals_outside_the_box: 0,
-                      Goals_inside_the_box: 0,
-                      Goals_from_freekicks: 0,
-                    },
-                    Discipline: {
-                      Fouls_conceeded: 0,
-                      Fouls_won: 0,
-                      Yellow_cards: 0,
-                      Red_cards: 0,
-                    },
-                    Distribution: {
-                      Assists: 0,
-                      Pass_success_rate: 0,
-                      Long_passes_rate: 0,
-                      Opponent_half_pass_accuracy: 0,
-                      Own_half_pass_accuracy: 0,
-                      Pass_direction_forward_percent: 0,
-                      Pass_direction_backward_percent: 0,
-                      Pass_direction_left_percent: 0,
-                      Pass_direction_right_percent: 0,
-                      Total_passes: 0,
-                      Successful_passes: 0,
-                      Key_passes: 0,
-                      Total_passes_per_90_mins: 0,
-                    },
-                  },
-                ],
-              });
-              // alert("pdb");
-              await setDoc(doc(db, `users_db`, uuid), {
-                ...userData,
-                role: roleSelected,
-                dateCreated: serverTimestamp(),
-                accountId: uuid,
-              });
-              await navigate("/login");
-              dispatch(setCompletedSteps({}));
-              dispatch(setRoleSelected(""));
-              dispatch(
-                setUserSignUpData({
-                  firstname: "",
-                  surname: "",
-                  DateOfBirth: "",
-                  organization: "",
-                  phoneNumber: "",
-                  email: "",
-                  Nationality: "",
-                  DOB: "",
-                  password: "",
-                  subscriptionPackage: "",
-                  paymentType: "",
-                  paymentDetails: {},
+                  await setDoc(doc(db, `players_database`, user.uid), {
+                    id: uuid,
+                    Account_creator_id: uuid,
+                    player_profile_image: "",
+                    firstName: userData?.firstName,
+                    surName: userData?.surname,
+                    CountryCode: userData?.CountryCode,
+                    Nationality: userData?.Nationality,
+                    dateCreated: serverTimestamp(),
+                    Age: currentAge,
+                    position: userData?.PlayerPosition,
+                    date_of_birth: userData?.DateOfBirth,
+                    jerseyNumber: "",
+                    clubName: "Free agent",
+                    preferredFoot: userData?.preferredFoot,
+                    height: userData?.height,
+                    marketValue: "",
+                    contractStartDate: "",
+                    contractEndDate: "",
+                    Social_media: [
+                      {
+                        Facebook: `https://web.facebook.com/`,
+                        Instagram: `https://www.instagram.com//`,
+                      },
+                    ],
+                    current_health: "Match Fit",
+                    videos: [],
+                    Achievements: [],
+                    Market_Value_History: [],
+                    Club_History: [],
+                    Statistics: [
+                      {
+                        Season: "Overall",
+                        General: {
+                          Games_Played: 0,
+                          Minutes_Played: 0,
+                          Starts: 0,
+                          Subbed_off: 0,
+                        },
+                        Defence: {
+                          Clearance: 0,
+                          Tackles: 0,
+                          Duels: 0,
+                          Aeriel_duels: 0,
+                          Blocks: 0,
+                          Interceptions: 0,
+                        },
+                        Attack: {
+                          Total_shots: 0,
+                          Shots_on_target: 0,
+                          Goals_Scored: 0,
+                          Conversion_rate: 0,
+                          Minutes_per_goal: 0,
+                          Header_goals: 0,
+                          Left_goals: 0,
+                          Right_goals: 0,
+                          Other_goals: 0,
+                          Goals_outside_the_box: 0,
+                          Goals_inside_the_box: 0,
+                          Goals_from_freekicks: 0,
+                        },
+                        Discipline: {
+                          Fouls_conceeded: 0,
+                          Fouls_won: 0,
+                          Yellow_cards: 0,
+                          Red_cards: 0,
+                        },
+                        Distribution: {
+                          Assists: 0,
+                          Pass_success_rate: 0,
+                          Long_passes_rate: 0,
+                          Opponent_half_pass_accuracy: 0,
+                          Own_half_pass_accuracy: 0,
+                          Pass_direction_forward_percent: 0,
+                          Pass_direction_backward_percent: 0,
+                          Pass_direction_left_percent: 0,
+                          Pass_direction_right_percent: 0,
+                          Total_passes: 0,
+                          Successful_passes: 0,
+                          Key_passes: 0,
+                          Total_passes_per_90_mins: 0,
+                        },
+                      },
+                      {
+                        Season: "23/24",
+                        General: {
+                          Games_Played: 0,
+                          Minutes_Played: 0,
+                          Starts: 0,
+                          Subbed_off: 0,
+                        },
+                        Defence: {
+                          Clearance: 0,
+                          Tackles: 0,
+                          Duels: 0,
+                          Aeriel_duels: 0,
+                          Blocks: 0,
+                          Interceptions: 0,
+                        },
+                        Attack: {
+                          Total_shots: 0,
+                          Shots_on_target: 0,
+                          Goals_Scored: 0,
+                          Conversion_rate: 0,
+                          Minutes_per_goal: 0,
+                          Header_goals: 0,
+                          Left_goals: 0,
+                          Right_goals: 0,
+                          Other_goals: 0,
+                          Goals_outside_the_box: 0,
+                          Goals_inside_the_box: 0,
+                          Goals_from_freekicks: 0,
+                        },
+                        Discipline: {
+                          Fouls_conceeded: 0,
+                          Fouls_won: 0,
+                          Yellow_cards: 0,
+                          Red_cards: 0,
+                        },
+                        Distribution: {
+                          Assists: 0,
+                          Pass_success_rate: 0,
+                          Long_passes_rate: 0,
+                          Opponent_half_pass_accuracy: 0,
+                          Own_half_pass_accuracy: 0,
+                          Pass_direction_forward_percent: 0,
+                          Pass_direction_backward_percent: 0,
+                          Pass_direction_left_percent: 0,
+                          Pass_direction_right_percent: 0,
+                          Total_passes: 0,
+                          Successful_passes: 0,
+                          Key_passes: 0,
+                          Total_passes_per_90_mins: 0,
+                        },
+                      },
+                      {
+                        Season: "22/23",
+                        General: {
+                          Games_Played: 0,
+                          Minutes_Played: 0,
+                          Starts: 0,
+                          Subbed_off: 0,
+                        },
+                        Defence: {
+                          Clearance: 0,
+                          Tackles: 0,
+                          Duels: 0,
+                          Aeriel_duels: 0,
+                          Blocks: 0,
+                          Interceptions: 0,
+                        },
+                        Attack: {
+                          Total_shots: 0,
+                          Shots_on_target: 0,
+                          Goals_Scored: 0,
+                          Conversion_rate: 0,
+                          Minutes_per_goal: 0,
+                          Header_goals: 0,
+                          Left_goals: 0,
+                          Right_goals: 0,
+                          Other_goals: 0,
+                          Goals_outside_the_box: 0,
+                          Goals_inside_the_box: 0,
+                          Goals_from_freekicks: 0,
+                        },
+                        Discipline: {
+                          Fouls_conceeded: 0,
+                          Fouls_won: 0,
+                          Yellow_cards: 0,
+                          Red_cards: 0,
+                        },
+                        Distribution: {
+                          Assists: 0,
+                          Pass_success_rate: 0,
+                          Long_passes_rate: 0,
+                          Opponent_half_pass_accuracy: 0,
+                          Own_half_pass_accuracy: 0,
+                          Pass_direction_forward_percent: 0,
+                          Pass_direction_backward_percent: 0,
+                          Pass_direction_left_percent: 0,
+                          Pass_direction_right_percent: 0,
+                          Total_passes: 0,
+                          Successful_passes: 0,
+                          Key_passes: 0,
+                          Total_passes_per_90_mins: 0,
+                        },
+                      },
+                      {
+                        Season: "21/22",
+                        General: {
+                          Games_Played: 0,
+                          Minutes_Played: 0,
+                          Starts: 0,
+                          Subbed_off: 0,
+                        },
+                        Defence: {
+                          Clearance: 0,
+                          Tackles: 0,
+                          Duels: 0,
+                          Aeriel_duels: 0,
+                          Blocks: 0,
+                          Interceptions: 0,
+                        },
+                        Attack: {
+                          Total_shots: 0,
+                          Shots_on_target: 0,
+                          Goals_Scored: 0,
+                          Conversion_rate: 0,
+                          Minutes_per_goal: 0,
+                          Header_goals: 0,
+                          Left_goals: 0,
+                          Right_goals: 0,
+                          Other_goals: 0,
+                          Goals_outside_the_box: 0,
+                          Goals_inside_the_box: 0,
+                          Goals_from_freekicks: 0,
+                        },
+                        Discipline: {
+                          Fouls_conceeded: 0,
+                          Fouls_won: 0,
+                          Yellow_cards: 0,
+                          Red_cards: 0,
+                        },
+                        Distribution: {
+                          Assists: 0,
+                          Pass_success_rate: 0,
+                          Long_passes_rate: 0,
+                          Opponent_half_pass_accuracy: 0,
+                          Own_half_pass_accuracy: 0,
+                          Pass_direction_forward_percent: 0,
+                          Pass_direction_backward_percent: 0,
+                          Pass_direction_left_percent: 0,
+                          Pass_direction_right_percent: 0,
+                          Total_passes: 0,
+                          Successful_passes: 0,
+                          Key_passes: 0,
+                          Total_passes_per_90_mins: 0,
+                        },
+                      },
+                      {
+                        Season: "20/21",
+                        General: {
+                          Games_Played: 0,
+                          Minutes_Played: 0,
+                          Starts: 0,
+                          Subbed_off: 0,
+                        },
+                        Defence: {
+                          Clearance: 0,
+                          Tackles: 0,
+                          Duels: 0,
+                          Aeriel_duels: 0,
+                          Blocks: 0,
+                          Interceptions: 0,
+                        },
+                        Attack: {
+                          Total_shots: 0,
+                          Shots_on_target: 0,
+                          Goals_Scored: 0,
+                          Conversion_rate: 0,
+                          Minutes_per_goal: 0,
+                          Header_goals: 0,
+                          Left_goals: 0,
+                          Right_goals: 0,
+                          Other_goals: 0,
+                          Goals_outside_the_box: 0,
+                          Goals_inside_the_box: 0,
+                          Goals_from_freekicks: 0,
+                        },
+                        Discipline: {
+                          Fouls_conceeded: 0,
+                          Fouls_won: 0,
+                          Yellow_cards: 0,
+                          Red_cards: 0,
+                        },
+                        Distribution: {
+                          Assists: 0,
+                          Pass_success_rate: 0,
+                          Long_passes_rate: 0,
+                          Opponent_half_pass_accuracy: 0,
+                          Own_half_pass_accuracy: 0,
+                          Pass_direction_forward_percent: 0,
+                          Pass_direction_backward_percent: 0,
+                          Pass_direction_left_percent: 0,
+                          Pass_direction_right_percent: 0,
+                          Total_passes: 0,
+                          Successful_passes: 0,
+                          Key_passes: 0,
+                          Total_passes_per_90_mins: 0,
+                        },
+                      },
+                      {
+                        Season: "19/20",
+                        General: {
+                          Games_Played: 0,
+                          Minutes_Played: 0,
+                          Starts: 0,
+                          Subbed_off: 0,
+                        },
+                        Defence: {
+                          Clearance: 0,
+                          Tackles: 0,
+                          Duels: 0,
+                          Aeriel_duels: 0,
+                          Blocks: 0,
+                          Interceptions: 0,
+                        },
+                        Attack: {
+                          Total_shots: 0,
+                          Shots_on_target: 0,
+                          Goals_Scored: 0,
+                          Conversion_rate: 0,
+                          Minutes_per_goal: 0,
+                          Header_goals: 0,
+                          Left_goals: 0,
+                          Right_goals: 0,
+                          Other_goals: 0,
+                          Goals_outside_the_box: 0,
+                          Goals_inside_the_box: 0,
+                          Goals_from_freekicks: 0,
+                        },
+                        Discipline: {
+                          Fouls_conceeded: 0,
+                          Fouls_won: 0,
+                          Yellow_cards: 0,
+                          Red_cards: 0,
+                        },
+                        Distribution: {
+                          Assists: 0,
+                          Pass_success_rate: 0,
+                          Long_passes_rate: 0,
+                          Opponent_half_pass_accuracy: 0,
+                          Own_half_pass_accuracy: 0,
+                          Pass_direction_forward_percent: 0,
+                          Pass_direction_backward_percent: 0,
+                          Pass_direction_left_percent: 0,
+                          Pass_direction_right_percent: 0,
+                          Total_passes: 0,
+                          Successful_passes: 0,
+                          Key_passes: 0,
+                          Total_passes_per_90_mins: 0,
+                        },
+                      },
+                    ],
+                  });
+                  // alert("pdb");
+                  await setDoc(doc(db, `users_db`, user.uid), {
+                    ...userData,
+                    role: roleSelected,
+                    dateCreated: serverTimestamp(),
+                    accountId: user.uid,
+                  });
+
+                  dispatch(setCompletedSteps({}));
+                  dispatch(setRoleSelected(""));
+                  dispatch(
+                    setUserSignUpData({
+                      firstname: "",
+                      surname: "",
+                      DateOfBirth: "",
+                      organization: "",
+                      phoneNumber: "",
+                      email: "",
+                      Nationality: "",
+                      DOB: "",
+                      password: "",
+                      subscriptionPackage: "",
+                      paymentType: "",
+                      paymentDetails: {},
+                    })
+                  );
+
+                  await navigate("/login");
                 })
-              );
+                .catch((error) => {
+                  const errorCode = error.code;
+                  const errorMessage = error.message;
+                  console.log(
+                    "errorCode",
+                    errorCode,
+                    "errorMessage",
+                    errorMessage
+                  );
+
+                  // consitions
+                  if (errorCode == "auth/email-already-in-use") {
+                    triggerWarningAlertModal("G-Account Exists");
+                  }
+                });
             }
           } else {
-            setDoc(doc(db, `users_db`, uuid), {
-              ...userData,
-              role: roleSelected,
-              dateCreated: serverTimestamp(),
-              accountId: uuid,
-            });
-            alert("Other Accs");
-            await navigate("/login");
+            // invoke google createUserWithEmailAndPassword method
+            await createUserWithEmailAndPassword(auth, email, password)
+              .then(async (userCredential) => {
+                const user = userCredential.user;
+                // save credentials
+                dispatch(setCredentials(user.uid));
+                alert(user.uid);
+                // set login status to true
+                dispatch(setLoginStatus(true));
 
-            dispatch(setCompletedSteps({}));
-            dispatch(setRoleSelected(""));
-            dispatch(
-              setUserSignUpData({
-                firstname: "",
-                surname: "",
-                DateOfBirth: "",
-                organization: "",
-                phoneNumber: "",
-                email: "",
-                Nationality: "",
-                DOB: "",
-                password: "",
-                subscriptionPackage: "",
-                paymentType: "",
-                paymentDetails: {},
+                await setDoc(doc(db, `users_db`, user.uid), {
+                  ...userData,
+                  role: roleSelected,
+                  dateCreated: serverTimestamp(),
+                  accountId: user.uid,
+                });
+                alert("Other Accs");
+
+                dispatch(setCompletedSteps({}));
+                dispatch(setRoleSelected(""));
+                dispatch(
+                  setUserSignUpData({
+                    firstname: "",
+                    surname: "",
+                    DateOfBirth: "",
+                    organization: "",
+                    phoneNumber: "",
+                    email: "",
+                    Nationality: "",
+                    DOB: "",
+                    password: "",
+                    subscriptionPackage: "",
+                    paymentType: "",
+                    paymentDetails: {},
+                  })
+                );
+                await navigate("/login");
               })
-            );
+              .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(
+                  "errorCode",
+                  errorCode,
+                  "errorMessage",
+                  errorMessage
+                );
+
+                // consitions
+                if (errorCode == "auth/email-already-in-use") {
+                  triggerWarningAlertModal("G-Account Exists");
+                }
+              });
           }
         }
         // } else {
@@ -619,8 +713,7 @@ const ConfirmDetails = () => {
         // display: "flex",
         padding: "0px 6vw",
         overflowY: "scroll",
-      }}
-    >
+      }}>
       {/*MEMEBERSHIP PLAN HEADER and USER DETAILS SUMMARY */}
 
       <div
@@ -630,16 +723,14 @@ const ConfirmDetails = () => {
           // background: "yellow",
           display: "flex",
           flexDirection: "column",
-        }}
-      >
+        }}>
         {/* MEMBERSHIP PLAN HEADER CARD */}
         <div
           style={{
             flex: "0.3",
             display: "flex",
             paddingLeft: "0%",
-          }}
-        >
+          }}>
           {/* IMAGE AREA */}
           <div
             style={{
@@ -648,8 +739,7 @@ const ConfirmDetails = () => {
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
-            }}
-          >
+            }}>
             {/* 
 
  */}
@@ -676,14 +766,12 @@ const ConfirmDetails = () => {
               display: "flex",
               // justifyContent: "flex-start",
               alignItems: "center",
-            }}
-          >
+            }}>
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <div>
                 <h5 style={{ fontWeight: "bold" }}>
                   Start your free trial for 30 <br /> days
@@ -695,8 +783,7 @@ const ConfirmDetails = () => {
                     style={{ color: "#5585FE", cursor: "pointer" }}
                     onClick={() => {
                       navigate("/create-account/freetrial");
-                    }}
-                  >
+                    }}>
                     change your membership
                   </span>
                 </small>
@@ -713,8 +800,7 @@ const ConfirmDetails = () => {
             padding: "1vh 3vw",
             // background: "green",
             // display: "flex",
-          }}
-        >
+          }}>
           {/* // PADDING CONTAINER */}
           <div style={{ flex: ".6", paddingLeft: "8vw" }}>
             <h5 style={{ marginTop: "1vh" }}>
@@ -727,8 +813,7 @@ const ConfirmDetails = () => {
                 }}
                 onClick={() => {
                   navigate("/create-account/user-form");
-                }}
-              >
+                }}>
                 &nbsp; edit
               </span>{" "}
             </h5>
@@ -742,8 +827,7 @@ const ConfirmDetails = () => {
                     listStyleType: "disc",
                     color: "#9FA4B1",
                     fontWeight: "bolder",
-                  }}
-                >
+                  }}>
                   <li>
                     First name:{" "}
                     <span style={{ color: "black" }}> {firstName} </span>{" "}
@@ -798,8 +882,7 @@ const ConfirmDetails = () => {
                     listStyleType: "disc",
                     color: "#9FA4B1",
                     fontWeight: "bolder",
-                  }}
-                >
+                  }}>
                   <li>
                     First name:{" "}
                     <span style={{ color: "black" }}> {firstName} </span>{" "}
@@ -895,8 +978,7 @@ const ConfirmDetails = () => {
             // height: "68%",
             padding: ".5vw",
             marginTop: "3vh",
-          }}
-        >
+          }}>
           <h6 style={{ fontWeight: "bolder" }}>Package Summary</h6>
 
           <ul style={{ width: "90%", fontSize: ".8em" }}>
@@ -950,8 +1032,7 @@ const ConfirmDetails = () => {
           <div onClick={handleStartFreeTrial}>
             <BasicButton
               style={{ width: "90%", marginLeft: "5%" }}
-              innerText="Start Trial"
-            ></BasicButton>
+              innerText="Start Trial"></BasicButton>
           </div>
           <span
             style={{
@@ -961,8 +1042,7 @@ const ConfirmDetails = () => {
               alignItems: "center",
               justifyContent: "center",
               textAlign: "center",
-            }}
-          >
+            }}>
             {" "}
             You will be automatically charged or prompted to pay on{" "}
             {oneMonthLater.format("MMMM Do YYYY, h:mm a")} after trial end{" "}

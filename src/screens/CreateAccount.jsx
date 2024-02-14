@@ -59,8 +59,9 @@ const CreateAccount = () => {
 
   const dispatch = useDispatch();
 
-  const handleTrialNavigation = () => {
-    navigate("/create-account/confirm-details");
+  const handleTrialNavigation = async (email, password) => {
+    // await console.log(email, password);
+    await navigate("/create-account/confirm-details");
   };
 
   const completedStepsObject = useSelector(selectCompleteSteps);
@@ -99,9 +100,11 @@ const CreateAccount = () => {
     dispatch(setWarningAlertModalCounter());
   };
 
-  const onSubmit = (formData, e) => {
+  const onSubmit = async (formData, e) => {
     e.preventDefault();
     console.log(formData);
+
+    // declare email amd password to be passed to create-account page
     const {
       firstName,
       surname,
@@ -190,7 +193,7 @@ const CreateAccount = () => {
         setHeight("");
         setPlayerPosition("");
         setPreferredFoot("");
-        handleTrialNavigation();
+        handleTrialNavigation(email, password);
         handleStepsCompleted();
       }
     } else {
@@ -207,7 +210,7 @@ const CreateAccount = () => {
         setNationality("");
         setDOB("");
         setPhoneNumber("");
-        handleTrialNavigation();
+        handleTrialNavigation(email, password);
         handleStepsCompleted();
       }
     }
@@ -239,8 +242,7 @@ const CreateAccount = () => {
         // background: "red",
         display: "flex",
         flexDirection: "column",
-      }}
-    >
+      }}>
       {/* CREATE NEW ACCOUNT */}
       <div
         className="accountHeader"
@@ -249,8 +251,7 @@ const CreateAccount = () => {
           // background: "red",
           display: "flex",
           flexDirection: "column",
-        }}
-      >
+        }}>
         <div
           style={{
             flex: "0.5",
@@ -259,8 +260,7 @@ const CreateAccount = () => {
             justifyContent: "center",
             gap: "10px",
             alignItems: "center",
-          }}
-        >
+          }}>
           <img src={logoImage} style={{ width: "100px" }} />
           <h2>Create new account</h2>
         </div>
@@ -286,13 +286,11 @@ const CreateAccount = () => {
           alignItems: "center",
           paddingLeft: "5%",
           // paddingTop: "25vh", sm
-        }}
-      >
+        }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div
             className="md:flex md:flex-row      sm:flex sm:flex-col"
-            style={{ gap: "2vw", marginBottom: "1.5vh" }}
-          >
+            style={{ gap: "2vw", marginBottom: "1.5vh" }}>
             <div>
               <TextField
                 className="md:w-[15vw] sm:w-[80vw]"
@@ -349,8 +347,7 @@ const CreateAccount = () => {
           {/* EMAIL AND PHONE NUMBER */}
           <div
             className="md:flex md:flex-row      sm:flex sm:flex-col"
-            style={{ gap: "2vw", marginBottom: "1.5vh" }}
-          >
+            style={{ gap: "2vw", marginBottom: "1.5vh" }}>
             <div>
               <TextField
                 className="md:w-[15vw] sm:w-[80vw]"
@@ -415,8 +412,7 @@ const CreateAccount = () => {
           {/*ORGANIZATION/CLUB NAME AND PASSWORDS*/}
           <div
             className="md:flex md:flex-row      sm:flex sm:flex-col"
-            style={{ gap: "2vw", marginBottom: "1vh" }}
-          >
+            style={{ gap: "2vw", marginBottom: "1vh" }}>
             {roleSelected === "Club" ? (
               <ClubAutoComplete
                 ListArray={clubsInDatabase}
@@ -507,8 +503,7 @@ const CreateAccount = () => {
                 // alignItems: "center",
                 // justifyContent: "center",
                 paddingRight: "13%",
-              }}
-            >
+              }}>
               <div>
                 <BasicSelect
                   inputStyle={{ width: browserWidth >= 1024 ? "15vw" : "80vw" }}
@@ -567,8 +562,7 @@ const CreateAccount = () => {
               marginTop: "1vh",
 
               // color: buttonColor,
-            }}
-          >
+            }}>
             Create Account
           </Button>
           <div className="md:hidden sm:h-[3vh] "></div>
