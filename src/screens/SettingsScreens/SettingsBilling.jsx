@@ -1,8 +1,43 @@
 import { Button, Card, Divider, Paper } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FilteredPlayersTable from "../../components/Tables/FilterPlayersTable";
+import { db } from "../../Firebase/Firebase";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 
 function SettingsBilling() {
+  // useState
+  useEffect(() => {
+    const activeProductsQuery = query(
+      collection(db, "products"),
+      where("active", "==", true)
+    );
+
+    onSnapshot(activeProductsQuery, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        const { doc } = change;
+        console.log(
+          `Product ${doc.id} ${change.type === "added" ? "added" : "changed"}:`,
+          doc.data()
+        );
+
+        // Fetch and log prices only for added or modified products
+        if (change.type === "added" || change.type === "modified") {
+          onSnapshot(doc.ref.collection("prices"), (priceSnapshot) => {
+            priceSnapshot.docChanges().forEach((priceChange) => {
+              const { doc } = priceChange;
+              console.log(
+                `Price ${
+                  priceChange.type === "added" ? "added" : "changed"
+                } for product ${doc.ref.parent.id}:`,
+                doc.data()
+              );
+            });
+          });
+        }
+      });
+    });
+  }, []);
+
   return (
     <div
       className="md:flex md:flex-col md:w-[100%] md:h-[82vh]   sm:flex sm:flex-col sm:w-[100%] sm:h-[82vh]  primaryTextColor"
@@ -14,8 +49,7 @@ function SettingsBilling() {
           // flexDirection: "column",
           // overflowY: "scroll",
         }
-      }
-    >
+      }>
       {/* Header Column */}
       <div style={{ flex: "0.01" }}>
         <h5>Billing</h5>
@@ -36,12 +70,10 @@ function SettingsBilling() {
             flexDirection: "row",
             marginBottom: "5vh",
             gap: "5em",
-          }}
-        >
+          }}>
           <Paper
             className="cardBackground primaryTextColor md:w-[30vw] md:h-[90%] md:flex md:flex-col sm:pt-[20px]   sm:w-[90vw] sm:h-[15vh] sm:flex sm:flex-col"
-            style={{ padding: "10px 20px" }}
-          >
+            style={{ padding: "10px 20px" }}>
             <div
               style={{
                 flex: ".3",
@@ -50,8 +82,7 @@ function SettingsBilling() {
                 flexDirection: "row",
                 // alignItems: "center",
                 // justifyContent: "space-between",
-              }}
-            >
+              }}>
               <div className="padding" style={{ flex: ".7" }}>
                 {/* <ul
                   className="primaryTextColor"
@@ -89,8 +120,7 @@ function SettingsBilling() {
             marginBottom: "3vh",
             display: "flex",
             flexDirection: "row",
-          }}
-        >
+          }}>
           <div style={{ flex: ".7" }}>
             <div style={{ padding: "10px 20px" }}>
               <h4>Payment method</h4>
@@ -106,8 +136,7 @@ function SettingsBilling() {
                   // padding: "10px",
                 }}
                 size="small"
-                variant="outlined"
-              >
+                variant="outlined">
                 change payment method
               </Button>
             </div>
@@ -119,8 +148,7 @@ function SettingsBilling() {
             // background: "brown",
             display: "flex",
             flexDirection: "row",
-          }}
-        >
+          }}>
           <div style={{ flex: ".7" }}>
             <div style={{ padding: "10px 20px" }}>
               <h4>Pause or cancel subscription</h4>
@@ -139,8 +167,7 @@ function SettingsBilling() {
                   // padding: "10px",
                 }}
                 size="small"
-                variant="outlined"
-              >
+                variant="outlined">
                 cancel Subscription
               </Button>
             </div>
