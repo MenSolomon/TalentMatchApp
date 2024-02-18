@@ -53,6 +53,7 @@ import ContactSupportModal from "./components/Modals/ContactSupportModal";
 import { selectUsersDatabase } from "./statemanager/slices/DatabaseSlice";
 import Favorites from "./screens/Favorites";
 import Settings from "./screens/Settings";
+import PlanItem from "./screens/PlanItem";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -343,6 +344,8 @@ const App = () => {
         {/* PROTECTED ROUTES  */}
 
         <Route element={<PrivateRoutes />}>
+          <Route path="/plans" element={<PlanItem />} />
+
           <Route path="/" element={<MotherComponent />}>
             <Route path="/favorite" element={<Favorites />} />
             <Route path="/help" element={<Error404 />} />
@@ -395,8 +398,7 @@ const App = () => {
           {/* COACH AGENT AND SCOUT VERSION */}
           <Route
             path="/multiStudio"
-            element={<CoachAgentScoutVersionMotherComponent />}
-          >
+            element={<CoachAgentScoutVersionMotherComponent />}>
             <Route path="/multiStudio/favorite" element={<Error404 />} />
             <Route path="/multiStudio/help" element={<Error404 />} />
             <Route path="/multiStudio/settings" element={<Settings />} />
@@ -439,6 +441,7 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
 
         <Route path="/membership-plans" element={<MembershipPlanPage />} />
+
         {/* <Route path="/spt" element={<Support />} />
         <Route path="/sptss" element={<SupportSettings />} /> */}
 
