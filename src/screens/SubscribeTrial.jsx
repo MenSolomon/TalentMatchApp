@@ -77,6 +77,42 @@ const SubscribeTrial = () => {
     fontSize: ".9em",
   };
 
+  // Get all products
+  const [products, setProducts] = useState([]);
+  const productIds = [
+    { id: "prod_PaUHk97wgtKo0H", name: "Club Premium Pack", role: "Club" },
+    { id: "prod_PaUHRN5h6D6QKA", name: "Club Starter Pack", role: "Club" },
+    { id: "prod_PaUF5OfYMdzFMf", name: "Player Starter Pack", role: "Player" },
+    { id: "prod_PaUE0WeQlZ2Cbl", name: "Player Premium Pack", role: "Player" },
+    { id: "prod_PaUDv3uRDwWYKc", name: "Scout Premium Pack", role: "Scout" },
+    { id: "prod_PaUClniIfnFCUO", name: "Scout Starter Pack", role: "Scout" },
+    { id: "prod_PaUCj9WT4b4zWI", name: "Coach Starter Pack", role: "Coach" },
+    { id: "prod_PaUB3JqrDbTutg", name: "Coach Premium Pack", role: "Coach" },
+    { id: "prod_PaUAvtceTmYGJV", name: "Agent Premium Pack", role: "Agent" },
+    { id: "prod_PaU961QtG9oT80", name: "Agent Premium Pack", role: "Agent" },
+  ];
+  useEffect(() => {
+    const FetchProducts = () => {
+      const q = query(collection(db, "products"), where("active", "==", true));
+      getDocs(q).then((querySnapshot) => {
+        querySnapshot.forEach(async (doc) => {
+          const allProducts = [];
+          allProducts.push(...allProducts, { id: doc.id, data: doc.data() });
+          // console.log(doc.id, " => ", doc.data());
+          console.log(allProducts);
+          setProducts(doc.data());
+
+          // getDocs(collection(doc.ref, "prices")).then((priceSnap) => {
+          //   priceSnap.forEach((priceDoc) => {
+          //     console.log(priceDoc.id, " => ", priceDoc.data());
+          //   });
+          // });
+        });
+      });
+    };
+    // FetchProducts()
+  }, []);
+
   return (
     <div
       className="md:w-[100%] md:flex-row md:h-[100%] md:flex   
@@ -90,8 +126,7 @@ const SubscribeTrial = () => {
         // gap: "5vw",
         paddingLeft: "4%",
         // flexDirection: "column",
-      }}
-    >
+      }}>
       <div
         className="md:flex md:justify-end md:basis-[55%]   sm:flex sm:justify-center sm:basis-[0.5] "
         style={{
@@ -100,8 +135,7 @@ const SubscribeTrial = () => {
           // display: "flex",
           // justifyContent: "flex-end",
           paddingRight: "10px",
-        }}
-      >
+        }}>
         {/* // LEFT PAPER  */}
 
         <div
@@ -115,14 +149,12 @@ const SubscribeTrial = () => {
               // display: "flex",
               // flexDirection: "column",
             }
-          }
-        >
+          }>
           <div
             style={{
               flex: "0.5",
               display: "flex",
-            }}
-          >
+            }}>
             <div
               style={{
                 flex: "0.3",
@@ -130,8 +162,7 @@ const SubscribeTrial = () => {
                 display: "flex",
                 justifyContent: "flex-end",
                 alignItems: "center",
-              }}
-            >
+              }}>
               {/* 
 
  */}
@@ -157,14 +188,12 @@ const SubscribeTrial = () => {
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                }}
-              >
+                }}>
                 <div>
                   <h5 style={{ fontWeight: "bold" }}>
                     Start your free trial for 30 <br /> days
@@ -176,8 +205,7 @@ const SubscribeTrial = () => {
                       style={{ color: "#5585FE", cursor: "pointer" }}
                       onClick={() => {
                         navigate("/create-account/freetrial");
-                      }}
-                    >
+                      }}>
                       change your membership
                     </span>
                   </small>
@@ -194,8 +222,7 @@ const SubscribeTrial = () => {
               flexDirection: "column",
               gap: "5px",
               // background: "red",
-            }}
-          >
+            }}>
             <FormControl>
               <FormLabel id="demo-radio-buttons-group-label">
                 {" "}
@@ -207,8 +234,7 @@ const SubscribeTrial = () => {
                 name="radio-buttons-group"
                 onChange={(e) => {
                   setPackage(e.target.value);
-                }}
-              >
+                }}>
                 <FormControlLabel
                   value="Starter Pack"
                   control={<Radio />}
@@ -216,8 +242,7 @@ const SubscribeTrial = () => {
                     <div style={{ width: "100%" }}>
                       Starter Pack{" "}
                       <span
-                        style={{ marginLeft: "16vw", fontWeight: "bolder" }}
-                      >
+                        style={{ marginLeft: "16vw", fontWeight: "bolder" }}>
                         {" "}
                         $40 per year{" "}
                       </span>{" "}
@@ -231,8 +256,7 @@ const SubscribeTrial = () => {
                     <div style={{ width: "100%" }}>
                       Premium Pack{" "}
                       <span
-                        style={{ marginLeft: "14vw", fontWeight: "bolder" }}
-                      >
+                        style={{ marginLeft: "14vw", fontWeight: "bolder" }}>
                         {" "}
                         $100 per year{" "}
                       </span>{" "}
@@ -253,8 +277,7 @@ const SubscribeTrial = () => {
           // justifyContent: "flex-start",
           // background: "red",
           padding: "10px 10px",
-        }}
-      >
+        }}>
         <Card
           className="md:w-[25vw] md:h-[42vh]    sm:w-[100%] sm:h-[30vh] sm:pb-[1.5vh] sm:text-[.85em] "
           sx={{
@@ -263,8 +286,7 @@ const SubscribeTrial = () => {
             borderRadius: "5px",
             paddingBottom: "2vh",
             padding: ".5vw",
-          }}
-        >
+          }}>
           <h5
           // style={{ color: "#5585FE" }}
           >
@@ -305,8 +327,7 @@ const SubscribeTrial = () => {
                   subscriptionPackage: packageValue,
                 })
               );
-            }}
-          >
+            }}>
             <BasicButton
               style={{
                 width: "90%",
@@ -315,8 +336,7 @@ const SubscribeTrial = () => {
 
                 marginLeft: "5%",
               }}
-              innerText="Start Trial"
-            >
+              innerText="Start Trial">
               {" "}
             </BasicButton>
           </div>
