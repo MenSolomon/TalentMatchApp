@@ -41,10 +41,11 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "../Firebase/Firebase";
+import { auth, db } from "../Firebase/Firebase";
 import { setUserSavedProfiles } from "../statemanager/slices/SavedProfileSlice";
 import { setUserNotifications } from "../statemanager/slices/NofiticationsSlice";
 import { setPlayerSelectedByClubOrScoutInPlayerManagement } from "../statemanager/slices/PlayersInAgencySlice";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -224,6 +225,22 @@ const Login = () => {
   // }
 
   const onSubmit = (formData) => {
+    // use google signinwithemailandpassword to get the current userid
+    signInWithEmailAndPassword(auth, formData.email, formData.password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        if (user) {
+          alert(user.uid);
+          Navigate("/");
+        }
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+
     const userRef = collection(db, `users_db`);
 
     const q = query(
@@ -338,7 +355,7 @@ const Login = () => {
             }
 
             dispatch(setUserNotifications(notificationItems));
-            Navigate("/");
+            // Navigate("/");
             setErrorMessage("");
           });
 

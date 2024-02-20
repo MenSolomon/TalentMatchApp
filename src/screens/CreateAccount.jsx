@@ -46,7 +46,7 @@ const CreateAccount = () => {
     useSelector(selectUserSignUpData);
   const roleSelected = useSelector(selectRoleSelected);
 
-  const { subscriptionPackage, paymentType } =
+  const { subscriptionPackage, paymentType, subscriptionPrice } =
     userFormDataWithOnlySubscriptionPackage;
 
   const handlePhoneNumberChange = (value) => {
@@ -130,6 +130,8 @@ const CreateAccount = () => {
       Nationality,
       password,
       CountryCode,
+      subscriptionPrice,
+      subscriptionPackage,
     };
 
     const userDataForPlayer = {
@@ -143,6 +145,8 @@ const CreateAccount = () => {
       password,
       height,
       PlayerPosition,
+      subscriptionPrice,
+      subscriptionPackage,
       preferredFoot,
     };
 
@@ -183,7 +187,6 @@ const CreateAccount = () => {
         dispatch(
           setUserSignUpData({
             paymentType,
-            subscriptionPackage,
             ...userDataForPlayer,
           })
         );
@@ -203,7 +206,6 @@ const CreateAccount = () => {
         dispatch(
           setUserSignUpData({
             paymentType,
-            subscriptionPackage,
             ...userData,
           })
         );

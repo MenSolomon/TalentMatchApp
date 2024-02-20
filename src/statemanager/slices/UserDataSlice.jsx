@@ -14,6 +14,7 @@ export const UserDataSlice = createSlice({
       DOB: "",
       password: "",
       subscriptionPackage: "",
+      subscriptionPrice: "",
       paymentType: "",
       paymentDetails: {},
     },

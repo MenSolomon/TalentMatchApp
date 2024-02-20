@@ -123,25 +123,9 @@ const PlanItem = () => {
                 id: prods.id,
               },
             ]);
-
-            // Collect data for state update
-            // return {
-            //   name: prods.data.name,
-            //   image: prods.data.images,
-            //   price: priceDoc.data().unit_amount,
-            // };
           });
         }
       });
-
-      // Wait for all promises to resolve before updating the state
-      // const resolvedProducts = await Promise.all(productPromises);
-      // console.log(resolvedProducts);
-      // // Filter out any undefined values
-      // const filteredProducts = resolvedProducts.filter((product) => product);
-
-      // setProducts(filteredProducts);
-      // console.log("products", filteredProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
     }

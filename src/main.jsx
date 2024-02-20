@@ -12,15 +12,13 @@ import MobileVideoDisplayCarousel from "./components/Carousel/MobileVideoDisplay
 let persistor = persistStore(store);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Provider store={store}>
-        <PersistGate persistor={persistor}>
-          <BackEndDataCatalog>
-            <App /> {/* <MobileVideoDisplayCarousel /> */}
-          </BackEndDataCatalog>
-        </PersistGate>
-      </Provider>
-    </BrowserRouter>
-  </React.StrictMode>
+  <BrowserRouter>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <BackEndDataCatalog>
+          <App /> {/* <MobileVideoDisplayCarousel /> */}
+        </BackEndDataCatalog>
+      </PersistGate>
+    </Provider>
+  </BrowserRouter>
 );

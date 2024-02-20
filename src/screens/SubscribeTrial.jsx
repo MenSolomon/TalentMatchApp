@@ -26,6 +26,8 @@ import {
   selectCompleteSteps,
   selectRoleSelected,
   setCompletedSteps,
+  setPriceID,
+  setProductID,
 } from "../statemanager/slices/SignupStepperSlice";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -38,7 +40,13 @@ import {
   selectUserSignUpData,
   setUserSignUpData,
 } from "../statemanager/slices/UserDataSlice";
-import { selectCurrentBrowserSize } from "../statemanager/slices/OtherComponentStatesSlice";
+import {
+  selectCurrentBrowserSize,
+  setWarningAlertModalCounter,
+  setWarningAlertModalMessage,
+} from "../statemanager/slices/OtherComponentStatesSlice";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../Firebase/Firebase";
 
 const SubscribeTrial = () => {
   const browserSize = useSelector(selectCurrentBrowserSize);
@@ -49,6 +57,10 @@ const SubscribeTrial = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
 
   const handleTrialNavigation = () => {
     navigate("/create-account/user-form");
@@ -60,7 +72,8 @@ const SubscribeTrial = () => {
     dispatch(setCompletedSteps({ ...completedStepsObject, 1: true }));
   };
 
-  const [packageValue, setPackage] = useState("Starter Pack");
+  const [packageValue, setPackage] = useState("");
+  const [packageValuePrice, setPackageValuePrice] = useState("");
 
   const roleSelected = useSelector(selectRoleSelected);
 
@@ -91,27 +104,126 @@ const SubscribeTrial = () => {
     { id: "prod_PaUAvtceTmYGJV", name: "Agent Premium Pack", role: "Agent" },
     { id: "prod_PaU961QtG9oT80", name: "Agent Premium Pack", role: "Agent" },
   ];
-  useEffect(() => {
-    const FetchProducts = () => {
-      const q = query(collection(db, "products"), where("active", "==", true));
-      getDocs(q).then((querySnapshot) => {
-        querySnapshot.forEach(async (doc) => {
-          const allProducts = [];
-          allProducts.push(...allProducts, { id: doc.id, data: doc.data() });
-          // console.log(doc.id, " => ", doc.data());
-          console.log(allProducts);
-          setProducts(doc.data());
+  const [fetchCounter, setFetchCounter] = useState(0);
+  // state to render loading effect whiles products is being set
+  const [isProductsLoading, setIsProductsLoading] = useState(true);
+  // useEffect(() => {
+  //   const FetchProducts = async () => {
+  //     const q = query(collection(db, "products"), where("active", "==", true));
+  //     const allProducts = [];
 
-          // getDocs(collection(doc.ref, "prices")).then((priceSnap) => {
-          //   priceSnap.forEach((priceDoc) => {
-          //     console.log(priceDoc.id, " => ", priceDoc.data());
-          //   });
-          // });
+  //     try {
+  //       const querySnapshot = await getDocs(q);
+
+  //       // get all the products
+  //       querySnapshot.forEach((doc) => {
+  //         // save them to allProducts array
+  //         allProducts.push({ id: doc.id, data: doc.data() });
+  //       });
+
+  //       const selectedIds = productIds
+  //         .filter((prodId) => prodId.role === roleSelected)
+  //         .map((prodId) => prodId.id);
+
+  //       const productPromises = allProducts.map(async (prods) => {
+  //         if (selectedIds.includes(prods.id)) {
+  //           const priceSnap = await getDocs(
+  //             collection(db, `products/${prods.id}/prices`)
+  //           );
+
+  //           priceSnap.forEach((priceDoc) => {
+  //             console.log({
+  //               name: prods.data.name,
+  //               image: prods.data.images,
+  //               price: priceDoc.data().unit_amount,
+  //               id: prods.id,
+  //             });
+  //             // set counter to +1
+  //             setFetchCounter(fetchCounter + 1);
+  //             setProducts((prevProducts) => [
+  //               ...prevProducts,
+  //               {
+  //                 name: prods.data.name,
+  //                 image: prods.data.images,
+  //                 price: priceDoc.data().unit_amount,
+  //                 id: prods.id,
+  //               },
+  //             ]);
+  //           });
+  //         }
+  //       });
+  //     } catch (error) {
+  //       console.error("Error fetching products:", error);
+  //     }
+  //   };
+
+  //   FetchProducts();
+  // }, []);
+
+  useEffect(() => {
+    const FetchProducts = async () => {
+      const q = query(collection(db, "products"), where("active", "==", true));
+      const allProducts = [];
+
+      try {
+        const querySnapshot = await getDocs(q);
+
+        // get all the products
+        querySnapshot.forEach((doc) => {
+          // save them to allProducts array
+          allProducts.push({ id: doc.id, data: doc.data() });
         });
-      });
+
+        const selectedIds = productIds
+          .filter((prodId) => prodId.role === roleSelected)
+          .map((prodId) => prodId.id);
+
+        const productPromises = allProducts.map(async (prods) => {
+          if (selectedIds.includes(prods.id)) {
+            const priceSnap = await getDocs(
+              collection(db, `products/${prods.id}/prices`)
+            );
+
+            priceSnap.forEach((priceDoc) => {
+              console.log({
+                name: prods.data.name,
+                image: prods.data.images,
+                price: priceDoc.data().unit_amount,
+                id: prods.id,
+                priceId: priceDoc.id,
+              });
+              // set counter to +1
+              setFetchCounter((prevFetchCounter) => prevFetchCounter + 1);
+              setProducts((prevProducts) => [
+                ...prevProducts,
+                {
+                  name: prods.data.name,
+                  image: prods.data.images,
+                  price: priceDoc.data().unit_amount,
+                  id: prods.id,
+                  priceId: priceDoc.id,
+                },
+              ]);
+              // disable loading
+              setIsProductsLoading(false);
+            });
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
     };
-    // FetchProducts()
-  }, []);
+
+    if (fetchCounter == 0) {
+      FetchProducts();
+    }
+    // Wrap the function in runWithPriority to disable strict mode
+    // runWithPriority(NormalPriority, () => {
+    //   if (fetchCounter === 0) {
+    //     FetchProducts();
+    //   }
+    // });
+  }, []); // Empty dependency array to trigger only on mount
 
   return (
     <div
@@ -226,43 +338,52 @@ const SubscribeTrial = () => {
             <FormControl>
               <FormLabel id="demo-radio-buttons-group-label">
                 {" "}
-                <h6 style={{ fontWeight: "bold" }}> Packages</h6>
+                <h6 style={{ fontWeight: "bold" }}>Packages</h6>
               </FormLabel>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
                 defaultValue="Starter Pack"
                 name="radio-buttons-group"
                 onChange={(e) => {
-                  setPackage(e.target.value);
+                  const selectedProduct = JSON.parse(e.target.value);
+                  // Access item.id and item.priceid from selectedProduct
+                  const { id, priceId } = selectedProduct;
+
+                  setPackage(selectedProduct.id);
+                  setPackageValuePrice(selectedProduct.priceId);
+
+                  console.log("priceId", priceId, "id:", id);
+                  // save price id
+                  dispatch(setPriceID(priceId));
+                  // save product id
+                  dispatch(setProductID(id));
                 }}>
-                <FormControlLabel
-                  value="Starter Pack"
-                  control={<Radio />}
-                  label={
-                    <div style={{ width: "100%" }}>
-                      Starter Pack{" "}
-                      <span
-                        style={{ marginLeft: "16vw", fontWeight: "bolder" }}>
-                        {" "}
-                        $40 per year{" "}
-                      </span>{" "}
-                    </div>
-                  }
-                />
-                <FormControlLabel
-                  value="Premium Pack"
-                  control={<Radio />}
-                  label={
-                    <div style={{ width: "100%" }}>
-                      Premium Pack{" "}
-                      <span
-                        style={{ marginLeft: "14vw", fontWeight: "bolder" }}>
-                        {" "}
-                        $100 per year{" "}
-                      </span>{" "}
-                    </div>
-                  }
-                />
+                {isProductsLoading == true ? (
+                  <div>Loading...</div>
+                ) : (
+                  products.map((item) => (
+                    <FormControlLabel
+                      key={item.id}
+                      value={JSON.stringify({
+                        id: item.id,
+                        priceId: item.priceId,
+                      })}
+                      control={<Radio />}
+                      label={
+                        <div style={{ width: "100%" }}>
+                          {item.name}
+                          <span
+                            style={{
+                              marginLeft: "16vw",
+                              fontWeight: "bolder",
+                            }}>
+                            $ {item.price / 100} per Month
+                          </span>{" "}
+                        </div>
+                      }
+                    />
+                  ))
+                )}
               </RadioGroup>
             </FormControl>
           </div>
@@ -299,9 +420,18 @@ const SubscribeTrial = () => {
               <span style={{ float: "right", fontWeight: "bolder" }}>$0</span>{" "}
             </li>
             <li style={{ margin: 0 }}>
-              {packageValue}
+              {
+                products.find((data) => {
+                  return data.id === packageValue;
+                })?.name
+              }
               <span style={{ float: "right", fontWeight: "bolder" }}>
-                ${packageValue === "Starter Pack" ? "40" : "100"}
+                $
+                {packageValue === ""
+                  ? 0
+                  : products.find((data) => {
+                      return data.id === packageValue;
+                    })?.price / 100}
               </span>{" "}
             </li>
           </ul>
@@ -318,22 +448,27 @@ const SubscribeTrial = () => {
 
           <div
             onClick={() => {
-              handleTrialNavigation();
-              handleStepsCompleted();
+              console.log("packageValuePrice", packageValuePrice);
+              if (packageValue === "") {
+                triggerWarningAlertModal("Please select a package");
+              } else {
+                handleTrialNavigation();
+                handleStepsCompleted();
 
-              dispatch(
-                setUserSignUpData({
-                  ...userData,
-                  subscriptionPackage: packageValue,
-                })
-              );
+                dispatch(
+                  setUserSignUpData({
+                    ...userData,
+                    subscriptionPackage: packageValue,
+                    subscriptionPrice: packageValuePrice,
+                  })
+                );
+              }
             }}>
             <BasicButton
               style={{
                 width: "90%",
                 height: browserWidth >= 1024 ? "" : "4.5vh",
                 marginBottom: browserWidth >= 1024 ? "" : "1.5vh",
-
                 marginLeft: "5%",
               }}
               innerText="Start Trial">

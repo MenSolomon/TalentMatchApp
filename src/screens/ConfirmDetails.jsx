@@ -68,6 +68,7 @@ const ConfirmDetails = () => {
     Nationality,
     password,
   } = userData;
+
   // Add one month to the current date
   const oneMonthLater = today.add(1, "months");
 
