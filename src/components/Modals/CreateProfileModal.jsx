@@ -1611,7 +1611,9 @@ export default function CreateProfileModal({ ProfileType }) {
               // className="md:flex md:flex-row md:overflow-y-hidden md:gap-[0%] sm:flex-col-reverse   sm:gap-[2vh] sm:flex sm:overflow-y-scroll"
               style={{ flex: ".05" }}>
               {isLoading ? (
-                <CircularProgress />
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <CircularProgress />
+                </div>
               ) : (
                 <Button
                   className="md:absolute md:bottom-[-6%] md:w-[23vw] sm:w-[100%] sm:absolute sm:bottom-[2%]"
