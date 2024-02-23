@@ -6,7 +6,13 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { Add, Close, Settings } from "@mui/icons-material";
-import { Card, Divider, TextField, IconButton, Tooltip } from "@mui/material";
+import {
+  Card,
+  TextField,
+  IconButton,
+  Tooltip,
+  CircularProgress,
+} from "@mui/material";
 import CountrySelect from "../Autocompletes/CountrySelect";
 import IconTooltip from "../Tooltips/IconToolTip";
 import DatePickerTool from "../DatePicker/DatePicker";
@@ -78,19 +84,8 @@ const style = {
   border: "transparent",
   boxShadow: 24,
   borderRadius: "1vw",
-  // padding: "2vw",
-  // display: "flex",
-  // flexDirection: "column",
-  // paddingTop: "3vh",
 };
 
-// const inputStyles = {
-//   width: "85%",
-// };
-
-// const selectFieldStyle ={
-//   width:130
-// } ;
 // currentProfileClicked
 export default function CreateProfileModal({ ProfileType }) {
   const dispatch = useDispatch();
@@ -240,6 +235,8 @@ export default function CreateProfileModal({ ProfileType }) {
 
   const [profileName, setProfileName] = useState("");
   const [editedProfileName, setEditedProfileName] = useState("");
+  // state to manage loading circle
+  const [isLoading, setIsloading] = useState(false);
 
   /// RETREIVING VALUES FOR RANGE SLIDERs  \\\\\\\\\\
 
@@ -422,14 +419,200 @@ export default function CreateProfileModal({ ProfileType }) {
   const handleCreateProfile = async () => {
     // get accountid and product id
     const accountId = await currentUser.uid;
-    console.log(accountId);
+
     // get product id form database if the redux state is empty
     const productIDRef = doc(db, `users_db/${accountId}`);
     const productIdSnap = await getDoc(productIDRef);
     const productID = await productIdSnap.data().subscriptionPackage;
     const priceID = await productIdSnap.data().subscriptionPrice;
+    console.log("accountId:", accountId);
+    console.log("priceID:", priceID);
 
     const SubscriptionValidationChecker = async () => {
+      try {
+        const subscriptionsRef = collection(
+          db,
+          "users_db",
+          accountId,
+          "subscriptions"
+        );
+
+        const queryActiveOrTrialing = query(
+          subscriptionsRef,
+          where("status", "in", ["trialing", "active"])
+        );
+
+        onSnapshot(queryActiveOrTrialing, (snapshot) => {
+          const doc = snapshot.docs[0];
+          if (doc) {
+            // console.log(doc.id, ' => ', doc.data());
+
+            console.log("subs exists");
+            const uuid = uuidv4();
+            // alert("Saved prof" + accountId);
+
+            if (userSavedProfiles.length < 1) {
+              // cont newProfile == log
+              // alert("less");
+
+              // This is the rest of users in the database devoid of the current user logged in
+
+              // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
+
+              // alert(accountId);
+              ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
+              const savedProfileSubCollectionRef = doc(
+                db,
+                `users_db/${accountId}/SavedProfiles`,
+                "Default"
+              );
+
+              setDoc(savedProfileSubCollectionRef, {
+                label: "Default",
+                dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+                filter: currentProfileFilterObject,
+                labelId: "Default",
+              });
+
+              handleClose();
+
+              /// REset the filter object after createion
+              dispatch(
+                setCurrentProfileFilterObject({
+                  // PlaceOfBirth: "Any",
+                  NationalityValue: "Any",
+                  AgeRangeValue: [0, 40],
+                  HeightRangeValue: [0, 2.5],
+                  positionRangeSliderValues: {
+                    "Clean sheet": [0, 100],
+                    Saves: [0, 100],
+                    "Long pass accuracy": [0, 100],
+                    Interception: [0, 100],
+
+                    Blocks: [0, 100],
+                    "Successful tackles rate %": [0, 100],
+                    "pass success": [0, 100],
+                    "total passes": [0, 100],
+                    assists: [0, 100],
+
+                    Goals: [0, 100],
+                    "Goal/match played ratio": [0, 100],
+                    Assists: [0, 100],
+                    // "Shots per game": [0, 100],
+                  },
+                  MarketValue: "0 - 99,999",
+                  SalaryExpectationValue: "0 - 4,999",
+
+                  ClubCountryValue: "Any",
+                  // CaptainRadioValue: "Any",
+                  PrefferedFootRadioValue: "Any",
+                  PlayerDivisionValue: "Any",
+                  ContractStatusCheckBoxes: "Any",
+
+                  // REview below
+                  PlayerPositionAutoCompleteValue: "Any",
+                  PlayerAlternatePositionAutoCompleteValue: "None",
+
+                  previousProfile: "",
+                })
+              );
+            } else {
+              const savedProfileSubCollectionRef = doc(
+                db,
+                `users_db/${accountId}/SavedProfiles`,
+                uuid
+              );
+              if (profileName !== "" && profileName.toLowerCase() !== "") {
+                ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
+
+                const profileNameMatch = userSavedProfiles.filter((data) => {
+                  const { label } = data;
+                  return (
+                    label.replace(/\s/g, "").toLowerCase() ===
+                    profileName.replace(/\s/g, "").toLowerCase()
+                  );
+                });
+
+                console.log("ProfileLabelMatxh", profileNameMatch);
+                // This it to make sure that we dont create a profile with the same name
+
+                if (profileNameMatch.length <= 0) {
+                  setDoc(savedProfileSubCollectionRef, {
+                    label: profileName,
+                    dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+                    filter: currentProfileFilterObject,
+                    labelId: uuid,
+                  });
+
+                  handleClose();
+                  dispatch(
+                    setCurrentProfileFilterObject({
+                      // PlaceOfBirth: "Any",
+                      NationalityValue: "Any",
+                      AgeRangeValue: [0, 40],
+                      HeightRangeValue: [0, 2.5],
+                      positionRangeSliderValues: {
+                        "Clean sheet": [0, 100],
+                        Saves: [0, 100],
+                        "Long pass accuracy": [0, 100],
+                        Interception: [0, 100],
+
+                        Blocks: [0, 100],
+                        "Successful tackles rate %": [0, 100],
+                        "pass success": [0, 100],
+                        "total passes": [0, 100],
+                        assists: [0, 100],
+
+                        Goals: [0, 100],
+                        "Goal/match played ratio": [0, 100],
+                        Assists: [0, 100],
+                        // "Shots per game": [0, 100],
+                      },
+                      SalaryExpectationValue: "0 - 4,999",
+
+                      MarketValue: "0 - 99,999",
+
+                      ClubCountryValue: "Any",
+                      // CaptainRadioValue: "Any",
+                      PrefferedFootRadioValue: "Any",
+                      PlayerDivisionValue: "Any",
+                      ContractStatusCheckBoxes: "Any",
+                      // REview below
+                      PlayerPositionAutoCompleteValue: "Any",
+                      PlayerAlternatePositionAutoCompleteValue: "None",
+                      previousProfile: "",
+                    })
+                  );
+                  /// Snackbar show
+                  dispatch(
+                    setSnackbarMessage(`"${profileName}" filter created`)
+                  );
+                  dispatch(setSnackbarTriggerCounter());
+
+                  setProfileName("");
+                } else {
+                  triggerWarningAlertModal(
+                    "Please change your profile name a similar name already exists"
+                  );
+                }
+              } else {
+                triggerWarningAlertModal(
+                  "Please enter a profile name (cannot be name default)"
+                );
+              }
+            }
+            // changing the click current clicked value to the edited name
+
+            // reset the textfields after save
+          } else {
+            StripeCheckout(priceID);
+            // Handle the case where no active/trialing subscription exists
+            console.log("No active or trialing subscriptions found.");
+            // set isLoading to true
+            setIsloading(true);
+          }
+        });
+      } catch (error) {}
       try {
         const subscriptionQuery = query(
           collection(db, `users_db/${accountId}/subscriptions`)
@@ -1427,23 +1610,27 @@ export default function CreateProfileModal({ ProfileType }) {
             <div
               // className="md:flex md:flex-row md:overflow-y-hidden md:gap-[0%] sm:flex-col-reverse   sm:gap-[2vh] sm:flex sm:overflow-y-scroll"
               style={{ flex: ".05" }}>
-              <Button
-                className="md:absolute md:bottom-[-6%] md:w-[23vw] sm:w-[100%] sm:absolute sm:bottom-[2%]"
-                sx={{
-                  // width: "23vw",
-                  background: "blue",
-                  color: "white",
-                  border: ".5vw",
-                  // position: "absolute",
-                  // bottom: 50,
-                }}
-                onClick={
-                  ProfileType === "Edit"
-                    ? handleSaveProfile
-                    : handleCreateProfile
-                }>
-                {ProfileType === "Edit" ? "Save" : "Create"}
-              </Button>{" "}
+              {isLoading ? (
+                <CircularProgress />
+              ) : (
+                <Button
+                  className="md:absolute md:bottom-[-6%] md:w-[23vw] sm:w-[100%] sm:absolute sm:bottom-[2%]"
+                  sx={{
+                    // width: "23vw",
+                    background: "blue",
+                    color: "white",
+                    border: ".5vw",
+                    // position: "absolute",
+                    // bottom: 50,
+                  }}
+                  onClick={
+                    ProfileType === "Edit"
+                      ? handleSaveProfile
+                      : handleCreateProfile
+                  }>
+                  {ProfileType === "Edit" ? "Save" : "Create"}
+                </Button>
+              )}
             </div>
           </div>
         </Fade>
