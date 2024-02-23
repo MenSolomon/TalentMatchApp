@@ -231,7 +231,6 @@ const Login = () => {
         // Signed in
         const user = userCredential.user;
         if (user) {
-          alert(user.uid);
           Navigate("/");
         }
         // ...

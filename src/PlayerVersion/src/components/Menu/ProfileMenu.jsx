@@ -4,6 +4,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import { Navigate, useNavigate } from "react-router-dom";
+import { auth } from "../../../../Firebase/Firebase";
+import { signOut } from "firebase/auth";
 
 export default function ProfileMenu({ style, name }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -35,8 +37,7 @@ export default function ProfileMenu({ style, name }) {
         aria-expanded={open ? "true" : undefined}
         endIcon={<KeyboardArrowDown />}
         sx={{ color: "black", width: "15vw", fontWeight: "800" }}
-        onClick={handleClick}
-      >
+        onClick={handleClick}>
         {name && name.substring(0, 16)}
       </Button>
       <Menu
@@ -47,8 +48,7 @@ export default function ProfileMenu({ style, name }) {
         onClose={handleClose}
         MenuListProps={{
           "aria-labelledby": "basic-button",
-        }}
-      >
+        }}>
         <MenuItem sx={{ color: "black" }} onClick={handleClose}>
           Profile
         </MenuItem>
@@ -59,9 +59,17 @@ export default function ProfileMenu({ style, name }) {
           sx={{ color: "black" }}
           onClick={() => {
             handleClose();
-            Navigate("/login");
-          }}
-        >
+            console.log("logging out");
+            signOut(auth)
+              .then(() => {
+                // Sign-out successful.
+
+                Navigate("/login");
+              })
+              .catch((error) => {
+                console.log("error:", error);
+              });
+          }}>
           Logout
         </MenuItem>
       </Menu>
