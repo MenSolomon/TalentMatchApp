@@ -1,42 +1,87 @@
 import { Button, Card, Divider, Paper } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import FilteredPlayersTable from "../../components/Tables/FilterPlayersTable";
-import { db } from "../../Firebase/Firebase";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { auth, db, functions } from "../../Firebase/Firebase";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  getDoc,
+  doc,
+} from "firebase/firestore";
+import { productDetails } from "../../CoachAgentScoutVersion/src/utils/ProductIds";
+import { httpsCallable } from "firebase/functions";
 
 function SettingsBilling() {
-  // useState
+  // state to store price id
+  const [priceId, setPriceId] = useState();
+  // product details arry
+  const productids = productDetails;
   useEffect(() => {
-    const activeProductsQuery = query(
-      collection(db, "products"),
-      where("active", "==", true)
+    const activeQueryFn = () => {
+      const activeProductsQuery = query(
+        collection(db, "products"),
+        where("active", "==", true)
+      );
+
+      onSnapshot(activeProductsQuery, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          const { doc } = change;
+          console.log(
+            `Product ${doc.id} ${
+              change.type === "added" ? "added" : "changed"
+            }:`,
+            doc.data()
+          );
+
+          // Fetch and log prices only for added or modified products
+          if (change.type === "added" || change.type === "modified") {
+            onSnapshot(doc.ref.collection("prices"), (priceSnapshot) => {
+              priceSnapshot.docChanges().forEach((priceChange) => {
+                const { doc } = priceChange;
+                console.log(
+                  `Price ${
+                    priceChange.type === "added" ? "added" : "changed"
+                  } for product ${doc.ref.parent.id}:`,
+                  doc.data()
+                );
+              });
+            });
+          }
+        });
+      });
+    };
+    // get product id
+    const getProductId = async () => {
+      // uid
+      const currentUser = await auth.currentUser;
+      const subscriptionProductRef = doc(db, "users_db", currentUser.uid);
+      const subscriptionProductSnap = await getDoc(subscriptionProductRef);
+      await setPriceId(subscriptionProductSnap.data().subscriptionPackage);
+      // console.log(
+      //   "subscriptionProductSnap:",
+      //   subscriptionProductSnap.data().subscriptionPackage
+      // );
+    };
+    activeQueryFn();
+    getProductId();
+  }, []);
+
+  const handleCustomerPortal = async () => {
+    const createPortalLink = httpsCallable(
+      functions,
+      "ext-firestore-stripe-payments-createPortalLink"
     );
 
-    onSnapshot(activeProductsQuery, (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        const { doc } = change;
-        console.log(
-          `Product ${doc.id} ${change.type === "added" ? "added" : "changed"}:`,
-          doc.data()
-        );
-
-        // Fetch and log prices only for added or modified products
-        if (change.type === "added" || change.type === "modified") {
-          onSnapshot(doc.ref.collection("prices"), (priceSnapshot) => {
-            priceSnapshot.docChanges().forEach((priceChange) => {
-              const { doc } = priceChange;
-              console.log(
-                `Price ${
-                  priceChange.type === "added" ? "added" : "changed"
-                } for product ${doc.ref.parent.id}:`,
-                doc.data()
-              );
-            });
-          });
-        }
-      });
+    const { data } = await createPortalLink({
+      returnUrl: window.location.origin,
+      locale: "auto", // Optional, defaults to "auto"
+      // configuration: "bpc_1JSEAKHYgolSBA358VNoc2Hs", // Optional ID of a portal configuration: https://stripe.com/docs/api/customer_portal/configuration
     });
-  }, []);
+
+    window.location.assign(data.url);
+  };
 
   return (
     <div
@@ -97,7 +142,12 @@ function SettingsBilling() {
                   <li></li>
                   <li></li>
                 </ul> */}
-                Pro Plan Money Active
+                {productids.map((item) => {
+                  if (priceId === item.id) {
+                    return <div>{item.name}</div>;
+                  }
+                })}{" "}
+                Plan Money Active
               </div>
               <div style={{ flex: ".3" }}>
                 <div style={{ padding: "5px 0px" }}>
@@ -123,13 +173,14 @@ function SettingsBilling() {
           }}>
           <div style={{ flex: ".7" }}>
             <div style={{ padding: "10px 20px" }}>
-              <h4>Payment method</h4>
-              <small>modify your payment method for future payments</small>
+              <h4>Subscription</h4>
+              <small>Modify your subscription</small>
             </div>
           </div>
           <div style={{ flex: ".3" }}>
             <div style={{ padding: "10px 0px" }}>
               <Button
+                onClick={handleCustomerPortal}
                 style={{
                   display: "flex",
                   justifyContent: "start",
@@ -137,12 +188,12 @@ function SettingsBilling() {
                 }}
                 size="small"
                 variant="outlined">
-                change payment method
+                Manage Subscription
               </Button>
             </div>
           </div>
         </div>
-        <div
+        {/* <div
           style={{
             flex: ".4",
             // background: "brown",
@@ -172,7 +223,7 @@ function SettingsBilling() {
               </Button>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

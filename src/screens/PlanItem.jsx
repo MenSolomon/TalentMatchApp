@@ -13,6 +13,7 @@ import {
 import { useSelector } from "react-redux";
 import { selectCredentials } from "../statemanager/slices/LoginUserDataSlice";
 import { auth, db } from "../Firebase/Firebase";
+import { productDetails } from "../CoachAgentScoutVersion/src/utils/ProductIds";
 
 const PlanItem = () => {
   // credentials state
@@ -35,19 +36,8 @@ const PlanItem = () => {
   //     });
   //   });
   // };
+  const productIds = productDetails;
 
-  const productIds = [
-    { id: "prod_PaUHk97wgtKo0H", name: "Club Premium Pack", role: "Club" },
-    { id: "prod_PaUHRN5h6D6QKA", name: "Club Starter Pack", role: "Club" },
-    { id: "prod_PaUF5OfYMdzFMf", name: "Player Starter Pack", role: "Player" },
-    { id: "prod_PaUE0WeQlZ2Cbl", name: "Player Premium Pack", role: "Player" },
-    { id: "prod_PaUDv3uRDwWYKc", name: "Scout Premium Pack", role: "Scout" },
-    { id: "prod_PaUClniIfnFCUO", name: "Scout Starter Pack", role: "Scout" },
-    { id: "prod_PaUCj9WT4b4zWI", name: "Coach Starter Pack", role: "Coach" },
-    { id: "prod_PaUB3JqrDbTutg", name: "Coach Premium Pack", role: "Coach" },
-    { id: "prod_PaUAvtceTmYGJV", name: "Agent Premium Pack", role: "Agent" },
-    { id: "prod_PaU961QtG9oT80", name: "Agent Premium Pack", role: "Agent" },
-  ];
   const roleSelected = "Agent";
 
   const currentUser = auth.currentUser;
