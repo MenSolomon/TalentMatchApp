@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Paper } from "@mui/material";
+import { Button, Card, CircularProgress, Divider, Paper } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import FilteredPlayersTable from "../../components/Tables/FilterPlayersTable";
 import { auth, db, functions } from "../../Firebase/Firebase";
@@ -16,6 +16,8 @@ import { httpsCallable } from "firebase/functions";
 function SettingsBilling() {
   // state to store price id
   const [priceId, setPriceId] = useState();
+  // state to display circular progress animation
+  const [isLoading, setIsLoading] = useState(false);
   // product details arry
   const productids = productDetails;
   useEffect(() => {
@@ -146,8 +148,8 @@ function SettingsBilling() {
                   if (priceId === item.id) {
                     return <div>{item.name}</div>;
                   }
-                })}{" "}
-                Plan Money Active
+                })}
+                Active
               </div>
               <div style={{ flex: ".3" }}>
                 <div style={{ padding: "5px 0px" }}>
@@ -179,17 +181,24 @@ function SettingsBilling() {
           </div>
           <div style={{ flex: ".3" }}>
             <div style={{ padding: "10px 0px" }}>
-              <Button
-                onClick={handleCustomerPortal}
-                style={{
-                  display: "flex",
-                  justifyContent: "start",
-                  // padding: "10px",
-                }}
-                size="small"
-                variant="outlined">
-                Manage Subscription
-              </Button>
+              {isLoading ? (
+                <CircularProgress />
+              ) : (
+                <Button
+                  onClick={() => {
+                    handleCustomerPortal();
+                    setIsLoading(true);
+                  }}
+                  style={{
+                    display: "flex",
+                    justifyContent: "start",
+                    // padding: "10px",
+                  }}
+                  size="small"
+                  variant="outlined">
+                  Manage Subscription
+                </Button>
+              )}
             </div>
           </div>
         </div>
