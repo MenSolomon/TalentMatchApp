@@ -688,10 +688,6 @@ const ConfirmDetails = () => {
               });
           }
         }
-        // } else {
-        //  // Cde to inject data for the first time
-
-        // }
       }
     } catch (error) {
       console.error("Error fetching document:", error);

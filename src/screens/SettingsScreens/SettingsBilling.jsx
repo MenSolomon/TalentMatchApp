@@ -10,10 +10,12 @@ import {
   getDoc,
   doc,
 } from "firebase/firestore";
-import { productDetails } from "../../CoachAgentScoutVersion/src/utils/ProductIds";
+import { productDetails } from "../../utils/ProductDetails";
 import { httpsCallable } from "firebase/functions";
+import { useNavigate } from "react-router-dom";
 
 function SettingsBilling() {
+  const navigate = useNavigate();
   // state to store price id
   const [priceId, setPriceId] = useState();
   // state to display circular progress animation
@@ -61,11 +63,16 @@ function SettingsBilling() {
       const subscriptionProductRef = doc(db, "users_db", currentUser.uid);
       const subscriptionProductSnap = await getDoc(subscriptionProductRef);
       await setPriceId(subscriptionProductSnap.data().subscriptionPackage);
-      // console.log(
-      //   "subscriptionProductSnap:",
-      //   subscriptionProductSnap.data().subscriptionPackage
-      // );
     };
+
+    // get status of subscription
+    // const getSubscriptionStatus = async () => {
+    //         //get uid
+    //         const currentUser = await auth.currentUser;
+    //         const subscriptionDocRef = doc(db, "users_db", currentUser.uid);
+    //         const subscriptionDocSnap = await getDoc(subscriptionDocRef);
+    //         await setPriceId(subscriptionProductSnap.data().subscriptionPackage);
+    // }
     activeQueryFn();
     getProductId();
   }, []);
@@ -153,7 +160,11 @@ function SettingsBilling() {
               </div>
               <div style={{ flex: ".3" }}>
                 <div style={{ padding: "5px 0px" }}>
-                  <Button variant="outlined">Upgrade</Button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => navigate("/changeSubscription")}>
+                    Upgrade
+                  </Button>
                 </div>
               </div>
             </div>

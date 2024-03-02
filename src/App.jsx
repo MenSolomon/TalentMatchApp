@@ -54,6 +54,7 @@ import { selectUsersDatabase } from "./statemanager/slices/DatabaseSlice";
 import Favorites from "./screens/Favorites";
 import Settings from "./screens/Settings";
 import PlanItem from "./screens/PlanItem";
+import ChangeSubscriptionPackagePage from "./screens/ChangeSubscriptionPackagePage";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -433,6 +434,11 @@ const App = () => {
               element={<CoachAgentScoutVersionPlayerManagement />}
             />
           </Route>
+
+          <Route
+            path="/changeSubscription"
+            element={<ChangeSubscriptionPackagePage />}
+          />
         </Route>
 
         {/* END OF PROTECTED ROUTES */}
