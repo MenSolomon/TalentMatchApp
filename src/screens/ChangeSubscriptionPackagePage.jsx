@@ -43,7 +43,9 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { auth, db } from "../Firebase/Firebase";
@@ -67,12 +69,6 @@ const ChangeSubscriptionPackagePage = () => {
   const Navigate = useNavigate();
 
   const rolesMenu = ["Agent", "Player", "Coach", "Scout"];
-
-  const BasicFeaturesArray = [
-    "100 request per day",
-    "100 request per day",
-    "100 request per day",
-  ];
 
   // state to store all products
   const [products, setProducts] = useState([]);
@@ -158,17 +154,20 @@ const ChangeSubscriptionPackagePage = () => {
       FetchProducts();
     }
   }, []);
+
   // function to initiate stripe checkout
   const StripeCheckout = async (productID, priceID) => {
-    console.log("priceId", priceID, "productID:", productID);
+    // console.log("priceId", priceID, "productID:", productID);
     // get user id
-    const currentUser = auth.currentUser;
+    const currentUser = await auth.currentUser;
     // save price id
     dispatch(setPriceID(priceID));
     // save product id
     dispatch(setProductID(productID));
     const usersDbRef = collection(db, "users_db");
     const currentUserDocRef = doc(usersDbRef, currentUser.uid);
+
+    // stripe db actions
     const checkoutSessionsCollectionRef = collection(
       currentUserDocRef,
       "checkout_sessions"
@@ -182,6 +181,11 @@ const ChangeSubscriptionPackagePage = () => {
         cancel_url: window.location.origin,
       }
     );
+    // update the product and price ids in the user db
+    await updateDoc(currentUserDocRef, {
+      subscriptionPackage: productID,
+      subscriptionPrice: priceID,
+    });
 
     // Wait for the CheckoutSession to get attached by the extension
     onSnapshot(newCheckoutSessionDocRef, (snap) => {
@@ -314,46 +318,20 @@ const ChangeSubscriptionPackagePage = () => {
               justifyContent: "flex-end",
               paddingTop: "1vh",
             }}>
-            <div
-              style={{
-                width: "17vw",
-                height: "8.4vh",
-                background: "white",
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                borderRadius: "1.5vw",
-                padding: "0vh .6vw",
-                gap: "2vw",
+            <Button
+              onClick={() => {
+                Navigate(-1);
+              }}
+              sx={{
+                background: "#5585FE",
+                width: "10vw",
+                height: "7vh",
+                color: "white",
+                textTransform: "none",
+                borderRadius: "1.2vw",
               }}>
-              <h6
-                style={{
-                  marginTop: "1.5vh",
-                  alignSelf: "center",
-                  color: "#5585FE",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  Navigate("/login");
-                }}>
-                Login
-              </h6>
-
-              <Button
-                onClick={() => {
-                  Navigate("/create-account/freetrial");
-                }}
-                sx={{
-                  background: "#5585FE",
-                  width: "10vw",
-                  height: "7vh",
-                  color: "white",
-                  textTransform: "none",
-                  borderRadius: "1.2vw",
-                }}>
-                Start free trial
-              </Button>
-            </div>
+              Go Back
+            </Button>
           </div>
         ) : (
           ""
@@ -446,7 +424,7 @@ const ChangeSubscriptionPackagePage = () => {
 
           {/* Subcscription Cards */}
           {isProductsLoading == true ? (
-            <div>
+            <div style={{ textAlign: "center" }}>
               <CircularProgress />
             </div>
           ) : (
@@ -472,8 +450,8 @@ const ChangeSubscriptionPackagePage = () => {
                       // display loading sign
                       setIsButtonTriggered(true);
                       // get current uid
-                      const currentUser = auth.currentUser;
-
+                      const currentUser = await auth.currentUser;
+                      // alert(currentUser.uid);
                       // Check if an active subscription exists
                       const userRef = collection(
                         db,
@@ -482,7 +460,7 @@ const ChangeSubscriptionPackagePage = () => {
                       const q = query(userRef, where("status", "==", "active"));
                       const docSnap = await getDocs(q);
 
-                      if (docSnap) {
+                      if (docSnap.size !== 0) {
                         triggerWarningAlertModal(
                           "An active subscription already exists. \n Cancel the existing one first"
                         );
@@ -571,7 +549,7 @@ const SubscriptionCard = ({
 
         <div style={{ flex: ".6" }}>
           {isButtonTriggered ? (
-            <div style={{ display: "flex", justifySelf: "center" }}>
+            <div style={{ textAlign: "center" }}>
               <CircularProgress />
             </div>
           ) : (

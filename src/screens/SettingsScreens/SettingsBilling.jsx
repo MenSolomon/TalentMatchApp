@@ -9,6 +9,7 @@ import {
   onSnapshot,
   getDoc,
   doc,
+  getDocs,
 } from "firebase/firestore";
 import { productDetails } from "../../utils/ProductDetails";
 import { httpsCallable } from "firebase/functions";
@@ -20,6 +21,10 @@ function SettingsBilling() {
   const [priceId, setPriceId] = useState();
   // state to display circular progress animation
   const [isLoading, setIsLoading] = useState(false);
+  // state to set subscription status
+  const [subscriptionStatus, setSubscriptionStatus] = useState();
+  // state to set next billing date
+  const [nextBillingDate, setNextBillingDate] = useState("N/A");
   // product details arry
   const productids = productDetails;
   useEffect(() => {
@@ -66,15 +71,34 @@ function SettingsBilling() {
     };
 
     // get status of subscription
-    // const getSubscriptionStatus = async () => {
-    //         //get uid
-    //         const currentUser = await auth.currentUser;
-    //         const subscriptionDocRef = doc(db, "users_db", currentUser.uid);
-    //         const subscriptionDocSnap = await getDoc(subscriptionDocRef);
-    //         await setPriceId(subscriptionProductSnap.data().subscriptionPackage);
-    // }
+    const getSubscriptionStatus = async () => {
+      // get current uid
+      const currentUser = await auth.currentUser;
+      // alert(currentUser.uid);
+      // Check if an active subscription exists
+      const userRef = collection(
+        db,
+        `users_db/${currentUser.uid}/subscriptions`
+      );
+      const q = query(userRef, where("status", "==", "active"));
+      const docSnap = await getDocs(q);
+
+      if (docSnap.size === 0) {
+        setSubscriptionStatus("Inactive");
+        setNextBillingDate("N/A");
+      } else if (docSnap.size === 1) {
+        setSubscriptionStatus("Active");
+        docSnap.forEach(async (doc) => {
+          const timestamp = await doc.data().current_period_end.seconds;
+          const date = await new Date(timestamp * 1000);
+          console.log(date.toLocaleDateString());
+          setNextBillingDate(date.toDateString());
+        });
+      }
+    };
     activeQueryFn();
     getProductId();
+    getSubscriptionStatus();
   }, []);
 
   const handleCustomerPortal = async () => {
@@ -138,40 +162,26 @@ function SettingsBilling() {
                 // justifyContent: "space-between",
               }}>
               <div className="padding" style={{ flex: ".7" }}>
-                {/* <ul
-                  className="primaryTextColor"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: ".5em",
-                    paddingTop: "5px",
-                  }}
-                >
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                </ul> */}
                 {productids.map((item) => {
                   if (priceId === item.id) {
                     return <div>{item.name}</div>;
                   }
                 })}
-                Active
+                {subscriptionStatus}
               </div>
               <div style={{ flex: ".3" }}>
                 <div style={{ padding: "5px 0px" }}>
                   <Button
                     variant="outlined"
                     onClick={() => navigate("/changeSubscription")}>
-                    Upgrade
+                    Change Package
                   </Button>
                 </div>
               </div>
             </div>
             <div style={{ flex: ".7" }}>
               <div>
-                It let you add 1 pro website. <br />
-                Next Billing Date: <span>16 March, 201</span>
+                Next Billing Date: <span>{nextBillingDate.toString()}</span>
               </div>
             </div>
           </Paper>
@@ -187,7 +197,9 @@ function SettingsBilling() {
           <div style={{ flex: ".7" }}>
             <div style={{ padding: "10px 20px" }}>
               <h4>Subscription</h4>
-              <small>Modify your subscription</small>
+              <small>
+                Modify your subscription <br /> Cancel or renew
+              </small>
             </div>
           </div>
           <div style={{ flex: ".3" }}>
