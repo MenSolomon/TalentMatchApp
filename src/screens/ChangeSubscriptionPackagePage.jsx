@@ -112,20 +112,13 @@ const ChangeSubscriptionPackagePage = () => {
           .filter((prodId) => prodId.role === roleSelected)
           .map((prodId) => prodId.id);
 
-        const productPromises = allProducts.map(async (prods) => {
+        allProducts.map(async (prods) => {
           if (selectedIds.includes(prods.id)) {
             const priceSnap = await getDocs(
               collection(db, `products/${prods.id}/prices`)
             );
 
             priceSnap.forEach((priceDoc) => {
-              console.log({
-                name: prods.data.name,
-                image: prods.data.images,
-                price: priceDoc.data().unit_amount,
-                id: prods.id,
-                priceId: priceDoc.id,
-              });
               // set counter to +1
               setFetchCounter((prevFetchCounter) => prevFetchCounter + 1);
               setProducts((prevProducts) => [

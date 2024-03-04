@@ -33,12 +33,22 @@ import PrivateRoutes from "./utilities/PrivateRoute";
 import Support from "./screens/Support";
 import SupportSettings from "./screens/SupportSettings";
 import WarningAlertModal from "./components/Modals/WarningAlertModal";
-import { createTheme, ThemeProvider, Button, CssBaseline } from "@mui/material";
+import {
+  createTheme,
+  ThemeProvider,
+  Button,
+  CssBaseline,
+  Alert,
+} from "@mui/material";
 import Error404 from "./screens/Error404";
 import ErrorPageNotFound from "./screens/ErrorPageNotFound";
 import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
-import { selectUserDetailsObject } from "./statemanager/slices/LoginUserDataSlice";
+import {
+  selectIsSubscriptionActive,
+  selectUserDetailsObject,
+  setIsSubscriptionActive,
+} from "./statemanager/slices/LoginUserDataSlice";
 import { useEffect, useState } from "react";
 import {
   setCurrentBrowserSize,
@@ -55,6 +65,7 @@ import Favorites from "./screens/Favorites";
 import Settings from "./screens/Settings";
 import PlanItem from "./screens/PlanItem";
 import ChangeSubscriptionPackagePage from "./screens/ChangeSubscriptionPackagePage";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -214,6 +225,7 @@ const App = () => {
 
   const { pathname, search, hash } = location;
   const userLoginObject = useSelector(selectUserDetailsObject);
+  const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
 
   // this use effect is to redirect studio for the desired role on user change
   useEffect(() => {
@@ -312,8 +324,43 @@ const App = () => {
     dispatch(setCurrentScreenSize({ width, height }));
   }, [screenSize]);
 
-  /// Listen wherther or not internet is connected
+  // check for active subscription
+  useEffect(() => {
+    const SubscriptionValidationChecker = async () => {
+      const currentUser = auth.currentUser;
+      const accountId = currentUser.uid;
+      try {
+        const subscriptionsRef = collection(
+          db,
+          "users_db",
+          accountId,
+          "subscriptions"
+        );
 
+        const queryActiveOrTrialing = query(
+          subscriptionsRef,
+          where("status", "in", ["trialing", "active"])
+        );
+
+        onSnapshot(queryActiveOrTrialing, (snapshot) => {
+          const doc = snapshot.docs[0];
+          if (doc) {
+            // set isSubscriptionActive to true
+            //displays the inactive subscription warning
+            dispatch(setIsSubscriptionActive(true));
+          } else {
+            dispatch(setIsSubscriptionActive(false));
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    SubscriptionValidationChecker();
+  }, []);
+
+  /// Listen wherther or not internet is connected
   useEffect(() => {
     const handleOnline = () => {
       dispatch(setInternetConnectionOnline());
@@ -340,6 +387,22 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      {isSubscriptionActive ? null : (
+        <Alert
+          severity="error"
+          variant="filled"
+          action={
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              onClick={() => navigate("/changeSubscription")}>
+              Get One
+            </Button>
+          }>
+          No or Inactive Subscrtiption
+        </Alert>
+      )}
       <CssBaseline />
       <Routes>
         {/* PROTECTED ROUTES  */}
