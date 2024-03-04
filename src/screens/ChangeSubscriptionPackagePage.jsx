@@ -68,8 +68,6 @@ const ChangeSubscriptionPackagePage = () => {
 
   const Navigate = useNavigate();
 
-  const rolesMenu = ["Agent", "Player", "Coach", "Scout"];
-
   // state to store all products
   const [products, setProducts] = useState([]);
   // product details array
@@ -78,6 +76,8 @@ const ChangeSubscriptionPackagePage = () => {
   const [isProductsLoading, setIsProductsLoading] = useState(true);
   // state to display loading sign or button
   const [isButtonTriggered, setIsButtonTriggered] = useState(false);
+  // state to hold the roleSelected
+  const [role, setRole] = useState();
 
   // function to trigger warining modal
   const triggerWarningAlertModal = (message) => {
@@ -92,7 +92,7 @@ const ChangeSubscriptionPackagePage = () => {
       const roleRef = await doc(db, `users_db`, currentUser.uid);
       const roleSnap = await getDoc(roleRef);
       const roleSelected = await roleSnap.data().role;
-      // await alert(roleSelected);
+      await setRole(roleSelected);
       try {
         const q = query(
           collection(db, "products"),
@@ -266,40 +266,7 @@ const ChangeSubscriptionPackagePage = () => {
         {/* MENU ITEMS */}
 
         {browserWidth >= 1024 ? (
-          <div style={{ flex: ".55", display: "flex" }}>
-            {" "}
-            <BasicMenu menuTitle={"Roles"} menuItemsArray={rolesMenu} />{" "}
-            <Button
-              id="basic-button"
-              sx={{
-                color: "white",
-                textTransform: "none",
-                fontWeight: "bolder",
-                fontSize: "1.1em",
-                marginRight: 3,
-                height: "7vh",
-              }}
-              onClick={() => {
-                Navigate("/support");
-              }}>
-              Support
-            </Button>
-            <Button
-              id="basic-button"
-              sx={{
-                color: "white",
-                textTransform: "none",
-                fontWeight: "bolder",
-                fontSize: "1.1em",
-                marginRight: 3,
-                height: "7vh",
-              }}
-              onClick={() => {
-                Navigate("/resources");
-              }}>
-              Resources
-            </Button>
-          </div>
+          <div style={{ flex: ".55", display: "flex" }}></div>
         ) : (
           <div style={{ flex: ".55", display: "flex" }}>
             {" "}
@@ -344,7 +311,7 @@ const ChangeSubscriptionPackagePage = () => {
 
         {/* // Container housiong the header information  */}
         <div
-          className="md:h-[60vh] md:flex-row md:w-[100%] md:flex    
+          className="md:h-[30vh] md:flex-row md:w-[100%] md:flex    
           sm:h-[50vh] sm:w-[100%] sm:flex sm:flex-col
           "
           style={
@@ -376,11 +343,11 @@ const ChangeSubscriptionPackagePage = () => {
                   src={logoImage}
                   style={{ width: "160px", marginRight: "2vw" }}
                 />{" "}
-                | Player{" "}
+                |{role}
               </h1>
 
               <h1 className="sm:text-[2.2em]  md:text-[3em]">
-                Choose the plan that <br /> best suits your team.
+                Choose the plan that <br /> best suits your needs.
               </h1>
               <h4
                 className="sm:font-lighter sm:text-[1em]  md:text-[1.2em] md:font-lighter"
@@ -393,16 +360,6 @@ const ChangeSubscriptionPackagePage = () => {
             </div>
           </div>
           {/* SOCIAL MEDIA SECTIONS / EMPTY SECTIOn */}
-          <div
-            style={{
-              flex: ".45",
-
-              display: "flex",
-              flexDirection: "column-reverse",
-              // background: "pink",
-            }}>
-            {/* //ICON AREA */}
-          </div>
         </div>
 
         {/* SUBSCRIPTION CARDS */}
@@ -419,7 +376,7 @@ const ChangeSubscriptionPackagePage = () => {
           <h1 style={{ textAlign: "center" }}> Choose your Plan </h1>
           <h3 style={{ textAlign: "center" }}>
             {" "}
-            Unlock powerful features as a player{" "}
+            Unlock powerful features as a {role}
           </h3>
 
           {/* Subcscription Cards */}

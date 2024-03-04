@@ -792,7 +792,7 @@ export default function CreateProfileModal({ ProfileType }) {
   };
 
   // FUNCTION FOR CREATING PROFILE
-  const handleSaveProfile = () => {
+  const handleSaveProfile = async () => {
     const {
       // PlaceOfBirth,
       NationalityValue,
@@ -811,7 +811,8 @@ export default function CreateProfileModal({ ProfileType }) {
       positionRangeSliderValues,
     } = currentProfileFilterObject;
 
-    const { accountId } = loginUserDetails;
+    // get accountid and product id
+    const accountId = await currentUser.uid;
 
     const MacthedProfile = userSavedProfiles.filter((data) => {
       return data.label === currentProfileClicked;
