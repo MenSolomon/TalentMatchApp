@@ -66,6 +66,7 @@ import Settings from "./screens/Settings";
 import PlanItem from "./screens/PlanItem";
 import ChangeSubscriptionPackagePage from "./screens/ChangeSubscriptionPackagePage";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { auth, db } from "./Firebase/Firebase";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -347,6 +348,7 @@ const App = () => {
           if (doc) {
             // set isSubscriptionActive to true
             //displays the inactive subscription warning
+            alert("sub exists");
             dispatch(setIsSubscriptionActive(true));
           } else {
             dispatch(setIsSubscriptionActive(false));
