@@ -81,7 +81,7 @@ function SettingsBilling() {
         db,
         `users_db/${currentUser.uid}/subscriptions`
       );
-      const q = query(userRef, where("status", "==", "active"));
+      const q = query(userRef, where("status", "in", ["trialing", "active"]));
       const docSnap = await getDocs(q);
 
       if (docSnap.size === 0) {
@@ -92,7 +92,7 @@ function SettingsBilling() {
         docSnap.forEach(async (doc) => {
           const timestamp = await doc.data().current_period_end.seconds;
           const date = await new Date(timestamp * 1000);
-          console.log(date.toLocaleDateString());
+          // console.log(date.toLocaleDateString());
           setNextBillingDate(date.toDateString());
         });
       }
@@ -226,37 +226,6 @@ function SettingsBilling() {
             </div>
           </div>
         </div>
-        {/* <div
-          style={{
-            flex: ".4",
-            // background: "brown",
-            display: "flex",
-            flexDirection: "row",
-          }}>
-          <div style={{ flex: ".7" }}>
-            <div style={{ padding: "10px 20px" }}>
-              <h4>Pause or cancel subscription</h4>
-              <small>
-                By canceling your account you will lose all your data and
-                currently active subscriptions as well.
-              </small>
-            </div>
-          </div>
-          <div style={{ flex: ".3" }}>
-            <div style={{ padding: "10px 0px" }}>
-              <Button
-                style={{
-                  display: "flex",
-                  justifyContent: "start",
-                  // padding: "10px",
-                }}
-                size="small"
-                variant="outlined">
-                cancel Subscription
-              </Button>
-            </div>
-          </div>
-        </div> */}
       </div>
     </div>
   );

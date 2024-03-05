@@ -30,6 +30,7 @@ import BasicAutoComplete from "../../../../components/Autocompletes/BasicAutoCom
 import BasicSelect from "../../../../components/Selects/BasicSelect";
 import ClubAutoComplete from "../../../../components/Autocompletes/ClubAutoComplete";
 import {
+  selectIsSubscriptionActive,
   selectSubscriptionFeatures,
   selectUserDetailsObject,
 } from "../../../../statemanager/slices/LoginUserDataSlice";
@@ -1293,15 +1294,23 @@ export default function UploadPlayerToAgencyModal() {
   // subscriptionfeatures object selector
   const userLoginObject = useSelector(selectUserDetailsObject);
   const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
+  const subscriptionStatus = useSelector(selectIsSubscriptionActive);
+  // state to hold maximum number of profiles
   const { maxProfiles } = subscriptionFeaturesObject;
+  // state to hold subscription status
+
   const handleOpen = () => {
     // console.log(maxProfiles);
-    if (userLoginObject?.playersInPossession.length < maxProfiles) {
-      setOpen(true);
-    } else {
-      triggerWarningAlertModal(
-        "Upgrade your subscription to add more profiles"
-      );
+    if (subscriptionStatus === true) {
+      if (userLoginObject?.playersInPossession.length < maxProfiles) {
+        setOpen(true);
+      } else {
+        triggerWarningAlertModal(
+          "Upgrade your subscription to add more profiles"
+        );
+      }
+    } else if (subscriptionStatus === false) {
+      triggerWarningAlertModal("You do not have an active subscription");
     }
   };
   const handleClose = () => {
