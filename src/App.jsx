@@ -333,9 +333,8 @@ const App = () => {
     dispatch(setCurrentScreenSize({ width, height }));
   }, [screenSize]);
 
-  // check for active subscription
-  const subscriptionStatus = useSelector(selectIsSubscriptionActive);
   useEffect(() => {
+    // alert("SubscriptionValidationChecker");
     const currentUser = auth.currentUser;
 
     if (currentUser) {
@@ -363,13 +362,15 @@ const App = () => {
 
           onSnapshot(queryActiveOrTrialing, (snapshot) => {
             const doc = snapshot.docs[0];
-            if (doc.data().status === "active") {
-              // console.log(doc.data().status);
-              alert("setting to true");
-              dispatch(setIsSubscriptionActive(true));
-            } else {
-              alert("setting to false");
+            const length = snapshot.docs.length;
+            console.log(snapshot.docs.length);
+            // console.log(snapshot.docs[0].exists());
 
+            if (length > 0) {
+              // alert("setting to true");
+              dispatch(setIsSubscriptionActive(true));
+            } else if (length == 0) {
+              // alert("setting to false");
               dispatch(setIsSubscriptionActive(false));
             }
           });
@@ -381,7 +382,7 @@ const App = () => {
     } else {
       dispatch(setIsSubscriptionActive(true));
     }
-  }, [isSubscriptionActive]);
+  }, []);
 
   /// Listen wherther or not internet is connected
   useEffect(() => {

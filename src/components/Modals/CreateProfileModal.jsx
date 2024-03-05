@@ -415,17 +415,24 @@ export default function CreateProfileModal({ ProfileType }) {
       }
     });
   };
-  useEffect(() => {}, [selectIsSubscriptionActive]);
 
   // FUNCTION FOR CREATING PROFILE
   const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
 
   // const { productID } = selectProductID;
   const handleCreateProfile = async () => {
+    alert("handleCreateProfile");
     const { accountId } = loginUserDetails;
     const uuid = uuidv4();
+    // get product id form database if the redux state is empty
+    const productIDRef = doc(db, `users_db/${accountId}`);
+    const productIdSnap = await getDoc(productIDRef);
+    const productID = await productIdSnap.data().subscriptionPackage;
+    const priceID = await productIdSnap.data().subscriptionPrice;
 
     if (isSubscriptionActive == true) {
+      alert(`isSubscriptionActive:${isSubscriptionActive}`);
+
       if (userSavedProfiles.length < 1) {
         // cont newProfile == log
         // alert("less");
@@ -574,8 +581,9 @@ export default function CreateProfileModal({ ProfileType }) {
           );
         }
       }
-    } else {
-      triggerWarningAlertModal("You need an active subscription");
+    } else if (isSubscriptionActive == false) {
+      alert(`isSubscriptionActive:${isSubscriptionActive}`);
+      StripeCheckout(priceID);
     }
 
     // changing the click current clicked value to the edited name
@@ -585,6 +593,7 @@ export default function CreateProfileModal({ ProfileType }) {
 
   // FUNCTION FOR CREATING PROFILE
   const handleSaveProfile = async () => {
+    alert("handleSaveProfile");
     // get accountid and product id
     const currentUser = auth.currentUser;
     const accountId = await currentUser.uid;
