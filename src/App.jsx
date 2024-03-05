@@ -65,8 +65,16 @@ import Favorites from "./screens/Favorites";
 import Settings from "./screens/Settings";
 import PlanItem from "./screens/PlanItem";
 import ChangeSubscriptionPackagePage from "./screens/ChangeSubscriptionPackagePage";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { auth, db } from "./Firebase/Firebase";
+import { setPriceID } from "./statemanager/slices/SignupStepperSlice";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -326,41 +334,54 @@ const App = () => {
   }, [screenSize]);
 
   // check for active subscription
+  const subscriptionStatus = useSelector(selectIsSubscriptionActive);
   useEffect(() => {
-    const SubscriptionValidationChecker = async () => {
-      const currentUser = auth.currentUser;
-      const accountId = currentUser.uid;
-      try {
-        const subscriptionsRef = collection(
-          db,
-          "users_db",
-          accountId,
-          "subscriptions"
-        );
+    const currentUser = auth.currentUser;
 
-        const queryActiveOrTrialing = query(
-          subscriptionsRef,
-          where("status", "in", ["trialing", "active"])
-        );
+    if (currentUser) {
+      const SubscriptionValidationChecker = async () => {
+        const accountId = await currentUser.uid;
+        // get product id form database if the redux state is empty
+        const productIDRef = doc(db, `users_db/${accountId}`);
+        const productIdSnap = await getDoc(productIDRef);
+        const priceID = await productIdSnap.data().subscriptionPrice;
 
-        onSnapshot(queryActiveOrTrialing, (snapshot) => {
-          const doc = snapshot.docs[0];
-          if (doc) {
-            // set isSubscriptionActive to true
-            //displays the inactive subscription warning
-            alert("sub exists");
-            dispatch(setIsSubscriptionActive(true));
-          } else {
-            dispatch(setIsSubscriptionActive(false));
-          }
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
+        // save priceID to redux
+        await dispatch(setPriceID(priceID));
+        try {
+          const subscriptionsRef = collection(
+            db,
+            "users_db",
+            accountId,
+            "subscriptions"
+          );
 
-    SubscriptionValidationChecker();
-  }, []);
+          const queryActiveOrTrialing = query(
+            subscriptionsRef,
+            where("status", "in", ["trialing", "active"])
+          );
+
+          onSnapshot(queryActiveOrTrialing, (snapshot) => {
+            const doc = snapshot.docs[0];
+            if (doc.data().status === "active") {
+              // console.log(doc.data().status);
+              alert("setting to true");
+              dispatch(setIsSubscriptionActive(true));
+            } else {
+              alert("setting to false");
+
+              dispatch(setIsSubscriptionActive(false));
+            }
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      SubscriptionValidationChecker();
+    } else {
+      dispatch(setIsSubscriptionActive(true));
+    }
+  }, [isSubscriptionActive]);
 
   /// Listen wherther or not internet is connected
   useEffect(() => {

@@ -6,7 +6,7 @@ export const UserLoginDataSlice = createSlice({
     logInStatus: false,
     userDetailsObject: {},
     credentials: "",
-    isSubscriptionActive: false,
+    isSubscriptionActive: true,
   },
 
   reducers: {
