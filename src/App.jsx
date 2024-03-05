@@ -48,6 +48,7 @@ import {
   selectIsSubscriptionActive,
   selectUserDetailsObject,
   setIsSubscriptionActive,
+  setSubscriptionFeatures,
 } from "./statemanager/slices/LoginUserDataSlice";
 import { useEffect, useState } from "react";
 import {
@@ -340,11 +341,20 @@ const App = () => {
     if (currentUser) {
       const SubscriptionValidationChecker = async () => {
         const accountId = await currentUser.uid;
+        // alert(accountId);
         // get product id form database if the redux state is empty
         const productIDRef = doc(db, `users_db/${accountId}`);
         const productIdSnap = await getDoc(productIDRef);
+        const productID = await productIdSnap.data().subscriptionPackage;
         const priceID = await productIdSnap.data().subscriptionPrice;
-
+        // alert(productID);
+        //get and store maxProfiles
+        const maxProfilesRef = await doc(db, `products/${productID}`);
+        const maxProfilesSnap = await getDoc(maxProfilesRef);
+        const maxProfiles = await maxProfilesSnap.data().features;
+        // save to redux
+        await dispatch(setSubscriptionFeatures(maxProfiles));
+        console.log(`maxProfilesSnap:${maxProfiles}`);
         // save priceID to redux
         await dispatch(setPriceID(priceID));
         try {
@@ -363,7 +373,7 @@ const App = () => {
           onSnapshot(queryActiveOrTrialing, (snapshot) => {
             const doc = snapshot.docs[0];
             const length = snapshot.docs.length;
-            console.log(snapshot.docs.length);
+            // console.log(snapshot.docs.length);
             // console.log(snapshot.docs[0].exists());
 
             if (length > 0) {

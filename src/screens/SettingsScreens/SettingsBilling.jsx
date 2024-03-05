@@ -26,6 +26,7 @@ function SettingsBilling() {
   // state to set next billing date
   const [nextBillingDate, setNextBillingDate] = useState("N/A");
   // product details arry
+  // We take the names from a dublicate array in the src directory to prevent unecessary reads from firestore
   const productids = productDetails;
   useEffect(() => {
     const activeQueryFn = () => {

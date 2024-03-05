@@ -64,7 +64,7 @@ export const productDetails = [
   },
   {
     id: "prod_PaU961QtG9oT80",
-    name: "Agent Premium",
+    name: "Agent Starter",
     role: "Agent",
     details: [],
   },

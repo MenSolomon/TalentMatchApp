@@ -7,6 +7,7 @@ export const UserLoginDataSlice = createSlice({
     userDetailsObject: {},
     credentials: "",
     isSubscriptionActive: true,
+    subscriptionFeatures: {},
   },
 
   reducers: {
@@ -22,6 +23,9 @@ export const UserLoginDataSlice = createSlice({
     setIsSubscriptionActive: (state, action) => {
       state.isSubscriptionActive = action.payload;
     },
+    setSubscriptionFeatures: (state, action) => {
+      state.subscriptionFeatures = action.payload;
+    },
   },
 });
 
@@ -35,10 +39,14 @@ export const selectCredentials = (state) => state.UserLoginData.credentials;
 export const selectIsSubscriptionActive = (state) =>
   state.UserLoginData.isSubscriptionActive;
 
+export const selectSubscriptionFeatures = (state) =>
+  state.UserLoginData.subscriptionFeatures;
+
 export const {
   setLoginStatus,
   setUserDetailsObject,
   setCredentials,
   setIsSubscriptionActive,
+  setSubscriptionFeatures,
 } = UserLoginDataSlice.actions;
 export default UserLoginDataSlice.reducer;

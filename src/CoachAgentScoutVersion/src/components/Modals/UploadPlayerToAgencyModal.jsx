@@ -29,7 +29,10 @@ import GroupedRadio from "../../../../components/Radio/GroupedRadio";
 import BasicAutoComplete from "../../../../components/Autocompletes/BasicAutoComplete";
 import BasicSelect from "../../../../components/Selects/BasicSelect";
 import ClubAutoComplete from "../../../../components/Autocompletes/ClubAutoComplete";
-import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
+import {
+  selectSubscriptionFeatures,
+  selectUserDetailsObject,
+} from "../../../../statemanager/slices/LoginUserDataSlice";
 import { useForm } from "react-hook-form";
 import CountrySelect from "../AutoComplete/CountrySelect";
 import { useRef } from "react";
@@ -66,6 +69,7 @@ import moment from "moment";
 import { selectPlayersDatabase } from "../../../../statemanager/slices/DatabaseSlice";
 import { selectClubsInDatabase } from "../../../../statemanager/slices/ClubsInDatabaseSlice";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const style = {
   position: "absolute",
@@ -106,6 +110,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
   const playerCreatedAdditionalInfoObject = useSelector(
     selectPlayerObjectSampleWithoutBasicInformation
   );
+
   const dispatch = useDispatch();
   const [DOB, setDOB] = React.useState("");
   const [CountryCode, setCountryCode] = React.useState("");
@@ -122,7 +127,6 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
   const [submitBtnEnabler, setSubmitBtnEnabler] = React.useState(false);
   const [jerseyNumber, setJerseyNumber] = React.useState("1");
   const [openBackdropTrigger, setOpenBackdropTrigger] = React.useState(true);
-
   // Images States
   const [fileName, setFileName] = React.useState([]);
   const [file, setFile] = React.useState([]);
@@ -251,6 +255,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
   const triggerWarningAlertModal = (message) => {
     dispatch(setWarningAlertModalMessage(message));
     dispatch(setWarningAlertModalCounter());
+    console.log(userLoginObject?.playersInPossession.length);
   };
 
   const onSubmit = (formData, e) => {
@@ -1278,146 +1283,26 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
   );
 }
 
-// MODAL TO ADD EXISTING PLAYER TO AGENCY   , paddingLeft: "5%"
-
-// function AddPlayerFromDatabaseModal() {
-//   const [open, setOpen] = React.useState(false);
-//   const handleOpen = () => {
-//     setOpen(true);
-//   };
-//   const handleClose = () => {
-//     setOpen(false);
-//   };
-//   const PlayerArray = useSelector(selectPlayersInAgencyArray);
-
-//   return (
-//     <React.Fragment>
-//       <Card
-//         className="background primaryTextColor uploadPlayerModalCard"
-//         onClick={handleOpen}
-//         style={{
-//           // background: "#E0FA55",
-//           height: "45vh",
-//           width: "20vw",
-//           display: "flex",
-//           flexDirection: "column",
-//           padding: ".4vw",
-//         }}
-//       >
-//         {/* CARD HEADER */}
-
-//         <div style={{ flex: ".2" }}>
-//           <h4>Add existing player</h4>
-//         </div>
-
-//         {/* Card CONTENT */}
-//         <div style={{ flex: ".4" }}>
-//           Add any player(s) from our existing databases across our the world:{" "}
-//           <br />
-//         </div>
-//       </Card>
-
-//       <Modal
-//         open={open}
-//         onClose={handleClose}
-//         aria-labelledby="child-modal-title"
-//         aria-describedby="child-modal-description"
-//       >
-//         <Box
-//           className="cardBackground primaryTextColor"
-//           sx={{ ...style, width: 1000 }}
-//         >
-//           <h2 id="child-modal-title">Add existing player</h2>
-//           <Button
-//             onClick={handleClose}
-//             sx={{ width: "10%", marginLeft: "80%" }}
-//           >
-//             Back
-//           </Button>
-//           <div
-//             style={{
-//               // background: "red",
-//               width: "100%",
-//               height: "80%",
-//               display: "flex",
-//               // padding: "10px",
-//               flexDirection: "column",
-//             }}
-//           >
-//             {/* Search Bar */}
-//             <div style={{ flex: "0.1" }}>
-//               <TextField required
-//                 id="input-with-icon-textfield"
-//                 label="Search"
-//                 InputProps={{
-//                   startAdornment: (
-//                     <InputAdornment position="start">
-//                       <Search />
-//                     </InputAdornment>
-//                   ),
-//                 }}
-//                 variant="outlined"
-//                 size="small"
-//               />
-//             </div>
-//             {/* Player View Cards */}
-//             <div
-//               style={{
-//                 flex: "0.8",
-//                 // background: "peru",
-//                 display: "flex",
-//                 flexWrap: "wrap",
-//                 overflowY: "scroll",
-//               }}
-//             >
-//               {PlayerArray.map((data, index) => {
-//                 const {
-//                   firstName,
-//                   surName,
-//                   Age,
-//                   position,
-//                   Nationality,
-//                   jerseyNumber,
-//                   image,
-//                 } = data;
-
-//                 return (
-//                   <PlayerViewCardFromPlayersScreen
-//                     key={index}
-//                     image={image}
-//                     surName={surName}
-//                     age={Age}
-//                     position={position}
-//                     jerseyNumber={jerseyNumber}
-//                     firstName={firstName}
-//                     nationality={Nationality}
-//                   />
-//                 );
-//               })}
-//             </div>
-//             <div
-//               style={{
-//                 flex: "0.1",
-//                 display: "flex",
-//                 alignItems: "center",
-//                 justifyContent: "center",
-//               }}
-//             >
-//               <Pagination count={10} color="secondary" />
-//             </div>
-//           </div>
-//         </Box>
-//       </Modal>
-//     </React.Fragment>
-//   );
-// }
-
 export default function UploadPlayerToAgencyModal() {
   const [open, setOpen] = React.useState(false);
-  // const [motherModalAfterFormSubmitted, setMotherModalAfterFormSubmitted] = React.useState("");
-
+  const dispatch = useDispatch();
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
+  // subscriptionfeatures object selector
+  const userLoginObject = useSelector(selectUserDetailsObject);
+  const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
+  const { maxProfiles } = subscriptionFeaturesObject;
   const handleOpen = () => {
-    setOpen(true);
+    // console.log(maxProfiles);
+    if (userLoginObject?.playersInPossession.length < maxProfiles) {
+      setOpen(true);
+    } else {
+      triggerWarningAlertModal(
+        "Upgrade your subscription to add more profiles"
+      );
+    }
   };
   const handleClose = () => {
     setOpen(false);

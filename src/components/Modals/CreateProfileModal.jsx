@@ -421,7 +421,7 @@ export default function CreateProfileModal({ ProfileType }) {
 
   // const { productID } = selectProductID;
   const handleCreateProfile = async () => {
-    alert("handleCreateProfile");
+    // alert("handleCreateProfile");
     const { accountId } = loginUserDetails;
     const uuid = uuidv4();
     // get product id form database if the redux state is empty
@@ -431,7 +431,7 @@ export default function CreateProfileModal({ ProfileType }) {
     const priceID = await productIdSnap.data().subscriptionPrice;
 
     if (isSubscriptionActive == true) {
-      alert(`isSubscriptionActive:${isSubscriptionActive}`);
+      // alert(`isSubscriptionActive:${isSubscriptionActive}`);
 
       if (userSavedProfiles.length < 1) {
         // cont newProfile == log
