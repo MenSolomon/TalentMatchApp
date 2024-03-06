@@ -77,6 +77,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "./Firebase/Firebase";
 import { setPriceID } from "./statemanager/slices/SignupStepperSlice";
+import CoachAgentScoutVersionConnetions from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionConnections";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -377,14 +378,12 @@ const App = () => {
             // console.log(`no. of subs: ${length}`);
             // console.log(`accountId:${accountId}`);
             if (length > 0) {
-              alert("setting to true");
               dispatch(setIsSubscriptionActive(true));
               // get end next billing date
               const timestamp = doc.data().current_period_end.seconds;
               const date = await new Date(timestamp * 1000);
               dispatch(setNextBillingDate(date.toDateString()));
             } else if (length == 0) {
-              alert("setting to false");
               dispatch(setIsSubscriptionActive(false));
               dispatch(setNextBillingDate("N/A"));
             }
@@ -522,6 +521,10 @@ const App = () => {
             <Route
               path="/multiStudio/favorites"
               element={<CoachAgentScoutVersionFavorites />}
+            />
+            <Route
+              path="/multiStudio/connections"
+              element={<CoachAgentScoutVersionConnetions />}
             />
             <Route
               path="/multiStudio/messages"

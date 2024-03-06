@@ -80,7 +80,7 @@ const Login = () => {
         const userInfoRef = doc(db, `users_db/${accountId}`);
 
         const userInfoSnap = await getDoc(userInfoRef);
-        console.log(userInfoSnap.data());
+
         if (user) {
           dispatch(setLoginStatus(true));
           dispatch(
