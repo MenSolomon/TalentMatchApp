@@ -48,6 +48,7 @@ import {
   selectIsSubscriptionActive,
   selectUserDetailsObject,
   setIsSubscriptionActive,
+  setNextBillingDate,
   setSubscriptionFeatures,
 } from "./statemanager/slices/LoginUserDataSlice";
 import { useEffect, useState } from "react";
@@ -349,12 +350,12 @@ const App = () => {
         const priceID = await productIdSnap.data().subscriptionPrice;
         // alert(productID);
         //get and store maxProfiles
-        const maxProfilesRef = await doc(db, `products/${productID}`);
-        const maxProfilesSnap = await getDoc(maxProfilesRef);
-        const maxProfiles = await maxProfilesSnap.data().features;
+        const featuresRef = await doc(db, `products/${productID}`);
+        const featuresSnap = await getDoc(featuresRef);
+        const features = await featuresSnap.data().features;
         // save to redux
-        await dispatch(setSubscriptionFeatures(maxProfiles));
-        console.log(`maxProfilesSnap:${maxProfiles}`);
+        await dispatch(setSubscriptionFeatures(features));
+        console.log(`maxProfilesSnap:${features.maxProfiles}`);
         // save priceID to redux
         await dispatch(setPriceID(priceID));
         try {
@@ -370,18 +371,22 @@ const App = () => {
             where("status", "in", ["trialing", "active"])
           );
 
-          onSnapshot(queryActiveOrTrialing, (snapshot) => {
+          onSnapshot(queryActiveOrTrialing, async (snapshot) => {
             const doc = snapshot.docs[0];
             const length = snapshot.docs.length;
-            // console.log(snapshot.docs.length);
-            // console.log(snapshot.docs[0].exists());
-
+            // console.log(`no. of subs: ${length}`);
+            // console.log(`accountId:${accountId}`);
             if (length > 0) {
-              // alert("setting to true");
+              alert("setting to true");
               dispatch(setIsSubscriptionActive(true));
+              // get end next billing date
+              const timestamp = doc.data().current_period_end.seconds;
+              const date = await new Date(timestamp * 1000);
+              dispatch(setNextBillingDate(date.toDateString()));
             } else if (length == 0) {
-              // alert("setting to false");
+              alert("setting to false");
               dispatch(setIsSubscriptionActive(false));
+              dispatch(setNextBillingDate("N/A"));
             }
           });
         } catch (error) {

@@ -7,6 +7,7 @@ export const UserLoginDataSlice = createSlice({
     userDetailsObject: {},
     credentials: "",
     isSubscriptionActive: true,
+    nextBillingDate: "N/A",
     subscriptionFeatures: {},
   },
 
@@ -22,6 +23,9 @@ export const UserLoginDataSlice = createSlice({
     },
     setIsSubscriptionActive: (state, action) => {
       state.isSubscriptionActive = action.payload;
+    },
+    setNextBillingDate: (state, action) => {
+      state.nextBillingDate = action.payload;
     },
     setSubscriptionFeatures: (state, action) => {
       state.subscriptionFeatures = action.payload;
@@ -42,11 +46,15 @@ export const selectIsSubscriptionActive = (state) =>
 export const selectSubscriptionFeatures = (state) =>
   state.UserLoginData.subscriptionFeatures;
 
+export const selectNextBillingDate = (state) =>
+  state.UserLoginData.nextBillingDate;
+
 export const {
   setLoginStatus,
   setUserDetailsObject,
   setCredentials,
   setIsSubscriptionActive,
   setSubscriptionFeatures,
+  setNextBillingDate,
 } = UserLoginDataSlice.actions;
 export default UserLoginDataSlice.reducer;

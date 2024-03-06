@@ -14,6 +14,11 @@ import {
 import { productDetails } from "../../utils/ProductDetails";
 import { httpsCallable } from "firebase/functions";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import {
+  selectIsSubscriptionActive,
+  selectNextBillingDate,
+} from "../../statemanager/slices/LoginUserDataSlice";
 
 function SettingsBilling() {
   const navigate = useNavigate();
@@ -24,10 +29,12 @@ function SettingsBilling() {
   // state to set subscription status
   const [subscriptionStatus, setSubscriptionStatus] = useState();
   // state to set next billing date
-  const [nextBillingDate, setNextBillingDate] = useState("N/A");
+  const nextBillingDate = useSelector(selectNextBillingDate);
+
   // product details arry
   // We take the names from a dublicate array in the src directory to prevent unecessary reads from firestore
   const productids = productDetails;
+  const subscriptionStatusRedux = useSelector(selectIsSubscriptionActive);
   useEffect(() => {
     const activeQueryFn = () => {
       const activeProductsQuery = query(
@@ -84,17 +91,10 @@ function SettingsBilling() {
       const q = query(userRef, where("status", "in", ["trialing", "active"]));
       const docSnap = await getDocs(q);
 
-      if (docSnap.size === 0) {
+      if (subscriptionStatusRedux === false) {
         setSubscriptionStatus("Inactive");
-        setNextBillingDate("N/A");
-      } else if (docSnap.size === 1) {
+      } else if (subscriptionStatusRedux === true) {
         setSubscriptionStatus("Active");
-        docSnap.forEach(async (doc) => {
-          const timestamp = await doc.data().current_period_end.seconds;
-          const date = await new Date(timestamp * 1000);
-          // console.log(date.toLocaleDateString());
-          setNextBillingDate(date.toDateString());
-        });
       }
     };
     activeQueryFn();
@@ -182,7 +182,7 @@ function SettingsBilling() {
             </div>
             <div style={{ flex: ".7" }}>
               <div>
-                Next Billing Date: <span>{nextBillingDate.toString()}</span>
+                Next Billing Date: <span>{nextBillingDate}</span>
               </div>
             </div>
           </Paper>
