@@ -29,7 +29,11 @@ import GroupedRadio from "../../../../components/Radio/GroupedRadio";
 import BasicAutoComplete from "../../../../components/Autocompletes/BasicAutoComplete";
 import BasicSelect from "../../../../components/Selects/BasicSelect";
 import ClubAutoComplete from "../../../../components/Autocompletes/ClubAutoComplete";
-import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
+import {
+  selectIsSubscriptionActive,
+  selectSubscriptionFeatures,
+  selectUserDetailsObject,
+} from "../../../../statemanager/slices/LoginUserDataSlice";
 import { useForm } from "react-hook-form";
 import CountrySelect from "../AutoComplete/CountrySelect";
 import { useRef } from "react";
@@ -37,15 +41,19 @@ import { selectPlayerObjectSampleWithoutBasicInformation } from "../../../../sta
 import { v4 as uuidv4 } from "uuid";
 import {
   arrayUnion,
+  collection,
   doc,
   getDoc,
   increment,
+  onSnapshot,
+  query,
   serverTimestamp,
   setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { db, storage } from "../../../../Firebase/Firebase";
+import { auth, db, storage } from "../../../../Firebase/Firebase";
 import BasicSlider from "../slider/BasicSlider";
 import {
   selectSoccerPostions,
@@ -61,6 +69,8 @@ import {
 import moment from "moment";
 import { selectPlayersDatabase } from "../../../../statemanager/slices/DatabaseSlice";
 import { selectClubsInDatabase } from "../../../../statemanager/slices/ClubsInDatabaseSlice";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const style = {
   position: "absolute",
@@ -95,12 +105,13 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
   const fileInputRef = useRef(null);
   // const uuid = uuidv4();
   const [open, setOpen] = React.useState(false);
-
+  const navigate = useNavigate();
   const userLoginObject = useSelector(selectUserDetailsObject);
   const allPlayersInDatabase = useSelector(selectPlayersDatabase);
   const playerCreatedAdditionalInfoObject = useSelector(
     selectPlayerObjectSampleWithoutBasicInformation
   );
+
   const dispatch = useDispatch();
   const [DOB, setDOB] = React.useState("");
   const [CountryCode, setCountryCode] = React.useState("");
@@ -117,7 +128,6 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
   const [submitBtnEnabler, setSubmitBtnEnabler] = React.useState(false);
   const [jerseyNumber, setJerseyNumber] = React.useState("1");
   const [openBackdropTrigger, setOpenBackdropTrigger] = React.useState(true);
-
   // Images States
   const [fileName, setFileName] = React.useState([]);
   const [file, setFile] = React.useState([]);
@@ -246,6 +256,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
   const triggerWarningAlertModal = (message) => {
     dispatch(setWarningAlertModalMessage(message));
     dispatch(setWarningAlertModalCounter());
+    console.log(userLoginObject?.playersInPossession.length);
   };
 
   const onSubmit = (formData, e) => {
@@ -785,7 +796,40 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
       }
     }
 
-    uploadPlayerData();
+    const SubscriptionValidationChecker = async () => {
+      const currentUser = auth.currentUser;
+      const accountId = currentUser.uid;
+      try {
+        const subscriptionsRef = collection(
+          db,
+          "users_db",
+          accountId,
+          "subscriptions"
+        );
+
+        const queryActiveOrTrialing = query(
+          subscriptionsRef,
+          where("status", "in", ["trialing", "active"])
+        );
+
+        onSnapshot(queryActiveOrTrialing, (snapshot) => {
+          const doc = snapshot.docs[0];
+          if (doc) {
+            uploadPlayerData();
+          } else {
+            navigate("/changeSubscription");
+            // Handle the case where no active/trialing subscription exists
+            console.log("No active or trialing subscriptions found.");
+            // set isLoading to true
+            setIsloading(true);
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    SubscriptionValidationChecker();
   };
 
   return (
@@ -802,8 +846,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
           // display: "flex",
           // flexDirection: "column",
           // padding: ".4vw",
-        }}
-      >
+        }}>
         {/* CARD HEADER */}
 
         <div style={{ flex: ".2" }}>
@@ -825,19 +868,16 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
         open={open}
         onClose={handleClose}
         aria-labelledby="child-modal-title"
-        aria-describedby="child-modal-description"
-      >
+        aria-describedby="child-modal-description">
         <Box
           className="cardBackground primaryTextColor md:overflow-y-hidden md:flex md:flex-col md:h-[94%] md:w-[80%] sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col sm:overflow-y-scroll"
-          sx={{ ...style, paddingBottom: "2vh" }}
-        >
+          sx={{ ...style, paddingBottom: "2vh" }}>
           <div style={{ flex: ".2" }}>
             <h2 id="child-modal-title">
               Create a player profile{" "}
               <Button
                 sx={{ width: "10%", float: "right" }}
-                onClick={handleClose}
-              >
+                onClick={handleClose}>
                 Back
               </Button>
             </h2>
@@ -865,8 +905,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
           <div style={{ flex: ".8" }}>
             <form
               className="md:flex md:flex-col sm:flex sm:flex-col  "
-              onSubmit={handleSubmit(onSubmit)}
-            >
+              onSubmit={handleSubmit(onSubmit)}>
               {/* {...register("firstName", { required: true })} */}
               <div
                 // md:basis-[35%]
@@ -877,8 +916,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                   // display: "flex",
                   gap: "1vw",
                   // background: "red",
-                }}
-              >
+                }}>
                 {/* LEFT INPUT PLAYER DETAILS */}
                 <div
                   className="md:w-[100%]  md:flex md:flex-col md:basis-[35%]    sm:w-[100%]  sm:flex sm:flex-col sm:basis-[35%]"
@@ -889,8 +927,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       // flexDirection: "column",
                       // background: "red",
                     }
-                  }
-                >
+                  }>
                   <div
                     style={{
                       flex: "1",
@@ -898,8 +935,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       gap: "20px",
                       alignItems: "center",
                       flexDirection: "column",
-                    }}
-                  >
+                    }}>
                     {/* <CustomTextField placeholder={"First Name"} />
                 <CustomTextField placeholder={"Surname"} />     */}
 
@@ -1002,8 +1038,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                     // alignItems: "center",
                     // flexDirection: "column",
                     // background: "yellow",
-                  }}
-                >
+                  }}>
                   <BasicSlider
                     rangeName="Market value 000,000 (optional)"
                     max={50}
@@ -1129,16 +1164,14 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       }}
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
-                      onClick={() => fileInputRef.current.click()}
-                    >
+                      onClick={() => fileInputRef.current.click()}>
                       <div
                         style={{
                           display: "flex",
                           alignItems: "center",
                           justifyItems: "baseline",
                           gap: 10,
-                        }}
-                      >
+                        }}>
                         <AddAPhoto />
                         <Typography sx={{ fontWeight: "600" }}>
                           Select or drag profile Image
@@ -1187,8 +1220,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                             color: "red",
                             // backgroundColor: "white",
                             // left: "10vw",
-                          }}
-                        >
+                          }}>
                           <Close />
                         </IconButton>
                       </div>
@@ -1240,8 +1272,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                     marginBottom: "2vh",
                     // position: "absolute",
                   }}
-                  variant="contained"
-                >
+                  variant="contained">
                   Create
                 </Button>
               </div>
@@ -1253,146 +1284,34 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
   );
 }
 
-// MODAL TO ADD EXISTING PLAYER TO AGENCY   , paddingLeft: "5%"
-
-// function AddPlayerFromDatabaseModal() {
-//   const [open, setOpen] = React.useState(false);
-//   const handleOpen = () => {
-//     setOpen(true);
-//   };
-//   const handleClose = () => {
-//     setOpen(false);
-//   };
-//   const PlayerArray = useSelector(selectPlayersInAgencyArray);
-
-//   return (
-//     <React.Fragment>
-//       <Card
-//         className="background primaryTextColor uploadPlayerModalCard"
-//         onClick={handleOpen}
-//         style={{
-//           // background: "#E0FA55",
-//           height: "45vh",
-//           width: "20vw",
-//           display: "flex",
-//           flexDirection: "column",
-//           padding: ".4vw",
-//         }}
-//       >
-//         {/* CARD HEADER */}
-
-//         <div style={{ flex: ".2" }}>
-//           <h4>Add existing player</h4>
-//         </div>
-
-//         {/* Card CONTENT */}
-//         <div style={{ flex: ".4" }}>
-//           Add any player(s) from our existing databases across our the world:{" "}
-//           <br />
-//         </div>
-//       </Card>
-
-//       <Modal
-//         open={open}
-//         onClose={handleClose}
-//         aria-labelledby="child-modal-title"
-//         aria-describedby="child-modal-description"
-//       >
-//         <Box
-//           className="cardBackground primaryTextColor"
-//           sx={{ ...style, width: 1000 }}
-//         >
-//           <h2 id="child-modal-title">Add existing player</h2>
-//           <Button
-//             onClick={handleClose}
-//             sx={{ width: "10%", marginLeft: "80%" }}
-//           >
-//             Back
-//           </Button>
-//           <div
-//             style={{
-//               // background: "red",
-//               width: "100%",
-//               height: "80%",
-//               display: "flex",
-//               // padding: "10px",
-//               flexDirection: "column",
-//             }}
-//           >
-//             {/* Search Bar */}
-//             <div style={{ flex: "0.1" }}>
-//               <TextField required
-//                 id="input-with-icon-textfield"
-//                 label="Search"
-//                 InputProps={{
-//                   startAdornment: (
-//                     <InputAdornment position="start">
-//                       <Search />
-//                     </InputAdornment>
-//                   ),
-//                 }}
-//                 variant="outlined"
-//                 size="small"
-//               />
-//             </div>
-//             {/* Player View Cards */}
-//             <div
-//               style={{
-//                 flex: "0.8",
-//                 // background: "peru",
-//                 display: "flex",
-//                 flexWrap: "wrap",
-//                 overflowY: "scroll",
-//               }}
-//             >
-//               {PlayerArray.map((data, index) => {
-//                 const {
-//                   firstName,
-//                   surName,
-//                   Age,
-//                   position,
-//                   Nationality,
-//                   jerseyNumber,
-//                   image,
-//                 } = data;
-
-//                 return (
-//                   <PlayerViewCardFromPlayersScreen
-//                     key={index}
-//                     image={image}
-//                     surName={surName}
-//                     age={Age}
-//                     position={position}
-//                     jerseyNumber={jerseyNumber}
-//                     firstName={firstName}
-//                     nationality={Nationality}
-//                   />
-//                 );
-//               })}
-//             </div>
-//             <div
-//               style={{
-//                 flex: "0.1",
-//                 display: "flex",
-//                 alignItems: "center",
-//                 justifyContent: "center",
-//               }}
-//             >
-//               <Pagination count={10} color="secondary" />
-//             </div>
-//           </div>
-//         </Box>
-//       </Modal>
-//     </React.Fragment>
-//   );
-// }
-
 export default function UploadPlayerToAgencyModal() {
   const [open, setOpen] = React.useState(false);
-  // const [motherModalAfterFormSubmitted, setMotherModalAfterFormSubmitted] = React.useState("");
+  const dispatch = useDispatch();
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
+  // subscriptionfeatures object selector
+  const userLoginObject = useSelector(selectUserDetailsObject);
+  const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
+  const subscriptionStatus = useSelector(selectIsSubscriptionActive);
+  // state to hold maximum number of profiles
+  const { maxProfiles } = subscriptionFeaturesObject;
+  // state to hold subscription status
 
   const handleOpen = () => {
-    setOpen(true);
+    // console.log(maxProfiles);
+    if (subscriptionStatus === true) {
+      if (userLoginObject?.playersInPossession.length < maxProfiles) {
+        setOpen(true);
+      } else {
+        triggerWarningAlertModal(
+          "Upgrade your subscription to add more profiles"
+        );
+      }
+    } else if (subscriptionStatus === false) {
+      triggerWarningAlertModal("You do not have an active subscription");
+    }
   };
   const handleClose = () => {
     setOpen(false);
@@ -1410,8 +1329,7 @@ export default function UploadPlayerToAgencyModal() {
         open={open}
         onClose={handleClose}
         aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-      >
+        aria-describedby="parent-modal-description">
         <Box
           sx={{
             ...style,
@@ -1419,8 +1337,7 @@ export default function UploadPlayerToAgencyModal() {
             // display: "flex",
             // flexDirection: "column",\
           }}
-          className="cardBackground primaryTextColor md:h-[94%] md:w-[80%] sm:w-[100%] sm:h-[100%]"
-        >
+          className="cardBackground primaryTextColor md:h-[94%] md:w-[80%] sm:w-[100%] sm:h-[100%]">
           {/* // UPLOAD A PLAYER HEADER */}
 
           <div style={{ flex: ".2", textAlign: "center" }}>
@@ -1460,8 +1377,7 @@ export default function UploadPlayerToAgencyModal() {
                   display: "grid",
                   placeContent: "center",
                   paddingLeft: "3vw",
-                }}
-              >
+                }}>
                 <img
                   className="md:w-[200px] md:h-[400px]  sm:w-[200px] sm:h-[400px]"
                   // style={{ width: "200px", height: "400px" }}
@@ -1480,8 +1396,7 @@ export default function UploadPlayerToAgencyModal() {
                   padding: ".4vw",
                   display: "grid",
                   placeContent: "center",
-                }}
-              >
+                }}>
                 <CreateAPlayerProfileModal
                   turnMotherModalAfterSubmitted={retrieveDataFromMotherModal}
                 />

@@ -13,7 +13,7 @@ import {
 import { useSelector } from "react-redux";
 import { selectCredentials } from "../statemanager/slices/LoginUserDataSlice";
 import { auth, db } from "../Firebase/Firebase";
-import { productDetails } from "../CoachAgentScoutVersion/src/utils/ProductIds";
+import { productDetails } from "../utils/ProductDetails";
 
 const PlanItem = () => {
   // credentials state

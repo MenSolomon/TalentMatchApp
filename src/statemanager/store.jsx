@@ -67,6 +67,14 @@ const SavedProfilesSlicePersistConfig = {
   whitelist: ["userSavedProfiles"],
 };
 
+const UserLoginDataSlicePersistConfig = {
+  key: "UserLoginData",
+  version: 1,
+  storage,
+  blacklist: ["logInStatus", "userDetailsObject", "credentials"],
+  whitelist: ["subscriptionFeatures", "isSubscriptionActive"],
+};
+
 const reducer = combineReducers({
   //   files: incomeReducer,
   CollapsePlayerCards: playerDetailsCardsCollapseReducer,
@@ -78,7 +86,10 @@ const reducer = combineReducers({
   FormStepper: SignupStepperReducer,
   UserData: UserDaterReducer,
   TempDatabase: TempDatabaseReducer,
-  UserLoginData: LoginUserDataSlice,
+  UserLoginData: persistReducer(
+    UserLoginDataSlicePersistConfig,
+    LoginUserDataSlice
+  ),
   SavedProfiles: persistReducer(
     SavedProfilesSlicePersistConfig,
     SavedProfilesReducer

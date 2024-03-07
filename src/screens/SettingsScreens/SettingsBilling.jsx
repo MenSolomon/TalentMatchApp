@@ -9,17 +9,32 @@ import {
   onSnapshot,
   getDoc,
   doc,
+  getDocs,
 } from "firebase/firestore";
-import { productDetails } from "../../CoachAgentScoutVersion/src/utils/ProductIds";
+import { productDetails } from "../../utils/ProductDetails";
 import { httpsCallable } from "firebase/functions";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import {
+  selectIsSubscriptionActive,
+  selectNextBillingDate,
+} from "../../statemanager/slices/LoginUserDataSlice";
 
 function SettingsBilling() {
+  const navigate = useNavigate();
   // state to store price id
   const [priceId, setPriceId] = useState();
   // state to display circular progress animation
   const [isLoading, setIsLoading] = useState(false);
+  // state to set subscription status
+  const [subscriptionStatus, setSubscriptionStatus] = useState();
+  // state to set next billing date
+  const nextBillingDate = useSelector(selectNextBillingDate);
+
   // product details arry
+  // We take the names from a dublicate array in the src directory to prevent unecessary reads from firestore
   const productids = productDetails;
+  const subscriptionStatusRedux = useSelector(selectIsSubscriptionActive);
   useEffect(() => {
     const activeQueryFn = () => {
       const activeProductsQuery = query(
@@ -61,13 +76,30 @@ function SettingsBilling() {
       const subscriptionProductRef = doc(db, "users_db", currentUser.uid);
       const subscriptionProductSnap = await getDoc(subscriptionProductRef);
       await setPriceId(subscriptionProductSnap.data().subscriptionPackage);
-      // console.log(
-      //   "subscriptionProductSnap:",
-      //   subscriptionProductSnap.data().subscriptionPackage
-      // );
+    };
+
+    // get status of subscription
+    const getSubscriptionStatus = async () => {
+      // get current uid
+      const currentUser = await auth.currentUser;
+      // alert(currentUser.uid);
+      // Check if an active subscription exists
+      const userRef = collection(
+        db,
+        `users_db/${currentUser.uid}/subscriptions`
+      );
+      const q = query(userRef, where("status", "in", ["trialing", "active"]));
+      const docSnap = await getDocs(q);
+
+      if (subscriptionStatusRedux === false) {
+        setSubscriptionStatus("Inactive");
+      } else if (subscriptionStatusRedux === true) {
+        setSubscriptionStatus("Active");
+      }
     };
     activeQueryFn();
     getProductId();
+    getSubscriptionStatus();
   }, []);
 
   const handleCustomerPortal = async () => {
@@ -131,36 +163,26 @@ function SettingsBilling() {
                 // justifyContent: "space-between",
               }}>
               <div className="padding" style={{ flex: ".7" }}>
-                {/* <ul
-                  className="primaryTextColor"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: ".5em",
-                    paddingTop: "5px",
-                  }}
-                >
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                </ul> */}
                 {productids.map((item) => {
                   if (priceId === item.id) {
                     return <div>{item.name}</div>;
                   }
                 })}
-                Active
+                {subscriptionStatus}
               </div>
               <div style={{ flex: ".3" }}>
                 <div style={{ padding: "5px 0px" }}>
-                  <Button variant="outlined">Upgrade</Button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => navigate("/changeSubscription")}>
+                    Change Package
+                  </Button>
                 </div>
               </div>
             </div>
             <div style={{ flex: ".7" }}>
               <div>
-                It let you add 1 pro website. <br />
-                Next Billing Date: <span>16 March, 201</span>
+                Next Billing Date: <span>{nextBillingDate}</span>
               </div>
             </div>
           </Paper>
@@ -176,7 +198,9 @@ function SettingsBilling() {
           <div style={{ flex: ".7" }}>
             <div style={{ padding: "10px 20px" }}>
               <h4>Subscription</h4>
-              <small>Modify your subscription</small>
+              <small>
+                Modify your subscription <br /> Cancel or renew
+              </small>
             </div>
           </div>
           <div style={{ flex: ".3" }}>
@@ -202,37 +226,6 @@ function SettingsBilling() {
             </div>
           </div>
         </div>
-        {/* <div
-          style={{
-            flex: ".4",
-            // background: "brown",
-            display: "flex",
-            flexDirection: "row",
-          }}>
-          <div style={{ flex: ".7" }}>
-            <div style={{ padding: "10px 20px" }}>
-              <h4>Pause or cancel subscription</h4>
-              <small>
-                By canceling your account you will lose all your data and
-                currently active subscriptions as well.
-              </small>
-            </div>
-          </div>
-          <div style={{ flex: ".3" }}>
-            <div style={{ padding: "10px 0px" }}>
-              <Button
-                style={{
-                  display: "flex",
-                  justifyContent: "start",
-                  // padding: "10px",
-                }}
-                size="small"
-                variant="outlined">
-                cancel Subscription
-              </Button>
-            </div>
-          </div>
-        </div> */}
       </div>
     </div>
   );

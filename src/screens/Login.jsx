@@ -72,15 +72,40 @@ const Login = () => {
   const onSubmit = (formData) => {
     // use google signinwithemailandpassword to get the current userid
     signInWithEmailAndPassword(auth, formData.email, formData.password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed in
         const user = userCredential.user;
         const accountId = user.uid;
+        // get userDetails
+        const userInfoRef = doc(db, `users_db/${accountId}`);
+
+        const userInfoSnap = await getDoc(userInfoRef);
+
         if (user) {
           dispatch(setLoginStatus(true));
           dispatch(
             setUserDetailsObject({
-              accountId: accountId,
+              Nationality: userInfoSnap.data().Nationality,
+              email: userInfoSnap.data().email,
+              CountryCode: userInfoSnap.data().CountryCode,
+              stripeLink: userInfoSnap.data().stripeLink,
+              DateOfBirth: userInfoSnap.data().DateOfBirth,
+              organization: userInfoSnap.data().organization,
+              phoneNumber: userInfoSnap.data().phoneNumber,
+              subscriptionPackage: userInfoSnap.data().subscriptionPackage,
+              surname: userInfoSnap.data().surname,
+              paymentDetails: {
+                phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
+              },
+              accountId: userInfoSnap.data().accountId,
+              firstName: userInfoSnap.data().firstName,
+              role: userInfoSnap.data().role,
+              dateCreated: {
+                seconds: userInfoSnap.data().dateCreated.seconds,
+                nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
+              },
+              stripeId: userInfoSnap.data().stripeId,
+              subscriptionPrice: userInfoSnap.data().subscriptionPrice,
             })
           );
 
@@ -180,6 +205,8 @@ const Login = () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        console.error("Error code:", errorCode);
+        console.error("Error message:", errorMessage);
       });
   };
 

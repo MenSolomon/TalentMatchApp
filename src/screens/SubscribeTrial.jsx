@@ -47,7 +47,7 @@ import {
 } from "../statemanager/slices/OtherComponentStatesSlice";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../Firebase/Firebase";
-import { productDetails } from "../CoachAgentScoutVersion/src/utils/ProductIds";
+import { productDetails } from "../utils/ProductDetails";
 
 const SubscribeTrial = () => {
   const browserSize = useSelector(selectCurrentBrowserSize);
@@ -98,58 +98,6 @@ const SubscribeTrial = () => {
   const [fetchCounter, setFetchCounter] = useState(0);
   // state to render loading effect whiles products is being set
   const [isProductsLoading, setIsProductsLoading] = useState(true);
-  // useEffect(() => {
-  //   const FetchProducts = async () => {
-  //     const q = query(collection(db, "products"), where("active", "==", true));
-  //     const allProducts = [];
-
-  //     try {
-  //       const querySnapshot = await getDocs(q);
-
-  //       // get all the products
-  //       querySnapshot.forEach((doc) => {
-  //         // save them to allProducts array
-  //         allProducts.push({ id: doc.id, data: doc.data() });
-  //       });
-
-  //       const selectedIds = productIds
-  //         .filter((prodId) => prodId.role === roleSelected)
-  //         .map((prodId) => prodId.id);
-
-  //       const productPromises = allProducts.map(async (prods) => {
-  //         if (selectedIds.includes(prods.id)) {
-  //           const priceSnap = await getDocs(
-  //             collection(db, `products/${prods.id}/prices`)
-  //           );
-
-  //           priceSnap.forEach((priceDoc) => {
-  //             console.log({
-  //               name: prods.data.name,
-  //               image: prods.data.images,
-  //               price: priceDoc.data().unit_amount,
-  //               id: prods.id,
-  //             });
-  //             // set counter to +1
-  //             setFetchCounter(fetchCounter + 1);
-  //             setProducts((prevProducts) => [
-  //               ...prevProducts,
-  //               {
-  //                 name: prods.data.name,
-  //                 image: prods.data.images,
-  //                 price: priceDoc.data().unit_amount,
-  //                 id: prods.id,
-  //               },
-  //             ]);
-  //           });
-  //         }
-  //       });
-  //     } catch (error) {
-  //       console.error("Error fetching products:", error);
-  //     }
-  //   };
-
-  //   FetchProducts();
-  // }, []);
 
   useEffect(() => {
     const FetchProducts = async () => {

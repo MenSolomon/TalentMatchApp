@@ -17,6 +17,7 @@ import {
   Inbox,
   Monitor,
   MoveToInbox,
+  People,
   Settings,
   Star,
 } from "@mui/icons-material";
@@ -68,6 +69,8 @@ const NavBarButton = ({ ButtonName, ButtonImage, path, buttonStyle }) => {
             />
           ) : ButtonName === "Messages" ? (
             <Forum sx={{ color: buttonColor }} />
+          ) : ButtonName === "Connections" ? (
+            <People sx={{ color: buttonColor }} />
           ) : ButtonName === "Analytics" ? (
             <Monitor sx={{ color: buttonColor }} />
           ) : ButtonName === "Help" ? (
@@ -80,8 +83,7 @@ const NavBarButton = ({ ButtonName, ButtonImage, path, buttonStyle }) => {
             <Star sx={{ color: buttonColor }} />
           )
         }
-        onClick={handleNavigate}
-      >
+        onClick={handleNavigate}>
         {ButtonName}
       </Button>
     </NavLink>

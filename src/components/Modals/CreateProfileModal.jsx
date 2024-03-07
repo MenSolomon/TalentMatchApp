@@ -22,6 +22,7 @@ import CheckboxesGroup from "../CheckBoxes/GroupedCheckBox";
 import RangeSlider from "../Slider/RangeSlider";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  selectIsSubscriptionActive,
   selectUserDetailsObject,
   setUserDetailsObject,
 } from "../../statemanager/slices/LoginUserDataSlice";
@@ -377,12 +378,13 @@ export default function CreateProfileModal({ ProfileType }) {
   }, [PlayerPositionAutoCompleteValue, currentProfileClicked]);
 
   // FUNCTION TO TRIGGER STRIPE CHECKOUT
-  const currentUser = auth.currentUser;
+
   // useEffect(() => {
   //   console.log(currentUser.uid);
   // }, []);
 
   const StripeCheckout = async (priceID) => {
+    const currentUser = auth.currentUser;
     const usersDbRef = collection(db, "users_db");
     const currentUserDocRef = doc(usersDbRef, currentUser.uid);
     const checkoutSessionsCollectionRef = collection(
@@ -415,9 +417,185 @@ export default function CreateProfileModal({ ProfileType }) {
   };
 
   // FUNCTION FOR CREATING PROFILE
+  const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
+
   // const { productID } = selectProductID;
   const handleCreateProfile = async () => {
+    // alert("handleCreateProfile");
+    const { accountId } = loginUserDetails;
+    const uuid = uuidv4();
+    // get product id form database if the redux state is empty
+    const productIDRef = doc(db, `users_db/${accountId}`);
+    const productIdSnap = await getDoc(productIDRef);
+    const productID = await productIdSnap.data().subscriptionPackage;
+    const priceID = await productIdSnap.data().subscriptionPrice;
+
+    if (isSubscriptionActive == true) {
+      // alert(`isSubscriptionActive:${isSubscriptionActive}`);
+
+      if (userSavedProfiles.length < 1) {
+        // cont newProfile == log
+        // alert("less");
+
+        // This is the rest of users in the database devoid of the current user logged in
+
+        // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
+
+        // alert(accountId);
+        ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
+        const savedProfileSubCollectionRef = doc(
+          db,
+          `users_db/${accountId}/SavedProfiles`,
+          "Default"
+        );
+
+        setDoc(savedProfileSubCollectionRef, {
+          label: "Default",
+          dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+          filter: currentProfileFilterObject,
+          labelId: "Default",
+        });
+
+        handleClose();
+
+        /// REset the filter object after createion
+        dispatch(
+          setCurrentProfileFilterObject({
+            // PlaceOfBirth: "Any",
+            NationalityValue: "Any",
+            AgeRangeValue: [0, 40],
+            HeightRangeValue: [0, 2.5],
+            positionRangeSliderValues: {
+              "Clean sheet": [0, 100],
+              Saves: [0, 100],
+              "Long pass accuracy": [0, 100],
+              Interception: [0, 100],
+
+              Blocks: [0, 100],
+              "Successful tackles rate %": [0, 100],
+              "pass success": [0, 100],
+              "total passes": [0, 100],
+              assists: [0, 100],
+
+              Goals: [0, 100],
+              "Goal/match played ratio": [0, 100],
+              Assists: [0, 100],
+              // "Shots per game": [0, 100],
+            },
+            MarketValue: "0 - 99,999",
+            SalaryExpectationValue: "0 - 4,999",
+
+            ClubCountryValue: "Any",
+            // CaptainRadioValue: "Any",
+            PrefferedFootRadioValue: "Any",
+            PlayerDivisionValue: "Any",
+            ContractStatusCheckBoxes: "Any",
+
+            // REview below
+            PlayerPositionAutoCompleteValue: "Any",
+            PlayerAlternatePositionAutoCompleteValue: "None",
+
+            previousProfile: "",
+          })
+        );
+      } else {
+        const savedProfileSubCollectionRef = doc(
+          db,
+          `users_db/${accountId}/SavedProfiles`,
+          uuid
+        );
+        if (profileName !== "" && profileName.toLowerCase() !== "") {
+          ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
+
+          const profileNameMatch = userSavedProfiles.filter((data) => {
+            const { label } = data;
+            return (
+              label.replace(/\s/g, "").toLowerCase() ===
+              profileName.replace(/\s/g, "").toLowerCase()
+            );
+          });
+
+          console.log("ProfileLabelMatxh", profileNameMatch);
+          // This it to make sure that we dont create a profile with the same name
+
+          if (profileNameMatch.length <= 0) {
+            setDoc(savedProfileSubCollectionRef, {
+              label: profileName,
+              dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+              filter: currentProfileFilterObject,
+              labelId: uuid,
+            });
+
+            handleClose();
+            dispatch(
+              setCurrentProfileFilterObject({
+                // PlaceOfBirth: "Any",
+                NationalityValue: "Any",
+                AgeRangeValue: [0, 40],
+                HeightRangeValue: [0, 2.5],
+                positionRangeSliderValues: {
+                  "Clean sheet": [0, 100],
+                  Saves: [0, 100],
+                  "Long pass accuracy": [0, 100],
+                  Interception: [0, 100],
+
+                  Blocks: [0, 100],
+                  "Successful tackles rate %": [0, 100],
+                  "pass success": [0, 100],
+                  "total passes": [0, 100],
+                  assists: [0, 100],
+
+                  Goals: [0, 100],
+                  "Goal/match played ratio": [0, 100],
+                  Assists: [0, 100],
+                  // "Shots per game": [0, 100],
+                },
+                SalaryExpectationValue: "0 - 4,999",
+
+                MarketValue: "0 - 99,999",
+
+                ClubCountryValue: "Any",
+                // CaptainRadioValue: "Any",
+                PrefferedFootRadioValue: "Any",
+                PlayerDivisionValue: "Any",
+                ContractStatusCheckBoxes: "Any",
+                // REview below
+                PlayerPositionAutoCompleteValue: "Any",
+                PlayerAlternatePositionAutoCompleteValue: "None",
+                previousProfile: "",
+              })
+            );
+            /// Snackbar show
+            dispatch(setSnackbarMessage(`"${profileName}" filter created`));
+            dispatch(setSnackbarTriggerCounter());
+
+            setProfileName("");
+          } else {
+            triggerWarningAlertModal(
+              "Please change your profile name a similar name already exists"
+            );
+          }
+        } else {
+          triggerWarningAlertModal(
+            "Please enter a profile name (cannot be name default)"
+          );
+        }
+      }
+    } else if (isSubscriptionActive == false) {
+      alert(`isSubscriptionActive:${isSubscriptionActive}`);
+      StripeCheckout(priceID);
+    }
+
+    // changing the click current clicked value to the edited name
+
+    // reset the textfields after save
+  };
+
+  // FUNCTION FOR CREATING PROFILE
+  const handleSaveProfile = async () => {
+    alert("handleSaveProfile");
     // get accountid and product id
+    const currentUser = auth.currentUser;
     const accountId = await currentUser.uid;
 
     // get product id form database if the redux state is empty
@@ -425,8 +603,6 @@ export default function CreateProfileModal({ ProfileType }) {
     const productIdSnap = await getDoc(productIDRef);
     const productID = await productIdSnap.data().subscriptionPackage;
     const priceID = await productIdSnap.data().subscriptionPrice;
-    console.log("accountId:", accountId);
-    console.log("priceID:", priceID);
 
     const SubscriptionValidationChecker = async () => {
       try {
@@ -442,168 +618,85 @@ export default function CreateProfileModal({ ProfileType }) {
           where("status", "in", ["trialing", "active"])
         );
 
-        onSnapshot(queryActiveOrTrialing, (snapshot) => {
+        onSnapshot(queryActiveOrTrialing, async (snapshot) => {
           const doc = snapshot.docs[0];
-          if (doc) {
-            // console.log(doc.id, ' => ', doc.data());
+          if (doc.data.length !== 0) {
+            const {
+              // PlaceOfBirth,
+              NationalityValue,
+              AgeRangeValue,
+              HeightRangeValue,
+              PlayerPositionAutoCompleteValue,
+              PlayerAlternatePositionAutoCompleteValue,
+              ClubCountryValue,
+              MarketValue,
+              SalaryExpectationValue,
 
-            console.log("subs exists");
-            const uuid = uuidv4();
-            // alert("Saved prof" + accountId);
+              // CaptainRadioValue,
+              PrefferedFootRadioValue,
+              PlayerDivisionValue,
+              ContractStatusCheckBoxes,
+              positionRangeSliderValues,
+            } = currentProfileFilterObject;
 
-            if (userSavedProfiles.length < 1) {
-              // cont newProfile == log
-              // alert("less");
+            // get accountid and product id
+            const accountId = await currentUser.uid;
 
-              // This is the rest of users in the database devoid of the current user logged in
+            const MacthedProfile = userSavedProfiles.filter((data) => {
+              return data.label === currentProfileClicked;
+            });
 
-              // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
+            const nameExists = userSavedProfiles.filter(
+              (data) => data.label.toLowerCase() === profileName.toLowerCase()
+            );
+            const { labelId } = MacthedProfile[0];
 
-              // alert(accountId);
-              ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
-              const savedProfileSubCollectionRef = doc(
-                db,
-                `users_db/${accountId}/SavedProfiles`,
-                "Default"
-              );
-
-              setDoc(savedProfileSubCollectionRef, {
-                label: "Default",
-                dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-                filter: currentProfileFilterObject,
-                labelId: "Default",
-              });
-
-              handleClose();
-
-              /// REset the filter object after createion
-              dispatch(
-                setCurrentProfileFilterObject({
-                  // PlaceOfBirth: "Any",
-                  NationalityValue: "Any",
-                  AgeRangeValue: [0, 40],
-                  HeightRangeValue: [0, 2.5],
-                  positionRangeSliderValues: {
-                    "Clean sheet": [0, 100],
-                    Saves: [0, 100],
-                    "Long pass accuracy": [0, 100],
-                    Interception: [0, 100],
-
-                    Blocks: [0, 100],
-                    "Successful tackles rate %": [0, 100],
-                    "pass success": [0, 100],
-                    "total passes": [0, 100],
-                    assists: [0, 100],
-
-                    Goals: [0, 100],
-                    "Goal/match played ratio": [0, 100],
-                    Assists: [0, 100],
-                    // "Shots per game": [0, 100],
-                  },
-                  MarketValue: "0 - 99,999",
-                  SalaryExpectationValue: "0 - 4,999",
-
-                  ClubCountryValue: "Any",
-                  // CaptainRadioValue: "Any",
-                  PrefferedFootRadioValue: "Any",
-                  PlayerDivisionValue: "Any",
-                  ContractStatusCheckBoxes: "Any",
-
-                  // REview below
-                  PlayerPositionAutoCompleteValue: "Any",
-                  PlayerAlternatePositionAutoCompleteValue: "None",
-
-                  previousProfile: "",
-                })
-              );
+            if (profileName === "") {
+              triggerWarningAlertModal("name cannot be empty ");
             } else {
-              const savedProfileSubCollectionRef = doc(
-                db,
-                `users_db/${accountId}/SavedProfiles`,
-                uuid
-              );
-              if (profileName !== "" && profileName.toLowerCase() !== "") {
-                ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
-
-                const profileNameMatch = userSavedProfiles.filter((data) => {
-                  const { label } = data;
-                  return (
-                    label.replace(/\s/g, "").toLowerCase() ===
-                    profileName.replace(/\s/g, "").toLowerCase()
-                  );
-                });
-
-                console.log("ProfileLabelMatxh", profileNameMatch);
-                // This it to make sure that we dont create a profile with the same name
-
-                if (profileNameMatch.length <= 0) {
-                  setDoc(savedProfileSubCollectionRef, {
-                    label: profileName,
-                    dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-                    filter: currentProfileFilterObject,
-                    labelId: uuid,
-                  });
-
-                  handleClose();
-                  dispatch(
-                    setCurrentProfileFilterObject({
-                      // PlaceOfBirth: "Any",
-                      NationalityValue: "Any",
-                      AgeRangeValue: [0, 40],
-                      HeightRangeValue: [0, 2.5],
-                      positionRangeSliderValues: {
-                        "Clean sheet": [0, 100],
-                        Saves: [0, 100],
-                        "Long pass accuracy": [0, 100],
-                        Interception: [0, 100],
-
-                        Blocks: [0, 100],
-                        "Successful tackles rate %": [0, 100],
-                        "pass success": [0, 100],
-                        "total passes": [0, 100],
-                        assists: [0, 100],
-
-                        Goals: [0, 100],
-                        "Goal/match played ratio": [0, 100],
-                        Assists: [0, 100],
-                        // "Shots per game": [0, 100],
-                      },
-                      SalaryExpectationValue: "0 - 4,999",
-
-                      MarketValue: "0 - 99,999",
-
-                      ClubCountryValue: "Any",
-                      // CaptainRadioValue: "Any",
-                      PrefferedFootRadioValue: "Any",
-                      PlayerDivisionValue: "Any",
-                      ContractStatusCheckBoxes: "Any",
-                      // REview below
-                      PlayerPositionAutoCompleteValue: "Any",
-                      PlayerAlternatePositionAutoCompleteValue: "None",
-                      previousProfile: "",
-                    })
-                  );
-                  /// Snackbar show
-                  dispatch(
-                    setSnackbarMessage(`"${profileName}" filter created`)
-                  );
-                  dispatch(setSnackbarTriggerCounter());
-
-                  setProfileName("");
-                } else {
-                  triggerWarningAlertModal(
-                    "Please change your profile name a similar name already exists"
-                  );
-                }
-              } else {
-                triggerWarningAlertModal(
-                  "Please enter a profile name (cannot be name default)"
+              // This if statement makes prevents saved name from being the same as a existing profile name
+              if (
+                nameExists.length <= 0 ||
+                profileName === currentProfileClicked
+              ) {
+                // Update the document in Firestore
+                const selectedProfileRef = doc(
+                  db,
+                  `users_db/${accountId}/SavedProfiles`,
+                  labelId
                 );
+                updateDoc(selectedProfileRef, {
+                  label: profileName,
+                  filter: {
+                    // PlaceOfBirth,
+                    NationalityValue,
+                    AgeRangeValue,
+                    HeightRangeValue,
+                    PlayerPositionAutoCompleteValue:
+                      PlayerPositionAutoCompleteValue,
+                    PlayerAlternatePositionAutoCompleteValue:
+                      PlayerAlternatePositionAutoCompleteValue,
+                    ClubCountryValue,
+                    MarketValue,
+                    SalaryExpectationValue,
+
+                    // CaptainRadioValue,
+                    PrefferedFootRadioValue,
+                    PlayerDivisionValue,
+                    ContractStatusCheckBoxes,
+                    positionRangeSliderValues: positionRangeSliderValues,
+                  },
+                });
+                dispatch(setPreviousProfile(profileName));
+
+                navigate(`/profile/${profileName}`);
+                setOpen(false);
+                dispatch(setSnackbarMessage(`"${profileName}" filter saved`));
+                dispatch(setSnackbarTriggerCounter());
+              } else {
+                triggerWarningAlertModal("Profile Name already exists");
               }
             }
-            // changing the click current clicked value to the edited name
-
-            // reset the textfields after save
           } else {
             StripeCheckout(priceID);
             // Handle the case where no active/trialing subscription exists
@@ -612,258 +705,12 @@ export default function CreateProfileModal({ ProfileType }) {
             setIsloading(true);
           }
         });
-      } catch (error) {}
-      try {
-        const subscriptionQuery = query(
-          collection(db, `users_db/${accountId}/subscriptions`)
-        );
-
-        await getDocs(subscriptionQuery).then((subscriptionSnapShot) => {
-          console.log(subscriptionSnapShot.size);
-          if (subscriptionSnapShot.size !== 0) {
-            console.log("subs exists");
-            const uuid = uuidv4();
-            // alert("Saved prof" + accountId);
-
-            if (userSavedProfiles.length < 1) {
-              // cont newProfile == log
-              // alert("less");
-
-              // This is the rest of users in the database devoid of the current user logged in
-
-              // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
-
-              // alert(accountId);
-              ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
-              const savedProfileSubCollectionRef = doc(
-                db,
-                `users_db/${accountId}/SavedProfiles`,
-                "Default"
-              );
-
-              setDoc(savedProfileSubCollectionRef, {
-                label: "Default",
-                dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-                filter: currentProfileFilterObject,
-                labelId: "Default",
-              });
-
-              handleClose();
-
-              /// REset the filter object after createion
-              dispatch(
-                setCurrentProfileFilterObject({
-                  // PlaceOfBirth: "Any",
-                  NationalityValue: "Any",
-                  AgeRangeValue: [0, 40],
-                  HeightRangeValue: [0, 2.5],
-                  positionRangeSliderValues: {
-                    "Clean sheet": [0, 100],
-                    Saves: [0, 100],
-                    "Long pass accuracy": [0, 100],
-                    Interception: [0, 100],
-
-                    Blocks: [0, 100],
-                    "Successful tackles rate %": [0, 100],
-                    "pass success": [0, 100],
-                    "total passes": [0, 100],
-                    assists: [0, 100],
-
-                    Goals: [0, 100],
-                    "Goal/match played ratio": [0, 100],
-                    Assists: [0, 100],
-                    // "Shots per game": [0, 100],
-                  },
-                  MarketValue: "0 - 99,999",
-                  SalaryExpectationValue: "0 - 4,999",
-
-                  ClubCountryValue: "Any",
-                  // CaptainRadioValue: "Any",
-                  PrefferedFootRadioValue: "Any",
-                  PlayerDivisionValue: "Any",
-                  ContractStatusCheckBoxes: "Any",
-
-                  // REview below
-                  PlayerPositionAutoCompleteValue: "Any",
-                  PlayerAlternatePositionAutoCompleteValue: "None",
-
-                  previousProfile: "",
-                })
-              );
-            } else {
-              const savedProfileSubCollectionRef = doc(
-                db,
-                `users_db/${accountId}/SavedProfiles`,
-                uuid
-              );
-              if (profileName !== "" && profileName.toLowerCase() !== "") {
-                ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
-
-                const profileNameMatch = userSavedProfiles.filter((data) => {
-                  const { label } = data;
-                  return (
-                    label.replace(/\s/g, "").toLowerCase() ===
-                    profileName.replace(/\s/g, "").toLowerCase()
-                  );
-                });
-
-                console.log("ProfileLabelMatxh", profileNameMatch);
-                // This it to make sure that we dont create a profile with the same name
-
-                if (profileNameMatch.length <= 0) {
-                  setDoc(savedProfileSubCollectionRef, {
-                    label: profileName,
-                    dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-                    filter: currentProfileFilterObject,
-                    labelId: uuid,
-                  });
-
-                  handleClose();
-                  dispatch(
-                    setCurrentProfileFilterObject({
-                      // PlaceOfBirth: "Any",
-                      NationalityValue: "Any",
-                      AgeRangeValue: [0, 40],
-                      HeightRangeValue: [0, 2.5],
-                      positionRangeSliderValues: {
-                        "Clean sheet": [0, 100],
-                        Saves: [0, 100],
-                        "Long pass accuracy": [0, 100],
-                        Interception: [0, 100],
-
-                        Blocks: [0, 100],
-                        "Successful tackles rate %": [0, 100],
-                        "pass success": [0, 100],
-                        "total passes": [0, 100],
-                        assists: [0, 100],
-
-                        Goals: [0, 100],
-                        "Goal/match played ratio": [0, 100],
-                        Assists: [0, 100],
-                        // "Shots per game": [0, 100],
-                      },
-                      SalaryExpectationValue: "0 - 4,999",
-
-                      MarketValue: "0 - 99,999",
-
-                      ClubCountryValue: "Any",
-                      // CaptainRadioValue: "Any",
-                      PrefferedFootRadioValue: "Any",
-                      PlayerDivisionValue: "Any",
-                      ContractStatusCheckBoxes: "Any",
-                      // REview below
-                      PlayerPositionAutoCompleteValue: "Any",
-                      PlayerAlternatePositionAutoCompleteValue: "None",
-                      previousProfile: "",
-                    })
-                  );
-                  /// Snackbar show
-                  dispatch(
-                    setSnackbarMessage(`"${profileName}" filter created`)
-                  );
-                  dispatch(setSnackbarTriggerCounter());
-
-                  setProfileName("");
-                } else {
-                  triggerWarningAlertModal(
-                    "Please change your profile name a similar name already exists"
-                  );
-                }
-              } else {
-                triggerWarningAlertModal(
-                  "Please enter a profile name (cannot be name default)"
-                );
-              }
-            }
-            // changing the click current clicked value to the edited name
-
-            // reset the textfields after save
-          } else if (subscriptionSnapShot.size === 0) {
-            StripeCheckout(priceID);
-            console.log("subs doesnt exist, stripe triggered");
-          }
-        });
       } catch (error) {
         console.log(error);
       }
     };
 
     SubscriptionValidationChecker();
-  };
-
-  // FUNCTION FOR CREATING PROFILE
-  const handleSaveProfile = () => {
-    const {
-      // PlaceOfBirth,
-      NationalityValue,
-      AgeRangeValue,
-      HeightRangeValue,
-      PlayerPositionAutoCompleteValue,
-      PlayerAlternatePositionAutoCompleteValue,
-      ClubCountryValue,
-      MarketValue,
-      SalaryExpectationValue,
-
-      // CaptainRadioValue,
-      PrefferedFootRadioValue,
-      PlayerDivisionValue,
-      ContractStatusCheckBoxes,
-      positionRangeSliderValues,
-    } = currentProfileFilterObject;
-
-    const { accountId } = loginUserDetails;
-
-    const MacthedProfile = userSavedProfiles.filter((data) => {
-      return data.label === currentProfileClicked;
-    });
-
-    const nameExists = userSavedProfiles.filter(
-      (data) => data.label.toLowerCase() === profileName.toLowerCase()
-    );
-    const { labelId } = MacthedProfile[0];
-
-    if (profileName === "") {
-      triggerWarningAlertModal("name cannot be empty ");
-    } else {
-      // This if statement makes prevents saved name from being the same as a existing profile name
-      if (nameExists.length <= 0 || profileName === currentProfileClicked) {
-        // Update the document in Firestore
-        const selectedProfileRef = doc(
-          db,
-          `users_db/${accountId}/SavedProfiles`,
-          labelId
-        );
-        updateDoc(selectedProfileRef, {
-          label: profileName,
-          filter: {
-            // PlaceOfBirth,
-            NationalityValue,
-            AgeRangeValue,
-            HeightRangeValue,
-            PlayerPositionAutoCompleteValue: PlayerPositionAutoCompleteValue,
-            PlayerAlternatePositionAutoCompleteValue:
-              PlayerAlternatePositionAutoCompleteValue,
-            ClubCountryValue,
-            MarketValue,
-            SalaryExpectationValue,
-
-            // CaptainRadioValue,
-            PrefferedFootRadioValue,
-            PlayerDivisionValue,
-            ContractStatusCheckBoxes,
-            positionRangeSliderValues: positionRangeSliderValues,
-          },
-        });
-        dispatch(setPreviousProfile(profileName));
-
-        navigate(`/profile/${profileName}`);
-        setOpen(false);
-        dispatch(setSnackbarMessage(`"${profileName}" filter saved`));
-        dispatch(setSnackbarTriggerCounter());
-      } else {
-        triggerWarningAlertModal("Profile Name already exists");
-      }
-    }
   };
 
   // REview this
