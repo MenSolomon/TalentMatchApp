@@ -33,12 +33,24 @@ import PrivateRoutes from "./utilities/PrivateRoute";
 import Support from "./screens/Support";
 import SupportSettings from "./screens/SupportSettings";
 import WarningAlertModal from "./components/Modals/WarningAlertModal";
-import { createTheme, ThemeProvider, Button, CssBaseline } from "@mui/material";
+import {
+  createTheme,
+  ThemeProvider,
+  Button,
+  CssBaseline,
+  Alert,
+} from "@mui/material";
 import Error404 from "./screens/Error404";
 import ErrorPageNotFound from "./screens/ErrorPageNotFound";
 import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
-import { selectUserDetailsObject } from "./statemanager/slices/LoginUserDataSlice";
+import {
+  selectIsSubscriptionActive,
+  selectUserDetailsObject,
+  setIsSubscriptionActive,
+  setNextBillingDate,
+  setSubscriptionFeatures,
+} from "./statemanager/slices/LoginUserDataSlice";
 import { useEffect, useState } from "react";
 import {
   setCurrentBrowserSize,
@@ -53,6 +65,19 @@ import ContactSupportModal from "./components/Modals/ContactSupportModal";
 import { selectUsersDatabase } from "./statemanager/slices/DatabaseSlice";
 import Favorites from "./screens/Favorites";
 import Settings from "./screens/Settings";
+import PlanItem from "./screens/PlanItem";
+import ChangeSubscriptionPackagePage from "./screens/ChangeSubscriptionPackagePage";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { auth, db } from "./Firebase/Firebase";
+import { setPriceID } from "./statemanager/slices/SignupStepperSlice";
+import CoachAgentScoutVersionConnetions from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionConnections";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -212,6 +237,7 @@ const App = () => {
 
   const { pathname, search, hash } = location;
   const userLoginObject = useSelector(selectUserDetailsObject);
+  const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
 
   // this use effect is to redirect studio for the desired role on user change
   useEffect(() => {
@@ -310,8 +336,69 @@ const App = () => {
     dispatch(setCurrentScreenSize({ width, height }));
   }, [screenSize]);
 
-  /// Listen wherther or not internet is connected
+  useEffect(() => {
+    // alert("SubscriptionValidationChecker");
+    const currentUser = auth.currentUser;
 
+    if (currentUser) {
+      const SubscriptionValidationChecker = async () => {
+        const accountId = await currentUser.uid;
+        // alert(accountId);
+        // get product id form database if the redux state is empty
+        const productIDRef = doc(db, `users_db/${accountId}`);
+        const productIdSnap = await getDoc(productIDRef);
+        const productID = await productIdSnap.data().subscriptionPackage;
+        const priceID = await productIdSnap.data().subscriptionPrice;
+        // alert(productID);
+        //get and store maxProfiles
+        const featuresRef = await doc(db, `products/${productID}`);
+        const featuresSnap = await getDoc(featuresRef);
+        const features = await featuresSnap.data().features;
+        // save to redux
+        await dispatch(setSubscriptionFeatures(features));
+        console.log(`maxProfilesSnap:${features.maxProfiles}`);
+        // save priceID to redux
+        await dispatch(setPriceID(priceID));
+        try {
+          const subscriptionsRef = collection(
+            db,
+            "users_db",
+            accountId,
+            "subscriptions"
+          );
+
+          const queryActiveOrTrialing = query(
+            subscriptionsRef,
+            where("status", "in", ["trialing", "active"])
+          );
+
+          onSnapshot(queryActiveOrTrialing, async (snapshot) => {
+            const doc = snapshot.docs[0];
+            const length = snapshot.docs.length;
+            // console.log(`no. of subs: ${length}`);
+            // console.log(`accountId:${accountId}`);
+            if (length > 0) {
+              dispatch(setIsSubscriptionActive(true));
+              // get end next billing date
+              const timestamp = doc.data().current_period_end.seconds;
+              const date = await new Date(timestamp * 1000);
+              dispatch(setNextBillingDate(date.toDateString()));
+            } else if (length == 0) {
+              dispatch(setIsSubscriptionActive(false));
+              dispatch(setNextBillingDate("N/A"));
+            }
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      SubscriptionValidationChecker();
+    } else {
+      dispatch(setIsSubscriptionActive(true));
+    }
+  }, []);
+
+  /// Listen wherther or not internet is connected
   useEffect(() => {
     const handleOnline = () => {
       dispatch(setInternetConnectionOnline());
@@ -338,11 +425,29 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      {isSubscriptionActive ? null : (
+        <Alert
+          severity="error"
+          variant="filled"
+          action={
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              onClick={() => navigate("/changeSubscription")}>
+              Get One
+            </Button>
+          }>
+          No or Inactive Subscrtiption
+        </Alert>
+      )}
       <CssBaseline />
       <Routes>
         {/* PROTECTED ROUTES  */}
 
         <Route element={<PrivateRoutes />}>
+          <Route path="/plans" element={<PlanItem />} />
+
           <Route path="/" element={<MotherComponent />}>
             <Route path="/favorite" element={<Favorites />} />
             <Route path="/help" element={<Error404 />} />
@@ -395,8 +500,7 @@ const App = () => {
           {/* COACH AGENT AND SCOUT VERSION */}
           <Route
             path="/multiStudio"
-            element={<CoachAgentScoutVersionMotherComponent />}
-          >
+            element={<CoachAgentScoutVersionMotherComponent />}>
             <Route path="/multiStudio/favorite" element={<Error404 />} />
             <Route path="/multiStudio/help" element={<Error404 />} />
             <Route path="/multiStudio/settings" element={<Settings />} />
@@ -419,6 +523,10 @@ const App = () => {
               element={<CoachAgentScoutVersionFavorites />}
             />
             <Route
+              path="/multiStudio/connections"
+              element={<CoachAgentScoutVersionConnetions />}
+            />
+            <Route
               path="/multiStudio/messages"
               element={<CoachAgentScoutVersionInbox />}
             />
@@ -431,6 +539,11 @@ const App = () => {
               element={<CoachAgentScoutVersionPlayerManagement />}
             />
           </Route>
+
+          <Route
+            path="/changeSubscription"
+            element={<ChangeSubscriptionPackagePage />}
+          />
         </Route>
 
         {/* END OF PROTECTED ROUTES */}
@@ -439,6 +552,7 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
 
         <Route path="/membership-plans" element={<MembershipPlanPage />} />
+
         {/* <Route path="/spt" element={<Support />} />
         <Route path="/sptss" element={<SupportSettings />} /> */}
 

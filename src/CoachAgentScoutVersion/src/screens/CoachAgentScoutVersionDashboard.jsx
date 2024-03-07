@@ -89,8 +89,7 @@ const CoachAgentScoutVersionDashboard = () => {
           // height: "100%",
           // width: "100%",
         }
-      }
-    >
+      }>
       {/* // Heading Area   style={{ flex: ".1" }}*/}
       <div className="md:basis-[10%] sm:basis-[10%]">
         <h3 style={{ margin: 0, float: "left" }} className="primaryTextColor">
@@ -115,8 +114,7 @@ const CoachAgentScoutVersionDashboard = () => {
               // display: "grid",
               // placeItems: "center",
               // position: "relative",
-            }}
-          >
+            }}>
             {/* // DASHED BORDER DIV */}
             <div
               className="cardBackground md:w-[88%] md:h-[90%] md:grid md:place-items-center md:absolute     sm:w-[88%] sm:h-[90%] sm:grid sm:place-items-center sm:relative"
@@ -128,8 +126,7 @@ const CoachAgentScoutVersionDashboard = () => {
                 // position: "absolute",
                 // display: "grid",
                 // placeItems: "center",
-              }}
-            >
+              }}>
               <img
                 src={PlayerSkeletonImage}
                 style={{ width: "200px", color: "red" }}
@@ -158,15 +155,13 @@ const CoachAgentScoutVersionDashboard = () => {
               paddingRight: "2vw",
               paddingTop: "3vh",
               paddingBottom: "2vh",
-            }}
-          >
+            }}>
             {/* // PROFILE ANALYTICS TOTAL VIEWS */}
             <div
               style={{
                 flex: ".3",
                 borderBottom: `1px solid ${primaryTextColor}`,
-              }}
-            >
+              }}>
               <h5>Profile Analytics</h5>
 
               <h6>Total players under management</h6>
@@ -184,8 +179,7 @@ const CoachAgentScoutVersionDashboard = () => {
                 flex: ".35",
                 paddingTop: "2vh",
                 borderBottom: `1px solid ${primaryTextColor}`,
-              }}
-            >
+              }}>
               <h6>Summary</h6>
               <h6 className="secondaryTextColor">Last 28 days</h6>
               <h6>Most viewed player</h6>
@@ -216,8 +210,7 @@ const CoachAgentScoutVersionDashboard = () => {
             // display: "flex",
             // flexDirection: "column",
             // gap: "2.4vh",
-          }}
-        >
+          }}>
           <div
             className="cardBackground md:basis-[50%] md:relative md:flex-col md:flex   sm:basis-[50%] sm:relative sm:flex-col sm:flex"
             style={{
@@ -230,8 +223,7 @@ const CoachAgentScoutVersionDashboard = () => {
               // position: "relative",
               // display: "flex",
               // flexDirection: "column",
-            }}
-          >
+            }}>
             <div style={{ flex: ".2" }}>
               <h5>Recent messages</h5>
             </div>
@@ -242,8 +234,7 @@ const CoachAgentScoutVersionDashboard = () => {
                 overflowY: "scroll",
                 flex: ".8",
                 maxHeight: "26vh",
-              }}
-            >
+              }}>
               {dummyRecentMessages.map((data, index) => {
                 const { message, userAvatar, date, userName } = data;
 
@@ -272,8 +263,7 @@ const CoachAgentScoutVersionDashboard = () => {
               paddingRight: "2vw",
               paddingTop: "3vh",
               paddingBottom: "2vh",
-            }}
-          >
+            }}>
             <h5>Latest news</h5>
 
             {newData.map((data, index) => {
@@ -310,8 +300,7 @@ const RecentMessageCard = ({ message, userAvatar, date, userName }) => {
         display: "flex",
         padding: ".3vw",
         cursor: "pointer",
-      }}
-    >
+      }}>
       <div style={{ flex: ".22" }}>
         <Avatar src={userAvatar} sx={{ width: 50, height: 50 }} />
       </div>

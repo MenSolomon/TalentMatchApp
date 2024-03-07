@@ -41,10 +41,11 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "../Firebase/Firebase";
+import { auth, db } from "../Firebase/Firebase";
 import { setUserSavedProfiles } from "../statemanager/slices/SavedProfileSlice";
 import { setUserNotifications } from "../statemanager/slices/NofiticationsSlice";
 import { setPlayerSelectedByClubOrScoutInPlayerManagement } from "../statemanager/slices/PlayersInAgencySlice";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -68,296 +69,145 @@ const Login = () => {
     setErrorMessage("");
   };
 
-  // const onSubmit = (formData) => {
-  //   // alert(formData.email, formData.password);
-
-  //   //     const docRef = doc(db, "cities", "SF");
-  //   // const docSnap = await getDoc(docRef);
-
-  //   // if (docSnap.exists()) {
-  //   //   console.log("Document data:", docSnap.data());
-  //   // } else {
-  //   //   // docSnap.data() will be undefined in this case
-  //   //   console.log("No such document!");
-  //   // }
-  //   // where("state", "==", "CO"), where("name", "==", "Denver")
-  //   // const q = query(
-  //   //   collection(db, "users_db"),
-
-  //   // );
-
-  //   // const querySnapshot = getDocs(q);
-  //   // querySnapshot.forEach((doc) => {
-  //   //   // doc.data() is never undefined for query doc snapshots
-  //   //   console.log(doc.id, " => ", doc.data());
-  //   //   alert("Collected");
-  //   //   console.log(doc.data(), "USer");
-  //   // });
-
-  //   const userRef = collection(db, `users_db`);
-
-  //   const q = query(
-  //     userRef,
-  //     where("email", "==", formData.email),
-  //     where("password", "==", formData.password)
-  //   );
-  //   const alldata = onSnapshot(q, (querySnapshot) => {
-  //     const items = [];
-  //     querySnapshot.forEach((doc) => {
-  //       items.push(doc.data());
-  //     });
-
-  //     items.forEach((item) => {
-  //       if (item.dateCreated !== "" && item.dateCreated !== null) {
-  //         const firestoreTimestamp = item.dateCreated;
-  //         const date = firestoreTimestamp.toDate();
-  //         const options = {
-  //           year: "numeric",
-  //           month: "long",
-  //           day: "numeric",
-  //           hour: "numeric",
-  //           minute: "numeric",
-  //           second: "numeric",
-  //         };
-  //         const dateTimeFormat = new Intl.DateTimeFormat("en-US", options);
-  //         const dateString = dateTimeFormat.format(date);
-  //         item.dateCreated = dateString;
-  //       }
-  //     });
-
-  //     if (items.length > 0) {
-  //       dispatch(setLoginStatus(true));
-  //       dispatch(setUserDetailsObject(items[0]));
-
-  //       // Setting Profiles Array to
-
-  //       const savedProfileSubCollectionRef = collection(
-  //         db,
-  //         `users_db/${items[0].accountId}/SavedProfiles`
-  //       );
-
-  //       const q = query(savedProfileSubCollectionRef);
-  //       const allProfiles = onSnapshot(q, (querySnapshot) => {
-  //         const profileItems = [];
-  //         querySnapshot.forEach((doc) => {
-  //           profileItems.push(doc.data());
-  //         });
-
-  //         // console.log(loginUserObject?.accountId, items, "SavedPFS");
-  //         dispatch(setUserSavedProfiles(profileItems));
-
-  //         const notificationsSubCollectionRef = collection(
-  //           db,
-  //           `users_db/${items[0].accountId}/Notifications`
-  //         );
-
-  //         const q = query(notificationsSubCollectionRef);
-  //         const allNotifications = onSnapshot(q, (querySnapshot) => {
-  //           const notificationItems = [];
-  //           querySnapshot.forEach((doc) => {
-  //             notificationItems.push(doc.data());
-  //           });
-
-  //           const docRef = doc(db, "players_database", items[0].accountId);
-  //           const docSnap = getDoc(docRef);
-
-  //           // if (docSnap.exists()) {
-  //           //   console.log("Document data:", docSnap.data());
-  //           // } else {
-  //           //   // docSnap.data() will be undefined in this case
-  //           //   console.log("No such document!");
-  //           // }
-
-  //           items[0].role === "Player"
-  //             ? dispatch(
-  //                 setPlayerSelectedByClubOrScoutInPlayerManagement(
-  //                   docSnap.data()
-  //                 )
-  //               )
-  //             : "";
-
-  //           // console.log(loginUserObject?.accountId, items, "SavedPFS");
-  //           dispatch(setUserNotifications(notificationItems));
-  //           Navigate("/");
-  //           setErrorMessage("");
-  //         });
-  //         return () => {
-  //           allNotifications();
-  //         };
-  //       });
-  //       return () => {
-  //         allProfiles();
-  //       };
-  //     } else {
-  //       setErrorMessage("Account doesn't exist");
-  //     }
-  //   });
-  //   return () => {
-  //     alldata();
-  //   };
-
-  //   // Navigate("/");
-
-  //   // const matchUserAccount = AllUsersDatabase.filter((data) => {
-  //   //   return data.email === formData.email;
-  //   // });
-
-  //   // // console.log("ax1x", matchUserAccount[0]);
-  //   // if (matchUserAccount.length > 0) {
-  //   //   if (matchUserAccount[0].password === formData.password) {
-  //   //     dispatch(setLoginStatus(true));
-  //   //     dispatch(setUserDetailsObject(matchUserAccount[0]));
-  //   //     setErrorMessage("");
-
-  //   //     Navigate("/");
-  //   //   } else {
-  //   //     setErrorMessage("Password doesnt match account");
-  //   //     // alert();
-  //   //   }
-  //   // } else {
-  //   //   setErrorMessage("Account doesn't exist");
-  //   // }
-  // };
-
-  // const handleLogin()=>{
-
-  // }
-
   const onSubmit = (formData) => {
-    const userRef = collection(db, `users_db`);
+    // use google signinwithemailandpassword to get the current userid
+    signInWithEmailAndPassword(auth, formData.email, formData.password)
+      .then(async (userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        const accountId = user.uid;
+        // get userDetails
+        const userInfoRef = doc(db, `users_db/${accountId}`);
 
-    const q = query(
-      userRef,
-      where("email", "==", formData.email),
-      where("password", "==", formData.password)
-    );
+        const userInfoSnap = await getDoc(userInfoRef);
 
-    const alldata = onSnapshot(q, async (querySnapshot) => {
-      const items = [];
-      querySnapshot.forEach((doc) => {
-        items.push(doc.data());
-      });
-
-      items.forEach(async (item) => {
-        if (item.dateCreated !== "" && item.dateCreated !== null) {
-          const firestoreTimestamp = item.dateCreated;
-          const date = firestoreTimestamp.toDate();
-          const options = {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
-          };
-          const dateTimeFormat = new Intl.DateTimeFormat("en-US", options);
-          const dateString = dateTimeFormat.format(date);
-          item.dateCreated = dateString;
-        }
-      });
-
-      if (items.length > 0) {
-        dispatch(setLoginStatus(true));
-        dispatch(setUserDetailsObject(items[0]));
-
-        const savedProfileSubCollectionRef = collection(
-          db,
-          `users_db/${items[0].accountId}/SavedProfiles`
-        );
-
-        const q = query(savedProfileSubCollectionRef);
-        const allProfiles = onSnapshot(q, (querySnapshot) => {
-          const profileItems = [];
-          querySnapshot.forEach((doc) => {
-            profileItems.push(doc.data());
-          });
-
-          dispatch(setUserSavedProfiles(profileItems));
-
-          const notificationsSubCollectionRef = collection(
-            db,
-            `users_db/${items[0].accountId}/Notifications`
+        if (user) {
+          dispatch(setLoginStatus(true));
+          dispatch(
+            setUserDetailsObject({
+              Nationality: userInfoSnap.data().Nationality,
+              email: userInfoSnap.data().email,
+              CountryCode: userInfoSnap.data().CountryCode,
+              stripeLink: userInfoSnap.data().stripeLink,
+              DateOfBirth: userInfoSnap.data().DateOfBirth,
+              organization: userInfoSnap.data().organization,
+              phoneNumber: userInfoSnap.data().phoneNumber,
+              subscriptionPackage: userInfoSnap.data().subscriptionPackage,
+              surname: userInfoSnap.data().surname,
+              paymentDetails: {
+                phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
+              },
+              accountId: userInfoSnap.data().accountId,
+              firstName: userInfoSnap.data().firstName,
+              role: userInfoSnap.data().role,
+              dateCreated: {
+                seconds: userInfoSnap.data().dateCreated.seconds,
+                nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
+              },
+              stripeId: userInfoSnap.data().stripeId,
+              subscriptionPrice: userInfoSnap.data().subscriptionPrice,
+            })
           );
 
-          const q = query(notificationsSubCollectionRef);
-          const allNotifications = onSnapshot(q, async (querySnapshot) => {
-            const notificationItems = [];
+          const savedProfileSubCollectionRef = collection(
+            db,
+            `users_db/${accountId}/SavedProfiles`
+          );
+
+          const q = query(savedProfileSubCollectionRef);
+          const allProfiles = onSnapshot(q, (querySnapshot) => {
+            const profileItems = [];
             querySnapshot.forEach((doc) => {
-              notificationItems.push(doc.data());
+              profileItems.push(doc.data());
             });
 
-            const docRef = doc(db, "players_database", items[0].accountId);
-            try {
-              const docSnap = await getDoc(docRef);
-              if (docSnap.exists()) {
-                const playerData = docSnap.data();
+            dispatch(setUserSavedProfiles(profileItems));
 
-                if (items[0].role === "Player") {
-                  const firestoreTimestamp = playerData.dateCreated;
-                  const date = firestoreTimestamp.toDate();
-                  const options = {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "numeric",
-                    second: "numeric",
-                  };
-                  const dateTimeFormat = new Intl.DateTimeFormat(
-                    "en-US",
-                    options
-                  );
-                  const dateString = dateTimeFormat.format(date);
-                  playerData.dateCreated = dateString;
+            const notificationsSubCollectionRef = collection(
+              db,
+              `users_db/${accountId}/Notifications`
+            );
 
-                  const playerObjectRef = collection(
-                    db,
-                    `players_database/${items[0].accountId}/videos`
-                  );
+            const q = query(notificationsSubCollectionRef);
+            const allNotifications = onSnapshot(q, async (querySnapshot) => {
+              const notificationItems = [];
+              querySnapshot.forEach((doc) => {
+                notificationItems.push(doc.data());
+              });
 
-                  const q2 = query(playerObjectRef);
-                  onSnapshot(q2, (querySnapshot) => {
-                    const videosArray = [];
-                    querySnapshot.forEach((doc) => {
-                      videosArray.push(doc.data());
-                    });
-                    // alert("data collected");
-                    dispatch(
-                      setPlayerSelectedByClubOrScoutInPlayerManagement({
-                        ...playerData,
-                        videos: videosArray,
-                      })
+              const docRef = doc(db, "players_database", accountId);
+              try {
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                  const playerData = docSnap.data();
+
+                  if (items[0].role === "Player") {
+                    const firestoreTimestamp = playerData.dateCreated;
+                    const date = firestoreTimestamp.toDate();
+                    const options = {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "numeric",
+                      second: "numeric",
+                    };
+                    const dateTimeFormat = new Intl.DateTimeFormat(
+                      "en-US",
+                      options
                     );
-                  });
-                }
-              } else {
-                console.log("No such document!");
-              }
-            } catch (error) {
-              console.error("Error getting document:", error);
-            }
+                    const dateString = dateTimeFormat.format(date);
+                    playerData.dateCreated = dateString;
 
-            dispatch(setUserNotifications(notificationItems));
-            Navigate("/");
-            setErrorMessage("");
+                    const playerObjectRef = collection(
+                      db,
+                      `players_database/${accountId}/videos`
+                    );
+
+                    const q2 = query(playerObjectRef);
+                    onSnapshot(q2, (querySnapshot) => {
+                      const videosArray = [];
+                      querySnapshot.forEach((doc) => {
+                        videosArray.push(doc.data());
+                      });
+                      // alert("data collected");
+                      dispatch(
+                        setPlayerSelectedByClubOrScoutInPlayerManagement({
+                          ...playerData,
+                          videos: videosArray,
+                        })
+                      );
+                    });
+                  }
+                } else {
+                  console.log("No such document!");
+                }
+              } catch (error) {
+                console.error("Error getting document:", error);
+              }
+
+              dispatch(setUserNotifications(notificationItems));
+              Navigate("/");
+              setErrorMessage("");
+            });
+
+            return () => {
+              allNotifications();
+            };
           });
 
           return () => {
-            allNotifications();
+            allProfiles();
           };
-        });
-
-        return () => {
-          allProfiles();
-        };
-      } else {
-        setErrorMessage("Account doesn't exist");
-      }
-    });
-
-    return () => {
-      alldata();
-    };
+        }
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error("Error code:", errorCode);
+        console.error("Error message:", errorMessage);
+      });
   };
 
   return (

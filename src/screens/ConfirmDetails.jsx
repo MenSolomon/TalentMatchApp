@@ -68,6 +68,7 @@ const ConfirmDetails = () => {
     Nationality,
     password,
   } = userData;
+
   // Add one month to the current date
   const oneMonthLater = today.add(1, "months");
 
@@ -687,10 +688,6 @@ const ConfirmDetails = () => {
               });
           }
         }
-        // } else {
-        //  // Cde to inject data for the first time
-
-        // }
       }
     } catch (error) {
       console.error("Error fetching document:", error);
