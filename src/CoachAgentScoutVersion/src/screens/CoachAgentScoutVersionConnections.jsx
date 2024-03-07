@@ -8,6 +8,7 @@ import {
 } from "@mui/icons-material";
 import {
   Avatar,
+  Button,
   IconButton,
   InputAdornment,
   Pagination,
@@ -20,48 +21,62 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
 import { v4 } from "uuid";
-import { collection, doc, query, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  onSnapshot,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { auth, db } from "../../../Firebase/Firebase";
 import moment from "moment/moment";
 import { selectuserMessages } from "../../../statemanager/slices/MessagesSlice";
 import CountrySelect from "../components/AutoComplete/CountrySelect";
+import { useQuery } from "@tanstack/react-query";
 
 const CoachAgentScoutVersionConnetions = () => {
   const [selectedUser, setSelectedUser] = useState([]);
-  const [CountryCode, setCountryCode] = React.useState("");
-  const [CountryName, setCountryName] = React.useState("");
+  const [countryCode, setCountryCode] = React.useState("");
+  const [countryName, setCountryName] = React.useState("");
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
+
+  const {
+    status,
+    data: agentAndScoutsList,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["getVisibleAgents"],
+    queryFn: async () => {
+      try {
+        const subscriptionsRef = collection(db, "users_db");
+        const queryAgentsAndScouts = query(
+          subscriptionsRef,
+          where("role", "in", ["Agent", "Scout"])
+        );
+
+        // Get the documents from Firestore
+        const snapshot = await getDocs(queryAgentsAndScouts);
+
+        // Extract the data from the documents
+        const agentAndScouts = snapshot.docs.map((doc) => doc.data());
+        console.log(agentAndScouts);
+        // Return the data (no need for unnecessary parenthesis)
+        return agentAndScouts;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
+
+  // Access initial data and loading/error states from useQuery
 
   useEffect(() => {
     const currentUser = auth.currentUser;
     const accountId = currentUser.uid;
-    const getVisibleAgents = async () => {
-      // try {
-      //   const subscriptionsRef = collection(db, "users_db");
-      //   const queryAgentsAndScouts = query(
-      //     subscriptionsRef,
-      //     where("role", "in", ["Agent", "Scout"])
-      //   );
-      //   onSnapshot(queryAgentsAndScouts, async (snapshot) => {
-      //     const doc = snapshot.docs[0];
-      //     const length = snapshot.docs.length;
-      //     // console.log(`no. of subs: ${length}`);
-      //     // console.log(`accountId:${accountId}`);
-      //     if (length > 0) {
-      //       dispatch(setIsSubscriptionActive(true));
-      //       // get end next billing date
-      //       const timestamp = doc.data().current_period_end.seconds;
-      //       const date = await new Date(timestamp * 1000);
-      //       dispatch(setNextBillingDate(date.toDateString()));
-      //     } else if (length == 0) {
-      //       dispatch(setIsSubscriptionActive(false));
-      //       dispatch(setNextBillingDate("N/A"));
-      //     }
-      //   });
-      // } catch (error) {
-      //   console.log(error);
-      // }
-    };
+    const getVisibleAgents = async () => {};
     getVisibleAgents();
   }, []);
 
@@ -84,26 +99,54 @@ const CoachAgentScoutVersionConnetions = () => {
         {/* // INBOX HEADER */}
         <div className="md:basis-[20%]  sm:basis-[20%]">
           <h5 style={{ fontWeight: "bolder", margin: "0" }}>Connections</h5>
+          <h6 className="">Filter</h6>
           {/* <span style={{ fontSize: ".8em" }}>
             102Messages <Circle sx={{ width: 7 }} /> 40 unread
           </span> */}
           {/* // SEARCH INBOX */}
-          <CountrySelect
-            className="sm:w-[100%] md:w-[90%]"
-            countryCode={(e) => {
-              setCountryCode(e);
-            }}
-            countryName={(e) => {
-              setCountryName(e);
-            }}
-            selectLabel="Nationality *"
-          />
+          <div className="md:inline-flex">
+            {" "}
+            <CountrySelect
+              className="sm:w-[80%] md:w-[90%]"
+              countryCode={(e) => {
+                setCountryCode(e);
+              }}
+              countryName={(e) => {
+                setCountryName(e);
+              }}
+              selectLabel="Nationality *"
+            />
+            <Button
+              onClick={() => {
+                setCountryName("");
+              }}>
+              Reset
+            </Button>
+          </div>
         </div>
 
         {/* // MESSAGE SUMMARY */}
         <div
           className="md:basis-[80%] sm:flex-col  sm:flex sm:flex-shrink-0 sm:basis-[80%]"
-          style={{ overflowY: "scroll" }}></div>
+          style={{ overflowY: "scroll" }}>
+          {countryName === ""
+            ? agentAndScoutsList?.map((person) => {
+                return (
+                  <div>
+                    {person.firstName} {person.surname}
+                  </div>
+                );
+              })
+            : agentAndScoutsList
+                ?.filter((person) => person.Nationality === countryName)
+                .map((filtered) => {
+                  return (
+                    <div>
+                      {filtered.firstName} {filtered.surname}
+                    </div>
+                  );
+                })}
+        </div>
       </div>
 
       {/* INBOX CONTENT SECTION */}
@@ -181,52 +224,7 @@ const CoachAgentScoutVersionConnetions = () => {
                 flexDirection: "column",
                 maxHeight: "75vh",
               }}>
-              <div style={{ flex: ".85", overflowY: "scroll" }}>
-                {selectedUser.messages.length === 0 ? (
-                  <h4
-                    className="primaryTextColor"
-                    style={{ textAlign: "center" }}>
-                    No messages yet
-                  </h4>
-                ) : (
-                  selectedUser.messages &&
-                  selectedUser.messages.map((data, index) => {
-                    const {
-                      senderId,
-                      recepientId,
-                      senderName,
-                      recepientName,
-                      message,
-                      dateSent,
-                    } = data;
-
-                    // Assuming userLoginDetailsObject contains the accountId of the logged-in user
-                    const loggedInUserAccountId =
-                      userLoginDetailsObject?.accountId;
-
-                    if (senderId === loggedInUserAccountId) {
-                      return (
-                        <LoginUserMessage
-                          key={index}
-                          message={message}
-                          dateSent={dateSent}
-                          profileImage={""}
-                        />
-                      );
-                    } else {
-                      return (
-                        <OtherUserMessage
-                          key={index}
-                          message={message}
-                          dateSent={dateSent}
-                          profileImage={""}
-                        />
-                      );
-                    }
-                  })
-                )}
-                ;
-              </div>
+              <div style={{ flex: ".85", overflowY: "scroll" }}></div>
 
               {/* // TEXT FIELD AND SEND BUTTON AREA */}
               <div style={{ flex: ".15", display: "flex" }}>
