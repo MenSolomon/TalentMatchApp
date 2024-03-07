@@ -242,7 +242,14 @@ export default function TransferPlayerModal() {
       const items = await onSnapshotPromise;
 
       // alert(items.length);
-      console.log(items.length);
+      // console.log(items.length);
+      // alert(
+      //   items.length +
+      //     "  " +
+      //     nameOfDestinatedClub +
+      //     "  " +
+      //     userLoginDetailsObject.role
+      // );
 
       if (items.length > 0) {
         const playerObjectInjectionRef = doc(
@@ -251,6 +258,7 @@ export default function TransferPlayerModal() {
           selectedPlayerInManagementObject?.id
         );
 
+        // alert(items[0]?.accountId);
         const userToSendNotificationRef = doc(
           db,
           `users_db/${items[0].accountId}/Notifications`,

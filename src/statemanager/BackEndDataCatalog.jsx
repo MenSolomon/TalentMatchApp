@@ -11,7 +11,12 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
-import { setPlayersDatabase, setUsersDatabase } from "./slices/DatabaseSlice";
+import {
+  selectPlayersDatabase,
+  setApiPlayersDatabase,
+  setPlayersDatabase,
+  setUsersDatabase,
+} from "./slices/DatabaseSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTempUsersDatabase } from "./slices/TempDatabaseSlice";
 import {
@@ -48,6 +53,8 @@ const BackEndDataCatalog = ({ children }) => {
   const currentCreatedSearchProfileName = useSelector(selectCurrentProfile);
   const onlineStatus = useSelector(selectInternetConnectionStatus);
   const loginStatus = useSelector(selectLoginStatus);
+
+  const allPlayersDatabaseFromSlice = useSelector(selectPlayersDatabase);
 
   const [isLoading, setIsLoading] = useState(true);
   const [progressPercentage, setProgressPercentage] = useState(0);
@@ -867,6 +874,31 @@ const BackEndDataCatalog = ({ children }) => {
       alldata();
     };
   }, []);
+
+  // RETRIEVE PLAYERS FROM API DATABASE
+  useEffect(() => {
+    const apiPlayers = collection(db, `api_data`);
+
+    // const playersQuery = query(collection(db, "players_database"));
+    // const playersSnapshot =  getDocs(playersQuery);
+    const q = query(apiPlayers);
+    const alldata = onSnapshot(q, (querySnapshot) => {
+      const items = [];
+      querySnapshot.forEach((doc) => {
+        items.push(doc.data());
+        // alert(doc.id());
+      });
+
+      const mixedPlayers = [...allPlayersDatabaseFromSlice, ...items];
+
+      dispatch(setApiPlayersDatabase(items));
+      console.log(items, "Retrieve Api Data");
+    });
+    return () => {
+      alldata();
+    };
+  }, []);
+
   // useEffect(() => {
   //   const documentRef = doc(
   //     db,
