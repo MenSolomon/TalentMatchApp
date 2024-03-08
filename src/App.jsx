@@ -377,7 +377,7 @@ const App = () => {
             const length = snapshot.docs.length;
             // console.log(`no. of subs: ${length}`);
             // console.log(`accountId:${accountId}`);
-            if (length > 0) {
+            if (doc.data().status === "active") {
               dispatch(setIsSubscriptionActive(true));
               // get end next billing date
               const timestamp = doc.data().current_period_end.seconds;
