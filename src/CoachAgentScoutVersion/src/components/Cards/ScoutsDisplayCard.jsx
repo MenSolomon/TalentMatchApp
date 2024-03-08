@@ -6,6 +6,7 @@ const ScoutsDisplayCard = ({
   UserName,
   AgencyName,
   style,
+  handleConnect,
 }) => {
   return (
     <Card
@@ -18,8 +19,7 @@ const ScoutsDisplayCard = ({
         // height: "23vh",
         borderRadius: "1vw",
         background: "red",
-      }}
-    >
+      }}>
       <div
         style={{
           flex: ".5",
@@ -27,8 +27,7 @@ const ScoutsDisplayCard = ({
           backgroundSize: "cover",
           //   paddingLeft: ".5vw",
           //   paddingRight: ".5w",
-        }}
-      ></div>
+        }}></div>
       <div
         className="md:flex sm:flex"
         style={{
@@ -38,8 +37,7 @@ const ScoutsDisplayCard = ({
           paddingRight: ".5vw",
           paddingTop: "5%",
           gap: ".3vw",
-        }}
-      >
+        }}>
         {/* AVATAR */}
         <div style={{ flex: ".2" }}>
           <Avatar src={avatarUrl}></Avatar>
@@ -53,7 +51,12 @@ const ScoutsDisplayCard = ({
         </div>
         {/* SIGN UP CHIP */}
         <div style={{ flex: ".3" }}>
-          <Chip sx={{ cursor: "pointer" }} label="Remind" color="primary" />
+          <Chip
+            sx={{ cursor: "pointer" }}
+            label="Connect"
+            color="primary"
+            onClick={handleConnect}
+          />
         </div>
       </div>
     </Card>
