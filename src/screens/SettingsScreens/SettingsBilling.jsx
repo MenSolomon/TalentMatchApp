@@ -152,7 +152,7 @@ function SettingsBilling() {
                     return <div>{item.name}</div>;
                   }
                 })}
-                {subscriptionStatus}
+                {isSubscriptionActive ? "Active" : "Inactive"}
               </div>
               <div style={{ flex: ".3" }}>
                 <div style={{ padding: "5px 0px" }}>

@@ -54,6 +54,7 @@ import {
   setPriceID,
   setProductID,
 } from "../statemanager/slices/SignupStepperSlice";
+import { selectUserDetailsObject } from "../statemanager/slices/LoginUserDataSlice";
 
 // This code gets all the products then filters through to display the ones that march the role of the user
 // Based on the selected package a stripe checkout is initated
@@ -78,6 +79,8 @@ const ChangeSubscriptionPackagePage = () => {
   const [isButtonTriggered, setIsButtonTriggered] = useState(false);
   // state to hold the roleSelected
   const [role, setRole] = useState();
+  // account id
+  const { accountId } = useSelector(selectUserDetailsObject);
 
   // function to trigger warining modal
   const triggerWarningAlertModal = (message) => {
@@ -89,7 +92,7 @@ const ChangeSubscriptionPackagePage = () => {
     const FetchProducts = async () => {
       // get user id
       const currentUser = auth.currentUser;
-      const roleRef = await doc(db, `users_db`, currentUser.uid);
+      const roleRef = await doc(db, `users_db`, accountId);
       const roleSnap = await getDoc(roleRef);
       const roleSelected = await roleSnap.data().role;
       await setRole(roleSelected);
@@ -158,7 +161,7 @@ const ChangeSubscriptionPackagePage = () => {
     // save product id
     dispatch(setProductID(productID));
     const usersDbRef = collection(db, "users_db");
-    const currentUserDocRef = doc(usersDbRef, currentUser.uid);
+    const currentUserDocRef = doc(usersDbRef, accountId);
 
     // stripe db actions
     const checkoutSessionsCollectionRef = collection(
@@ -401,11 +404,11 @@ const ChangeSubscriptionPackagePage = () => {
                       setIsButtonTriggered(true);
                       // get current uid
                       const currentUser = await auth.currentUser;
-                      // alert(currentUser.uid);
+                      // alert(accountId);
                       // Check if an active subscription exists
                       const userRef = collection(
                         db,
-                        `users_db/${currentUser.uid}/subscriptions`
+                        `users_db/${accountId}/subscriptions`
                       );
                       const q = query(userRef, where("status", "==", "active"));
                       const docSnap = await getDocs(q);
