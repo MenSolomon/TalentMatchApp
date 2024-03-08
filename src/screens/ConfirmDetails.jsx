@@ -243,8 +243,8 @@ const ConfirmDetails = () => {
                   dispatch(setLoginStatus(true));
 
                   await setDoc(doc(db, `players_database`, user.uid), {
-                    id: uuid,
-                    Account_creator_id: uuid,
+                    id: user.uid,
+                    Account_creator_id: user.uid,
                     player_profile_image: "",
                     firstName: userData?.firstName,
                     surName: userData?.surname,
@@ -710,7 +710,8 @@ const ConfirmDetails = () => {
         // display: "flex",
         padding: "0px 6vw",
         overflowY: "scroll",
-      }}>
+      }}
+    >
       {/*MEMEBERSHIP PLAN HEADER and USER DETAILS SUMMARY */}
 
       <div
@@ -720,14 +721,16 @@ const ConfirmDetails = () => {
           // background: "yellow",
           display: "flex",
           flexDirection: "column",
-        }}>
+        }}
+      >
         {/* MEMBERSHIP PLAN HEADER CARD */}
         <div
           style={{
             flex: "0.3",
             display: "flex",
             paddingLeft: "0%",
-          }}>
+          }}
+        >
           {/* IMAGE AREA */}
           <div
             style={{
@@ -736,7 +739,8 @@ const ConfirmDetails = () => {
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
-            }}>
+            }}
+          >
             {/* 
 
  */}
@@ -763,12 +767,14 @@ const ConfirmDetails = () => {
               display: "flex",
               // justifyContent: "flex-start",
               alignItems: "center",
-            }}>
+            }}
+          >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-              }}>
+              }}
+            >
               <div>
                 <h5 style={{ fontWeight: "bold" }}>
                   Start your free trial for 30 <br /> days
@@ -780,7 +786,8 @@ const ConfirmDetails = () => {
                     style={{ color: "#5585FE", cursor: "pointer" }}
                     onClick={() => {
                       navigate("/create-account/freetrial");
-                    }}>
+                    }}
+                  >
                     change your membership
                   </span>
                 </small>
@@ -797,7 +804,8 @@ const ConfirmDetails = () => {
             padding: "1vh 3vw",
             // background: "green",
             // display: "flex",
-          }}>
+          }}
+        >
           {/* // PADDING CONTAINER */}
           <div style={{ flex: ".6", paddingLeft: "8vw" }}>
             <h5 style={{ marginTop: "1vh" }}>
@@ -810,7 +818,8 @@ const ConfirmDetails = () => {
                 }}
                 onClick={() => {
                   navigate("/create-account/user-form");
-                }}>
+                }}
+              >
                 &nbsp; edit
               </span>{" "}
             </h5>
@@ -824,7 +833,8 @@ const ConfirmDetails = () => {
                     listStyleType: "disc",
                     color: "#9FA4B1",
                     fontWeight: "bolder",
-                  }}>
+                  }}
+                >
                   <li>
                     First name:{" "}
                     <span style={{ color: "black" }}> {firstName} </span>{" "}
@@ -879,7 +889,8 @@ const ConfirmDetails = () => {
                     listStyleType: "disc",
                     color: "#9FA4B1",
                     fontWeight: "bolder",
-                  }}>
+                  }}
+                >
                   <li>
                     First name:{" "}
                     <span style={{ color: "black" }}> {firstName} </span>{" "}
@@ -975,7 +986,8 @@ const ConfirmDetails = () => {
             // height: "68%",
             padding: ".5vw",
             marginTop: "3vh",
-          }}>
+          }}
+        >
           <h6 style={{ fontWeight: "bolder" }}>Package Summary</h6>
 
           <ul style={{ width: "90%", fontSize: ".8em" }}>
@@ -1029,7 +1041,8 @@ const ConfirmDetails = () => {
           <div onClick={handleStartFreeTrial}>
             <BasicButton
               style={{ width: "90%", marginLeft: "5%" }}
-              innerText="Start Trial"></BasicButton>
+              innerText="Start Trial"
+            ></BasicButton>
           </div>
           <span
             style={{
@@ -1039,7 +1052,8 @@ const ConfirmDetails = () => {
               alignItems: "center",
               justifyContent: "center",
               textAlign: "center",
-            }}>
+            }}
+          >
             {" "}
             You will be automatically charged or prompted to pay on{" "}
             {oneMonthLater.format("MMMM Do YYYY, h:mm a")} after trial end{" "}
