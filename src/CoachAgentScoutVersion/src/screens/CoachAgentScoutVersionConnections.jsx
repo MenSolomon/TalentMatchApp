@@ -207,7 +207,7 @@ const CoachAgentScoutVersionConnetions = () => {
           </div>
         </div>
 
-        {/* // MESSAGE SUMMARY */}
+        {/* //  CONNECTIONS */}
         <div
           className="md:basis-[80%] sm:flex-col  sm:flex sm:flex-shrink-0 sm:basis-[80%]"
           style={{ overflowY: "scroll" }}>
@@ -244,7 +244,7 @@ const CoachAgentScoutVersionConnetions = () => {
         </div>
       </div>
 
-      {/* INBOX CONTENT SECTION */}
+      {/* USER ADDED CONNECTIONS */}
       <div
         className="cardBackground md:flex md:flex-col md:pl-[1.5vw] md:basis-[40%]  sm:basis-[40%]      sm:flex sm:flex-shrink-0 sm:flex-col sm:pl-[0vw]"
         style={{

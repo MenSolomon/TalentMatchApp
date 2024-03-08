@@ -1,4 +1,4 @@
-import { Avatar, Card, Chip } from "@mui/material";
+import { Avatar, Card, Chip, Stack } from "@mui/material";
 
 const ScoutsDisplayCard = ({
   backgroundUrl,
@@ -7,6 +7,7 @@ const ScoutsDisplayCard = ({
   AgencyName,
   style,
   handleConnect,
+  handleDelete,
 }) => {
   return (
     <Card
@@ -18,7 +19,6 @@ const ScoutsDisplayCard = ({
         // width: "20vw",
         // height: "23vh",
         borderRadius: "1vw",
-        background: "red",
       }}>
       <div
         style={{
@@ -51,12 +51,20 @@ const ScoutsDisplayCard = ({
         </div>
         {/* SIGN UP CHIP */}
         <div style={{ flex: ".3" }}>
-          <Chip
-            sx={{ cursor: "pointer" }}
-            label="Connect"
-            color="primary"
-            onClick={handleConnect}
-          />
+          <Stack direction="row" spacing={1}>
+            <Chip
+              sx={{ cursor: "pointer" }}
+              label="Connect"
+              color="primary"
+              onClick={handleConnect}
+            />
+            <Chip
+              sx={{ cursor: "pointer" }}
+              color="error"
+              label="Delete"
+              onClick={handleDelete}
+            />
+          </Stack>
         </div>
       </div>
     </Card>
