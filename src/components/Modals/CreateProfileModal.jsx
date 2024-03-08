@@ -593,7 +593,6 @@ export default function CreateProfileModal({ ProfileType }) {
 
   // FUNCTION FOR CREATING PROFILE
   const handleSaveProfile = async () => {
-    alert("handleSaveProfile");
     // get accountid and product id
     const currentUser = auth.currentUser;
     const accountId = await currentUser.uid;
