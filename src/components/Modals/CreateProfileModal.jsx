@@ -595,13 +595,13 @@ export default function CreateProfileModal({ ProfileType }) {
   const handleSaveProfile = async () => {
     // get accountid and product id
     const currentUser = auth.currentUser;
-    const accountId = await currentUser.uid;
+    // const accountId = await currentUser.uid;
 
-    // get product id form database if the redux state is empty
-    const productIDRef = doc(db, `users_db/${accountId}`);
-    const productIdSnap = await getDoc(productIDRef);
-    const productID = await productIdSnap.data().subscriptionPackage;
-    const priceID = await productIdSnap.data().subscriptionPrice;
+    // // get product id form database if the redux state is empty
+    // const productIDRef = doc(db, `users_db/${accountId}`);
+    // const productIdSnap = await getDoc(productIDRef);
+    // const productID = await productIdSnap.data().subscriptionPackage;
+    // const priceID = await productIdSnap.data().subscriptionPrice;
 
     const SubscriptionValidationChecker = async () => {
       try {

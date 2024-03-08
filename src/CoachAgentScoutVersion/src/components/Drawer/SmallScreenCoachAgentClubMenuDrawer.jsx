@@ -30,6 +30,11 @@ export default function SmallScreenCoachAgentClubMenuDrawer() {
     { name: "Players", icon: "people-group", path: "/multiStudio/players" },
     // { name: "Statistics", icon: "bar_chart_4_bars", path: "/Statistics" },
     // { name: "Favourites", icon: "favorite", path: "/favorites" },
+    {
+      name: "Connections",
+      icon: "monitoring",
+      path: "/multiStudio/connections",
+    },
     { name: "Messages", icon: "move_to_inbox", path: "/multiStudio/messages" },
 
     { name: "Analytics", icon: "monitoring", path: "/multiStudio/analytics" },
