@@ -4,6 +4,18 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { TextField } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserDataSlice";
+import {
+  setSnackbarMessage,
+  setSnackbarTriggerCounter,
+  setWarningAlertModalCounter,
+  setWarningAlertModalMessage,
+} from "../../statemanager/slices/OtherComponentStatesSlice";
+import { doc, setDoc } from "firebase/firestore";
+import { v4 } from "uuid";
+import { db } from "../../Firebase/Firebase";
+import moment from "moment";
 
 const style = {
   position: "absolute",
@@ -19,10 +31,72 @@ const style = {
   p: 5,
 };
 
-export default function CreateShowInterestModal({ playerName }) {
+export default function CreateShowInterestModal({ playerName, playerId }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const [Message, setMessage] = React.useState("");
+
+  const dispatch = useDispatch();
+
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
+
+  const userLoginAccount = useSelector(selectUserDetailsObject);
+
+  // const establishedConnections =userLoginAccount?.Connections
+
+  const submitInterest = async () => {
+    const uuid = v4();
+
+    // FOR PLAYER ACC HOLDER
+    const userNotificationRef = doc(
+      db,
+      `users_db/${userLoginAccount.accountId}/Notifications`,
+      uuid
+    );
+
+    /// FOR SELF
+    const playerNotificationRef = doc(
+      db,
+      `users_db/${playerId}/Notifications`,
+      uuid
+    );
+
+    //Notification sent
+
+    await setDoc(userNotificationRef, {
+      NotificationId: uuid,
+      requestAccepted: false,
+      dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+      senderAddress: userLoginAccount.email,
+      senderId: userLoginAccount.accountId,
+      type: "Connection request",
+      message: `Your interest with ${playerName} has been established`,
+      readStatus: false,
+    });
+
+    await setDoc(playerNotificationRef, {
+      NotificationId: uuid,
+      requestAccepted: false,
+      dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+      senderAddress: userLoginAccount.email,
+      senderId: userLoginAccount.accountId,
+      type: "Connection request",
+      message: `${userLoginAccount.firstName} has shown interest in your profile. Accept to view message sent`,
+      readStatus: false,
+    });
+
+    dispatch(
+      setSnackbarMessage(
+        `You have succesfully established a connection with ${playerName}`
+      )
+    );
+    dispatch(setSnackbarTriggerCounter());
+  };
 
   return (
     <div>
@@ -56,10 +130,13 @@ export default function CreateShowInterestModal({ playerName }) {
             component="h2"
             sx={{ fontWeight: "bold" }}
           >
-            Player Name: Benjamin Bature
+            Player Name: {playerName} {playerId}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 4 }}>
             <TextField
+              onChange={(e) => {
+                setMessage(e.target.value);
+              }}
               id="outlined-multiline-static"
               label="Messages"
               rows={7}
@@ -71,6 +148,7 @@ export default function CreateShowInterestModal({ playerName }) {
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 4 }}>
             <Button
+              onClick={submitInterest}
               sx={{
                 textTransform: "none",
 

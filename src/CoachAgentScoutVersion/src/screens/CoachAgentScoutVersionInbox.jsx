@@ -20,7 +20,14 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
 import { v4 } from "uuid";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "../../../Firebase/Firebase";
 import moment from "moment/moment";
 import { selectuserMessages } from "../../../statemanager/slices/MessagesSlice";
@@ -98,6 +105,10 @@ const CoachAgentScoutVersionInbox = () => {
   ];
 
   const [AllUsersAndMessages, setAllUsersAndMessages] = useState([]);
+
+  const AaallUsersAndMessages = userLoginDetailsObject?.Connections;
+
+  console.log("Letter from overseas", AaallUsersAndMessages);
 
   const allMessages = useSelector(selectuserMessages);
 
@@ -208,6 +219,46 @@ const CoachAgentScoutVersionInbox = () => {
   // time;
   // message;
 
+  //   const citiesRef = db.collection("users_db");
+  const [connections, setConnections] = useState([]);
+  let isDocumentsRetrieved = false; // Flag to track if documents are retrieved
+
+  // Function to retrieve documents
+  async function retrieveDocuments() {
+    if (!isDocumentsRetrieved) {
+      // Check if documents are already retrieved
+      isDocumentsRetrieved = true; // Update flag to indicate retrieval
+
+      const items = []; // Array to store documents
+
+      try {
+        const videosQuery = query(
+          collection(db, `users_db`),
+          where("accountId", "in", AaallUsersAndMessages)
+        );
+
+        const videosSnapshot = await getDocs(videosQuery);
+
+        videosSnapshot.forEach((doc) => {
+          items.push(doc.data());
+        });
+
+        // Now items array contains all the documents
+        console.log(items);
+        setConnections(items);
+      } catch (error) {
+        console.log("Error getting documents: ", error);
+      }
+    }
+  }
+
+  useEffect(() => {
+    retrieveDocuments();
+  }, []);
+
+  // Call the function to retrieve documents
+  // retrieveDocuments();
+
   useEffect(() => {
     console.log(selectedUser?.contactId);
   }, [selectedUser]);
@@ -258,29 +309,45 @@ const CoachAgentScoutVersionInbox = () => {
           className="md:basis-[80%] sm:flex-col  sm:flex sm:flex-shrink-0 sm:basis-[80%]"
           style={{ overflowY: "scroll" }}
         >
-          {AllUsersAndMessages?.length === 0 ? (
+          {AaallUsersAndMessages === undefined ||
+          AaallUsersAndMessages?.length === 0 ? (
             <h4 className="primaryTextColor" style={{ textAlign: "center" }}>
               No contacts yet
             </h4>
           ) : (
-            AllUsersAndMessages?.map((data, index) => {
-              const { contactId, name, image, messages } = data;
+            // AllUsersAndMessages?.map((data, index) => {
+            //   const { contactId, name, image, messages } = data;
 
+            //   return (
+            //     <span
+            //       onClick={() => {
+            //         setSelectedUser({ contactId: contactId, name, messages });
+            //         setMessageText("");
+            //         // alert(contactId);
+            //       }}
+            //       key={index}
+            //     >
+            //       <MessageContactCard
+            //         profileImage={image}
+            //         profileName={name}
+            //         time={messages[messages.length - 1].time}
+            //         message={messages[messages.length - 1].message}
+            //       />
+            //     </span>
+            //   );
+            // })
+            connections.map((data, key) => {
               return (
                 <span
-                  onClick={() => {
-                    setSelectedUser({ contactId: contactId, name, messages });
-                    setMessageText("");
-                    // alert(contactId);
-                  }}
-                  key={index}
+                  style={{ marginBottom: "1vh", marginTop: "1vh" }}
+                  key={key}
                 >
                   <MessageContactCard
-                    profileImage={image}
-                    profileName={name}
-                    time={messages[messages.length - 1].time}
-                    message={messages[messages.length - 1].message}
-                  />
+                    profileImage={data?.profileImage}
+                    profileName={`${data?.firstName} ${data?.surname}`}
+                    time={""}
+                    message={""}
+                  />{" "}
                 </span>
               );
             })
