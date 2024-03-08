@@ -595,115 +595,89 @@ export default function CreateProfileModal({ ProfileType }) {
   const handleSaveProfile = async () => {
     // get accountid and product id
     const currentUser = auth.currentUser;
-    const accountId = await currentUser.uid;
+    // const accountId = await currentUser.uid;
 
-    // get product id form database if the redux state is empty
-    const productIDRef = doc(db, `users_db/${accountId}`);
-    const productIdSnap = await getDoc(productIDRef);
-    const productID = await productIdSnap.data().subscriptionPackage;
-    const priceID = await productIdSnap.data().subscriptionPrice;
+    // // get product id form database if the redux state is empty
+    // const productIDRef = doc(db, `users_db/${accountId}`);
+    // const productIdSnap = await getDoc(productIDRef);
+    // const productID = await productIdSnap.data().subscriptionPackage;
+    // const priceID = await productIdSnap.data().subscriptionPrice;
 
     const SubscriptionValidationChecker = async () => {
       try {
-        const subscriptionsRef = collection(
-          db,
-          "users_db",
-          accountId,
-          "subscriptions"
-        );
+        const {
+          // PlaceOfBirth,
+          NationalityValue,
+          AgeRangeValue,
+          HeightRangeValue,
+          PlayerPositionAutoCompleteValue,
+          PlayerAlternatePositionAutoCompleteValue,
+          ClubCountryValue,
+          MarketValue,
+          SalaryExpectationValue,
 
-        const queryActiveOrTrialing = query(
-          subscriptionsRef,
-          where("status", "in", ["trialing", "active"])
-        );
+          // CaptainRadioValue,
+          PrefferedFootRadioValue,
+          PlayerDivisionValue,
+          ContractStatusCheckBoxes,
+          positionRangeSliderValues,
+        } = currentProfileFilterObject;
 
-        onSnapshot(queryActiveOrTrialing, async (snapshot) => {
-          const doc = snapshot.docs[0];
-          if (doc.data.length !== 0) {
-            const {
-              // PlaceOfBirth,
-              NationalityValue,
-              AgeRangeValue,
-              HeightRangeValue,
-              PlayerPositionAutoCompleteValue,
-              PlayerAlternatePositionAutoCompleteValue,
-              ClubCountryValue,
-              MarketValue,
-              SalaryExpectationValue,
+        // get accountid and product id
+        const accountId = await currentUser.uid;
 
-              // CaptainRadioValue,
-              PrefferedFootRadioValue,
-              PlayerDivisionValue,
-              ContractStatusCheckBoxes,
-              positionRangeSliderValues,
-            } = currentProfileFilterObject;
-
-            // get accountid and product id
-            const accountId = await currentUser.uid;
-
-            const MacthedProfile = userSavedProfiles.filter((data) => {
-              return data.label === currentProfileClicked;
-            });
-
-            const nameExists = userSavedProfiles.filter(
-              (data) => data.label.toLowerCase() === profileName.toLowerCase()
-            );
-            const { labelId } = MacthedProfile[0];
-
-            if (profileName === "") {
-              triggerWarningAlertModal("name cannot be empty ");
-            } else {
-              // This if statement makes prevents saved name from being the same as a existing profile name
-              if (
-                nameExists.length <= 0 ||
-                profileName === currentProfileClicked
-              ) {
-                // Update the document in Firestore
-                const selectedProfileRef = doc(
-                  db,
-                  `users_db/${accountId}/SavedProfiles`,
-                  labelId
-                );
-                updateDoc(selectedProfileRef, {
-                  label: profileName,
-                  filter: {
-                    // PlaceOfBirth,
-                    NationalityValue,
-                    AgeRangeValue,
-                    HeightRangeValue,
-                    PlayerPositionAutoCompleteValue:
-                      PlayerPositionAutoCompleteValue,
-                    PlayerAlternatePositionAutoCompleteValue:
-                      PlayerAlternatePositionAutoCompleteValue,
-                    ClubCountryValue,
-                    MarketValue,
-                    SalaryExpectationValue,
-
-                    // CaptainRadioValue,
-                    PrefferedFootRadioValue,
-                    PlayerDivisionValue,
-                    ContractStatusCheckBoxes,
-                    positionRangeSliderValues: positionRangeSliderValues,
-                  },
-                });
-                dispatch(setPreviousProfile(profileName));
-
-                navigate(`/profile/${profileName}`);
-                setOpen(false);
-                dispatch(setSnackbarMessage(`"${profileName}" filter saved`));
-                dispatch(setSnackbarTriggerCounter());
-              } else {
-                triggerWarningAlertModal("Profile Name already exists");
-              }
-            }
-          } else {
-            StripeCheckout(priceID);
-            // Handle the case where no active/trialing subscription exists
-            console.log("No active or trialing subscriptions found.");
-            // set isLoading to true
-            setIsloading(true);
-          }
+        const MacthedProfile = userSavedProfiles.filter((data) => {
+          return data.label === currentProfileClicked;
         });
+
+        const nameExists = userSavedProfiles.filter(
+          (data) => data.label.toLowerCase() === profileName.toLowerCase()
+        );
+        const { labelId } = MacthedProfile[0];
+
+        if (profileName === "") {
+          triggerWarningAlertModal("name cannot be empty ");
+        } else {
+          // This if statement makes prevents saved name from being the same as a existing profile name
+          if (nameExists.length <= 0 || profileName === currentProfileClicked) {
+            // Update the document in Firestore
+            const selectedProfileRef = doc(
+              db,
+              `users_db/${accountId}/SavedProfiles`,
+              labelId
+            );
+            updateDoc(selectedProfileRef, {
+              label: profileName,
+              filter: {
+                // PlaceOfBirth,
+                NationalityValue,
+                AgeRangeValue,
+                HeightRangeValue,
+                PlayerPositionAutoCompleteValue:
+                  PlayerPositionAutoCompleteValue,
+                PlayerAlternatePositionAutoCompleteValue:
+                  PlayerAlternatePositionAutoCompleteValue,
+                ClubCountryValue,
+                MarketValue,
+                SalaryExpectationValue,
+
+                // CaptainRadioValue,
+                PrefferedFootRadioValue,
+                PlayerDivisionValue,
+                ContractStatusCheckBoxes,
+                positionRangeSliderValues: positionRangeSliderValues,
+              },
+            });
+            dispatch(setPreviousProfile(profileName));
+
+            navigate(`/profile/${profileName}`);
+            setOpen(false);
+            dispatch(setSnackbarMessage(`"${profileName}" filter saved`));
+            dispatch(setSnackbarTriggerCounter());
+          } else {
+            triggerWarningAlertModal("Profile Name already exists");
+          }
+        }
       } catch (error) {
         console.log(error);
       }
@@ -1002,7 +976,8 @@ export default function CreateProfileModal({ ProfileType }) {
               dispatch(setCurrentProfile(previousProfileClicked));
               dispatch(setEditFilterModalButtonClicked());
               // }
-            }}>
+            }}
+          >
             <Settings />
           </IconButton>
         </Tooltip>
@@ -1036,14 +1011,16 @@ export default function CreateProfileModal({ ProfileType }) {
             // background: "#1B1E2B",
             color: "white",
             cursor: "pointer",
-          }}>
+          }}
+        >
           <div
             style={{
               flex: ".93",
               fontSize: "1em",
               display: "grid",
               placeItems: "center",
-            }}>
+            }}
+          >
             {" "}
             Create new profile{" "}
           </div>
@@ -1051,7 +1028,8 @@ export default function CreateProfileModal({ ProfileType }) {
             style={{
               flex: ".07",
               display: "flex",
-            }}>
+            }}
+          >
             {" "}
             <Add sx={{ marginTop: "4.4vh", color: "gold" }} />{" "}
           </div>
@@ -1069,13 +1047,15 @@ export default function CreateProfileModal({ ProfileType }) {
           backdrop: {
             timeout: 500,
           },
-        }}>
+        }}
+      >
         <Fade in={open}>
           <div
             className="cardBackground primaryTextColor md:flex md:flex-col md:pt-[3vh]
             md:w-[85%] md:h-[97%] md:p-[2vw] md:absolute     sm:flex sm:flex-col sm:pt-[3vh]
             sm:w-[100%] sm:h-[100%] sm:p-[2vw] sm:absolute md:top-[50%] md:left-[50%]    sm:top-[50%] sm:left-[50%]"
-            style={style}>
+            style={style}
+          >
             {/* HEader MEssage */}
             <div
               className="md:flex md:flex-row md:gap-[4vw]  sm:flex sm:flex-col sm:gap-[4vw]"
@@ -1084,7 +1064,8 @@ export default function CreateProfileModal({ ProfileType }) {
                 // background: "green",
                 // display: "flex",
                 // gap: "4vw",
-              }}>
+              }}
+            >
               <h2 className="secondaryTextColor">
                 {" "}
                 {ProfileType === "Edit"
@@ -1130,7 +1111,8 @@ export default function CreateProfileModal({ ProfileType }) {
                   // paddingLeft: "92%",
                   fontSize: "2em",
                   position: "absolute",
-                }}>
+                }}
+              >
                 {/* <IconButton size="small" sx={{ background: "#5585FE" }}> */}
                 <Close onClick={handleClose} style={{ color: "white" }} />{" "}
                 {/* </IconButton> */}
@@ -1138,7 +1120,8 @@ export default function CreateProfileModal({ ProfileType }) {
             </div>
             <div
               className="md:flex md:flex-row md:overflow-y-hidden md:gap-[0%] sm:flex-col  sm:gap-[2vh] sm:flex sm:overflow-y-scroll"
-              style={{ flex: ".85" }}>
+              style={{ flex: ".85" }}
+            >
               {/* // Personal information */}
               <div
                 className="md:flex md:flex-col md:relative md:gap-[2vh] md:ml-[2%]  sm:ml-[0%] sm:flex sm:flex-col  sm:relative sm:gap-[2vh] "
@@ -1149,7 +1132,8 @@ export default function CreateProfileModal({ ProfileType }) {
                   // flexDirection: "column",
                   paddingRight: "1.5vw",
                   // position: "relative",
-                }}>
+                }}
+              >
                 {" "}
                 <h4 className="secondaryTextColor">
                   Personal Information{" "}
@@ -1205,12 +1189,14 @@ export default function CreateProfileModal({ ProfileType }) {
                   // display: "flex",
                   // flexDirection: "column",
                   // background: "yellow",
-                }}>
+                }}
+              >
                 <div
                   className="sm:ml-[2%]"
                   style={{
                     flex: ".1",
-                  }}>
+                  }}
+                >
                   {" "}
                   <h4 className="secondaryTextColor">
                     Player Information{" "}
@@ -1236,7 +1222,8 @@ export default function CreateProfileModal({ ProfileType }) {
                     display: "flex",
                     flexDirection: "column",
                     gap: "3vh",
-                  }}>
+                  }}
+                >
                   <BasicAutoComplete
                     style={{
                       // ...inputStyles,
@@ -1412,7 +1399,8 @@ export default function CreateProfileModal({ ProfileType }) {
                   // gap: "2vh",
                   // flexDirection: "column",
                   // background: "green",
-                }}>
+                }}
+              >
                 <h4 className="secondaryTextColor">
                   Other Information{" "}
                   <IconTooltip
@@ -1455,7 +1443,8 @@ export default function CreateProfileModal({ ProfileType }) {
             {/* // Button Area */}
             <div
               // className="md:flex md:flex-row md:overflow-y-hidden md:gap-[0%] sm:flex-col-reverse   sm:gap-[2vh] sm:flex sm:overflow-y-scroll"
-              style={{ flex: ".05" }}>
+              style={{ flex: ".05" }}
+            >
               {isLoading ? (
                 <div style={{ display: "flex", justifyContent: "center" }}>
                   <CircularProgress />
@@ -1475,7 +1464,8 @@ export default function CreateProfileModal({ ProfileType }) {
                     ProfileType === "Edit"
                       ? handleSaveProfile
                       : handleCreateProfile
-                  }>
+                  }
+                >
                   {ProfileType === "Edit" ? "Save" : "Create"}
                 </Button>
               )}

@@ -132,13 +132,14 @@ const All = () => {
                 type={type}
                 readStatus={readStatus}
                 senderAddress={senderAddress}
-                transferPlayerId={transferPlayerId}
-                senderImage={senderProfileImage}
+                transferPlayerId={data?.transferPlayerId}
+                senderImage={data?.senderProfileImage}
                 notificationMessage={message}
                 dateSent={dateCreated}
                 senderId={data.senderId}
                 notificationId={NotificationId}
-                transferCompleteStatus={transferComplete}
+                transferCompleteStatus={data?.transferComplete}
+                requestAccepted={data?.requestAccepted}
               />
             </MenuItem>
           );
@@ -161,6 +162,7 @@ const MenuItemRow = ({
   transferPlayerId,
   notificationId,
   transferCompleteStatus,
+  requestAccepted,
 }) => {
   // const handleAcceptPlayerTransfer =async({dateCreated,userId,playerId,readStatus})=>{
   //   const playerObjectRef = doc(db, `players_database/${playerId}`);
@@ -213,58 +215,82 @@ const MenuItemRow = ({
         notificationId
       );
 
-      await updateDoc(LoginUserObjectRef, {
-        playersInPossession: arrayUnion({ playerId: transferPlayerId }),
-      });
+      // THis is to accept for transfer notifications
+      if (type === "Transfer request") {
+        await updateDoc(LoginUserObjectRef, {
+          playersInPossession: arrayUnion({ playerId: transferPlayerId }),
+        });
 
-      await updateDoc(senderObjectRef, {
-        playersInPossession: arrayRemove({ playerId: transferPlayerId }),
-      });
+        await updateDoc(senderObjectRef, {
+          playersInPossession: arrayRemove({ playerId: transferPlayerId }),
+        });
 
-      await updateDoc(playerObjetRef, {
-        clubName: userLoginDetailsObject?.club,
-        jerseyNumber: "",
-        TransferStatus: "",
-      });
+        await updateDoc(playerObjetRef, {
+          clubName: userLoginDetailsObject?.club,
+          jerseyNumber: "",
+          TransferStatus: "",
+        });
 
-      const playerMatchObject = allPlayersDatabase.find((obj) => {
-        return obj.id === transferPlayerId;
-      });
+        const playerMatchObject = allPlayersDatabase.find((obj) => {
+          return obj.id === transferPlayerId;
+        });
 
-      const senderClub = allClubsInDatabase.filter((data) => {
-        return data.clubName === userLoginDetailsObject.club;
-      });
+        const senderClub = allClubsInDatabase.filter((data) => {
+          return data.clubName === userLoginDetailsObject.club;
+        });
 
-      // update  users's notification as transfer  successful or accepted
+        // update  users's notification as transfer  successful or accepted
 
-      await updateDoc(userOldNotificationMessageObjectRef, {
-        transferComplete: "accepted",
-      });
+        await updateDoc(userOldNotificationMessageObjectRef, {
+          transferComplete: "accepted",
+        });
 
-      await setDoc(senderNotificationObjectRef, {
-        NotificationId: uuid,
-        dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-        senderAddress: userLoginDetailsObject.email,
-        senderId: userLoginDetailsObject.accountId,
-        type: "Transfer request",
-        message:
-          userLoginDetailsObject.role === "Club"
-            ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${playerMatchObject?.firstName} ${playerMatchObject?.surName}  accepted`
-            : "",
-        senderProfileImage:
-          userLoginDetailsObject.role === "Club"
-            ? senderClub[0]?.clubImage
-            : "",
-        readStatus: false,
-        transferPlayerId: transferPlayerId,
-      });
+        await setDoc(senderNotificationObjectRef, {
+          NotificationId: uuid,
+          dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+          senderAddress: userLoginDetailsObject.email,
+          senderId: userLoginDetailsObject.accountId,
+          type: "Transfer request",
+          message:
+            userLoginDetailsObject.role === "Club"
+              ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${playerMatchObject?.firstName} ${playerMatchObject?.surName}  accepted`
+              : "",
+          senderProfileImage:
+            userLoginDetailsObject.role === "Club"
+              ? senderClub[0]?.clubImage
+              : "",
+          readStatus: false,
+          transferPlayerId: transferPlayerId,
+        });
 
-      // THe sender needs to be alerted that the transfer is complete
-      // /.////////
+        // THe sender needs to be alerted that the transfer is complete
+        // /.////////
 
-      // alert("updated");
-      dispatch(setSnackbarMessage(`Player's clubName update successfully`));
-      dispatch(setSnackbarTriggerCounterToZero());
+        // alert("updated");
+        dispatch(setSnackbarMessage(`Player's clubName update successfully`));
+        dispatch(setSnackbarTriggerCounterToZero());
+      } else if (type === "Connection request") {
+        const connectionRequestSenderRef = doc(
+          db,
+          `users_db/${userLoginDetailsObject.accountId}/Notifications`,
+          notificationId
+        );
+
+        const userRef = doc(db, `users_db/${userLoginDetailsObject.accountId}`);
+        const senderRef = doc(db, `users_db/${senderId}`);
+
+        await updateDoc(connectionRequestSenderRef, {
+          requestAccepted: true,
+        });
+
+        await updateDoc(userRef, {
+          Connections: arrayUnion(senderId),
+        });
+
+        await updateDoc(senderRef, {
+          Connections: arrayUnion(userLoginDetailsObject.accountId),
+        });
+      }
 
       // console.log(data.dateCreated, "Date0", dateCreated);
       // const readStatusUpdateArray = userLoginDetailsObject?.Notifications.map(
@@ -308,46 +334,59 @@ const MenuItemRow = ({
         notificationId
       );
 
-      await updateDoc(userOldNotificationMessageObjectRef, {
-        transferComplete: "declined",
-      });
+      if (type === "Transfer request") {
+        await updateDoc(userOldNotificationMessageObjectRef, {
+          transferComplete: "declined",
+        });
 
-      await updateDoc(playerObjetRef, {
-        // TransferStatus: "Currently renewed contract",
-        TransferStatus: "",
-      });
+        await updateDoc(playerObjetRef, {
+          // TransferStatus: "Currently renewed contract",
+          TransferStatus: "",
+        });
 
-      await setDoc(senderNotificationObjectRef, {
-        NotificationId: uuid,
-        dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-        senderAddress: userLoginDetailsObject.email,
-        senderId: userLoginDetailsObject.accountId,
-        type: "Transfer request",
-        message:
-          userLoginDetailsObject.role === "Club"
-            ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${playerMatchObject?.firstName} ${playerMatchObject?.surName}  declined`
-            : "",
-        senderProfileImage:
-          userLoginDetailsObject.role === "Club"
-            ? senderClub[0]?.clubImage
-            : "",
-        readStatus: false,
-        transferPlayerId: transferPlayerId,
-      });
+        await setDoc(senderNotificationObjectRef, {
+          NotificationId: uuid,
+          dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+          senderAddress: userLoginDetailsObject.email,
+          senderId: userLoginDetailsObject.accountId,
+          type: "Transfer request",
+          message:
+            userLoginDetailsObject.role === "Club"
+              ? `Transfer request from ${userLoginDetailsObject.club} for transfer of ${playerMatchObject?.firstName} ${playerMatchObject?.surName}  declined`
+              : "",
+          senderProfileImage:
+            userLoginDetailsObject.role === "Club"
+              ? senderClub[0]?.clubImage
+              : "",
+          readStatus: false,
+          transferPlayerId: transferPlayerId,
+        });
 
-      // UPDATING THE TRANSFERED PLAYER REALTIME IN REDUX
+        // UPDATING THE TRANSFERED PLAYER REALTIME IN REDUX
 
-      const docRef = doc(db, "players_database", transferPlayerId);
-      const docSnap = await getDoc(docRef);
+        const docRef = doc(db, "players_database", transferPlayerId);
+        const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
-        dispatch(
-          setPlayerSelectedByClubOrScoutInPlayerManagement(docSnap.data())
+        if (docSnap.exists()) {
+          console.log("Document data:", docSnap.data());
+          dispatch(
+            setPlayerSelectedByClubOrScoutInPlayerManagement(docSnap.data())
+          );
+        } else {
+          // docSnap.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      } else if (type === "Connection request") {
+        const connectionRequestSenderRef = doc(
+          db,
+          `users_db/${userLoginDetailsObject.accountId}/Notifications`,
+          notificationId
         );
-      } else {
-        // docSnap.data() will be undefined in this case
-        console.log("No such document!");
+        // await updateDoc(connectionRequestSenderRef, {});
+
+        // await updateDoc(connectionRequestSenderRef, {
+        //   Connections: arrayUnion({ accountId: senderId }),
+        // });
       }
     } catch (error) {
       console.error(error);
@@ -417,12 +456,15 @@ const MenuItemRow = ({
             }}
           >
             {relativeDate} &nbsp;
-            {type === "Transfer request" &&
-            transferCompleteStatus === "pending" ? (
+            {(type === "Transfer request" &&
+              transferCompleteStatus === "pending") ||
+            (type === "Connection request" &&
+              senderId !== userLoginDetailsObject.accountId &&
+              requestAccepted === false) ? (
               <>
                 <BasicButton
                   onClick={handleAcceptClick}
-                  innerText="Accept"
+                  innerText={"Accept"}
                   style={{
                     maxHeight: "5vh",
                     marginLeft: "1vw",
@@ -430,11 +472,15 @@ const MenuItemRow = ({
                   }}
                 />
 
-                <BasicButton
-                  innerText="Decline"
-                  onClick={handleDeclineClick}
-                  style={{ maxHeight: "5vh" }}
-                />
+                {requestAccepted === false && type === "Connection request" ? (
+                  ""
+                ) : (
+                  <BasicButton
+                    innerText="Decline"
+                    onClick={handleDeclineClick}
+                    style={{ maxHeight: "5vh" }}
+                  />
+                )}
               </>
             ) : (
               <b> {transferCompleteStatus}</b>
