@@ -25,6 +25,7 @@ import { v4 } from "uuid";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   onSnapshot,
@@ -59,31 +60,6 @@ const CoachAgentScoutVersionConnetions = () => {
     dispatch(setWarningAlertModalCounter());
   };
 
-  // useQuery to get all agents and scouts
-  const { data: agentAndScoutsList, error: getVisibleAgentsError } = useQuery({
-    queryKey: ["getVisibleAgents"],
-    queryFn: async () => {
-      try {
-        const agentsAndScoutsRef = collection(db, "users_db");
-        const queryAgentsAndScouts = query(
-          agentsAndScoutsRef,
-          where("role", "in", ["Agent", "Scout"])
-        );
-
-        // Get the documents from Firestore
-        const snapshot = await getDocs(queryAgentsAndScouts);
-
-        // Extract the data from the documents
-        const agentAndScouts = snapshot.docs.map((doc) => doc.data());
-        console.log(agentAndScouts);
-        // Return the data (no need for unnecessary parenthesis)
-        return agentAndScouts;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  });
-
   // function to add scounts and agents to connections
   const handleConnection = async (filtered) => {
     // 2. Check if filtered.accountId exists in any connection
@@ -115,6 +91,57 @@ const CoachAgentScoutVersionConnetions = () => {
     }
   };
 
+  // useQuery to get all agents and scouts
+  const { data: agentAndScoutsList, error: getVisibleAgentsError } = useQuery({
+    queryKey: ["getVisibleAgents"],
+    queryFn: async () => {
+      try {
+        const agentsAndScoutsRef = collection(db, "users_db");
+        const queryAgentsAndScouts = query(
+          agentsAndScoutsRef,
+          where("role", "in", ["Agent", "Scout"])
+        );
+
+        // Get the documents from Firestore
+        const snapshot = await getDocs(queryAgentsAndScouts);
+
+        // Extract the data from the documents
+        const agentAndScouts = snapshot.docs.map((doc) => doc.data());
+        // console.log(agentAndScouts);
+        // Return the data (no need for unnecessary parenthesis)
+        return agentAndScouts;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
+
+  // function to delete connection
+  const handleDelete = async (fieldValue) => {
+    const currentUser = auth.currentUser;
+    const userId = currentUser.uid;
+    const connectionsRef = collection(db, `users_db/${userId}/connections`);
+
+    try {
+      // Create a query to find documents where accountId matches fieldValue
+      const q = query(connectionsRef, where("accountId", "==", fieldValue));
+
+      // Get a snapshot of the matching documents
+      const querySnapshot = await getDocs(q);
+
+      // Loop through the documents and delete them
+      querySnapshot.forEach(async (doc) => {
+        const docRef = doc.ref;
+        await deleteDoc(docRef);
+      });
+
+      fetchAgentAndScoutsInConnectionsList();
+    } catch (error) {
+      console.error("Error deleting documents:", error);
+    }
+  };
+
+  // useQuery to get all agents and scouts in users connections
   const {
     status,
     data: agentAndScoutsInConnectionsList,
@@ -149,6 +176,7 @@ const CoachAgentScoutVersionConnetions = () => {
         console.log(error);
       }
     },
+    refetchOnWindowFocus: false,
   });
   return (
     <div
@@ -209,7 +237,7 @@ const CoachAgentScoutVersionConnetions = () => {
 
         {/* //  CONNECTIONS */}
         <div
-          className="md:basis-[80%] sm:flex-col  sm:flex sm:flex-shrink-0 sm:basis-[80%]"
+          className="md:basis-[70%] sm:flex-col  sm:flex sm:flex-shrink-0 sm:basis-[70%]"
           style={{ overflowY: "scroll" }}>
           {countryName === ""
             ? agentAndScoutsList?.map((person) => {
@@ -260,9 +288,7 @@ const CoachAgentScoutVersionConnetions = () => {
         {selectedUser.length === 0 ? (
           <div className="md:basis-[100%] md:grid md:place-content-center    sm:basis-[100%] sm:grid sm:place-content-center">
             {agentAndScoutsInConnectionsList === null ? (
-              <h5 style={{ textAlign: "center" }}>
-                Send and reveive messages without keeping your phone online
-              </h5>
+              <h5 style={{ textAlign: "center" }}>See connections here</h5>
             ) : isfetchingAgentAndScoutsInConnectionsList ? (
               <CircularProgress />
             ) : (
@@ -272,6 +298,7 @@ const CoachAgentScoutVersionConnetions = () => {
                     <ScoutsDisplayCard
                       AgencyName={connections.organization}
                       UserName={`${connections.firstName} ${connections.surname}`}
+                      handleDelete={() => handleDelete(connections.accountId)}
                     />
                   </div>
                 );

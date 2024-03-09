@@ -398,16 +398,18 @@ const MotherComponent = () => {
         const productIdSnap = await getDoc(productIDRef);
         const productID = await productIdSnap.data().subscriptionPackage;
         const priceID = await productIdSnap.data().subscriptionPrice;
-        // alert(productID);
-        //get and store maxProfiles
-        // const featuresRef = await doc(db, `products/${productID}`);
-        // const featuresSnap = await getDoc(featuresRef);
-        // const features = await featuresSnap.data().features;
-        // // save to redux
-        // await dispatch(setSubscriptionFeatures(features));
-        // console.log(`maxProfilesSnap:${features.maxProfiles}`);
         // save priceID to redux
         await dispatch(setPriceID(priceID));
+        // alert(productID);
+
+        //get and store maxProfiles
+        const featuresRef = await doc(db, `products/${productID}`);
+        const featuresSnap = await getDoc(featuresRef);
+        const features = await featuresSnap.data().features;
+        // save to redux
+        await dispatch(setSubscriptionFeatures(features));
+        console.log(`maxProfilesSnap:${features.maxProfiles}`);
+
         try {
           const subscriptionsRef = collection(
             db,
