@@ -11,7 +11,7 @@ const ScoutsDisplayCard = ({
 }) => {
   return (
     <Card
-      className="cardBackground primaryTextColor md:flex md:flex-col md:w-[20vw] md:h-[23vh]  sm:flex sm:flex-col sm:w-[100%] sm:h-[23vh]"
+      className="cardBackground primaryTextColor md:flex md:flex-col md:w-[30vw] md:h-[23vh]  sm:flex sm:flex-col sm:w-[100%] sm:h-[23vh]"
       style={{
         ...style,
         // display: "flex",
@@ -19,6 +19,7 @@ const ScoutsDisplayCard = ({
         // width: "20vw",
         // height: "23vh",
         borderRadius: "1vw",
+        marginBottom: "3vh",
       }}>
       <div
         style={{
