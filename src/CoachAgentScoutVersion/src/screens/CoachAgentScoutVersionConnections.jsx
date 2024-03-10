@@ -93,7 +93,7 @@ const CoachAgentScoutVersionConnetions = () => {
 
   // useQuery to get all agents and scouts
   const { data: agentAndScoutsList, error: getVisibleAgentsError } = useQuery({
-    queryKey: ["getVisibleAgents"],
+    queryKey: ["getVisibleAgentsAndScouts"],
     queryFn: async () => {
       try {
         const agentsAndScoutsRef = collection(db, "users_db");
@@ -108,9 +108,18 @@ const CoachAgentScoutVersionConnetions = () => {
 
         // Extract the data from the documents
         const agentAndScouts = snapshot.docs.map((doc) => doc.data());
-        // console.log(agentAndScouts);
-        // Return the data (no need for unnecessary parenthesis)
-        return agentAndScouts;
+
+        // Concatenate current user's first and last name for comparison
+        const currentUserName = `${userLoginDetailsObject.firstName} ${userLoginDetailsObject.surname}`;
+
+        // Filter to exclude the current user
+        const currentUserFilteredOut = agentAndScouts.filter((agentOrScout) => {
+          const agentOrScoutFullName = `${agentOrScout.firstName} ${agentOrScout.surname}`;
+          return agentOrScoutFullName !== currentUserName; // Strict equality check
+        });
+
+        console.log("currentUserFilteredOut", currentUserFilteredOut);
+        return currentUserFilteredOut;
       } catch (error) {
         console.log(error);
       }
@@ -150,7 +159,7 @@ const CoachAgentScoutVersionConnetions = () => {
     refetch: fetchAgentAndScoutsInConnectionsList,
     isFetching: isfetchingAgentAndScoutsInConnectionsList,
   } = useQuery({
-    queryKey: ["fetchConnections"],
+    queryKey: ["fetchAgentAndScoutsInConnectionsList"],
     queryFn: async () => {
       try {
         const connectionsRef = collection(

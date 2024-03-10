@@ -168,7 +168,7 @@ const CoachAgentScoutVersionDashboard = () => {
           />
           <Chip
             variant="contained"
-            label={canHideVisibilityValue ? "Visible" : "Invisible"}
+            label={canHideVisibilityValue ? "Visible" : "Hidden"}
             color={canHideVisibilityValue ? "success" : "error"}
           />
         </div>
