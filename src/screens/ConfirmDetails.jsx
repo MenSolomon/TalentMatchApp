@@ -593,6 +593,7 @@ const ConfirmDetails = () => {
                     role: roleSelected,
                     dateCreated: serverTimestamp(),
                     accountId: user.uid,
+                    isVisible: true,
                   });
 
                   dispatch(setCompletedSteps({}));
@@ -649,7 +650,7 @@ const ConfirmDetails = () => {
                   dateCreated: serverTimestamp(),
                   accountId: user.uid,
                   isVisible: true,
-                  playersInPossession:[]
+                  playersInPossession: [],
                 });
                 // alert("Other Accs");
 
