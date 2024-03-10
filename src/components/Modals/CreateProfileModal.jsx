@@ -23,6 +23,7 @@ import RangeSlider from "../Slider/RangeSlider";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectIsSubscriptionActive,
+  selectSubscriptionFeatures,
   selectUserDetailsObject,
   setUserDetailsObject,
 } from "../../statemanager/slices/LoginUserDataSlice";
@@ -100,7 +101,20 @@ export default function CreateProfileModal({ ProfileType }) {
 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    console.log(maxProfiles);
+    if (subscriptionStatus === true) {
+      if (userLoginObject?.playersInPossession.length < maxProfiles) {
+        setOpen(true);
+      } else {
+        triggerWarningAlertModal(
+          "Upgrade your subscription to add more profiles"
+        );
+      }
+    } else if (subscriptionStatus === false) {
+      triggerWarningAlertModal("You do not have an active subscription");
+    }
+  };
   const handleClose = () => {
     setOpen(false);
     dispatch(setAutoCompletePlayerPosition(""));
@@ -209,7 +223,8 @@ export default function CreateProfileModal({ ProfileType }) {
   );
   const loginUserDetails = useSelector(selectUserDetailsObject);
   const userSavedProfiles = useSelector(selectUserSavedProfiles);
-
+  const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
+  const { maxProfiles } = subscriptionFeaturesObject;
   const { email } = loginUserDetails;
   const allUsers = useSelector(selectTempUsersDatabase);
   const currentProfileFilterObject = useSelector(
@@ -435,10 +450,7 @@ export default function CreateProfileModal({ ProfileType }) {
     if (isSubscriptionActive == true) {
       // alert(`isSubscriptionActive:${isSubscriptionActive}`);
 
-      if (userSavedProfiles.length < 1) {
-        // cont newProfile == log
-        // alert("less");
-
+      if (userSavedProfiles.length < maxProfiles) {
         // This is the rest of users in the database devoid of the current user logged in
 
         // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
@@ -573,11 +585,13 @@ export default function CreateProfileModal({ ProfileType }) {
 
             setProfileName("");
           } else {
+            setIsloading(false);
             triggerWarningAlertModal(
               "Please change your profile name a similar name already exists"
             );
           }
         } else {
+          setIsloading(false);
           triggerWarningAlertModal(
             "Please enter a profile name (cannot be name default)"
           );
@@ -600,13 +614,6 @@ export default function CreateProfileModal({ ProfileType }) {
     // get accountid and product id
     const currentUser = auth.currentUser;
     // const accountId = await currentUser.uid;
-
-    // // get product id form database if the redux state is empty
-    // const productIDRef = doc(db, `users_db/${accountId}`);
-    // const productIdSnap = await getDoc(productIDRef);
-    // const productID = await productIdSnap.data().subscriptionPackage;
-    // const priceID = await productIdSnap.data().subscriptionPrice;
-
     const SubscriptionValidationChecker = async () => {
       try {
         const {
@@ -641,6 +648,7 @@ export default function CreateProfileModal({ ProfileType }) {
 
         if (profileName === "") {
           triggerWarningAlertModal("name cannot be empty ");
+          setIsloading(false);
         } else {
           // This if statement makes prevents saved name from being the same as a existing profile name
           if (nameExists.length <= 0 || profileName === currentProfileClicked) {
@@ -680,9 +688,11 @@ export default function CreateProfileModal({ ProfileType }) {
             dispatch(setSnackbarTriggerCounter());
           } else {
             triggerWarningAlertModal("Profile Name already exists");
+            setIsloading(false);
           }
         }
       } catch (error) {
+        setIsloading(false);
         console.log(error);
       }
     };

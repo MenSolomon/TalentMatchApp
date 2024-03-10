@@ -649,6 +649,7 @@ const ConfirmDetails = () => {
                   dateCreated: serverTimestamp(),
                   accountId: user.uid,
                   isVisible: true,
+                  playersInPossession:[]
                 });
                 // alert("Other Accs");
 
