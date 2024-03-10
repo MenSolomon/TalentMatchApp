@@ -99,7 +99,8 @@ const CoachAgentScoutVersionConnetions = () => {
         const agentsAndScoutsRef = collection(db, "users_db");
         const queryAgentsAndScouts = query(
           agentsAndScoutsRef,
-          where("role", "in", ["Agent", "Scout"])
+          where("role", "in", ["Agent", "Scout"]),
+          where("isVisible", "==", true)
         );
 
         // Get the documents from Firestore
@@ -242,7 +243,9 @@ const CoachAgentScoutVersionConnetions = () => {
           {countryName === ""
             ? agentAndScoutsList?.map((person) => {
                 return (
-                  <div className="sm:min-h-1vh md:min-h-0.5vh">
+                  <div
+                    className="sm:min-h-1vh md:min-h-0.5vh"
+                    key={person.accountId}>
                     <ScoutsDisplayCard
                       AgencyName={person.organization}
                       UserName={`${person.firstName} ${person.surname}`}
