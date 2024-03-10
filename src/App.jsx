@@ -78,6 +78,7 @@ import {
 import { auth, db } from "./Firebase/Firebase";
 import { setPriceID } from "./statemanager/slices/SignupStepperSlice";
 import CoachAgentScoutVersionConnetions from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionConnections";
+import PlayerVersionConnections from "./PlayerVersion/src/screens/PlayerVersionConnections";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -471,10 +472,13 @@ const App = () => {
             <Route path="/studio/favorite" element={<Error404 />} />
             <Route path="/studio/help" element={<Error404 />} />
             <Route path="/studio/settings" element={<Settings />} />
-
+            <Route
+              path="/studio/connections"
+              element={<PlayerVersionConnections />}
+            />
             <Route
               path="/studio/dashboard"
-              element={<PlayerVersionDashboard />}
+              element={<PlayerVersionConnections />}
             />
             <Route path="/studio/videos" element={<PlayerVersionVideos />} />
             <Route

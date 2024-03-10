@@ -36,6 +36,11 @@ const PlayerVersionMotherComponent = () => {
     //   path: "/studio/Statistics",
     // },
     // { name: "Favourites", icon: "favorite", path: "/studio/favorites" },
+    {
+      name: "Connections",
+      icon: "monitoring",
+      path: "/multiStudio/connections",
+    },
     { name: "Messages", icon: "move_to_inbox", path: "/studio/messages" },
 
     { name: "Analytics", icon: "monitoring", path: "/studio/analytics" },
@@ -225,8 +230,7 @@ const PlayerVersionMotherComponent = () => {
         // background: background,
         color: primaryTextColor,
         // zIndex: "-3",
-      }}
-    >
+      }}>
       {/* //=====  NAVBAR ======= \\ */}
       <div className="md:flex md:basis-[11%]  sm:flex sm:basis-[8%]">
         {/* // Logo Area */}
@@ -237,8 +241,7 @@ const PlayerVersionMotherComponent = () => {
             paddingTop: "1%",
             display: "grid",
             placeContent: "center",
-          }}
-        >
+          }}>
           <div className="sm:block md:hidden">
             <SmallScreenPlayerMenuDrawer />{" "}
           </div>
@@ -256,8 +259,7 @@ const PlayerVersionMotherComponent = () => {
 
             position: "relative",
             // background: "red",
-          }}
-        >
+          }}>
           <Marquee
             speed={35}
             pauseOnClick={true}
@@ -267,8 +269,7 @@ const PlayerVersionMotherComponent = () => {
               width: "100%",
               position: "absolute",
               display: screenWidth < 1024 ? "none" : "flex",
-            }}
-          >
+            }}>
             {/* I can be a React component, multiple React components, or just some
             text. */}
             {clubsInDatabase.map((data, index) => {
@@ -295,8 +296,7 @@ const PlayerVersionMotherComponent = () => {
             display: "flex",
             // background: "red",
             // paddingLeft: "5vw",
-          }}
-        >
+          }}>
           <LightAndDarkModeSwitch />
 
           <div
@@ -304,8 +304,7 @@ const PlayerVersionMotherComponent = () => {
               marginTop: "1.5vh",
               marginLeft: "-1vw",
               marginRight: "1vw",
-            }}
-          >
+            }}>
             <NotificationsMenu />
           </div>
           <ProfileMenu
@@ -357,8 +356,7 @@ const PlayerVersionMotherComponent = () => {
                           dispatch(setLoginStatus(false));
                           dispatch(setUserDetailsObject({}));
                           dispatch(setUserSavedProfiles([]));
-                        }}
-                      >
+                        }}>
                         <NavBarButton
                           ButtonName={name}
                           ButtonImage={icon}
@@ -391,8 +389,7 @@ const PlayerVersionMotherComponent = () => {
           style={{
             // flex: ".82",
             padding: "2vh 1.5vw",
-          }}
-        >
+          }}>
           <Outlet />
         </div>
       </div>

@@ -37,7 +37,6 @@ const ScoutsDisplayCard = ({
           // display: "flex",
           paddingLeft: ".5vw",
           paddingRight: ".5vw",
-          paddingTop: "5%",
           gap: ".3vw",
         }}>
         {/* AVATAR */}
