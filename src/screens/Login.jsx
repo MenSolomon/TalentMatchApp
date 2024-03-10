@@ -1,12 +1,13 @@
 import {
   Button,
+  CircularProgress,
   IconButton,
   InputAdornment,
   InputLabel,
   OutlinedInput,
   TextField,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import {
   Facebook,
@@ -46,6 +47,10 @@ import { setUserSavedProfiles } from "../statemanager/slices/SavedProfileSlice";
 import { setUserNotifications } from "../statemanager/slices/NofiticationsSlice";
 import { setPlayerSelectedByClubOrScoutInPlayerManagement } from "../statemanager/slices/PlayersInAgencySlice";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  setWarningAlertModalCounter,
+  setWarningAlertModalMessage,
+} from "../statemanager/slices/OtherComponentStatesSlice";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -64,15 +69,22 @@ const Login = () => {
   const Navigate = useNavigate();
   const dispatch = useDispatch();
   const AllUsersDatabase = useSelector(selectUsersDatabase);
-
+  // isLoading state
+  const [isLoading, setIsLoading] = useState(false);
   const resetErrorMessage = () => {
     setErrorMessage("");
+  };
+
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
   };
 
   const onSubmit = (formData) => {
     // use google signinwithemailandpassword to get the current userid
     signInWithEmailAndPassword(auth, formData.email, formData.password)
       .then(async (userCredential) => {
+        setIsLoading(true);
         // Signed in
         const user = userCredential.user;
         const accountId = user.uid;
@@ -203,10 +215,36 @@ const Login = () => {
         // ...
       })
       .catch((error) => {
+        setIsLoading(false);
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.error("Error code:", errorCode);
-        console.error("Error message:", errorMessage);
+        // console.error("Error code:", errorCode);
+        // console.error("Error message:", errorMessage);
+        switch (errorCode) {
+          case "auth/wrong-password":
+            triggerWarningAlertModal("The password you entered was wrong");
+            break;
+          case "auth/missing-password":
+            triggerWarningAlertModal("Please enter a password");
+            break;
+          case "auth/network=request-failed":
+            triggerWarningAlertModal("Please check your internet connectivity");
+            break;
+          case "auth/user-not-found":
+            triggerWarningAlertModal("Account doesn't exist");
+            break;
+          case "auth/user-disabled":
+            triggerWarningAlertModal("Account has been disabled");
+            break;
+          case "auth/invalid-email":
+            triggerWarningAlertModal("Please enter an email");
+          case "auth/invalid-login-credentials":
+            triggerWarningAlertModal(
+              "This account does not exist or your credentials are wrong"
+            );
+            break;
+          default:
+        }
       });
   };
 
@@ -357,19 +395,23 @@ const Login = () => {
                 <div> </div>
 
                 <div>
-                  <Button
-                    type="submit"
-                    className="md:w-[15vw] sm:w-[30vw]"
-                    sx={{
-                      // width: "15vw",
-                      height: "7vh",
-                      background: "#5585FE",
-                      color: "white",
-                      borderRadius: "1vw",
-                      fontWeight: "bold",
-                    }}>
-                    Login
-                  </Button>
+                  {isLoading ? (
+                    <CircularProgress />
+                  ) : (
+                    <Button
+                      type="submit"
+                      className="md:w-[15vw] sm:w-[30vw]"
+                      sx={{
+                        // width: "15vw",
+                        height: "7vh",
+                        background: "#5585FE",
+                        color: "white",
+                        borderRadius: "1vw",
+                        fontWeight: "bold",
+                      }}>
+                      Login
+                    </Button>
+                  )}
                 </div>
               </form>
             </div>

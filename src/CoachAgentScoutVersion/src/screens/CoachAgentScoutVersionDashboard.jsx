@@ -77,7 +77,6 @@ const CoachAgentScoutVersionDashboard = () => {
   const handleVisibility = async (event) => {
     if (canHideVisibility == true) {
       // setIsVisible(event.target.checked);
-
       if (event.target.checked === true) {
         const canHideVisibilityRef = doc(db, `users_db`, accountId);
         await updateDoc(canHideVisibilityRef, {

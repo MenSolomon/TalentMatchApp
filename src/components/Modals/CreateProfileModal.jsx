@@ -422,6 +422,8 @@ export default function CreateProfileModal({ ProfileType }) {
   // const { productID } = selectProductID;
   const handleCreateProfile = async () => {
     // alert("handleCreateProfile");
+    // set isLoading to true
+    setIsloading(true);
     const { accountId } = loginUserDetails;
     const uuid = uuidv4();
     // get product id form database if the redux state is empty
@@ -593,6 +595,8 @@ export default function CreateProfileModal({ ProfileType }) {
 
   // FUNCTION FOR CREATING PROFILE
   const handleSaveProfile = async () => {
+    setIsloading(true);
+
     // get accountid and product id
     const currentUser = auth.currentUser;
     // const accountId = await currentUser.uid;
