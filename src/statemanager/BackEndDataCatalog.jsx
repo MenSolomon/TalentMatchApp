@@ -583,7 +583,7 @@ const BackEndDataCatalog = ({ children }) => {
         await Promise.all(
           playersSnapshot.docs.map(async (playerDoc) => {
             const playerId = playerDoc.id;
-            console.log("Player ID:", playerId);
+            // console.log("Player ID:", playerId);
 
             const videosQuery = query(
               collection(db, `players_database/${playerId}/videos`)
@@ -629,7 +629,7 @@ const BackEndDataCatalog = ({ children }) => {
         doc(db, "users_db", loginUserObject?.accountId),
         // { includeMetadataChanges: true },
         (doc) => {
-          console.log(doc.data());
+          // console.log(doc.data());
 
           if (doc.data() !== undefined) {
             dispatch(setUserDetailsObject(doc.data()));

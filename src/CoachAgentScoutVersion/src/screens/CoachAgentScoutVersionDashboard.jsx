@@ -66,8 +66,6 @@ const CoachAgentScoutVersionDashboard = () => {
   const dispatch = useDispatch();
   // state to manage ability to set visibility
   const { canHideVisibility } = subscriptionFeaturesObject;
-  // state to manage aacount visibility
-  const [isVisible, setIsVisible] = useState(false);
   // triggerWarningAlertModal
   const triggerWarningAlertModal = (message) => {
     dispatch(setWarningAlertModalMessage(message));

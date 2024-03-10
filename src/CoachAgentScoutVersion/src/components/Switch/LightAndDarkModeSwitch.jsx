@@ -65,7 +65,7 @@ export default function LightAndDarkModeSwitch({ style }) {
   const themeProviderObject = useSelector(selectThemeProviderObject);
   const dispatch = useDispatch();
 
-  console.log(themeProviderObject);
+  // console.log(themeProviderObject);
 
   const handleChangeSwithValue = (e) => {
     const Event = e.target.checked;
