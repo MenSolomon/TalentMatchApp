@@ -1,7 +1,7 @@
 import { Avatar, Button, Chip, IconButton, Switch } from "@mui/material";
 import BoxIcon from "../components/Icons/BoxIcon";
 import VideoImage from "../assets/images/videoImage.svg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../statemanager/slices/ThemeProviderSlice";
 import UploadVideoModal from "../components/Modals/UploadVideosModal";
 import NewsCard from "../../../components/Cards/NewsCard/NewsCard";
@@ -20,7 +20,7 @@ import { db } from "../../../Firebase/Firebase";
 
 const PlayerVersionDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
-
+  const dispatch = useDispatch();
   const { primaryTextColor } = ThemeProvider;
 
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
