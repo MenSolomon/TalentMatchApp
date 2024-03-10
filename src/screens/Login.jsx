@@ -118,6 +118,7 @@ const Login = () => {
               },
               stripeId: userInfoSnap.data().stripeId,
               subscriptionPrice: userInfoSnap.data().subscriptionPrice,
+              playersInPossession: userInfoSnap.data().playersInPossession,
             })
           );
 
