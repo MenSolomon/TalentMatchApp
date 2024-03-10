@@ -326,8 +326,6 @@ const MotherComponent = () => {
     }
   }, [themeProviderObject]);
 
-  // useEffect(async () => {
-  //   // alert("SubscriptionValidationChecker");
   //   const currentUser = auth.currentUser;
 
   //   const SubscriptionValidationChecker = async () => {

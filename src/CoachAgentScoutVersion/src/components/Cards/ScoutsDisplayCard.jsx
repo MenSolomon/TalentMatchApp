@@ -8,10 +8,11 @@ const ScoutsDisplayCard = ({
   style,
   handleConnect,
   handleDelete,
+  deleteBtnVisible,
 }) => {
   return (
     <Card
-      className="cardBackground primaryTextColor md:flex md:flex-col md:w-[30vw] md:h-[23vh]  sm:flex sm:flex-col sm:w-[100%] sm:h-[23vh]"
+      className="playerCard primaryTextColor md:flex md:flex-col md:w-[30vw] md:h-[23vh]  sm:flex sm:flex-col sm:w-[100%] sm:h-[23vh]"
       style={{
         ...style,
         // display: "flex",
@@ -59,12 +60,14 @@ const ScoutsDisplayCard = ({
               color="primary"
               onClick={handleConnect}
             />
-            <Chip
-              sx={{ cursor: "pointer" }}
-              color="error"
-              label="Delete"
-              onClick={handleDelete}
-            />
+            {deleteBtnVisible && (
+              <Chip
+                sx={{ cursor: "pointer" }}
+                color="error"
+                label="Delete"
+                onClick={handleDelete}
+              />
+            )}
           </Stack>
         </div>
       </div>

@@ -237,7 +237,7 @@ const CoachAgentScoutVersionConnetions = () => {
 
         {/* //  CONNECTIONS */}
         <div
-          className="md:basis-[70%] sm:flex-col  sm:flex sm:flex-shrink-0 sm:basis-[70%]"
+          className="md:basis-[70%] sm:flex-col sm:flex sm:flex-shrink-0 sm:basis-[70%] content-center"
           style={{ overflowY: "scroll" }}>
           {countryName === ""
             ? agentAndScoutsList?.map((person) => {
@@ -282,6 +282,7 @@ const CoachAgentScoutVersionConnetions = () => {
           // flexDirection: "column",
           // paddingLeft: "1.5vw",
           borderRadius: "1vw",
+          overflowY: "scroll",
         }}>
         {/* // Pagination and delete message area */}
         {/* style={{ flex: "1", display: "grid", placeContent: "center" }} */}
@@ -299,6 +300,7 @@ const CoachAgentScoutVersionConnetions = () => {
                       AgencyName={connections.organization}
                       UserName={`${connections.firstName} ${connections.surname}`}
                       handleDelete={() => handleDelete(connections.accountId)}
+                      deleteBtnVisible={true}
                     />
                   </div>
                 );

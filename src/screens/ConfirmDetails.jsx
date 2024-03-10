@@ -648,6 +648,7 @@ const ConfirmDetails = () => {
                   role: roleSelected,
                   dateCreated: serverTimestamp(),
                   accountId: user.uid,
+                  isVisible: true,
                 });
                 // alert("Other Accs");
 
