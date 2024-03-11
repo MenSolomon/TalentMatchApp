@@ -112,14 +112,12 @@ function Row(props) {
           "& > *": { borderBottom: "unset" },
 
           color: "white",
-        }}
-      >
+        }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
-          >
+            onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
@@ -141,8 +139,7 @@ function Row(props) {
 
               alignItems: "center",
             }}
-            className="primaryTextColor"
-          >
+            className="primaryTextColor">
             <Avatar
               sx={{ width: 30, height: 30, marginRight: 1 }}
               src={row.playerImage}
@@ -203,8 +200,7 @@ function Row(props) {
                     gap: "1vw",
                     height: "30vh",
                   }}
-                  colSpan={3}
-                >
+                  colSpan={3}>
                   {/* // Profile Image  */}
                   <div style={{ flex: ".15" }}>
                     <Avatar
@@ -259,15 +255,13 @@ function Row(props) {
                     style={{
                       flex: ".2",
                       //    background: "yellow"
-                    }}
-                  >
+                    }}>
                     <div
                       style={{
                         width: "100%",
                         height: "100%",
                         // background: "red",
-                      }}
-                    >
+                      }}>
                       <PlayerOverallAttributes />
                     </div>
                   </div>
@@ -284,8 +278,7 @@ function Row(props) {
                         position: "relative",
                         paddingTop: "1vh",
                       }}
-                      className="tableVideo"
-                    >
+                      className="tableVideo">
                       <video
                         // id={`video-${index}`}
                         src="/believerJuggling.mp4"
@@ -294,8 +287,7 @@ function Row(props) {
                         // height="10vh"
                         style={{ position: "absolute" }}
                         // autoPlay={true}
-                        controls
-                      ></video>
+                        controls></video>
                     </div>
                   </div>
                 </TableCell>{" "}
@@ -663,12 +655,10 @@ export default function FilteredPlayersTable() {
               borderTopLeftRadius: ".4vw",
               borderTopRightRadius: ".4vw",
             }}
-            component={Card}
-          >
+            component={Card}>
             <Table
               aria-label="collapsible table"
-              sx={{ width: "100%", height: "80%" }}
-            >
+              sx={{ width: "100%", height: "80%" }}>
               <TableHead>
                 <TableRow>
                   {/* <TableCell /> */}
@@ -711,12 +701,10 @@ export default function FilteredPlayersTable() {
               overflowY: "scroll",
               borderRadius: "0vw",
             }}
-            component={Card}
-          >
+            component={Card}>
             <Table
               aria-label="collapsible table"
-              sx={{ width: "100%", height: "80%" }}
-            >
+              sx={{ width: "100%", height: "80%" }}>
               {/* <TableHead
       sx={{
         // visibility: "hidden",
@@ -745,9 +733,12 @@ export default function FilteredPlayersTable() {
                 sx={{
                   overflowY: "scroll",
                   maxHeight: "20vh",
-                }}
-              >
+                }}>
                 {/* <div style={{ overflowY: "scroll", height: "300px" }}> */}
+                {/* {rows.sort((a, b) => b.boostPoints - a.boostPoints).map((row, key) => (
+  <Row key={key} row={row} />
+))} */}
+
                 {rows.map((row, key) => (
                   <Row key={key} row={row} />
                 ))}

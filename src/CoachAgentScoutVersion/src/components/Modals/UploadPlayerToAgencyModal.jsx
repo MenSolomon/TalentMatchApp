@@ -22,8 +22,6 @@ import {
   Search,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInAgencySlice";
-import PlayerViewCardFromPlayersScreen from "../Cards/PlayerViewCardFromPlayersScreen";
 import DatePickerTool from "../../../../components/DatePicker/DatePicker";
 import GroupedRadio from "../../../../components/Radio/GroupedRadio";
 import BasicAutoComplete from "../../../../components/Autocompletes/BasicAutoComplete";
