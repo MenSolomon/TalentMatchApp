@@ -17,6 +17,7 @@ import {
   Avatar,
   Card,
   Checkbox,
+  CircularProgress,
   FormControlLabel,
   Tooltip,
 } from "@mui/material";
@@ -447,6 +448,7 @@ export default function FilteredPlayersTable() {
     data: MatchedPlayersArray,
     error,
     refetch,
+    isFetching: isMatchedPlayersArrayFetching,
   } = useQuery({
     queryKey: ["fetchAllPlayers"],
     queryFn: async () => {
@@ -463,6 +465,8 @@ export default function FilteredPlayersTable() {
     // refetchOnMount: true,
     // refetchOnWindowFocus: true,
   });
+  // remount component when usequery completes fetch
+  useEffect(() => {}, [MatchedPlayersArray]);
 
   const currentProfileFilterObjectInEffect = savedUserProfiles.find((data) => {
     return (
@@ -626,7 +630,9 @@ export default function FilteredPlayersTable() {
     // alert(ExistingPlayerProfile.length);
   }, [currentProfileNameSelected, savedUserProfiles]);
 
-  const rows = PossiblePlayerMatch?.map((data, index) => {
+  const rows = PossiblePlayerMatch?.sort(
+    (a, b) => b.BoostPoints - a.BoostPoints
+  ).map((data, index) => {
     const {
       firstName,
       surName,
@@ -673,15 +679,6 @@ export default function FilteredPlayersTable() {
 
   return (
     <div style={{ height: "42.5vh", width: "100%" }}>
-      {/* <TableContainer>
-        <Table
-          aria-label="collapsible table"
-          sx={{ width: "100%", height: "80%" }}
-        >
-       
-        </Table>
-      </TableContainer> */}
-
       {PossiblePlayerMatch?.length === 0 ? (
         " No Matches "
       ) : (
@@ -746,39 +743,24 @@ export default function FilteredPlayersTable() {
             <Table
               aria-label="collapsible table"
               sx={{ width: "100%", height: "80%" }}>
-              {/* <TableHead
-      sx={{
-        // visibility: "hidden",
-        height: "0vh",
-        backround: "red",
-      }}
-    >
-      <TableRow>
-        <TableCell />
-
-        <TableCell>
-          {" "}
-          <Checkbox />{" "}
-        </TableCell>
-        <TableCell>Personal</TableCell>
-        <TableCell align="right">Age</TableCell>
-        <TableCell align="right">Foot</TableCell>
-        <TableCell align="right">Height</TableCell>
-        <TableCell align="right">Country</TableCell>
-        <TableCell align="right">Club</TableCell>
-        <TableCell align="right">Market value</TableCell>
-        <TableCell align="right">Contract Expiry</TableCell>
-      </TableRow>
-    </TableHead> */}
               <TableBody
                 sx={{
                   overflowY: "scroll",
                   maxHeight: "20vh",
                 }}>
                 {/* <div style={{ overflowY: "scroll", height: "300px" }}> */}
-                {rows?.map((row, key) => (
-                  <Row key={key} row={row} />
-                ))}
+                {isMatchedPlayersArrayFetching ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignSelf: "center",
+                    }}>
+                    <CircularProgress />
+                  </div>
+                ) : (
+                  rows?.map((row, key) => <Row key={key} row={row} />)
+                )}
                 {/* </div> */}
               </TableBody>{" "}
             </Table>
