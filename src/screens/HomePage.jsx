@@ -184,8 +184,7 @@ const HomePage = () => {
         // gridTemplateRows: "14vh 93vh 5vh",
         gridTemplateAreas: "'flicks''PlayerContent''empty' ",
       }}
-      className="md:w-[100%] md:h-[100%] md:flex md:flex-col md:gap-[1vh]  sm:w-[100%] sm:h-[130%] sm:grid sm:grid-cols-1 sm:grid-rows-[14vh,93vh,5vh] sm:gap-[3vh] "
-    >
+      className="md:w-[100%] md:h-[100%] md:flex md:flex-col md:gap-[1vh]  sm:w-[100%] sm:h-[130%] sm:grid sm:grid-cols-1 sm:grid-rows-[14vh,93vh,5vh] sm:gap-[3vh] ">
       {/* // FIRST SECTION`` */}
       <div
         className="md:basis-[55%] md:flex md:flex-row md:gap-[1.1vw]  sm:basis-[90%] sm:flex sm:flex-col sm:gap-[1.1vw] md:w-[100%] sm:w-[100%]  "
@@ -195,8 +194,7 @@ const HomePage = () => {
           gridArea: "PlayerContent",
           // display: "flex",
           // gap: "1.1vw",
-        }}
-      >
+        }}>
         {/* // Transfer News carousel */}
         <div
           className="md:basis-[60%] md:relative  sm:basis-[60%] sm:relative"
@@ -205,8 +203,7 @@ const HomePage = () => {
             // background: "white",
             borderRadius: "1vw",
             position: "relative",
-          }}
-        >
+          }}>
           <NewsCarousel NewsArray={newData} />
         </div>
         {/* // Most Viewed Player /&& fantasy player of the week ,  free agent pick of the week */}
@@ -215,16 +212,14 @@ const HomePage = () => {
           style={{
             flex: ".4",
             display: "flex",
-          }}
-        >
+          }}>
           {/* // Players of the Week Pick */}
           <div
             style={{
               flex: "1",
               display: "flex",
               flexDirection: "column",
-            }}
-          >
+            }}>
             <div style={{ flex: ".2", background: "transparent" }}>
               {" "}
               {/* <CreateProfileModal /> */}
@@ -241,8 +236,7 @@ const HomePage = () => {
                 paddingRight: ".5vw",
                 paddingTop: ".5vh",
                 paddingBottom: ".5vh",
-              }}
-            >
+              }}>
               {top10Carousel.map((data, index) => {
                 const { firstName, surName, position, image } = data;
 
@@ -272,8 +266,7 @@ const HomePage = () => {
           padding: ".4vh .5vw",
           // display: "flex",
           // flexDirection: "column",
-        }}
-      >
+        }}>
         {/* // Headers */}
         <div style={{ flex: ".1", background: "transparent" }}>
           <WelcomeMessageModal />
@@ -316,8 +309,7 @@ const HomePage = () => {
           style={{
             flex: ".88",
             padding: "0vh .3vw",
-          }}
-        >
+          }}>
           <MatchedPlayersCarousel MatchedPlayersArray={playersInAgencyArray} />
         </div>
       </div>
