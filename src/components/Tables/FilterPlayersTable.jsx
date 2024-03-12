@@ -33,6 +33,10 @@ import {
   selectCurrentProfileFilterObject,
   selectUserSavedProfiles,
 } from "../../statemanager/slices/SavedProfileSlice";
+import { useEffect } from "react";
+import { collection, getDocs, query } from "firebase/firestore";
+import { db } from "../../Firebase/Firebase";
+import { useQuery } from "@tanstack/react-query";
 
 function createData(
   name,
@@ -421,7 +425,44 @@ export default function FilteredPlayersTable() {
   const currentProfileNameSelected = useSelector(selectCurrentProfile);
 
   const savedUserProfiles = useSelector(selectUserSavedProfiles);
-  const MatchedPlayersArray = useSelector(selectPlayersDatabase);
+  // const MatchedPlayersArray = useSelector(selectPlayersDatabase);
+
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     const playersQuery = query(collection(db, "players_database"));
+  //     const playersSnapshot = await getDocs(playersQuery);
+  //     const allProducts = [];
+  //     const playersSnapshotData = await playersSnapshot.forEach((doc) => {
+  //       // save them to allProducts array
+  //       allProducts.push(doc.data());
+  //     });
+  //     console.log("playersSnapshotData", allProducts);
+  //     return allProducts;
+  //   };
+  //   fetch();
+  // }, []);
+
+  const {
+    status,
+    data: MatchedPlayersArray,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["fetchAllPlayers"],
+    queryFn: async () => {
+      const playersQuery = query(collection(db, "players_database"));
+      const playersSnapshot = await getDocs(playersQuery);
+      const allProducts = [];
+      const playersSnapshotData = await playersSnapshot.forEach((doc) => {
+        // save them to allProducts array
+        allProducts.push(doc.data());
+      });
+      console.log("playersSnapshotData", allProducts);
+      return allProducts;
+    },
+    // refetchOnMount: true,
+    // refetchOnWindowFocus: true,
+  });
 
   const currentProfileFilterObjectInEffect = savedUserProfiles.find((data) => {
     return (
@@ -429,7 +470,7 @@ export default function FilteredPlayersTable() {
     );
   });
 
-  const ExistingPlayerProfile = MatchedPlayersArray.filter((data) => {
+  const ExistingPlayerProfile = MatchedPlayersArray?.filter((data) => {
     const {
       Nationality,
       position,
@@ -534,7 +575,7 @@ export default function FilteredPlayersTable() {
       }
     );
 
-    const ExistingPlayerProfile = MatchedPlayersArray.filter((data) => {
+    const ExistingPlayerProfile = MatchedPlayersArray?.filter((data) => {
       const {
         Nationality,
         position,
@@ -735,11 +776,7 @@ export default function FilteredPlayersTable() {
                   maxHeight: "20vh",
                 }}>
                 {/* <div style={{ overflowY: "scroll", height: "300px" }}> */}
-                {/* {rows.sort((a, b) => b.boostPoints - a.boostPoints).map((row, key) => (
-  <Row key={key} row={row} />
-))} */}
-
-                {rows.map((row, key) => (
+                {rows?.map((row, key) => (
                   <Row key={key} row={row} />
                 ))}
                 {/* </div> */}
