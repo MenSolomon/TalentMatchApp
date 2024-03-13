@@ -101,10 +101,24 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
   const allPlayerDatabase = useSelector(selectPlayersDatabase);
   const userDetailsObject = useSelector(selectUserDetailsObject);
 
-  const { id, firstName, surName } =
-    CurrentPlayerSelectedForClubScoutCoachAndAgentManagement;
-
+  // const { id, firstName, surName } =
+  //   CurrentPlayerSelectedForClubScoutCoachAndAgentManagement;
   const { role, surname } = userDetailsObject;
+
+  const surName =
+    role === "Player"
+      ? userDetailsObject?.surname
+      : CurrentPlayerSelectedForClubScoutCoachAndAgentManagement?.surName;
+
+  const firstName =
+    role === "Player"
+      ? userDetailsObject?.firstName
+      : CurrentPlayerSelectedForClubScoutCoachAndAgentManagement?.firstName;
+
+  const id =
+    role === "Player"
+      ? userDetailsObject?.accountId
+      : CurrentPlayerSelectedForClubScoutCoachAndAgentManagement?.id;
 
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState("");

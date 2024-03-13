@@ -31,6 +31,7 @@ import {
 import { setPlayerSelectedByClubOrScoutInPlayerManagement } from "../../statemanager/slices/PlayersInAgencySlice";
 import BasicButton from "../../components/Buttons/BasicButton";
 import { selectUserNotifications } from "../../statemanager/slices/NofiticationsSlice";
+import { formatDistanceToNow } from "date-fns";
 
 const Emails = () => {
   const dispatch = useDispatch();
@@ -182,7 +183,11 @@ const MenuItemRow = ({
   // }
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
   const dispatch = useDispatch();
-  const relativeDate = moment(dateSent).startOf("hour").fromNow();
+  const parsedTimestamp = new Date(dateSent);
+  const relativeDate = formatDistanceToNow(parsedTimestamp, {
+    addSuffix: true,
+  });
+  // const relativeDate = moment(dateSent).startOf("hour").fromNow();
   const allPlayersDatabase = useSelector(selectPlayersDatabase);
   const allClubsInDatabase = useSelector(selectClubsInDatabase);
   // moment(dateSent).startOf('hour').fromNow()

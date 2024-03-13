@@ -1,6 +1,33 @@
 import { Avatar, Checkbox, Tooltip } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectContactSelectedForMessaging,
+  setContactSelectedForMessaging,
+} from "../../../../statemanager/slices/OtherComponentStatesSlice";
+import { formatDistanceToNow } from "date-fns";
 
-const MessageContactCard = ({ profileImage, message, time, profileName }) => {
+const MessageContactCard = ({
+  profileImage,
+  message,
+  time,
+  profileName,
+  accountId,
+}) => {
+  const dispatch = useDispatch();
+
+  const handleMessageUserSelect = () => {
+    // alert(accountId, " for messaging");
+    dispatch(
+      setContactSelectedForMessaging({
+        contactId: accountId,
+        name: profileName,
+        profileImage: profileImage,
+      })
+    );
+  };
+
+  const selectedContactDetails = useSelector(selectContactSelectedForMessaging);
+
   return (
     <div
       className="messageCard cardBackground md:w-[100%] md:h-[100%] md:flex md:gap-[.5em]   sm:w-[100%] sm:h-[100%] sm:flex sm:gap-[.5em]"
@@ -14,9 +41,14 @@ const MessageContactCard = ({ profileImage, message, time, profileName }) => {
         borderRadius: ".5vw",
         paddingTop: "1vh",
         paddingRight: ".5vw",
+        borderBottom:
+          selectedContactDetails.contactId === accountId
+            ? "3px solid #5585fe"
+            : "",
         // borderLeft: "3px solid white",
         // border: "1px solid black",
       }}
+      onClick={handleMessageUserSelect}
     >
       {/* // CHECKBOX AREA */}
       <div style={{ flex: ".2", display: "flex", justifyContent: "center" }}>
