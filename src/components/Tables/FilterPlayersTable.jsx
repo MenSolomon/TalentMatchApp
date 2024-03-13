@@ -631,7 +631,7 @@ export default function FilteredPlayersTable() {
   }, [currentProfileNameSelected, savedUserProfiles]);
 
   const rows = PossiblePlayerMatch?.sort(
-    (a, b) => b.BoostPoints - a.BoostPoints
+    (a, b) => b.boostPoints - a.boostPoints
   ).map((data, index) => {
     const {
       firstName,

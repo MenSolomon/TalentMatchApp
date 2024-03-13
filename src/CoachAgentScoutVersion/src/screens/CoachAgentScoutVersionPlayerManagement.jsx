@@ -15,12 +15,17 @@ import ConfirmClubExitModal from "../components/Modals/ConfirmClubExitModal";
 import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../../Firebase/Firebase";
+import BasicButtonWithEndIcon from "../../../components/Buttons/BasicButtonWithEndIcon";
+import { selectCurrentBrowserSize } from "../../../statemanager/slices/OtherComponentStatesSlice";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 const CoachAgentScoutVersionPlayerManagement = () => {
   const { playerId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userLoginObject = useSelector(selectUserDetailsObject);
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
   const currentPlayerInfoObject = useSelector(
     selectPlayerSelectedByClubOrScoutInPlayerManagement
   );
@@ -357,7 +362,24 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               {/* // Edit Profile button */}
               {/*  */}
               <EditPlayerProfileModal />
-
+              <BasicButtonWithEndIcon
+                innerText={"Boost"}
+                endIcon={"bolt"}
+                style={{
+                  width: browserWidth >= 1024 ? "9vw" : "40vw",
+                  height: "6vh",
+                  marginBottom: "1.5vh",
+                }}
+                
+                onClick={async () => {
+                  const functions = getFunctions();
+                  const incrementBoostFn = httpsCallable(
+                    functions,
+                    "incrementBoost"
+                  );
+                  const result = await incrementBoostFn({ id: currentPlayerInfoObject.id })
+                }}
+              />
               {userLoginObject?.role === "Club" ? <TransferPlayerModal /> : ""}
 
               {userLoginObject?.role === "Club" ? <ConfirmClubExitModal /> : ""}
