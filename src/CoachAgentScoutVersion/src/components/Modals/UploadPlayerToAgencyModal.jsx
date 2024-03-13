@@ -22,8 +22,6 @@ import {
   Search,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInAgencySlice";
-import PlayerViewCardFromPlayersScreen from "../Cards/PlayerViewCardFromPlayersScreen";
 import DatePickerTool from "../../../../components/DatePicker/DatePicker";
 import GroupedRadio from "../../../../components/Radio/GroupedRadio";
 import BasicAutoComplete from "../../../../components/Autocompletes/BasicAutoComplete";
@@ -256,7 +254,6 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
   const triggerWarningAlertModal = (message) => {
     dispatch(setWarningAlertModalMessage(message));
     dispatch(setWarningAlertModalCounter());
-    console.log(userLoginObject?.playersInPossession.length);
   };
 
   const onSubmit = (formData, e) => {
@@ -846,8 +843,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
           // display: "flex",
           // flexDirection: "column",
           // padding: ".4vw",
-        }}
-      >
+        }}>
         {/* CARD HEADER */}
 
         <div style={{ flex: ".2" }}>
@@ -869,19 +865,16 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
         open={open}
         onClose={handleClose}
         aria-labelledby="child-modal-title"
-        aria-describedby="child-modal-description"
-      >
+        aria-describedby="child-modal-description">
         <Box
           className="cardBackground primaryTextColor md:overflow-y-hidden md:flex md:flex-col md:h-[94%] md:w-[80%] sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col sm:overflow-y-scroll"
-          sx={{ ...style, paddingBottom: "2vh" }}
-        >
+          sx={{ ...style, paddingBottom: "2vh" }}>
           <div style={{ flex: ".2" }}>
             <h2 id="child-modal-title">
               Create a player profile{" "}
               <Button
                 sx={{ width: "10%", float: "right" }}
-                onClick={handleClose}
-              >
+                onClick={handleClose}>
                 Back
               </Button>
             </h2>
@@ -909,8 +902,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
           <div style={{ flex: ".8" }}>
             <form
               className="md:flex md:flex-col sm:flex sm:flex-col  "
-              onSubmit={handleSubmit(onSubmit)}
-            >
+              onSubmit={handleSubmit(onSubmit)}>
               {/* {...register("firstName", { required: true })} */}
               <div
                 // md:basis-[35%]
@@ -921,8 +913,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                   // display: "flex",
                   gap: "1vw",
                   // background: "red",
-                }}
-              >
+                }}>
                 {/* LEFT INPUT PLAYER DETAILS */}
                 <div
                   className="md:w-[100%]  md:flex md:flex-col md:basis-[35%]    sm:w-[100%]  sm:flex sm:flex-col sm:basis-[35%]"
@@ -933,8 +924,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       // flexDirection: "column",
                       // background: "red",
                     }
-                  }
-                >
+                  }>
                   <div
                     style={{
                       flex: "1",
@@ -942,8 +932,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       gap: "20px",
                       alignItems: "center",
                       flexDirection: "column",
-                    }}
-                  >
+                    }}>
                     {/* <CustomTextField placeholder={"First Name"} />
                 <CustomTextField placeholder={"Surname"} />     */}
 
@@ -1046,8 +1035,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                     // alignItems: "center",
                     // flexDirection: "column",
                     // background: "yellow",
-                  }}
-                >
+                  }}>
                   <BasicSlider
                     rangeName="Market value 000,000 (optional)"
                     max={50}
@@ -1173,16 +1161,14 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                       }}
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
-                      onClick={() => fileInputRef.current.click()}
-                    >
+                      onClick={() => fileInputRef.current.click()}>
                       <div
                         style={{
                           display: "flex",
                           alignItems: "center",
                           justifyItems: "baseline",
                           gap: 10,
-                        }}
-                      >
+                        }}>
                         <AddAPhoto />
                         <Typography sx={{ fontWeight: "600" }}>
                           Select or drag profile Image
@@ -1231,8 +1217,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                             color: "red",
                             // backgroundColor: "white",
                             // left: "10vw",
-                          }}
-                        >
+                          }}>
                           <Close />
                         </IconButton>
                       </div>
@@ -1284,8 +1269,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                     marginBottom: "2vh",
                     // position: "absolute",
                   }}
-                  variant="contained"
-                >
+                  variant="contained">
                   Create
                 </Button>
               </div>
@@ -1309,13 +1293,13 @@ export default function UploadPlayerToAgencyModal() {
   const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
   const subscriptionStatus = useSelector(selectIsSubscriptionActive);
   // state to hold maximum number of profiles
-  const { maxProfiles } = subscriptionFeaturesObject;
+  const { maxPlayersInAgency } = subscriptionFeaturesObject;
   // state to hold subscription status
 
   const handleOpen = () => {
-    // console.log(maxProfiles);
     if (subscriptionStatus === true) {
-      if (userLoginObject?.playersInPossession.length < maxProfiles) {
+      if (userLoginObject?.playersInPossession.length < maxPlayersInAgency) {
+        // console.log(userLoginObject?.playersInPossession.length);
         setOpen(true);
       } else {
         triggerWarningAlertModal(
@@ -1342,8 +1326,7 @@ export default function UploadPlayerToAgencyModal() {
         open={open}
         onClose={handleClose}
         aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-      >
+        aria-describedby="parent-modal-description">
         <Box
           sx={{
             ...style,
@@ -1351,8 +1334,7 @@ export default function UploadPlayerToAgencyModal() {
             // display: "flex",
             // flexDirection: "column",\
           }}
-          className="cardBackground primaryTextColor md:h-[94%] md:w-[80%] sm:w-[100%] sm:h-[100%]"
-        >
+          className="cardBackground primaryTextColor md:h-[94%] md:w-[80%] sm:w-[100%] sm:h-[100%]">
           {/* // UPLOAD A PLAYER HEADER */}
 
           <div style={{ flex: ".2", textAlign: "center" }}>
@@ -1392,8 +1374,7 @@ export default function UploadPlayerToAgencyModal() {
                   display: "grid",
                   placeContent: "center",
                   paddingLeft: "3vw",
-                }}
-              >
+                }}>
                 <img
                   className="md:w-[200px] md:h-[400px]  sm:w-[200px] sm:h-[400px]"
                   // style={{ width: "200px", height: "400px" }}
@@ -1412,8 +1393,7 @@ export default function UploadPlayerToAgencyModal() {
                   padding: ".4vw",
                   display: "grid",
                   placeContent: "center",
-                }}
-              >
+                }}>
                 <CreateAPlayerProfileModal
                   turnMotherModalAfterSubmitted={retrieveDataFromMotherModal}
                 />

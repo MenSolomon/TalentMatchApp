@@ -18,7 +18,10 @@ import UploadPlayer from "./components/Tooltips/UploadPlayer";
 import WelcomeMessageModal from "./components/Modals/WelcomeMessageModal";
 import {
   selectUserDetailsObject,
+  setIsSubscriptionActive,
   setLoginStatus,
+  setNextBillingDate,
+  setSubscriptionFeatures,
   setUserDetailsObject,
 } from "./statemanager/slices/LoginUserDataSlice";
 import BasicSnackBar from "./components/Snackbars/BasicSnackbar";
@@ -32,9 +35,19 @@ import {
   selectUserSavedProfiles,
   setUserSavedProfiles,
 } from "./statemanager/slices/SavedProfileSlice";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { setPriceID } from "./statemanager/slices/SignupStepperSlice";
+import { auth, db } from "./Firebase/Firebase";
 
 const MotherComponent = () => {
-  const LoginUserDetails = useSelector(selectUserDetailsObject);
+  const userLoginObject = useSelector(selectUserDetailsObject);
   const usersSavedProfile = useSelector(selectUserSavedProfiles);
   // const { savedProfile } = LoginUserDetails;
 
@@ -313,6 +326,127 @@ const MotherComponent = () => {
     }
   }, [themeProviderObject]);
 
+  //   const currentUser = auth.currentUser;
+
+  //   const SubscriptionValidationChecker = async () => {
+  //     const accountId = await currentUser.uid;
+  //     // alert(accountId);
+  //     // get product id form database if the redux state is empty
+  //     const productIDRef = doc(db, `users_db/${accountId}`);
+  //     const productIdSnap = await getDoc(productIDRef);
+  //     const productID = await productIdSnap.data().subscriptionPackage;
+  //     const priceID = await productIdSnap.data().subscriptionPrice;
+  //     // alert(productID);
+  //     //get and store maxProfiles
+  //     const featuresRef = await doc(db, `products/${productID}`);
+  //     const featuresSnap = await getDoc(featuresRef);
+  //     const features = await featuresSnap.data().features;
+  //     // save to redux
+  //     await dispatch(setSubscriptionFeatures(features));
+  //     console.log(`maxProfilesSnap:${features.maxProfiles}`);
+  //     // save priceID to redux
+  //     await dispatch(setPriceID(priceID));
+  //     try {
+  //       const subscriptionsRef = collection(
+  //         db,
+  //         "users_db",
+  //         accountId,
+  //         "subscriptions"
+  //       );
+
+  //       const queryActiveOrTrialing = query(
+  //         subscriptionsRef,
+  //         where("status", "in", ["trialing", "active"])
+  //       );
+
+  //       onSnapshot(queryActiveOrTrialing, async (snapshot) => {
+  //         const doc = snapshot.docs[0];
+  //         const length = snapshot.docs.length;
+  //         // console.log(`no. of subs: ${length}`);
+  //         // console.log(`accountId:${accountId}`);
+  //         alert(length);
+
+  //         if (length > 0) {
+  //           dispatch(setIsSubscriptionActive(true));
+  //           // get end next billing date
+  //           const timestamp = doc.data().current_period_end.seconds;
+  //           const date = await new Date(timestamp * 1000);
+  //           dispatch(setNextBillingDate(date.toDateString()));
+  //         } else if (length == 0) {
+  //           dispatch(setIsSubscriptionActive(false));
+  //           dispatch(setNextBillingDate("N/A"));
+  //         }
+  //       });
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   SubscriptionValidationChecker();
+  // }, [userLoginObject?.accountId]);
+  useEffect(() => {
+    // alert("SubscriptionValidationChecker");
+    const currentUser = auth.currentUser;
+
+    if (currentUser) {
+      const SubscriptionValidationChecker = async () => {
+        const accountId = await currentUser.uid;
+        // alert(accountId);
+        // get product id form database if the redux state is empty
+        const productIDRef = doc(db, `users_db/${accountId}`);
+        const productIdSnap = await getDoc(productIDRef);
+        const productID = await productIdSnap.data().subscriptionPackage;
+        const priceID = await productIdSnap.data().subscriptionPrice;
+        console.log("priceID", priceID);
+        // save priceID to redux
+        await dispatch(setPriceID(priceID));
+        // alert(productID);
+
+        //get and store maxProfiles
+        const featuresRef = await doc(db, `products/${productID}`);
+        const featuresSnap = await getDoc(featuresRef);
+        const features = await featuresSnap.data().features;
+        // save to redux
+        await dispatch(setSubscriptionFeatures(features));
+        // console.log(`maxProfilesSnap:${features.maxProfiles}`);
+
+        try {
+          const subscriptionsRef = collection(
+            db,
+            "users_db",
+            accountId,
+            "subscriptions"
+          );
+
+          const queryActiveOrTrialing = query(
+            subscriptionsRef,
+            where("status", "in", ["trialing", "active"])
+          );
+
+          onSnapshot(queryActiveOrTrialing, async (snapshot) => {
+            const doc = snapshot.docs[0];
+            // console.log(doc.data()?.status);
+            const length = snapshot.docs.length;
+
+            if (doc) {
+              dispatch(setIsSubscriptionActive(true));
+              // get end next billing date
+              const timestamp = doc.data().current_period_end.seconds;
+              const date = await new Date(timestamp * 1000);
+              dispatch(setNextBillingDate(date.toDateString()));
+            } else if (doc === undefined) {
+              dispatch(setIsSubscriptionActive(false));
+              dispatch(setNextBillingDate("N/A"));
+            }
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      SubscriptionValidationChecker();
+    } else {
+      dispatch(setIsSubscriptionActive(true));
+    }
+  }, []);
   return (
     <div
       className="md:flex md:flex-col md:h-[112vh] md:w-[100vw] md:pb-[0vh] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw] sm:pb-[10vh]"
@@ -329,8 +463,7 @@ const MotherComponent = () => {
         // background: "red",
         color: primaryTextColor,
         // zIndex: "-3",
-      }}
-    >
+      }}>
       {/* //=====  NAVBAR ======= \\ */}
       <div
         className="md:flex md:basis-[11%]  sm:flex sm:basis-[8%]"
@@ -344,8 +477,7 @@ const MotherComponent = () => {
             paddingTop: "1%",
             display: "grid",
             placeContent: "center",
-          }}
-        >
+          }}>
           <div className="sm:block md:hidden">
             <SmallScreenMenuDrawer />{" "}
           </div>
@@ -364,8 +496,7 @@ const MotherComponent = () => {
             // paddingLeft: "4vw",
             // background: "red",
             position: "relative",
-          }}
-        >
+          }}>
           <Marquee
             // className="sm:hidden md:block"
 
@@ -377,8 +508,7 @@ const MotherComponent = () => {
               width: "100%",
               position: "absolute",
               display: screenWidth < 1024 ? "none" : "flex",
-            }}
-          >
+            }}>
             {clubsInDatabase.map((data, index) => {
               const { clubImage, clubName } = data;
               return (
@@ -405,8 +535,7 @@ const MotherComponent = () => {
             paddingTop: "1%",
             paddingLeft: "1.2vw",
             display: "flex",
-          }}
-        >
+          }}>
           {/* sx={{ , marginLeft: "1vw", borderBottom: "none" }} */}
 
           <UploadPlayer
@@ -423,8 +552,7 @@ const MotherComponent = () => {
               marginTop: "1.5vh",
               marginLeft: "-1vw",
               marginRight: "1vw",
-            }}
-          >
+            }}>
             <NotificationsMenu />
           </div>
           {/* </IconButton> */}
@@ -445,8 +573,7 @@ const MotherComponent = () => {
             // background: "green",
             // overflowY: "visible",
           }
-        }
-      >
+        }>
         {/* // NAV ARAEA */}
         <div
           className="md:basis-[18%] md:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:block sm:hidden"
@@ -458,8 +585,7 @@ const MotherComponent = () => {
               // paddingTop: "5vh",
               // background: "yellow",
             }
-          }
-        >
+          }>
           {/* // USE A MAP FOR THIS */}
           {/* // NavBAR FIRST HALF */}
           <div style={{ flex: ".65", overflowY: "scroll", maxHeight: "45vh" }}>
@@ -507,8 +633,7 @@ const MotherComponent = () => {
                           dispatch(setLoginStatus(false));
                           dispatch(setUserDetailsObject({}));
                           dispatch(setUserSavedProfiles([]));
-                        }}
-                      >
+                        }}>
                         <NavBarButton
                           ButtonName={name}
                           ButtonImage={icon}
@@ -544,8 +669,7 @@ const MotherComponent = () => {
             padding: "2vh 1.5vw",
 
             // background: "blue",
-          }}
-        >
+          }}>
           <Outlet />
         </div>
       </div>

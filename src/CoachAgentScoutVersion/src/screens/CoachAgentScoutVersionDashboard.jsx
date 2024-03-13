@@ -1,11 +1,22 @@
-import { Avatar, Button, IconButton } from "@mui/material";
+import { Avatar, Button, Chip, IconButton, Switch } from "@mui/material";
 import PlayerSkeletonImage from "../assets/images/PlayerSkeleton.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../statemanager/slices/ThemeProviderSlice";
 import UploadPlayerToAgencyModal from "../components/Modals/UploadPlayerToAgencyModal";
 import NewsCard from "../../../components/Cards/NewsCard/NewsCard";
-import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
+import {
+  selectSubscriptionFeatures,
+  selectUserDetailsObject,
+} from "../../../statemanager/slices/LoginUserDataSlice";
 import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
+import { useEffect, useState } from "react";
+import {
+  setWarningAlertModalCounter,
+  setWarningAlertModalMessage,
+} from "../../../statemanager/slices/OtherComponentStatesSlice";
+import { auth, db } from "../../../Firebase/Firebase";
+import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { useQuery } from "@tanstack/react-query";
 
 const CoachAgentScoutVersionDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
@@ -49,7 +60,58 @@ const CoachAgentScoutVersionDashboard = () => {
   ];
 
   const userLoginObject = useSelector(selectUserDetailsObject);
+  const { accountId } = userLoginObject;
+  const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
   const allPlayersInDatabase = useSelector(selectPlayersDatabase);
+  const dispatch = useDispatch();
+  // state to manage ability to set visibility
+  const { canHideVisibility } = subscriptionFeaturesObject;
+  // triggerWarningAlertModal
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
+  // function to set profile visibility
+  const handleVisibility = async (event) => {
+    if (canHideVisibility == true) {
+      // setIsVisible(event.target.checked);
+      if (event.target.checked === true) {
+        const canHideVisibilityRef = doc(db, `users_db`, accountId);
+        await updateDoc(canHideVisibilityRef, {
+          isVisible: true,
+        });
+        fetchIsVisibleFn();
+      } else if (event.target.checked === false) {
+        const canHideVisibilityRef = doc(db, `users_db`, accountId);
+        await updateDoc(canHideVisibilityRef, {
+          isVisible: false,
+        });
+        fetchIsVisibleFn();
+      }
+    } else if (canHideVisibility == false) {
+      triggerWarningAlertModal(
+        "Upgrade subscription to change profile visibility"
+      );
+    }
+  };
+
+  // usequery to get isVisible value
+
+  const fetchIsVisible = async () => {
+    const canHideVisibilityRef = doc(db, `users_db`, accountId);
+    const canHideVisibilitySnap = await getDoc(canHideVisibilityRef);
+    // console.log(canHideVisibilitySnap.data().isVisible);
+    return canHideVisibilitySnap.exists()
+      ? canHideVisibilitySnap.data().isVisible
+      : [];
+  };
+
+  const {
+    status,
+    data: canHideVisibilityValue,
+    error,
+    refetch: fetchIsVisibleFn,
+  } = useQuery({ queryKey: ["fetchIsVisible"], queryFn: fetchIsVisible });
 
   const playersInPossessionDetails =
     userLoginObject?.playersInPossession &&
@@ -77,7 +139,7 @@ const CoachAgentScoutVersionDashboard = () => {
   const playerWithHighestViews =
     sortedPlayers.length > 0 ? sortedPlayers[0] : null;
 
-  console.log(playerWithHighestViews, "arrayWithHeighetView");
+  // console.log(playerWithHighestViews, "arrayWithHeighetView");
 
   return (
     <div
@@ -91,14 +153,22 @@ const CoachAgentScoutVersionDashboard = () => {
         }
       }>
       {/* // Heading Area   style={{ flex: ".1" }}*/}
-      <div className="md:basis-[10%] sm:basis-[10%]">
+      <div className="md:basis-[10%] sm:basis-[10%] grid md:grid-cols-2 sm:grid-cols-2">
         <h3 style={{ margin: 0, float: "left" }} className="primaryTextColor">
           Profile dashboard
-        </h3>{" "}
-        {/* <IconButton sx={{ float: "right" }}>
-          {" "}
-          <BoxIcon IconClassName="bxs-video-plus" />{" "}
-        </IconButton> */}
+        </h3>
+        <div className="flex justify-self-end">
+          <Switch
+            checked={canHideVisibilityValue}
+            onChange={handleVisibility}
+            inputProps={{ "aria-label": "controlled" }}
+          />
+          <Chip
+            variant="contained"
+            label={canHideVisibilityValue ? "Visible" : "Hidden"}
+            color={canHideVisibilityValue ? "success" : "error"}
+          />
+        </div>
       </div>
 
       {/* // Cards  (upload video card , analytics summary card and other information card) */}

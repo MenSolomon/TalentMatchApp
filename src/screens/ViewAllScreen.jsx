@@ -17,6 +17,18 @@ const Players = () => {
   const PlayerArray = useSelector(selectPlayersInAgencyArray);
   const { profileName } = useParams();
 
+  // const fetch = async () => {
+  //   const playersQuery = query(collection(db, "players_database"));
+  //   const playersSnapshot = await getDocs(playersQuery);
+  //   const allProducts = [];
+  //   const playersSnapshotData = await playersSnapshot.forEach((doc) => {
+  //     // save them to allProducts array
+  //     allProducts.push(doc.data());
+  //   });
+  //   console.log(playersSnapshotData);
+  //   return playersSnapshotData;
+  // };
+
   // alert(profileName);
 
   const currentProfile = useSelector(selectCurrentProfile);
@@ -33,8 +45,7 @@ const Players = () => {
         flexDirection: "column",
         height: "100%",
         width: "100%",
-      }}
-    >
+      }}>
       <div style={{ flex: ".1", display: "flex" }}>
         <h3 style={{ margin: 0, float: "left" }}>{profileName} Profile</h3>
 
@@ -53,8 +64,7 @@ const Players = () => {
           // flexWrap: "wrap",
           // display: "flex",
           // background: "red",
-        }}
-      >
+        }}>
         {/* {PlayerArray.slice(0, 9).map((data, index) => {
           const {
             firstName,

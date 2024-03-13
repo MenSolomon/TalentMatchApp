@@ -1,51 +1,35 @@
-import {
-  Circle,
-  Delete,
-  EmojiEmotions,
-  Reply,
-  Search,
-  Send,
-} from "@mui/icons-material";
+import { EmojiEmotions, Send } from "@mui/icons-material";
 import {
   Avatar,
   Button,
   CircularProgress,
   IconButton,
-  InputAdornment,
-  Pagination,
   TextField,
 } from "@mui/material";
 
-import avatarImage from "../assets/images/avatar.jpg";
-import MessageContactCard from "../components/Cards/MessageContactCard";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
-import { v4 } from "uuid";
 import {
   addDoc,
   collection,
   deleteDoc,
-  doc,
   getDocs,
-  onSnapshot,
   query,
-  setDoc,
   where,
 } from "firebase/firestore";
 import { auth, db } from "../../../Firebase/Firebase";
-import moment from "moment/moment";
-import { selectuserMessages } from "../../../statemanager/slices/MessagesSlice";
-import CountrySelect from "../components/AutoComplete/CountrySelect";
+// import CountrySelect from "../components/AutoComplete/CountrySelect";
 import { useQuery } from "@tanstack/react-query";
-import ScoutsDisplayCard from "../components/Cards/ScoutsDisplayCard";
 import BasicSelect from "../../../components/Selects/BasicSelect";
 import {
   setWarningAlertModalCounter,
   setWarningAlertModalMessage,
 } from "../../../statemanager/slices/OtherComponentStatesSlice";
+import CountrySelect from "../../../CoachAgentScoutVersion/src/components/AutoComplete/CountrySelect";
+import ScoutsDisplayCard from "../../../CoachAgentScoutVersion/src/components/Cards/ScoutsDisplayCard";
 
-const CoachAgentScoutVersionConnetions = () => {
+const PlayerVersionConnections = () => {
   const dispatch = useDispatch();
   const [selectedUser, setSelectedUser] = useState([]);
   const [countryCode, setCountryCode] = React.useState("");
@@ -209,8 +193,8 @@ const CoachAgentScoutVersionConnetions = () => {
           <h5 style={{ fontWeight: "bolder", margin: "0" }}>Connections</h5>
           <h6 className="">Filter</h6>
           {/* <span style={{ fontSize: ".8em" }}>
-            102Messages <Circle sx={{ width: 7 }} /> 40 unread
-          </span> */}
+              102Messages <Circle sx={{ width: 7 }} /> 40 unread
+            </span> */}
           {/* // SEARCH INBOX */}
           <div className="md:inline-flex">
             {/* Country Select */}
@@ -423,4 +407,4 @@ const CoachAgentScoutVersionConnetions = () => {
   );
 };
 
-export default CoachAgentScoutVersionConnetions;
+export default PlayerVersionConnections;
