@@ -113,6 +113,8 @@ const CoachAgentScoutVersionInbox = () => {
   const [AllUsersAndMessages, setAllUsersAndMessages] = useState([]);
 
   const AaallUsersAndMessages = userLoginDetailsObject?.Connections;
+  const allScoutsandAgentsConnections =
+    userLoginDetailsObject?.AgentandScoutConnections;
 
   console.log("Letter from overseas", AaallUsersAndMessages);
 
@@ -240,7 +242,10 @@ const CoachAgentScoutVersionInbox = () => {
       try {
         const videosQuery = query(
           collection(db, `users_db`),
-          where("accountId", "in", AaallUsersAndMessages)
+          where("accountId", "in", [
+            ...AaallUsersAndMessages,
+            ...allScoutsandAgentsConnections,
+          ])
         );
 
         const videosSnapshot = await getDocs(videosQuery);
@@ -531,7 +536,6 @@ const CoachAgentScoutVersionInbox = () => {
                     }
                   })
                 )}
-                ;
               </div>
 
               {/* // TEXT FIELD AND SEND BUTTON AREA */}

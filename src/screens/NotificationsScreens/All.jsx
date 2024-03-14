@@ -141,6 +141,7 @@ const All = () => {
                 notificationId={NotificationId}
                 transferCompleteStatus={data?.transferComplete}
                 requestAccepted={data?.requestAccepted}
+                targetedRole={data?.targetAccountRole}
               />
             </MenuItem>
           );
@@ -164,6 +165,7 @@ const MenuItemRow = ({
   notificationId,
   transferCompleteStatus,
   requestAccepted,
+  targetedRole,
 }) => {
   // const handleAcceptPlayerTransfer =async({dateCreated,userId,playerId,readStatus})=>{
   //   const playerObjectRef = doc(db, `players_database/${playerId}`);
@@ -277,6 +279,11 @@ const MenuItemRow = ({
       } else if (type === "Connection request") {
         const connectionRequestSenderRef = doc(
           db,
+          `users_db/${senderId}/Notifications`,
+          notificationId
+        );
+        const connectionRequestReceipientRef = doc(
+          db,
           `users_db/${userLoginDetailsObject.accountId}/Notifications`,
           notificationId
         );
@@ -288,13 +295,30 @@ const MenuItemRow = ({
           requestAccepted: true,
         });
 
-        await updateDoc(userRef, {
-          Connections: arrayUnion(senderId),
+        await updateDoc(connectionRequestReceipientRef, {
+          requestAccepted: true,
         });
 
-        await updateDoc(senderRef, {
-          Connections: arrayUnion(userLoginDetailsObject.accountId),
-        });
+        // Seperating player connections from agent/scout connections
+        if (targetedRole === "Agent" || targetedRole === "Scout") {
+          await updateDoc(userRef, {
+            AgentandScoutConnections: arrayUnion(senderId),
+          });
+
+          await updateDoc(senderRef, {
+            AgentandScoutConnections: arrayUnion(
+              userLoginDetailsObject.accountId
+            ),
+          });
+        } else {
+          await updateDoc(userRef, {
+            Connections: arrayUnion(senderId),
+          });
+
+          await updateDoc(senderRef, {
+            Connections: arrayUnion(userLoginDetailsObject.accountId),
+          });
+        }
       }
 
       // console.log(data.dateCreated, "Date0", dateCreated);

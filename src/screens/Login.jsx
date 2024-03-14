@@ -123,6 +123,10 @@ const Login = () => {
                 userInfoSnap.data()?.Connections === undefined
                   ? []
                   : userInfoSnap.data()?.Connections,
+              AgentandScoutConnections:
+                userInfoSnap.data()?.AgentandScoutConnections === undefined
+                  ? []
+                  : userInfoSnap.data()?.AgentandScoutConnections,
             })
           );
 

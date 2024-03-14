@@ -129,11 +129,17 @@ const CoachAgentScoutVersionDashboard = () => {
     const fetchData = async () => {
       const items = []; // Array to store messages
       const usersItems = []; // Array to store user profiles
+      const agentConnections = userLoginDetailsObject?.AgentandScoutConnections;
+      const playerConnections = userLoginDetailsObject?.Connections;
 
-      if (userLoginDetailsObject && userLoginDetailsObject.Connections) {
+      const allScoutsandAgentsConnections = [
+        ...playerConnections,
+        ...agentConnections,
+      ];
+      if (userLoginDetailsObject && allScoutsandAgentsConnections) {
         // Fetch messages for each connection
         // *********** Retrieving all messages *********
-        for (const connection of userLoginDetailsObject.Connections) {
+        for (const connection of allScoutsandAgentsConnections) {
           const querySnapshot = await getDocs(
             collection(
               db,

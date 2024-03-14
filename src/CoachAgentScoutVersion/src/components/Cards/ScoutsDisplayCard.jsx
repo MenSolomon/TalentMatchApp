@@ -2,7 +2,7 @@ import { Avatar, Card, Chip, Stack } from "@mui/material";
 
 const ScoutsDisplayCard = ({
   backgroundUrl,
-  avatarUrl,
+  playerImageUrl,
   UserName,
   AgencyName,
   style,
@@ -21,27 +21,31 @@ const ScoutsDisplayCard = ({
         // height: "23vh",
         borderRadius: "1vw",
         marginBottom: "3vh",
-      }}>
-      <div
+      }}
+    >
+      {/* <div
         style={{
           flex: ".5",
           backgroundImage: `url(${backgroundUrl})`,
           backgroundSize: "cover",
           //   paddingLeft: ".5vw",
           //   paddingRight: ".5w",
-        }}></div>
+        }}></div> */}
       <div
         className="md:flex sm:flex"
         style={{
-          flex: ".5",
-          // display: "flex",
+          flex: "1",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           paddingLeft: ".5vw",
           paddingRight: ".5vw",
           gap: ".3vw",
-        }}>
+        }}
+      >
         {/* AVATAR */}
         <div style={{ flex: ".2" }}>
-          <Avatar src={avatarUrl}></Avatar>
+          <Avatar src={playerImageUrl}></Avatar>
         </div>
         {/* NAME AND AGENCY OR CLUB NAME */}
         <div style={{ flex: ".5" }}>
