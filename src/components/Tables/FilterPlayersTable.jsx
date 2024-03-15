@@ -459,7 +459,7 @@ export default function FilteredPlayersTable() {
         // save them to allProducts array
         allProducts.push(doc.data());
       });
-      console.log("playersSnapshotData", allProducts);
+      // console.log("playersSnapshotData", allProducts);
       return allProducts;
     },
     // refetchOnMount: true,
@@ -518,7 +518,7 @@ export default function FilteredPlayersTable() {
     return numberOfMatches >= 5;
   });
 
-  console.log("All Players", MatchedPlayersArray);
+  // console.log("All Players", MatchedPlayersArray);
 
   const allClubsInDatabase = useSelector(selectClubsInDatabase);
 
@@ -625,7 +625,7 @@ export default function FilteredPlayersTable() {
       return numberOfMatches >= 5;
     });
 
-    console.log(ExistingPlayerProfile + "Mawu");
+    // console.log(ExistingPlayerProfile + "Mawu");
     setPossiblePlayerMatch(ExistingPlayerProfile);
     // alert(ExistingPlayerProfile.length);
   }, [currentProfileNameSelected, savedUserProfiles]);
@@ -675,7 +675,7 @@ export default function FilteredPlayersTable() {
     );
   });
 
-  console.log("Table Row", rows);
+  // console.log("Table Row", rows);
 
   return (
     <div style={{ height: "42.5vh", width: "100%" }}>

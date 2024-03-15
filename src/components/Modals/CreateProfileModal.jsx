@@ -102,12 +102,7 @@ export default function CreateProfileModal({ ProfileType }) {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
-    console.log(
-      "userSavedProfiles.length:",
-      userSavedProfiles.length,
-      "maxProfiles:",
-      maxProfiles
-    );
+  
     setOpen(true);
   };
   const handleClose = () => {
@@ -656,7 +651,6 @@ export default function CreateProfileModal({ ProfileType }) {
               filter: {
                 // PlaceOfBirth,
                 NationalityValue,
-                AgeRangeValue,
                 HeightRangeValue,
                 PlayerPositionAutoCompleteValue:
                   PlayerPositionAutoCompleteValue,
