@@ -1,4 +1,13 @@
-import { Avatar, Card, IconButton, Tooltip } from "@mui/material";
+import {
+  Alert,
+  Avatar,
+  Badge,
+  Card,
+  Chip,
+  CircularProgress,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import PlayerManagementTabs from "../components/Tabs/PlayerManagementTabs";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,7 +25,11 @@ import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlic
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../../Firebase/Firebase";
 import BasicButtonWithEndIcon from "../../../components/Buttons/BasicButtonWithEndIcon";
-import { selectCurrentBrowserSize, setWarningAlertModalCounter, setWarningAlertModalMessage } from "../../../statemanager/slices/OtherComponentStatesSlice";
+import {
+  selectCurrentBrowserSize,
+  setWarningAlertModalCounter,
+  setWarningAlertModalMessage,
+} from "../../../statemanager/slices/OtherComponentStatesSlice";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
 const CoachAgentScoutVersionPlayerManagement = () => {
@@ -29,12 +42,14 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   const currentPlayerInfoObject = useSelector(
     selectPlayerSelectedByClubOrScoutInPlayerManagement
   );
+  const [isBoosting, setIsBoosting] = useState(false);
   const [filteredPlayerArray, setFilteredPlayerArray] = useState([]);
   const [playerData, setPlayerData] = useState({
     firstName: "",
     surName: "",
     player_profile_image: "",
     Age: "",
+    boostPoints: "",
     position: "",
     jerseyNumber: "",
     clubName: "",
@@ -130,6 +145,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         surName,
         player_profile_image,
         Age,
+        boostPoints,
         position,
         jerseyNumber,
         clubName,
@@ -144,6 +160,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         surName,
         player_profile_image,
         Age,
+        boostPoints,
         position,
         jerseyNumber,
         clubName,
@@ -158,6 +175,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         surName: "",
         player_profile_image: "",
         Age: "",
+        boostPoints: "",
         position: "",
         jerseyNumber: "",
         CountryCode: "",
@@ -171,24 +189,14 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     dispatch(setWarningAlertModalMessage(message));
     dispatch(setWarningAlertModalCounter());
   };
-// s
-  // const fetchBoostPoints = async (key ) => {
-  //   const { data } = await axios.get()
-  //   return data
-  // }
 
-  // const {
-  //   status,
-  //   data,
-  //   error,
-  //   refetch,
-  // } = useQuery(['oostPoints'], fetchBoostPoints)
   // Destructuring the items of playerData
 
   const {
     firstName,
     surName,
     Age,
+    boostPoints,
     player_profile_image,
     position,
     jerseyNumber,
@@ -226,6 +234,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             // position: "relative",
           }}>
           {/* // Image Canvas */}
+
           <Card
             className="md:w-[8.5vw] md:h-[18vh] md:float-right  sm:float-left sm:w-[30vw] sm:h-[18vh]"
             style={{
@@ -264,9 +273,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
           className="md:pl-[1vw] sm:pl-[-100%]"
           style={{ flex: ".6", paddingLeft: "1vw" }}>
           <h2 style={{ margin: "0" }}> {firstName} </h2>
-          <h1 style={{ margin: "0" }}>{surName} </h1>
-          <h1 style={{ margin: "0" }}>{boostPoints} </h1>
 
+          <h1 style={{ margin: "0" }}>{surName} </h1>
         </div>
         {/* Jersey Number*/}
         <div style={{ flex: ".15", display: "grid", placeContent: "center" }}>
@@ -325,6 +333,14 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               </h6>
             </div>
 
+            {/* Postion Area */}
+            <div style={{ flex: ".08", display: "flex" }}>
+              <h6 style={{ width: "100%", fontWeight: "bolder" }}>
+                Boost Points :
+                <Chip label={boostPoints} sx={{ backgroundColor: "#F7B900" }} />
+              </h6>
+            </div>
+
             {/* // Socials Area (Twitter and instagram) */}
 
             <div style={{ flex: ".1", display: "flex" }}>
@@ -378,35 +394,42 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               {/* // Edit Profile button */}
               {/*  */}
               <EditPlayerProfileModal />
-              <BasicButtonWithEndIcon
-                innerText={"Boost"}
-                endIcon={"bolt"}
-                style={{
-                  width: browserWidth >= 1024 ? "9vw" : "40vw",
-                  height: "6vh",
-                  marginBottom: "1.5vh",
-                }}
-                
-                onClick={async () => {
-                 
-                  try {
-                    const functions = getFunctions();
-                  const incrementBoostFn = httpsCallable(
-                    functions,
-                    "incrementBoost"
-                  );
-                  const result = await incrementBoostFn({ id: currentPlayerInfoObject.id })
-                  console.log('result', result)
-                  triggerWarningAlertModal(`${result.data.message}`)
-                  } catch (error) {
-                    console.log("cloudFn Error", error)
-                   
-                  }
-                  // triggerWarningAlertModal(`${result.data.message}`)
-                  
-                  // console.log(result)
-                }}
-              />
+              {isBoosting ? (
+                <CircularProgress />
+              ) : (
+                <BasicButtonWithEndIcon
+                  innerText={"Boost"}
+                  endIcon={"bolt"}
+                  style={{
+                    width: browserWidth >= 1024 ? "9vw" : "40vw",
+                    height: "6vh",
+                    marginBottom: "1.5vh",
+                  }}
+                  onClick={async () => {
+                    setIsBoosting(true);
+                    try {
+                      const functions = getFunctions();
+                      const incrementBoostFn = httpsCallable(
+                        functions,
+                        "incrementBoost"
+                      );
+                      const result = await incrementBoostFn({
+                        id: currentPlayerInfoObject.id,
+                      });
+                      if (result) {
+                        console.log("result", result);
+                        triggerWarningAlertModal(`${result.data.message}`);
+                        setIsBoosting(true);
+                      }
+                    } catch (error) {
+                      console.log("cloudFn Error", error);
+                    }
+                    // triggerWarningAlertModal(`${result.data.message}`)
+
+                    // console.log(result)
+                  }}
+                />
+              )}
               {userLoginObject?.role === "Club" ? <TransferPlayerModal /> : ""}
 
               {userLoginObject?.role === "Club" ? <ConfirmClubExitModal /> : ""}
@@ -428,6 +451,9 @@ const CoachAgentScoutVersionPlayerManagement = () => {
           />
         </div>
       </div>
+      {/* <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+  This success Alert has a custom icon.
+</Alert> */}
     </div>
   );
 };
