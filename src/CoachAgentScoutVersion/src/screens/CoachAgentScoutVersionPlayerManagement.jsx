@@ -15,6 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   CheckCircleOutline,
+  ErrorOutline,
   Facebook,
   Instagram,
   Twitter,
@@ -60,6 +61,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   const [isBoosting, setIsBoosting] = useState(false);
   const [filteredPlayerArray, setFilteredPlayerArray] = useState([]);
   const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [alertMessage, setAlertMessage] = useState();
   const handleCloseSnackBar = () => {
     setOpenSnackBar(false);
   };
@@ -227,7 +229,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     status,
     data: playerBoostPoints,
     error,
-    refetch,
+    refetch: refetchPlayerBoostPoints,
   } = useQuery({
     queryKey: ["fetchPlayerBoostPoints"],
     queryFn: fetchPlayerBoostPoints,
@@ -492,9 +494,11 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                       });
                       if (result) {
                         console.log("result", result);
-                        triggerWarningAlertModal(`${result.data.message}`);
+                        setAlertMessage(`${result.data.message}`);
                         setIsBoosting(false);
                         setOpenSnackBar(true);
+                        // refetch the boostpoints
+                        refetchPlayerBoostPoints();
                       }
                     } catch (error) {
                       console.log("cloudFn Error", error);
@@ -528,12 +532,18 @@ const CoachAgentScoutVersionPlayerManagement = () => {
       </div>
       <Snackbar
         open={openSnackBar}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={handleCloseSnackBar}>
         <Alert
-          icon={<CheckCircleOutline fontSize="inherit" />}
-          severity="success">
-          Boost Completed
+          icon={
+            alertMessage == "Boost completed" ? (
+              <CheckCircleOutline fontSize="inherit" />
+            ) : (
+              <ErrorOutline fontSize="inherit" />
+            )
+          }
+          severity={alertMessage == "Boost completed" ? "success" : "error"}>
+          {alertMessage}
         </Alert>
       </Snackbar>
     </div>
