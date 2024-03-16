@@ -15,12 +15,17 @@ import ConfirmClubExitModal from "../components/Modals/ConfirmClubExitModal";
 import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../../Firebase/Firebase";
+import BasicButtonWithEndIcon from "../../../components/Buttons/BasicButtonWithEndIcon";
+import { selectCurrentBrowserSize, setWarningAlertModalCounter, setWarningAlertModalMessage } from "../../../statemanager/slices/OtherComponentStatesSlice";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 const CoachAgentScoutVersionPlayerManagement = () => {
   const { playerId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userLoginObject = useSelector(selectUserDetailsObject);
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
   const currentPlayerInfoObject = useSelector(
     selectPlayerSelectedByClubOrScoutInPlayerManagement
   );
@@ -162,8 +167,22 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     }
   }, [filteredPlayerArray]);
 
-  // Retriving Videos of
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
+// s
+  // const fetchBoostPoints = async (key ) => {
+  //   const { data } = await axios.get()
+  //   return data
+  // }
 
+  // const {
+  //   status,
+  //   data,
+  //   error,
+  //   refetch,
+  // } = useQuery(['oostPoints'], fetchBoostPoints)
   // Destructuring the items of playerData
 
   const {
@@ -250,6 +269,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         >
           <h2 style={{ margin: "0" }}> {firstName} </h2>
           <h1 style={{ margin: "0" }}>{surName} </h1>
+          <h1 style={{ margin: "0" }}>{boostPoints} </h1>
+
         </div>
         {/* Jersey Number*/}
         <div style={{ flex: ".15", display: "grid", placeContent: "center" }}>
@@ -367,7 +388,35 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               {/* // Edit Profile button */}
               {/*  */}
               <EditPlayerProfileModal />
-
+              <BasicButtonWithEndIcon
+                innerText={"Boost"}
+                endIcon={"bolt"}
+                style={{
+                  width: browserWidth >= 1024 ? "9vw" : "40vw",
+                  height: "6vh",
+                  marginBottom: "1.5vh",
+                }}
+                
+                onClick={async () => {
+                 
+                  try {
+                    const functions = getFunctions();
+                  const incrementBoostFn = httpsCallable(
+                    functions,
+                    "incrementBoost"
+                  );
+                  const result = await incrementBoostFn({ id: currentPlayerInfoObject.id })
+                  console.log('result', result)
+                  triggerWarningAlertModal(`${result.data.message}`)
+                  } catch (error) {
+                    console.log("cloudFn Error", error)
+                   
+                  }
+                  // triggerWarningAlertModal(`${result.data.message}`)
+                  
+                  // console.log(result)
+                }}
+              />
               {userLoginObject?.role === "Club" ? <TransferPlayerModal /> : ""}
 
               {userLoginObject?.role === "Club" ? <ConfirmClubExitModal /> : ""}
