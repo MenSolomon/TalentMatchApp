@@ -6,13 +6,19 @@ import {
   Chip,
   CircularProgress,
   IconButton,
+  Snackbar,
   Tooltip,
 } from "@mui/material";
 import PlayerManagementTabs from "../components/Tabs/PlayerManagementTabs";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Facebook, Instagram, Twitter } from "@mui/icons-material";
+import {
+  CheckCircleOutline,
+  Facebook,
+  Instagram,
+  Twitter,
+} from "@mui/icons-material";
 import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
 import EditPlayerProfileModal from "../components/Modals/EditPlayerModal";
 import TransferPlayerModal from "../components/Modals/TransferPlayerModal";
@@ -22,7 +28,15 @@ import {
 } from "../../../statemanager/slices/PlayersInAgencySlice";
 import ConfirmClubExitModal from "../components/Modals/ConfirmClubExitModal";
 import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../../Firebase/Firebase";
 import BasicButtonWithEndIcon from "../../../components/Buttons/BasicButtonWithEndIcon";
 import {
@@ -31,6 +45,7 @@ import {
   setWarningAlertModalMessage,
 } from "../../../statemanager/slices/OtherComponentStatesSlice";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { useQuery } from "@tanstack/react-query";
 
 const CoachAgentScoutVersionPlayerManagement = () => {
   const { playerId } = useParams();
@@ -44,12 +59,17 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   );
   const [isBoosting, setIsBoosting] = useState(false);
   const [filteredPlayerArray, setFilteredPlayerArray] = useState([]);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const handleCloseSnackBar = () => {
+    setOpenSnackBar(false);
+  };
   const [playerData, setPlayerData] = useState({
     firstName: "",
     surName: "",
     player_profile_image: "",
     Age: "",
     boostPoints: "",
+    id: "",
     position: "",
     jerseyNumber: "",
     clubName: "",
@@ -146,6 +166,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         player_profile_image,
         Age,
         boostPoints,
+        id,
         position,
         jerseyNumber,
         clubName,
@@ -161,6 +182,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         player_profile_image,
         Age,
         boostPoints,
+        id,
         position,
         jerseyNumber,
         clubName,
@@ -176,6 +198,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         player_profile_image: "",
         Age: "",
         boostPoints: "",
+        id: "",
         position: "",
         jerseyNumber: "",
         CountryCode: "",
@@ -183,7 +206,33 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         Social_media: [],
       });
     }
-  }, [filteredPlayerArray]);
+  }, [filteredPlayerArray, openSnackBar]);
+
+  const fetchPlayerBoostPoints = async (key) => {
+    try {
+      const playerRef = doc(
+        db,
+        `players_database/${currentPlayerInfoObject?.id}`
+      );
+      const playerSnap = await getDoc(playerRef);
+      const playerSnapBoostPoint = playerSnap.data().boostPoints;
+
+      return playerSnapBoostPoint;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const {
+    status,
+    data: playerBoostPoints,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["fetchPlayerBoostPoints"],
+    queryFn: fetchPlayerBoostPoints,
+    refetchOnMount: true,
+  });
 
   const triggerWarningAlertModal = (message) => {
     dispatch(setWarningAlertModalMessage(message));
@@ -197,6 +246,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     surName,
     Age,
     boostPoints,
+    id,
     player_profile_image,
     position,
     jerseyNumber,
@@ -210,6 +260,26 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     // Open the link in a new tab or window
     window.open(link, "_blank");
   };
+
+  // const handleaddboost = async () => {
+  //   const playersRef = collection(db, "players_database");
+
+  //   try {
+  //     const snapshot = await getDocs(playersRef);
+  //     const updatePromises = []; // Array to store promises for individual updates
+
+  //     snapshot.forEach((doc) => {
+  //       const updatePromise = updateDoc(doc.ref, { boostPoints: 0 });
+  //       updatePromises.push(updatePromise);
+  //     });
+
+  //     await Promise.all(updatePromises); // Wait for all updates to finish
+  //     console.log("Boost points reset successfully for all players.");
+  //   } catch (error) {
+  //     console.error("Error resetting boost points:", error);
+  //     // Handle errors appropriately, e.g., notifying user or logging the error
+  //   }
+  // };
   return (
     <div
       className="md:w-[100%] md:h-[100%] md:flex md:flex-col md:gap-[0px]   sm:gap-[50px]   sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
@@ -337,7 +407,10 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             <div style={{ flex: ".08", display: "flex" }}>
               <h6 style={{ width: "100%", fontWeight: "bolder" }}>
                 Boost Points :
-                <Chip label={boostPoints} sx={{ backgroundColor: "#F7B900" }} />
+                <Chip
+                  label={playerBoostPoints}
+                  sx={{ backgroundColor: "#F7B900" }}
+                />
               </h6>
             </div>
 
@@ -407,6 +480,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                   }}
                   onClick={async () => {
                     setIsBoosting(true);
+
                     try {
                       const functions = getFunctions();
                       const incrementBoostFn = httpsCallable(
@@ -419,7 +493,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                       if (result) {
                         console.log("result", result);
                         triggerWarningAlertModal(`${result.data.message}`);
-                        setIsBoosting(true);
+                        setIsBoosting(false);
+                        setOpenSnackBar(true);
                       }
                     } catch (error) {
                       console.log("cloudFn Error", error);
@@ -451,9 +526,16 @@ const CoachAgentScoutVersionPlayerManagement = () => {
           />
         </div>
       </div>
-      {/* <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
-  This success Alert has a custom icon.
-</Alert> */}
+      <Snackbar
+        open={openSnackBar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackBar}>
+        <Alert
+          icon={<CheckCircleOutline fontSize="inherit" />}
+          severity="success">
+          Boost Completed
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

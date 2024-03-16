@@ -7,8 +7,8 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-const { onSchedule } = require("firebase-functions/v2/scheduler");
-const { onCall, HttpsError } = require("firebase-functions/v2/https");
+
+const {onCall, HttpsError} = require("firebase-functions/v2/https");
 const admin = require("firebase-admin");
 admin.initializeApp();
 
@@ -38,9 +38,9 @@ exports.incrementBoost = onCall(async (request) => {
         transaction.update(userDocRef, {
           boostPoints: admin.firestore.FieldValue.increment(-10),
         });
-        return { message: "Boost completed" };
+        return {message: "Boost completed"};
       } else if (currentUserBoostPoints == 0) {
-        return { message: "You have no boost points left" };
+        return {message: "You have no boost points left"};
       }
     });
 
