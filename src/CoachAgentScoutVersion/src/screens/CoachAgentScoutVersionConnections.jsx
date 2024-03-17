@@ -118,7 +118,7 @@ const CoachAgentScoutVersionConnetions = () => {
           return agentOrScoutFullName !== currentUserName; // Strict equality check
         });
 
-        console.log("currentUserFilteredOut", currentUserFilteredOut);
+        // console.log("currentUserFilteredOut", currentUserFilteredOut);
         return currentUserFilteredOut;
       } catch (error) {
         console.log(error);
@@ -176,10 +176,10 @@ const CoachAgentScoutVersionConnetions = () => {
 
         // Extract the data from the documents
         const queryConnectionsSnap = snapshot.docs.map((doc) => doc.data());
-        console.log(
-          "agentAndScoutsInConnectionsList",
-          agentAndScoutsInConnectionsList
-        );
+        // console.log(
+        //   "agentAndScoutsInConnectionsList",
+        //   agentAndScoutsInConnectionsList
+        // );
         // Return the data (no need for unnecessary parenthesis)
         return queryConnectionsSnap;
       } catch (error) {
@@ -307,7 +307,9 @@ const CoachAgentScoutVersionConnetions = () => {
             ) : (
               agentAndScoutsInConnectionsList?.map((connections) => {
                 return (
-                  <div className="sm:min-h-1vh md:min-h-0.5vh">
+                  <div
+                    className="sm:min-h-1vh md:min-h-0.5vh"
+                    key={connections.id}>
                     <ScoutsDisplayCard
                       AgencyName={connections.organization}
                       UserName={`${connections.firstName} ${connections.surname}`}

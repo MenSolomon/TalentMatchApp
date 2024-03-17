@@ -749,7 +749,7 @@ export default function FilteredPlayersTable() {
                   maxHeight: "20vh",
                 }}>
                 {/* <div style={{ overflowY: "scroll", height: "300px" }}> */}
-                {isMatchedPlayersArrayFetching ? (
+                {/* {isMatchedPlayersArrayFetching ? (
                   <div
                     style={{
                       display: "flex",
@@ -760,7 +760,10 @@ export default function FilteredPlayersTable() {
                   </div>
                 ) : (
                   rows?.map((row, key) => <Row key={key} row={row} />)
-                )}
+                )} */}
+                {rows?.map((row, key) => (
+                  <Row key={key} row={row} />
+                ))}
                 {/* </div> */}
               </TableBody>{" "}
             </Table>
