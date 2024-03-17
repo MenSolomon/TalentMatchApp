@@ -3,7 +3,6 @@ import logoImage from "../assets/images/AppLogoBlue.png";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { useEffect, useState } from "react";
-import CountrySelect from "../components/Autocompletes/CountrySelect";
 import BasicButton from "../components/Buttons/BasicButton";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,6 +30,11 @@ import {
   setWarningAlertModalCounter,
   setWarningAlertModalMessage,
 } from "../statemanager/slices/OtherComponentStatesSlice";
+import { CloudCircleOutlined, Person } from "@mui/icons-material";
+import UploadIDCardAccount from "../components/Modals/UploadIDCardAccount";
+import dayjs from "dayjs";
+import DatePickerToolCreateAccount from "../components/DatePicker/DatePickerCreateAccout";
+import CountrySelectCreateAccount from "../components/Autocompletes/CountrySelectCreateAccount";
 
 const CreateAccount = () => {
   const browserSize = useSelector(selectCurrentBrowserSize);
@@ -70,15 +74,172 @@ const CreateAccount = () => {
     dispatch(setCompletedSteps({ ...completedStepsObject, 2: true }));
   };
 
+  const [firstName, setfirstName] = useState("");
+  const [surname, setSurname] = useState("");
   const [CountryCode, setCountryCode] = useState("");
-
   const [Nationality, setNationality] = useState("");
+  const [nationalityCodeFromMRZ, setNationalityCodeFromMRZ] = useState("");
+
   const [selectedClubName, setSelectedClubName] = useState("");
   const [DOB, setDOB] = useState("");
+  const [DOBMui, setDOBMui] = useState("");
+
   const [passwordMatch, setPasswordMatch] = useState("");
   const [PlayerPosition, setPlayerPosition] = useState("");
   const [height, setHeight] = useState("");
   const [preferredFoot, setPreferredFoot] = useState("");
+
+  // **** SHORT POLLING THE FIRST NAME FROM THE MRZ STORED IN THE SESSIONS STORAGE  ****
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const retrievedFirstName = sessionStorage.getItem("firstName");
+      if (retrievedFirstName === "") {
+        setfirstName("");
+      } else if (retrievedFirstName && retrievedFirstName !== firstName) {
+        // alert(retrievedFirstName);
+
+        setfirstName(retrievedFirstName);
+      }
+    }, 100); // Adjust interval as needed
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, [firstName]);
+
+  // sessionStorage.setItem("firstName", "");
+  // sessionStorage.setItem("lastName", "");
+  // sessionStorage.setItem("nationality", "");
+  // sessionStorage.setItem("birthDate", "");
+
+  // **** SHORT POLLING THE  SURNAME FROM THE MRZ STORED IN THE SESSIONS STORAGE  ****
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const retrievedSurname = sessionStorage.getItem("lastName");
+      if (retrievedSurname === "") {
+        setSurname("");
+      } else if (retrievedSurname && retrievedSurname !== surname) {
+        // alert(retrievedSurname);
+
+        setSurname(retrievedSurname);
+      }
+    }, 100); // Adjust interval as needed
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, [surname]);
+
+  // **** SHORT POLLING THE  Date of Birth FROM THE MRZ STORED IN THE SESSIONS STORAGE  ****
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const retrievedDOB = sessionStorage.getItem("birthDate");
+
+      if (retrievedDOB === "") {
+        setDOBMui("");
+        // setDOB("");
+      } else if (retrievedDOB && retrievedDOB !== DOB) {
+        // alert(retrievedSurname);
+        // The iso if for material ui component display and standardDate
+        // toLocaleString is for database stpre
+
+        let formattedDateISOMUi =
+          convertMRZDateToStandardFormatISOStandardForMUI(retrievedDOB);
+
+        let formattedDateISODB =
+          convertMRZDateToStandardFormatISOStandardForDatabase(retrievedDOB);
+
+        // alert(formattedDate);
+        setDOBMui(formattedDateISOMUi);
+        setDOB(formattedDateISODB);
+      }
+    }, 100); // Adjust interval as needed
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, [DOB]);
+
+  // **** SHORT POLLING THE  Nationality(country code) FROM THE MRZ STORED IN THE SESSIONS STORAGE  ****
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const retrievedNationalityCode = sessionStorage.getItem("nationality");
+      if (retrievedNationalityCode === "") {
+        setNationalityCodeFromMRZ("");
+      } else if (
+        retrievedNationalityCode &&
+        retrievedNationalityCode !== nationalityCodeFromMRZ
+      ) {
+        // alert(retrievedSurname);
+        setNationalityCodeFromMRZ(retrievedNationalityCode);
+      }
+    }, 100); // Adjust interval as needed
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, [nationalityCodeFromMRZ]);
+
+  const handleFirstNameChange = (e) => {
+    const inputFirstName = e.target.value;
+    setfirstName(inputFirstName);
+    sessionStorage.setItem("firstName", inputFirstName);
+  };
+
+  const handlesurNameChange = (e) => {
+    const inputSurname = e.target.value;
+    setSurname(inputSurname);
+    sessionStorage.setItem("lastName", inputSurname);
+  };
+
+  // Function to convert MRZ date format to standard date format
+  function convertMRZDateToStandardFormatISOStandardForDatabase(mrzDate) {
+    // Extracting components from MRZ date format
+    const year = parseInt(mrzDate && mrzDate.substring(0, 2)); // Assuming two-digit year
+    const month = parseInt(mrzDate && mrzDate.substring(2, 4));
+    const day = parseInt(mrzDate && mrzDate.substring(4, 6));
+
+    // Get the current year's last two digits
+    const currentYearLastTwoDigits = parseInt(
+      new Date().getFullYear().toString().slice(-2)
+    );
+
+    // Determine the century of the year based on the condition
+    const century = year <= currentYearLastTwoDigits ? 2000 : 1900;
+
+    // Creating a new Date object with the extracted components
+    const standardDate = new Date(century + year, month - 1, day); // Add appropriate century to get full year, and subtract 1 from month since months are zero-based
+
+    // Formatting the date into the desired format
+    const options = {
+      weekday: "short",
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZone: "GMT",
+    };
+    const formattedDate = standardDate.toLocaleString("en-US", options);
+
+    return formattedDate;
+  }
+  function convertMRZDateToStandardFormatISOStandardForMUI(mrzDate) {
+    // Extracting components from MRZ date format
+    const year = parseInt(mrzDate && mrzDate.substring(0, 2)); // Assuming two-digit year
+    const month = parseInt(mrzDate && mrzDate.substring(2, 4));
+    const day = parseInt(mrzDate && mrzDate.substring(4, 6));
+
+    // Get the current year's last two digits
+    const currentYearLastTwoDigits = parseInt(
+      new Date().getFullYear().toString().slice(-2)
+    );
+
+    // Determine the century of the year based on the condition
+    const century = year <= currentYearLastTwoDigits ? 2000 : 1900;
+
+    // Creating a new Date object with the extracted components
+    const standardDate = new Date(century + year, month - 1, day); // Add appropriate century to get full year, and subtract 1 from month since months are zero-based
+
+    // Formatting the date into the desired format
+    const formattedDate = standardDate.toISOString().slice(0, 10); // Extracting only the yyyy-MM-dd part
+
+    return formattedDate;
+  }
 
   const handleClubSelect = (selectedClubName) => {
     // Do something with the selected clubName
@@ -106,8 +267,6 @@ const CreateAccount = () => {
 
     // declare email amd password to be passed to create-account page
     const {
-      firstName,
-      surname,
       organization,
       // phoneNumber,
       email,
@@ -150,70 +309,76 @@ const CreateAccount = () => {
       preferredFoot,
     };
 
-    if (Nationality === "" || Nationality === "False") {
-      setNationality("False");
-    }
-
-    if (DOB === "" || DOB === "False") {
-      setDOB("False");
-    }
-
-    if (password !== confirmPassword) {
-      setPasswordMatch("False");
-    }
-
-    if (roleSelected === "Player") {
-      if (height === "" || height === "False") {
-        setHeight("False");
-      }
-      if (preferredFoot === "" || preferredFoot === "False") {
-        setPreferredFoot("False");
-      }
-      if (PlayerPosition === "" || PlayerPosition === "False") {
-        setPlayerPosition("False");
-      }
-
-      if (
-        height === "" ||
-        height === "False" ||
-        PlayerPosition === "" ||
-        PlayerPosition === "False" ||
-        preferredFoot === "" ||
-        preferredFoot === "False" ||
-        password !== confirmPassword
-      ) {
-        ("DO NOTHING");
-      } else {
-        dispatch(
-          setUserSignUpData({
-            paymentType,
-            ...userDataForPlayer,
-          })
-        );
-        setNationality("");
-        setDOB("");
-        setPhoneNumber("");
-        setHeight("");
-        setPlayerPosition("");
-        setPreferredFoot("");
-        handleTrialNavigation(email, password);
-        handleStepsCompleted();
-      }
+    if (DOB === "") {
+      triggerWarningAlertModal(
+        "Please make sure you select a date 16 older or above from today"
+      );
     } else {
-      // USER DATA FOR OTHER ROLES EXCEPT PLAYER
+      if (Nationality === "" || Nationality === "False") {
+        setNationality("False");
+      }
 
-      if (password === confirmPassword) {
-        dispatch(
-          setUserSignUpData({
-            paymentType,
-            ...userData,
-          })
-        );
-        setNationality("");
-        setDOB("");
-        setPhoneNumber("");
-        handleTrialNavigation(email, password);
-        handleStepsCompleted();
+      if (DOB === "" || DOB === "False") {
+        setDOB("False");
+      }
+
+      if (password !== confirmPassword) {
+        setPasswordMatch("False");
+      }
+
+      if (roleSelected === "Player") {
+        if (height === "" || height === "False") {
+          setHeight("False");
+        }
+        if (preferredFoot === "" || preferredFoot === "False") {
+          setPreferredFoot("False");
+        }
+        if (PlayerPosition === "" || PlayerPosition === "False") {
+          setPlayerPosition("False");
+        }
+
+        if (
+          height === "" ||
+          height === "False" ||
+          PlayerPosition === "" ||
+          PlayerPosition === "False" ||
+          preferredFoot === "" ||
+          preferredFoot === "False" ||
+          password !== confirmPassword
+        ) {
+          alert("DO NOTHING");
+        } else {
+          dispatch(
+            setUserSignUpData({
+              paymentType,
+              ...userDataForPlayer,
+            })
+          );
+          setNationality("");
+          setDOB("");
+          setPhoneNumber("");
+          setHeight("");
+          setPlayerPosition("");
+          setPreferredFoot("");
+          handleTrialNavigation(email, password);
+          handleStepsCompleted();
+        }
+      } else {
+        // USER DATA FOR OTHER ROLES EXCEPT PLAYER
+
+        if (password === confirmPassword) {
+          dispatch(
+            setUserSignUpData({
+              paymentType,
+              ...userData,
+            })
+          );
+          setNationality("");
+          setDOB("");
+          setPhoneNumber("");
+          handleTrialNavigation(email, password);
+          handleStepsCompleted();
+        }
       }
     }
 
@@ -244,7 +409,8 @@ const CreateAccount = () => {
         // background: "red",
         display: "flex",
         flexDirection: "column",
-      }}>
+      }}
+    >
       {/* CREATE NEW ACCOUNT */}
       <div
         className="accountHeader"
@@ -253,7 +419,8 @@ const CreateAccount = () => {
           // background: "red",
           display: "flex",
           flexDirection: "column",
-        }}>
+        }}
+      >
         <div
           style={{
             flex: "0.5",
@@ -262,7 +429,8 @@ const CreateAccount = () => {
             justifyContent: "center",
             gap: "10px",
             alignItems: "center",
-          }}>
+          }}
+        >
           <img src={logoImage} style={{ width: "100px" }} />
           <h2>Create new account</h2>
         </div>
@@ -281,294 +449,391 @@ const CreateAccount = () => {
         className="md:pt-[7vh]     sm:pt-[55vh] "
         style={{
           flex: "0.7",
-          display: "grid",
-          placeContent: "center",
+          // display: "grid",
+          // placeContent: "center",
           overflowY: "scroll",
-          //   background: "red",
+          display: "flex",
           alignItems: "center",
-          paddingLeft: "5%",
+          justifyContent: "center",
+          // These percentages are for pc
+          paddingLeft: "15%",
+          paddingRight: "10%",
+
           // paddingTop: "25vh", sm
-        }}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div
-            className="md:flex md:flex-row      sm:flex sm:flex-col"
-            style={{ gap: "2vw", marginBottom: "1.5vh" }}>
-            <div>
-              <TextField
-                className="md:w-[15vw] sm:w-[80vw]"
-                color="primary"
-                id="outlined-basic"
-                label="First Name"
-                variant="outlined"
-                {...register("firstName", { required: true })}
-                required
-                defaultValue={userData.firstName}
-              />
-
-              {errors.firstName && (
-                <p style={{ color: "red", margin: 0 }}>
-                  firstName is required.
-                </p>
-              )}
-            </div>
-            {/* SURNAME */}
-            <div>
-              <TextField
-                className="md:w-[15vw] sm:w-[80vw]"
-                id="outlined-basic"
-                label="Surname"
-                variant="outlined"
-                {...register("surname", { required: true })}
-                required
-                defaultValue={userData.surname}
-              />{" "}
-              {errors.surname && (
-                <p style={{ color: "red", margin: 0 }}>surname is required.</p>
-              )}
-            </div>
-            {/* DATE OF BIRTH */}
-            <div>
-              <DatePickerTool
-                style={{ width: browserWidth >= 1024 ? "15vw" : "80vw" }}
-                containerStyle={{ marginTop: "-1vh" }}
-                label="Date of birth"
-                defaultValue={userData.DOB}
-                dateValue={(e) => {
-                  setDOB(e);
-                }}
-              />
-              {DOB === "False" ? (
-                <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
-                  Select your date of birth.
-                </p>
-              ) : (
-                ""
-              )}
-            </div>
-          </div>
-          {/* EMAIL AND PHONE NUMBER */}
-          <div
-            className="md:flex md:flex-row      sm:flex sm:flex-col"
-            style={{ gap: "2vw", marginBottom: "1.5vh" }}>
-            <div>
-              <TextField
-                className="md:w-[15vw] sm:w-[80vw]"
-                id="outlined-basic"
-                label="Email"
-                variant="outlined"
-                type="email"
-                {...register("email", { required: true })}
-                defaultValue={userData.email}
-                required
-              />
-              {errors.email && (
-                <p style={{ color: "red", margin: 0 }}>Email is required.</p>
-              )}
-            </div>
-            {/* PHONE */}
-            <div>
-              <TextField
-                // label="Phone Number"
-
-                variant="outlined"
-                className="md:w-[15vw] sm:w-[80vw]"
-                InputProps={{
-                  startAdornment: "",
-                  inputComponent: PhoneInputComponent,
-                  inputProps: {
-                    style: { width: "10%" },
-                  },
-                }}
-              />
-              {errors.phoneNumber && (
-                <p style={{ color: "red", margin: 0 }}>
-                  Phone Number is required.
-                </p>
-              )}
-            </div>
-
-            <div>
-              <CountrySelect
-                styles={{ width: browserWidth >= 1024 ? "15vw" : "80vw" }}
-                selectLabel="Nationality"
-                // defaultValue={userData.Nationality}
-                selectValue={(e) => {
-                  setNationality(e);
-                }}
-                selectCountryCode={(e) => {
-                  setCountryCode(e);
-                  // alert(e);
-                }}
-              />
-              {/* write a statement for validation */}
-              {Nationality === "False" ? (
-                <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
-                  Select your nationality.
-                </p>
-              ) : (
-                ""
-              )}
-            </div>
-          </div>
-
-          {/*ORGANIZATION/CLUB NAME AND PASSWORDS*/}
-          <div
-            className="md:flex md:flex-row      sm:flex sm:flex-col"
-            style={{ gap: "2vw", marginBottom: "1vh" }}>
-            {roleSelected === "Club" ? (
-              <ClubAutoComplete
-                ListArray={clubsInDatabase}
-                label="Select a club"
-                style={{ width: browserWidth >= 1024 ? "15vw" : "80vw" }}
-                onClubSelect={handleClubSelect}
-              />
-            ) : roleSelected === "Player" ? (
-              <div>
-                <BasicAutoComplete
-                  style={{
-                    // ...inputStyles,
-                    width: browserWidth >= 1024 ? "15vw" : "80vw",
-                    marginBottom: "2.5vh",
-                    color: "black",
-                  }}
-                  ListArray={soccerPositions}
-                  label="Position * "
-                  AutoCompleteValue={(e) => {
-                    setPlayerPosition(e);
-                    // alert(e);
-                  }}
-                  // defaultValue={PlayerPositionAutoCompleteValue}
-                />
-                {PlayerPosition === "False" ? (
-                  <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
-                    Position is required
-                  </p>
-                ) : (
-                  ""
-                )}
-              </div>
-            ) : (
-              <TextField
-                className="md:w-[15vw] sm:w-[80vw]"
-                id="outlined-basic"
-                label="Organization Name"
-                variant="outlined"
-                defaultValue={userData.organization}
-                {...register("organization", { required: false })}
-              />
-            )}
-
-            {/* {PASSWORDS} */}
-            <div>
-              <TextField
-                className="md:w-[15vw] sm:w-[80vw]"
-                id="outlined-basic"
-                label="Password"
-                variant="outlined"
-                {...register("password", { required: true })}
-                required
-              />
-              {errors.password && (
-                <p style={{ color: "red", margin: 0 }}>Password is required.</p>
-              )}
-            </div>
-
-            {/* CONFIRM PASSWORD */}
-            <div>
-              <TextField
-                className="md:w-[15vw] sm:w-[80vw]"
-                //                   className='md:w-[15vw] sm:w-[80vw]'
-
-                id="outlined-basic"
-                label="Confirm Password"
-                variant="outlined"
-                {...register("confirmPassword", { required: true })}
-                required
-              />
-              {passwordMatch === "False" ? (
-                <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
-                  Passwords dont match
-                </p>
-              ) : (
-                ""
-              )}
-            </div>
-          </div>
-
-          {roleSelected === "Player" ? (
+        }}
+      >
+        <div style={{ flex: ".7" }}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div
               className="md:flex md:flex-row      sm:flex sm:flex-col"
-              style={{
-                // display: "flex",
-                gap: "2vw",
-                marginBottom: "1vh",
-                // alignItems: "center",
-                // justifyContent: "center",
-                paddingRight: "13%",
-              }}>
+              style={{ gap: "2vw", marginBottom: "1.5vh" }}
+            >
+              {/* setfirstName
+setSurname */}
               <div>
-                <BasicSelect
-                  inputStyle={{ width: browserWidth >= 1024 ? "15vw" : "80vw" }}
-                  label={"Preferred foot *"}
-                  itemsArray={preferredFootArray}
-                  selectedValue={(e) => {
-                    setPreferredFoot(e);
-                  }}
+                <TextField
+                  className="md:w-[15vw] sm:w-[80vw]"
+                  color="primary"
+                  id="outlined-basic"
+                  label="First Name"
+                  variant="outlined"
+                  onChange={handleFirstNameChange}
+                  // {...register("firstName", { required: true })}
+                  value={firstName}
+                  required
                 />
-                {preferredFoot === "False" ? (
-                  <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
-                    Preferred foot is required
+
+                {errors.firstName && (
+                  <p style={{ color: "red", margin: 0 }}>
+                    firstName is required.
                   </p>
-                ) : (
-                  ""
                 )}
               </div>
-
+              {/* SURNAME */}
               <div>
-                <BasicSlider
-                  style={{
-                    width: browserWidth >= 1024 ? "15vw" : "80vw",
-                    color: "black",
-                  }}
-                  rangeName="Height (m) *"
-                  max={2.5}
-                  min={0.3}
-                  steps={0.1}
-                  sliderValue={(e) => {
-                    setHeight(e);
-                  }}
+                <TextField
+                  className="md:w-[15vw] sm:w-[80vw]"
+                  color="primary"
+                  id="outlined-basic"
+                  label="Surname"
+                  variant="outlined"
+                  // {...register("surName", { required: true })}
+                  onChange={handlesurNameChange}
+                  value={surname}
+                  required
                 />
-                {height === "False" ? (
+                {errors.surname && (
+                  <p style={{ color: "red", margin: 0 }}>
+                    surname is required.
+                  </p>
+                )}
+              </div>
+              {/* DATE OF BIRTH */}
+              <div>
+                <DatePickerToolCreateAccount
+                  style={{ width: browserWidth >= 1024 ? "15vw" : "80vw" }}
+                  containerStyle={{ marginTop: "-1vh" }}
+                  label="Date of birth"
+                  // defaultValue={userData.DOB}
+                  dateValue={(e) => {
+                    DOB === "" || DOB === undefined || DOB === null
+                      ? setDOB(e)
+                      : "";
+                  }}
+                  value={DOB && DOB !== "" ? dayjs(DOBMui) : dayjs(DOB)}
+                />
+                {DOB === "False" ? (
                   <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
-                    Height is required
+                    Select your date of birth.
                   </p>
                 ) : (
                   ""
                 )}
               </div>
             </div>
-          ) : (
-            ""
-          )}
+            {/* EMAIL AND PHONE NUMBER */}
+            <div
+              className="md:flex md:flex-row      sm:flex sm:flex-col"
+              style={{ gap: "2vw", marginBottom: "1.5vh" }}
+            >
+              <div>
+                <TextField
+                  className="md:w-[15vw] sm:w-[80vw]"
+                  id="outlined-basic"
+                  label="Email"
+                  variant="outlined"
+                  type="email"
+                  {...register("email", { required: true })}
+                  defaultValue={userData.email}
+                  required
+                />
+                {errors.email && (
+                  <p style={{ color: "red", margin: 0 }}>Email is required.</p>
+                )}
+              </div>
+              {/* PHONE */}
+              <div>
+                <TextField
+                  // label="Phone Number"
 
-          <Button
-            className="md:w-[37vw] sm:w-[50vw]"
-            type="submit"
-            sx={{
-              background: "#5585FE",
-              borderRadius: ".5vw",
-              color: "white",
-              textTransform: "none",
-              // width: "37vw",
-              marginLeft: "13%",
-              marginTop: "1vh",
+                  variant="outlined"
+                  className="md:w-[15vw] sm:w-[80vw]"
+                  InputProps={{
+                    startAdornment: "",
+                    inputComponent: PhoneInputComponent,
+                    inputProps: {
+                      style: { width: "10%" },
+                    },
+                  }}
+                />
+                {errors.phoneNumber && (
+                  <p style={{ color: "red", margin: 0 }}>
+                    Phone Number is required.
+                  </p>
+                )}
+              </div>
 
-              // color: buttonColor,
-            }}>
-            Create Account
-          </Button>
-          <div className="md:hidden sm:h-[3vh] "></div>
-        </form>
+              <div>
+                <CountrySelectCreateAccount
+                  styles={{ width: browserWidth >= 1024 ? "15vw" : "80vw" }}
+                  selectLabel="Nationality"
+                  ImplememtCountryCode={nationalityCodeFromMRZ}
+                  // defaultValue={userData.Nationality}
+                  selectValue={(e) => {
+                    setNationality(e);
+                  }}
+                  selectCountryCode={(e) => {
+                    setCountryCode(e);
+                    // alert(e);
+                  }}
+                />
+                {/* write a statement for validation */}
+                {Nationality === "False" ? (
+                  <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
+                    Select your nationality.
+                  </p>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+
+            {/*ORGANIZATION/CLUB NAME AND PASSWORDS*/}
+            <div
+              className="md:flex md:flex-row      sm:flex sm:flex-col"
+              style={{ gap: "2vw", marginBottom: "1vh" }}
+            >
+              {roleSelected === "Club" ? (
+                <ClubAutoComplete
+                  ListArray={clubsInDatabase}
+                  label="Select a club"
+                  style={{ width: browserWidth >= 1024 ? "15vw" : "80vw" }}
+                  onClubSelect={handleClubSelect}
+                />
+              ) : roleSelected === "Player" ? (
+                <div>
+                  <BasicAutoComplete
+                    style={{
+                      // ...inputStyles,
+                      width: browserWidth >= 1024 ? "15vw" : "80vw",
+                      marginBottom: "2.5vh",
+                      color: "black",
+                    }}
+                    ListArray={soccerPositions}
+                    label="Position * "
+                    AutoCompleteValue={(e) => {
+                      setPlayerPosition(e);
+                      // alert(e);
+                    }}
+                    // defaultValue={PlayerPositionAutoCompleteValue}
+                  />
+                  {PlayerPosition === "False" ? (
+                    <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
+                      Position is required
+                    </p>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              ) : (
+                <TextField
+                  className="md:w-[15vw] sm:w-[80vw]"
+                  id="outlined-basic"
+                  label="Organization Name"
+                  variant="outlined"
+                  defaultValue={userData.organization}
+                  {...register("organization", { required: false })}
+                />
+              )}
+
+              {/* {PASSWORDS} */}
+              <div>
+                <TextField
+                  className="md:w-[15vw] sm:w-[80vw]"
+                  id="outlined-basic"
+                  label="Password"
+                  variant="outlined"
+                  {...register("password", { required: true })}
+                  required
+                />
+                {errors.password && (
+                  <p style={{ color: "red", margin: 0 }}>
+                    Password is required.
+                  </p>
+                )}
+              </div>
+
+              {/* CONFIRM PASSWORD */}
+              <div>
+                <TextField
+                  className="md:w-[15vw] sm:w-[80vw]"
+                  //                   className='md:w-[15vw] sm:w-[80vw]'
+
+                  id="outlined-basic"
+                  label="Confirm Password"
+                  variant="outlined"
+                  {...register("confirmPassword", { required: true })}
+                  required
+                />
+                {passwordMatch === "False" ? (
+                  <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
+                    Passwords dont match
+                  </p>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+
+            {roleSelected === "Player" ? (
+              <div
+                className="md:flex md:flex-row      sm:flex sm:flex-col"
+                style={{
+                  // display: "flex",
+                  gap: "2vw",
+                  marginBottom: "1vh",
+                  // alignItems: "center",
+                  // justifyContent: "center",
+                  paddingRight: "13%",
+                }}
+              >
+                <div>
+                  <BasicSelect
+                    inputStyle={{
+                      width: browserWidth >= 1024 ? "15vw" : "80vw",
+                    }}
+                    label={"Preferred foot *"}
+                    itemsArray={preferredFootArray}
+                    selectedValue={(e) => {
+                      setPreferredFoot(e);
+                    }}
+                  />
+                  {preferredFoot === "False" ? (
+                    <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
+                      Preferred foot is required
+                    </p>
+                  ) : (
+                    ""
+                  )}
+                </div>
+
+                <div>
+                  <BasicSlider
+                    style={{
+                      width: browserWidth >= 1024 ? "15vw" : "80vw",
+                      color: "black",
+                    }}
+                    rangeName="Height (m) *"
+                    max={2.5}
+                    min={0.3}
+                    steps={0.1}
+                    sliderValue={(e) => {
+                      setHeight(e);
+                    }}
+                  />
+                  {height === "False" ? (
+                    <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
+                      Height is required
+                    </p>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+
+            <Button
+              className="md:w-[37vw] sm:w-[50vw]"
+              type="submit"
+              sx={{
+                background: "#5585FE",
+                borderRadius: ".5vw",
+                color: "white",
+                textTransform: "none",
+                // width: "37vw",
+                marginLeft: "13%",
+                marginTop: "1vh",
+
+                // color: buttonColor,
+              }}
+            >
+              Create Account
+            </Button>
+            <div className="md:hidden sm:h-[3vh] "></div>
+          </form>
+        </div>
+        <div style={{ flex: ".3", display: "flex" }}>
+          <div>
+            <div
+              style={{
+                flex: "0.8",
+                // background: "yellow",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center ",
+                border: "1px dashed black",
+                borderRadius: "1vw",
+                padding: "1vw",
+              }}
+            >
+              {/* Selected files in column*/}
+              <div
+                style={{
+                  // background: "peru",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                {/* column Top style  */}
+                <div style={{ flex: "0.2" }}></div>
+                {/* End of column Top style  */}
+
+                {/* CloudCircleOutlined  */}
+                <div
+                  style={{
+                    flex: "0.5",
+                    // background: "yellow",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Person sx={{ fontSize: "5em" }} />
+                </div>
+                {/* End of CloudCircleOutlined  */}
+
+                {/* Select_files */}
+                <div style={{ flex: "0.3" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      textAlign: "center",
+                      // gap: "5px",
+                      // background: "green",
+                    }}
+                  >
+                    <div>
+                      <h5>Drag and drop image of your ID card</h5>
+                      <small>
+                        {" "}
+                        The image should be any ID card of yours with an mrz
+                        code and not more than 2mb{" "}
+                      </small>
+                    </div>
+                    <div>
+                      <UploadIDCardAccount />
+                    </div>
+                  </div>
+                </div>
+                {/* End of Select_files */}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

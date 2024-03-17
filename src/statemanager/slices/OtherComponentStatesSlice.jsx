@@ -43,6 +43,8 @@ export const OtherComponentStatesSlice = createSlice({
       contactId: "",
       name: "",
     },
+    // MRZ scanned data
+    MrzScanner: {},
   },
 
   reducers: {
@@ -100,6 +102,9 @@ export const OtherComponentStatesSlice = createSlice({
     setContactSelectedForMessaging: (state, action) => {
       state.contactSelectedForMessaging = action.payload;
     },
+    setMrzScanner: (state, action) => {
+      state.MrzScanner = action.payload;
+    },
   },
 });
 
@@ -143,6 +148,9 @@ export const selectSoccerPostions = (state) =>
 export const selectContactSelectedForMessaging = (state) =>
   state.OtherComponentStates.contactSelectedForMessaging;
 
+export const selectMrzScanner = (state) =>
+  state.OtherComponentStates.MrzScanner;
+
 export const {
   setAutoCompletePlayerPosition,
   setFilterModalType,
@@ -162,5 +170,6 @@ export const {
   setCurrentBrowserSize,
   setCarouselVideoIndex,
   setContactSelectedForMessaging,
+  setMrzScanner,
 } = OtherComponentStatesSlice.actions;
 export default OtherComponentStatesSlice.reducer;

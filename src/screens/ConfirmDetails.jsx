@@ -10,7 +10,9 @@ import PaymentModeSelect from "../components/Selects/PaymentModeSelect";
 import BasicButton from "../components/Buttons/BasicButton";
 import moment from "moment/moment";
 import {
+  selectImageWithMrzFileStore,
   selectUserSignUpData,
+  setImageWithMrzFileStore,
   setUserSignUpData,
 } from "../statemanager/slices/UserDataSlice";
 import { useEffect, useState } from "react";
@@ -29,7 +31,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
-import { auth, db } from "../Firebase/Firebase";
+import { auth, db, storage } from "../Firebase/Firebase";
 import {
   selectPlayersDatabase,
   selectUsersDatabase,
@@ -44,6 +46,7 @@ import {
   setCredentials,
   setLoginStatus,
 } from "../statemanager/slices/LoginUserDataSlice";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
 
 const ConfirmDetails = () => {
   //
@@ -54,6 +57,9 @@ const ConfirmDetails = () => {
   const allUsers = useSelector(selectUsersDatabase);
   const allPlayersInDatabase = useSelector(selectPlayersDatabase);
   const today = moment();
+
+  ///
+  const selectedFile = useSelector(selectImageWithMrzFileStore);
 
   //state to manage user id
   const [agreement, setAgreement] = useState(false);
@@ -120,9 +126,11 @@ const ConfirmDetails = () => {
       });
     await navigate("/login");
   };
+
   const handleStartFreeTrial = async () => {
     // const email = location.state.email;
     // const password = location.state.password;
+
     try {
       const uuid = uuidv4();
       if (roleSelected === "") {
@@ -232,7 +240,7 @@ const ConfirmDetails = () => {
               // trigger handleGoogleLogin
               // await handleGoogleLogin(auth, email, password);
               // // Set the document in the database
-              alert("triggered");
+              // alert("triggered");
               // invoke google createUserWithEmailAndPassword method
               await createUserWithEmailAndPassword(auth, email, password)
                 .then(async (userCredential) => {
@@ -241,6 +249,24 @@ const ConfirmDetails = () => {
                   dispatch(setCredentials(user.uid));
                   // set login status to true
                   dispatch(setLoginStatus(true));
+
+                  const base64Data = selectedFile.replace(
+                    /^data:(.*);base64,/,
+                    ""
+                  );
+
+                  const profileImageRef = ref(
+                    storage,
+                    `verificationImage/${userData.firstName + "-" + uuid}`
+                  );
+                  // Upload the image
+                  //  await uploadBytes(profileImageRef, selectedFile);
+                  await uploadString(profileImageRef, base64Data, "base64");
+
+                  // Get the download URL
+                  const url = await getDownloadURL(profileImageRef);
+                  // We have to clear the sessionStorage for all the datat stored
+                  // alert("Storing ID IMAGe", url);
 
                   await setDoc(doc(db, `players_database`, user.uid), {
                     id: user.uid,
@@ -594,6 +620,7 @@ const ConfirmDetails = () => {
                     dateCreated: serverTimestamp(),
                     accountId: user.uid,
                     isVisible: true,
+                    userIDWithMRZImage: url,
                   });
 
                   dispatch(setCompletedSteps({}));
@@ -614,6 +641,11 @@ const ConfirmDetails = () => {
                       paymentDetails: {},
                     })
                   );
+                  dispatch(setImageWithMrzFileStore([]));
+                  sessionStorage.setItem("firstName", "");
+                  sessionStorage.setItem("lastName", "");
+                  sessionStorage.setItem("nationality", "");
+                  sessionStorage.setItem("birthDate", "");
 
                   await navigate("/login");
                 })
@@ -644,6 +676,25 @@ const ConfirmDetails = () => {
                 // set login status to true
                 dispatch(setLoginStatus(true));
 
+                // Write a code to check if the image
+                const base64Data = selectedFile.replace(
+                  /^data:(.*);base64,/,
+                  ""
+                );
+
+                const profileImageRef = ref(
+                  storage,
+                  `verificationImage/${userData.firstName + "-" + uuid}`
+                );
+                // Upload the image
+                //  await uploadBytes(profileImageRef, selectedFile);
+                await uploadString(profileImageRef, base64Data, "base64");
+
+                // Get the download URL
+                const url = await getDownloadURL(profileImageRef);
+                // We have to clear the sessionStorage for all the datat stored
+                // alert("Storing ID IMAGe", url);
+
                 await setDoc(doc(db, `users_db`, user.uid), {
                   ...userData,
                   role: roleSelected,
@@ -651,6 +702,7 @@ const ConfirmDetails = () => {
                   accountId: user.uid,
                   isVisible: true,
                   playersInPossession: [],
+                  userIDWithMRZImage: url,
                 });
                 // alert("Other Accs");
 
@@ -672,6 +724,12 @@ const ConfirmDetails = () => {
                     paymentDetails: {},
                   })
                 );
+                dispatch(setImageWithMrzFileStore([]));
+                sessionStorage.setItem("firstName", "");
+                sessionStorage.setItem("lastName", "");
+                sessionStorage.setItem("nationality", "");
+                sessionStorage.setItem("birthDate", "");
+
                 await navigate("/login");
               })
               .catch((error) => {
@@ -689,6 +747,8 @@ const ConfirmDetails = () => {
                   triggerWarningAlertModal("G-Account Exists");
                 }
               });
+
+            // selectedFile this is a base64  encoded image
           }
         }
       }
@@ -713,7 +773,8 @@ const ConfirmDetails = () => {
         // display: "flex",
         padding: "0px 6vw",
         overflowY: "scroll",
-      }}>
+      }}
+    >
       {/*MEMEBERSHIP PLAN HEADER and USER DETAILS SUMMARY */}
 
       <div
@@ -723,14 +784,16 @@ const ConfirmDetails = () => {
           // background: "yellow",
           display: "flex",
           flexDirection: "column",
-        }}>
+        }}
+      >
         {/* MEMBERSHIP PLAN HEADER CARD */}
         <div
           style={{
             flex: "0.3",
             display: "flex",
             paddingLeft: "0%",
-          }}>
+          }}
+        >
           {/* IMAGE AREA */}
           <div
             style={{
@@ -739,7 +802,8 @@ const ConfirmDetails = () => {
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
-            }}>
+            }}
+          >
             {/* 
 
  */}
@@ -766,12 +830,14 @@ const ConfirmDetails = () => {
               display: "flex",
               // justifyContent: "flex-start",
               alignItems: "center",
-            }}>
+            }}
+          >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-              }}>
+              }}
+            >
               <div>
                 <h5 style={{ fontWeight: "bold" }}>
                   Start your free trial for 30 <br /> days
@@ -783,7 +849,8 @@ const ConfirmDetails = () => {
                     style={{ color: "#5585FE", cursor: "pointer" }}
                     onClick={() => {
                       navigate("/create-account/freetrial");
-                    }}>
+                    }}
+                  >
                     change your membership
                   </span>
                 </small>
@@ -800,7 +867,8 @@ const ConfirmDetails = () => {
             padding: "1vh 3vw",
             // background: "green",
             // display: "flex",
-          }}>
+          }}
+        >
           {/* // PADDING CONTAINER */}
           <div style={{ flex: ".6", paddingLeft: "8vw" }}>
             <h5 style={{ marginTop: "1vh" }}>
@@ -813,7 +881,8 @@ const ConfirmDetails = () => {
                 }}
                 onClick={() => {
                   navigate("/create-account/user-form");
-                }}>
+                }}
+              >
                 &nbsp; edit
               </span>{" "}
             </h5>
@@ -827,7 +896,8 @@ const ConfirmDetails = () => {
                     listStyleType: "disc",
                     color: "#9FA4B1",
                     fontWeight: "bolder",
-                  }}>
+                  }}
+                >
                   <li>
                     First name:{" "}
                     <span style={{ color: "black" }}> {firstName} </span>{" "}
@@ -882,7 +952,8 @@ const ConfirmDetails = () => {
                     listStyleType: "disc",
                     color: "#9FA4B1",
                     fontWeight: "bolder",
-                  }}>
+                  }}
+                >
                   <li>
                     First name:{" "}
                     <span style={{ color: "black" }}> {firstName} </span>{" "}
@@ -978,7 +1049,8 @@ const ConfirmDetails = () => {
             // height: "68%",
             padding: ".5vw",
             marginTop: "3vh",
-          }}>
+          }}
+        >
           <h6 style={{ fontWeight: "bolder" }}>Package Summary</h6>
 
           <ul style={{ width: "90%", fontSize: ".8em" }}>
@@ -1032,7 +1104,8 @@ const ConfirmDetails = () => {
           <div onClick={handleStartFreeTrial}>
             <BasicButton
               style={{ width: "90%", marginLeft: "5%" }}
-              innerText="Start Trial"></BasicButton>
+              innerText="Start Trial"
+            ></BasicButton>
           </div>
           <span
             style={{
@@ -1042,7 +1115,8 @@ const ConfirmDetails = () => {
               alignItems: "center",
               justifyContent: "center",
               textAlign: "center",
-            }}>
+            }}
+          >
             {" "}
             You will be automatically charged or prompted to pay on{" "}
             {oneMonthLater.format("MMMM Do YYYY, h:mm a")} after trial end{" "}
