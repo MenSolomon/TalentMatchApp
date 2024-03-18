@@ -355,7 +355,7 @@ const CoachAgentScoutVersionConnetions = () => {
           style={{ overflowY: "scroll" }}>
           {countryName === ""
             ? agentAndScoutsList
-                ?.filter((agent) => !connection.includes(agent.accountId))
+                ?.filter((agent) => !connections.includes(agent.accountId))
                 .map((person) => {
                   return (
                     <div
