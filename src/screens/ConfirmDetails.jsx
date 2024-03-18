@@ -284,6 +284,7 @@ const ConfirmDetails = () => {
                     Nationality: userData?.Nationality,
                     dateCreated: serverTimestamp(),
                     Age: currentAge,
+                    boostPoints:0,
                     position: userData?.PlayerPosition,
                     date_of_birth: userData?.DateOfBirth,
                     jerseyNumber: "",
@@ -625,6 +626,7 @@ const ConfirmDetails = () => {
                     role: roleSelected,
                     dateCreated: serverTimestamp(),
                     accountId: user.uid,
+                    boostPoints:0,
                     isVisible: true,
                     userIDWithMRZImage: url,
                   });
@@ -706,6 +708,7 @@ const ConfirmDetails = () => {
                   role: roleSelected,
                   dateCreated: serverTimestamp(),
                   accountId: user.uid,
+                  boostPoints:0,
                   isVisible: true,
                   playersInPossession: [],
                   userIDWithMRZImage: url,
