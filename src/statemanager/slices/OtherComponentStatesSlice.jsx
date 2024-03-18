@@ -38,6 +38,11 @@ export const OtherComponentStatesSlice = createSlice({
       "Winger (W)",
       "Striker (ST)",
     ],
+    // messaging user selected
+    contactSelectedForMessaging: {
+      contactId: "",
+      name: "",
+    },
   },
 
   reducers: {
@@ -92,6 +97,9 @@ export const OtherComponentStatesSlice = createSlice({
     setCarouselVideoIndex: (state, action) => {
       state.carouselVideoIndex = action.payload;
     },
+    setContactSelectedForMessaging: (state, action) => {
+      state.contactSelectedForMessaging = action.payload;
+    },
   },
 });
 
@@ -132,6 +140,9 @@ export const selectCarouselVideoIndex = (state) =>
 export const selectSoccerPostions = (state) =>
   state.OtherComponentStates.playerPositions;
 
+export const selectContactSelectedForMessaging = (state) =>
+  state.OtherComponentStates.contactSelectedForMessaging;
+
 export const {
   setAutoCompletePlayerPosition,
   setFilterModalType,
@@ -150,5 +161,6 @@ export const {
   setContactSupportModalMessage,
   setCurrentBrowserSize,
   setCarouselVideoIndex,
+  setContactSelectedForMessaging,
 } = OtherComponentStatesSlice.actions;
 export default OtherComponentStatesSlice.reducer;

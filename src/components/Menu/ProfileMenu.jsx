@@ -14,6 +14,7 @@ import {
 import avatarImage from "../../assets/images/avatar.jpg";
 import { Avatar } from "@mui/material";
 import { setUserSavedProfiles } from "../../statemanager/slices/SavedProfileSlice";
+import { setContactSelectedForMessaging } from "../../statemanager/slices/OtherComponentStatesSlice";
 
 export default function ProfileMenu({ style, name }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -89,6 +90,12 @@ export default function ProfileMenu({ style, name }) {
             dispatch(setLoginStatus(false));
             dispatch(setUserDetailsObject({}));
             dispatch(setUserSavedProfiles([]));
+            dispatch(
+              setContactSelectedForMessaging({
+                contactId: "",
+                name: "",
+              })
+            );
           }}
         >
           Logout

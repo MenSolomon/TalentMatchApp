@@ -293,7 +293,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
           // width: "100%",
           // background: "red",
         }
-      }>
+      }
+    >
       {/* // Player Name , Image an jerseyNumber */}
       <div style={{ flex: ".25", display: "flex" }}>
         {/* Player Image */}
@@ -304,7 +305,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             // background: "red",
             paddingTop: "1.5vh",
             // position: "relative",
-          }}>
+          }}
+        >
           {/* // Image Canvas */}
 
           <Card
@@ -319,7 +321,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               backgroundImage: `url('${player_profile_image}')`,
               backgroundSize: "cover",
               backgroundPosition: "center",
-            }}></Card>
+            }}
+          ></Card>
 
           {/* Club Logo Canvas */}
           <div className="PlayerManagementNationalityTooltip">
@@ -343,7 +346,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         {/* Player Name */}
         <div
           className="md:pl-[1vw] sm:pl-[-100%]"
-          style={{ flex: ".6", paddingLeft: "1vw" }}>
+          style={{ flex: ".6", paddingLeft: "1vw" }}
+        >
           <h2 style={{ margin: "0" }}> {firstName} </h2>
 
           <h1 style={{ margin: "0" }}>{surName} </h1>
@@ -360,7 +364,6 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         // style={{ background: "red" }}
       >
         {/* Player basic information */}
-
         <div
           className=" sm:basis-[22%]  md:basis-[22%]"
           style={{
@@ -369,7 +372,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             paddingTop: "6vh",
             // background: "green",
             padding: ".8vw",
-          }}>
+          }}
+        >
           <Card
             className="cardBackground primaryTextColor md:w-[100%] md:h-[100%] md:flex md:flex-col md:p-[1.4vw]   sm:p-[2vw] sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
             style={{
@@ -381,7 +385,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               borderRadius: "1vw",
               // padding: "1.4vw",
               paddingTop: "8vh",
-            }}>
+            }}
+          >
             {/* // Player position , age , height */}
             <div style={{ flex: ".08", display: "flex" }}>
               {/* // CLUB name  Area */}
@@ -425,7 +430,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                   Social_media[0].Instagram === "https://www.instagram.com//"
                     ? ""
                     : Social_media[0].Instagram
-                }>
+                }
+              >
                 {" "}
                 <IconButton
                   onClick={() => {
@@ -433,7 +439,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                     Social_media[0].Instagram === "https://www.instagram.com//"
                       ? ""
                       : openLinkInNewPage(Social_media[0].Instagram);
-                  }}>
+                  }}
+                >
                   <Instagram style={{ color: "#5585FE" }} />
                 </IconButton>
               </Tooltip>
@@ -443,14 +450,16 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                   Social_media[0].Facebook === "https://web.facebook.com/"
                     ? ""
                     : openLinkInNewPage(Social_media[0].Facebook);
-                }}>
+                }}
+              >
                 <Tooltip
                   title={
                     Social_media.length == 0 ||
                     Social_media[0].Facebook === "https://web.facebook.com/"
                       ? ""
                       : Social_media[0].Facebook
-                  }>
+                  }
+                >
                   <Facebook style={{ color: "#5585FE" }} />
                 </Tooltip>
               </IconButton>
@@ -463,7 +472,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                 // display: "flex",
                 fontWeight: "bolder",
                 paddingTop: "1.5vh",
-              }}>
+              }}
+            >
               {/* <h5>Honors & Awards</h5> */}
 
               {/* // Edit Profile button */}
@@ -517,7 +527,6 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             </div>
           </Card>
         </div>
-
         {/* // TABS AND SUBSCREEMS SECTION */}
         <div className="md:basis-[78%] sm:basis-[78%]">
           <PlayerManagementTabs
@@ -525,7 +534,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               userLoginObject?.role === "Club"
                 ? subscreensTabArrayClubVersion
                 : userLoginObject?.role === "Coach" ||
-                  userLoginObject?.role === "Scout"
+                  userLoginObject?.role === "Scout" ||
+                  userLoginObject?.role === "Agent"
                 ? subscreensTabArrayScoutAndCoach
                 : subscreensTabArrayEmpty
             }
