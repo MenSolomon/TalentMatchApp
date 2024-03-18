@@ -32,8 +32,9 @@ export default function InitWorker() {
         // localStorage.setItem("lastName", parsed.lastName);
         // localStorage.setItem("nationality", parsed.nationality);
         // localStorage.setItem("birthDate", parsed.birthDate);
-        sessionStorage.setItem("firstName", parsed.firstName);
-        sessionStorage.setItem("lastName", parsed.lastName);
+
+        sessionStorage.setItem("firstName", formatString(parsed.firstName));
+        sessionStorage.setItem("lastName", formatString(parsed.lastName));
         sessionStorage.setItem("nationality", parsed.nationality);
         sessionStorage.setItem("birthDate", parsed.birthDate);
 
@@ -81,4 +82,16 @@ export default function InitWorker() {
   });
 
   return worker;
+}
+
+function formatString(inputString) {
+  // Capitalize the first letter of each word
+  let formattedString = inputString
+    .toLowerCase()
+    .replace(/\b\w/g, function (char) {
+      return char.toUpperCase();
+    });
+  // Remove extra whitespaces
+  formattedString = formattedString.replace(/\s+/g, " ").trim();
+  return formattedString;
 }

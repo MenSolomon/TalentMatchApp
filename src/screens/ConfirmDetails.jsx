@@ -11,6 +11,8 @@ import BasicButton from "../components/Buttons/BasicButton";
 import moment from "moment/moment";
 import {
   selectImageWithMrzFileStore,
+  selectProductPackage,
+  selectSelectedProductArray,
   selectUserSignUpData,
   setImageWithMrzFileStore,
   setUserSignUpData,
@@ -61,6 +63,9 @@ const ConfirmDetails = () => {
   ///
   const selectedFile = useSelector(selectImageWithMrzFileStore);
 
+  const products = useSelector(selectSelectedProductArray);
+  const packageValue = useSelector(selectProductPackage);
+
   //state to manage user id
   const [agreement, setAgreement] = useState(false);
   const [privacy, setPrivacy] = useState(false);
@@ -85,8 +90,7 @@ const ConfirmDetails = () => {
 
   const extractPaymentTypeSelected = (e) => {
     // setPa(e);
-
-    dispatch(setUserSignUpData({ ...userData, paymentType: e }));
+    // dispatch(setUserSignUpData({ ...userData, paymentType: e }));
   };
 
   useEffect(() => {
@@ -131,6 +135,10 @@ const ConfirmDetails = () => {
     // const email = location.state.email;
     // const password = location.state.password;
 
+    // else if (userData.paymentType === "" || !userData.paymentType) {
+    //   triggerWarningAlertModal("Please select a payment type");
+    // }
+
     try {
       const uuid = uuidv4();
       if (roleSelected === "") {
@@ -145,8 +153,6 @@ const ConfirmDetails = () => {
         triggerWarningAlertModal(
           "Please complete step 3 (Create an account before starting trial)"
         );
-      } else if (userData.paymentType === "" || !userData.paymentType) {
-        triggerWarningAlertModal("Please select a payment type");
       } else if (agreement === false || privacy === false) {
         triggerWarningAlertModal(
           "Please read terms and conditions as well as our privacy policy and tick the boxes to agree"
@@ -993,9 +999,9 @@ const ConfirmDetails = () => {
           </div>
 
           <div style={{ flex: ".4" }}>
-            <h5 style={{ marginTop: "1vh" }}>Add payment</h5>
+            {/* <h5 style={{ marginTop: "1vh" }}>Add payment</h5> */}
 
-            <PaymentModeSelect paymentType={extractPaymentTypeSelected} />
+            {/* <PaymentModeSelect paymentType={extractPaymentTypeSelected} /> */}
           </div>
         </div>
       </div>
@@ -1059,7 +1065,7 @@ const ConfirmDetails = () => {
               {roleSelected} membership{" "}
               <span style={{ float: "right", fontWeight: "bolder" }}>$0</span>{" "}
             </li>
-            <li>
+            {/* <li>
               {userData.subscriptionPackage}{" "}
               <span style={{ float: "right", fontWeight: "bolder" }}>
                 {userData.subscriptionPackage === "Starter Pack"
@@ -1068,15 +1074,31 @@ const ConfirmDetails = () => {
                   ? "$100"
                   : ""}
               </span>{" "}
+            </li> */}
+            <li style={{ margin: 0 }}>
+              {
+                products.find((data) => {
+                  return data.id === packageValue;
+                })?.name
+              }
+              <span style={{ float: "right", fontWeight: "bolder" }}>
+                $
+                {packageValue === ""
+                  ? 0
+                  : products.find((data) => {
+                      return data.id === packageValue;
+                    })?.price / 100}
+              </span>{" "}
             </li>
             <li>
               Subscription total{" "}
               <span style={{ float: "right", fontWeight: "bolder" }}>
-                {userData.subscriptionPackage === "Starter Pack"
-                  ? "$40"
-                  : userData.subscriptionPackage === "Premium Pack"
-                  ? "$100"
-                  : ""}
+                $
+                {packageValue === ""
+                  ? 0
+                  : products.find((data) => {
+                      return data.id === packageValue;
+                    })?.price / 100}
               </span>{" "}
             </li>
             <li>
@@ -1090,12 +1112,12 @@ const ConfirmDetails = () => {
             <li style={{ fontSize: "1.4em" }}>
               Total{" "}
               <span style={{ float: "right", fontWeight: "bolder" }}>
-                {" "}
-                {userData.subscriptionPackage === "Starter Pack"
-                  ? "$40"
-                  : userData.subscriptionPackage === "Premium Pack"
-                  ? "$100"
-                  : ""}
+                $
+                {packageValue === ""
+                  ? 0
+                  : products.find((data) => {
+                      return data.id === packageValue;
+                    })?.price / 100}
               </span>{" "}
             </li>{" "}
           </ul>

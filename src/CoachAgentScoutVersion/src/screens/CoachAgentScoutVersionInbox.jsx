@@ -112,9 +112,14 @@ const CoachAgentScoutVersionInbox = () => {
 
   const [AllUsersAndMessages, setAllUsersAndMessages] = useState([]);
 
-  const AaallUsersAndMessages = userLoginDetailsObject?.Connections;
+  const AaallUsersAndMessages =
+    userLoginDetailsObject?.Connections === undefined
+      ? []
+      : userLoginDetailsObject?.Connections;
   const allScoutsandAgentsConnections =
-    userLoginDetailsObject?.AgentandScoutConnections;
+    userLoginDetailsObject?.AgentandScoutConnections === undefined
+      ? []
+      : userLoginDetailsObject?.AgentandScoutConnections;
 
   console.log("Letter from overseas", AaallUsersAndMessages);
 

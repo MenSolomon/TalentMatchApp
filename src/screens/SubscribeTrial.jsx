@@ -38,6 +38,8 @@ import { useEffect, useState } from "react";
 import BasicButton from "../components/Buttons/BasicButton";
 import {
   selectUserSignUpData,
+  setProductPackage,
+  setSelectedProductArray,
   setUserSignUpData,
 } from "../statemanager/slices/UserDataSlice";
 import {
@@ -143,6 +145,7 @@ const SubscribeTrial = () => {
                   priceId: priceDoc.id,
                 },
               ]);
+
               // disable loading
               setIsProductsLoading(false);
             });
@@ -164,6 +167,10 @@ const SubscribeTrial = () => {
     // });
   }, []); // Empty dependency array to trigger only on mount
 
+  //
+  useEffect(() => {
+    dispatch(setSelectedProductArray(products));
+  }, [products]);
   return (
     <div
       className="md:w-[100%] md:flex-row md:h-[100%] md:flex   
@@ -177,7 +184,8 @@ const SubscribeTrial = () => {
         // gap: "5vw",
         paddingLeft: "4%",
         // flexDirection: "column",
-      }}>
+      }}
+    >
       <div
         className="md:flex md:justify-end md:basis-[55%]   sm:flex sm:justify-center sm:basis-[0.5] "
         style={{
@@ -186,7 +194,8 @@ const SubscribeTrial = () => {
           // display: "flex",
           // justifyContent: "flex-end",
           paddingRight: "10px",
-        }}>
+        }}
+      >
         {/* // LEFT PAPER  */}
 
         <div
@@ -200,12 +209,14 @@ const SubscribeTrial = () => {
               // display: "flex",
               // flexDirection: "column",
             }
-          }>
+          }
+        >
           <div
             style={{
               flex: "0.5",
               display: "flex",
-            }}>
+            }}
+          >
             <div
               style={{
                 flex: "0.3",
@@ -213,7 +224,8 @@ const SubscribeTrial = () => {
                 display: "flex",
                 justifyContent: "flex-end",
                 alignItems: "center",
-              }}>
+              }}
+            >
               {/* 
 
  */}
@@ -239,12 +251,14 @@ const SubscribeTrial = () => {
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "center",
-              }}>
+              }}
+            >
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                }}>
+                }}
+              >
                 <div>
                   <h5 style={{ fontWeight: "bold" }}>
                     Start your free trial for 30 <br /> days
@@ -256,7 +270,8 @@ const SubscribeTrial = () => {
                       style={{ color: "#5585FE", cursor: "pointer" }}
                       onClick={() => {
                         navigate("/create-account/freetrial");
-                      }}>
+                      }}
+                    >
                       change your membership
                     </span>
                   </small>
@@ -273,7 +288,8 @@ const SubscribeTrial = () => {
               flexDirection: "column",
               gap: "5px",
               // background: "red",
-            }}>
+            }}
+          >
             <FormControl>
               <FormLabel id="demo-radio-buttons-group-label">
                 {" "}
@@ -290,13 +306,15 @@ const SubscribeTrial = () => {
 
                   setPackage(selectedProduct.id);
                   setPackageValuePrice(selectedProduct.priceId);
+                  dispatch(setProductPackage(selectedProduct.id));
 
                   console.log("priceId", priceId, "id:", id);
                   // save price id
                   dispatch(setPriceID(priceId));
                   // save product id
                   dispatch(setProductID(id));
-                }}>
+                }}
+              >
                 {isProductsLoading == true ? (
                   <div>Loading...</div>
                 ) : (
@@ -315,7 +333,8 @@ const SubscribeTrial = () => {
                             style={{
                               marginLeft: "16vw",
                               fontWeight: "bolder",
-                            }}>
+                            }}
+                          >
                             $ {item.price / 100} per Month
                           </span>{" "}
                         </div>
@@ -337,7 +356,8 @@ const SubscribeTrial = () => {
           // justifyContent: "flex-start",
           // background: "red",
           padding: "10px 10px",
-        }}>
+        }}
+      >
         <Card
           className="md:w-[25vw] md:h-[42vh]    sm:w-[100%] sm:h-[30vh] sm:pb-[1.5vh] sm:text-[.85em] "
           sx={{
@@ -346,7 +366,8 @@ const SubscribeTrial = () => {
             borderRadius: "5px",
             paddingBottom: "2vh",
             padding: ".5vw",
-          }}>
+          }}
+        >
           <h5
           // style={{ color: "#5585FE" }}
           >
@@ -402,7 +423,8 @@ const SubscribeTrial = () => {
                   })
                 );
               }
-            }}>
+            }}
+          >
             <BasicButton
               style={{
                 width: "90%",
@@ -410,7 +432,8 @@ const SubscribeTrial = () => {
                 marginBottom: browserWidth >= 1024 ? "" : "1.5vh",
                 marginLeft: "5%",
               }}
-              innerText="Start Trial">
+              innerText="Start Trial"
+            >
               {" "}
             </BasicButton>
           </div>

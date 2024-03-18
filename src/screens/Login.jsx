@@ -90,8 +90,10 @@ const Login = () => {
         const accountId = user.uid;
         // get userDetails
         const userInfoRef = doc(db, `users_db/${accountId}`);
+        alert(accountId);
 
         const userInfoSnap = await getDoc(userInfoRef);
+        alert(userInfoSnap?.data()?.Nationality);
 
         if (user) {
           dispatch(setLoginStatus(true));
@@ -100,15 +102,22 @@ const Login = () => {
               Nationality: userInfoSnap.data().Nationality,
               email: userInfoSnap.data().email,
               CountryCode: userInfoSnap.data().CountryCode,
-              stripeLink: userInfoSnap.data().stripeLink,
+              stripeLink:
+                userInfoSnap?.data()?.stripeLink === undefined
+                  ? ""
+                  : userInfoSnap?.data()?.stripeLink,
               DateOfBirth: userInfoSnap.data().DateOfBirth,
               organization: userInfoSnap.data().organization,
               phoneNumber: userInfoSnap.data().phoneNumber,
               subscriptionPackage: userInfoSnap.data().subscriptionPackage,
               surname: userInfoSnap.data().surname,
-              paymentDetails: {
-                phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
-              },
+              profileImage:
+                userInfoSnap.data().profileImage === undefined
+                  ? ""
+                  : userInfoSnap.data().profileImage,
+              // paymentDetails: {
+              //   phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
+              // },
               accountId: userInfoSnap.data().accountId,
               firstName: userInfoSnap.data().firstName,
               role: userInfoSnap.data().role,

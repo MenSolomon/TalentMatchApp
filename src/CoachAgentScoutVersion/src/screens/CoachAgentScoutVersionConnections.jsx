@@ -252,9 +252,19 @@ const CoachAgentScoutVersionConnetions = () => {
 
   // Retreive all connections
 
-  const AaallUsersAndMessages = userLoginDetailsObject?.Connections;
+  // const AaallUsersAndMessages = userLoginDetailsObject?.Connections;
+  // const allScoutsandAgentsConnections =
+  //   userLoginDetailsObject?.AgentandScoutConnections;
+
+  const AaallUsersAndMessages =
+    userLoginDetailsObject?.Connections === undefined
+      ? []
+      : userLoginDetailsObject?.Connections;
   const allScoutsandAgentsConnections =
-    userLoginDetailsObject?.AgentandScoutConnections;
+    userLoginDetailsObject?.AgentandScoutConnections === undefined
+      ? []
+      : userLoginDetailsObject?.AgentandScoutConnections;
+
   const [connections, setConnections] = useState([]);
   let isDocumentsRetrieved = false; // Flag to track if documents are retrieved
   async function retrieveDocuments() {
@@ -358,7 +368,7 @@ const CoachAgentScoutVersionConnetions = () => {
         >
           {countryName === ""
             ? agentAndScoutsList
-                ?.filter((agent) => !connection.includes(agent.accountId))
+                ?.filter((agent) => !connection?.includes(agent.accountId))
                 .map((person) => {
                   return (
                     <div

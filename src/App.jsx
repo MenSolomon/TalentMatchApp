@@ -476,7 +476,8 @@ const App = () => {
             <Route path="/studio/settings" element={<Settings />} />
             <Route
               path="/studio/connections"
-              element={<PlayerVersionConnections />}
+              // element={<PlayerVersionConnections />}
+              element={<CoachAgentScoutVersionConnetions />}
             />
             <Route
               path="/studio/dashboard"
