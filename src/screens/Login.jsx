@@ -31,7 +31,6 @@ import {
   setIsSubscriptionActive,
   setLoginStatus,
   setNextBillingDate,
-  setSubscriptionFeatures,
   setUserDetailsObject,
 } from "../statemanager/slices/LoginUserDataSlice";
 import { selectUsersDatabase } from "../statemanager/slices/DatabaseSlice";
@@ -118,9 +117,11 @@ const Login = () => {
               onSnapshot(queryActiveOrTrialing, async (snapshot) => {
                 const doc = snapshot.docs[0];
                 const length = snapshot.docs.length;
-                if (doc.data().status === "active") {
+                if (doc?.data().status === "active") {
                   resolve(doc);
                 } else if (length == 0) {
+                  dispatch(setIsSubscriptionActive(false));
+                  dispatch(setNextBillingDate("N/A"));
                   resolve(null);
                 }
               });
@@ -173,7 +174,7 @@ const Login = () => {
                   DateOfBirth: userInfoSnap.data().DateOfBirth,
                   organization: userInfoSnap.data().organization,
                   phoneNumber: userInfoSnap.data().phoneNumber,
-                  subscriptionPackage: userInfoSnap.data().subscriptionPackage,
+                  subscriptionPackage: null,
                   surname: userInfoSnap.data().surname,
                   paymentDetails: {
                     phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
@@ -186,7 +187,7 @@ const Login = () => {
                     nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
                   },
                   stripeId: userInfoSnap.data().stripeId,
-                  subscriptionPrice: userInfoSnap.data().subscriptionPrice,
+                  subscriptionPrice: null,
                   playersInPossession: userInfoSnap.data().playersInPossession,
                 })
               );
@@ -215,6 +216,7 @@ const Login = () => {
             const q = query(notificationsSubCollectionRef);
             const allNotifications = onSnapshot(q, async (querySnapshot) => {
               const notificationItems = [];
+              ``;
               querySnapshot.forEach((doc) => {
                 notificationItems.push(doc.data());
               });

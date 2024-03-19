@@ -1,7 +1,7 @@
 import { NotificationAdd, Notifications } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import { useEffect } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import avatarImage from "./assets/images/avatar.jpg";
 
@@ -46,10 +46,12 @@ import {
 } from "firebase/firestore";
 import { setPriceID } from "./statemanager/slices/SignupStepperSlice";
 import { auth, db } from "./Firebase/Firebase";
+import { signOut } from "@firebase/auth";
 
 const MotherComponent = () => {
   const userLoginObject = useSelector(selectUserDetailsObject);
   const usersSavedProfile = useSelector(selectUserSavedProfiles);
+  const Navigate = useNavigate();
   // const { savedProfile } = LoginUserDetails;
 
   const menuButtonsArray = [
@@ -327,63 +329,8 @@ const MotherComponent = () => {
     }
   }, [themeProviderObject]);
 
-  //   const SubscriptionValidationChecker = async () => {
-  //     const accountId = await currentUser.uid;
-  //     // alert(accountId);
-  //     // get product id form database if the redux state is empty
-  //     const productIDRef = doc(db, `users_db/${accountId}`);
-  //     const productIdSnap = await getDoc(productIDRef);
-  //     const productID = await productIdSnap.data().subscriptionPackage;
-  //     const priceID = await productIdSnap.data().subscriptionPrice;
-  //     // alert(productID);
-  //     //get and store maxProfiles
-  //     const featuresRef = await doc(db, `products/${productID}`);
-  //     const featuresSnap = await getDoc(featuresRef);
-  //     const features = await featuresSnap.data().features;
-  //     // save to redux
-  //     await dispatch(setSubscriptionFeatures(features));
-  //     console.log(`maxProfilesSnap:${features.maxProfiles}`);
-  //     // save priceID to redux
-  //     await dispatch(setPriceID(priceID));
-  //     try {
-  //       const subscriptionsRef = collection(
-  //         db,
-  //         "users_db",
-  //         accountId,
-  //         "subscriptions"
-  //       );
-
-  //       const queryActiveOrTrialing = query(
-  //         subscriptionsRef,
-  //         where("status", "in", ["trialing", "active"])
-  //       );
-
-  //       onSnapshot(queryActiveOrTrialing, async (snapshot) => {
-  //         const doc = snapshot.docs[0];
-  //         const length = snapshot.docs.length;
-  //         // console.log(`no. of subs: ${length}`);
-  //         // console.log(`accountId:${accountId}`);
-  //         alert(length);
-
-  //         if (length > 0) {
-  //           dispatch(setIsSubscriptionActive(true));
-  //           // get end next billing date
-  //           const timestamp = doc.data().current_period_end.seconds;
-  //           const date = await new Date(timestamp * 1000);
-  //           dispatch(setNextBillingDate(date.toDateString()));
-  //         } else if (length == 0) {
-  //           dispatch(setIsSubscriptionActive(false));
-  //           dispatch(setNextBillingDate("N/A"));
-  //         }
-  //       });
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   SubscriptionValidationChecker();
-  // }, [userLoginObject?.accountId]);
   useEffect(() => {
-    alert("Mother Rendered");
+    // alert("Mother Rendered");
     const currentUser = auth.currentUser;
 
     if (currentUser) {
@@ -408,7 +355,7 @@ const MotherComponent = () => {
             onSnapshot(queryActiveOrTrialing, async (snapshot) => {
               const doc = snapshot.docs[0];
               const length = snapshot.docs.length;
-              if (doc.data().status === "active") {
+              if (doc?.data().status === "active") {
                 dispatch(setIsSubscriptionActive(true));
                 // get end next billing date
                 const timestamp = doc.data().current_period_end.seconds;
@@ -418,6 +365,21 @@ const MotherComponent = () => {
               } else if (length == 0) {
                 dispatch(setIsSubscriptionActive(false));
                 dispatch(setNextBillingDate("N/A"));
+                dispatch(
+                  setUserDetailsObject({
+                    ...userLoginObject,
+                    subscriptionPackage: null,
+                    subscriptionPrice: null,
+                  })
+                );
+                dispatch(
+                  setSubscriptionFeatures({
+                    canHideVisibility: false,
+                    maxPlayersInAgency: 1,
+                    maxProfiles: 1,
+                    maxVideosPerPlayer: 1,
+                  })
+                );
                 resolve(null);
               }
             });
@@ -443,8 +405,7 @@ const MotherComponent = () => {
             // save priceID to redux
             dispatch(setPriceID(priceID));
           } else if (docData == null) {
-            alert("docData null");
-
+            // alert("docData null");
             dispatch(
               setSubscriptionFeatures({
                 canHideVisibility: false,
@@ -648,6 +609,7 @@ const MotherComponent = () => {
                         key={index}
                         onClick={() => {
                           dispatch(setLoginStatus(false));
+                          dispatch(setIsSubscriptionActive(true));
                           dispatch(setUserDetailsObject({}));
                           dispatch(setUserSavedProfiles([]));
                           dispatch(
