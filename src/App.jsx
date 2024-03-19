@@ -496,7 +496,7 @@ const App = () => {
             />
             <Route
               path="/studio/dashboard"
-              element={<PlayerVersionConnections />}
+              element={<PlayerVersionDashboard />}
             />
             <Route path="/studio/videos" element={<PlayerVersionVideos />} />
             <Route

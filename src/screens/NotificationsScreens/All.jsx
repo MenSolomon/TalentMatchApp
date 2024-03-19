@@ -31,6 +31,7 @@ import {
 import { setPlayerSelectedByClubOrScoutInPlayerManagement } from "../../statemanager/slices/PlayersInAgencySlice";
 import BasicButton from "../../components/Buttons/BasicButton";
 import { selectUserNotifications } from "../../statemanager/slices/NofiticationsSlice";
+import { formatDistanceToNow } from "date-fns";
 
 const All = () => {
   const dispatch = useDispatch();
@@ -140,6 +141,7 @@ const All = () => {
                 notificationId={NotificationId}
                 transferCompleteStatus={data?.transferComplete}
                 requestAccepted={data?.requestAccepted}
+                targetedRole={data?.targetAccountRole}
               />
             </MenuItem>
           );
@@ -163,6 +165,7 @@ const MenuItemRow = ({
   notificationId,
   transferCompleteStatus,
   requestAccepted,
+  targetedRole,
 }) => {
   // const handleAcceptPlayerTransfer =async({dateCreated,userId,playerId,readStatus})=>{
   //   const playerObjectRef = doc(db, `players_database/${playerId}`);
@@ -180,7 +183,11 @@ const MenuItemRow = ({
   // }
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
   const dispatch = useDispatch();
-  const relativeDate = moment(dateSent).startOf("hour").fromNow();
+  const parsedTimestamp = new Date(dateSent);
+  const relativeDate = formatDistanceToNow(parsedTimestamp, {
+    addSuffix: true,
+  });
+  // const relativeDate = moment(dateSent).startOf("hour").fromNow();
   const allPlayersDatabase = useSelector(selectPlayersDatabase);
   const allClubsInDatabase = useSelector(selectClubsInDatabase);
   // moment(dateSent).startOf('hour').fromNow()
@@ -272,6 +279,11 @@ const MenuItemRow = ({
       } else if (type === "Connection request") {
         const connectionRequestSenderRef = doc(
           db,
+          `users_db/${senderId}/Notifications`,
+          notificationId
+        );
+        const connectionRequestReceipientRef = doc(
+          db,
           `users_db/${userLoginDetailsObject.accountId}/Notifications`,
           notificationId
         );
@@ -283,13 +295,30 @@ const MenuItemRow = ({
           requestAccepted: true,
         });
 
-        await updateDoc(userRef, {
-          Connections: arrayUnion(senderId),
+        await updateDoc(connectionRequestReceipientRef, {
+          requestAccepted: true,
         });
 
-        await updateDoc(senderRef, {
-          Connections: arrayUnion(userLoginDetailsObject.accountId),
-        });
+        // Seperating player connections from agent/scout connections
+        if (targetedRole === "Agent" || targetedRole === "Scout") {
+          await updateDoc(userRef, {
+            AgentandScoutConnections: arrayUnion(senderId),
+          });
+
+          await updateDoc(senderRef, {
+            AgentandScoutConnections: arrayUnion(
+              userLoginDetailsObject.accountId
+            ),
+          });
+        } else {
+          await updateDoc(userRef, {
+            Connections: arrayUnion(senderId),
+          });
+
+          await updateDoc(senderRef, {
+            Connections: arrayUnion(userLoginDetailsObject.accountId),
+          });
+        }
       }
 
       // console.log(data.dateCreated, "Date0", dateCreated);
