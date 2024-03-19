@@ -102,7 +102,6 @@ export default function CreateProfileModal({ ProfileType }) {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
-  
     setOpen(true);
   };
   const handleClose = () => {
@@ -215,8 +214,6 @@ export default function CreateProfileModal({ ProfileType }) {
   const userSavedProfiles = useSelector(selectUserSavedProfiles);
   const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
   const { maxProfiles } = subscriptionFeaturesObject;
-  const { email } = loginUserDetails;
-  const allUsers = useSelector(selectTempUsersDatabase);
   const currentProfileFilterObject = useSelector(
     selectCurrentProfileFilterObject
   );

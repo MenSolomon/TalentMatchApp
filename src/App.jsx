@@ -344,23 +344,9 @@ const App = () => {
     if (currentUser) {
       const SubscriptionValidationChecker = async () => {
         const accountId = await currentUser.uid;
-        // alert(accountId);
-        // get product id form database if the redux state is empty
-        const productIDRef = doc(db, `users_db/${accountId}`);
-        const productIdSnap = await getDoc(productIDRef);
-        const productID = await productIdSnap.data().subscriptionPackage;
-        const priceID = await productIdSnap.data().subscriptionPrice;
-        // alert(productID);
-        //get and store maxProfiles
-        const featuresRef = await doc(db, `products/${productID}`);
-        const featuresSnap = await getDoc(featuresRef);
-        const features = await featuresSnap.data().features;
-        // save to redux
-        await dispatch(setSubscriptionFeatures(features));
-        console.log(`maxProfilesSnap:${features.maxProfiles}`);
-        // save priceID to redux
-        await dispatch(setPriceID(priceID));
+
         try {
+          // get subscription
           const subscriptionsRef = collection(
             db,
             "users_db",
@@ -373,22 +359,54 @@ const App = () => {
             where("status", "in", ["trialing", "active"])
           );
 
-          onSnapshot(queryActiveOrTrialing, async (snapshot) => {
-            const doc = snapshot.docs[0];
-            const length = snapshot.docs.length;
-            // console.log(`no. of subs: ${length}`);
-            // console.log(`accountId:${accountId}`);
-            if (doc.data().status === "active") {
-              dispatch(setIsSubscriptionActive(true));
-              // get end next billing date
-              const timestamp = doc.data().current_period_end.seconds;
-              const date = await new Date(timestamp * 1000);
-              dispatch(setNextBillingDate(date.toDateString()));
-            } else if (length == 0) {
-              dispatch(setIsSubscriptionActive(false));
-              dispatch(setNextBillingDate("N/A"));
-            }
+          const subscriptionDocPromise = new Promise((resolve, reject) => {
+            onSnapshot(queryActiveOrTrialing, async (snapshot) => {
+              const doc = snapshot.docs[0];
+              const length = snapshot.docs.length;
+              if (doc.data().status === "active") {
+                dispatch(setIsSubscriptionActive(true));
+                // get end next billing date
+                const timestamp = doc.data().current_period_end.seconds;
+                const date = await new Date(timestamp * 1000);
+                dispatch(setNextBillingDate(date.toDateString()));
+                resolve(doc);
+              } else if (length == 0) {
+                dispatch(setIsSubscriptionActive(false));
+                dispatch(setNextBillingDate("N/A"));
+                resolve(null);
+              }
+            });
           });
+
+          const docData = await subscriptionDocPromise;
+          // if an active subscription exist get the product id and store it
+          if (docData) {
+            // get product id from database if an active
+            const productID = await docData.data().items[0].plan.product;
+            const priceID = await docData.data().items[0].plan.id;
+            // alert(await docData.data().items[0].plan.product);
+            //get and store maxProfiles
+            const featuresRef = await doc(db, `products/${productID}`);
+            const featuresSnap = await getDoc(featuresRef);
+            const features = await featuresSnap.data().features;
+            // save features to redux
+            dispatch(setSubscriptionFeatures(features));
+
+            // save priceID to redux
+            dispatch(setPriceID(priceID));
+          } else if (docData == null) {
+            alert("docData null");
+
+            dispatch(
+              setSubscriptionFeatures({
+                canHideVisibility: false,
+                maxPlayersInAgency: 1,
+                maxProfiles: 1,
+                maxVideosPerPlayer: 1,
+              })
+            );
+            dispatch(setPriceID(null));
+          }
         } catch (error) {
           console.log(error);
         }
