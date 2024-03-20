@@ -71,7 +71,7 @@ const CoachAgentScoutVersionConnetions = () => {
   ) => {
     const uuid = v4();
 
-    alert(targetedAccountID);
+    // alert(targetedAccountID);
 
     // FOR PLAYER ACC HOLDER
     const userNotificationRef = doc(
@@ -393,7 +393,7 @@ const CoachAgentScoutVersionConnetions = () => {
                   );
                 })
             : agentAndScoutsList
-                ?.filter((agent) => !connection.includes(agent.accountId))
+                ?.filter((agent) => !connection?.includes(agent.accountId))
                 .filter(
                   (person) =>
                     person.Nationality === countryName && person.role === role
@@ -433,8 +433,7 @@ const CoachAgentScoutVersionConnetions = () => {
         {/* // Pagination and delete message area */}
         {/* style={{ flex: "1", display: "grid", placeContent: "center" }} */}
         Filter for player connections and agent/scout connections
-        {AaallUsersAndMessages === undefined ||
-        AaallUsersAndMessages?.length === 0 ? (
+        {connections === undefined || connections?.length === 0 ? (
           <h4 className="primaryTextColor" style={{ textAlign: "center" }}>
             No contacts yet
           </h4>

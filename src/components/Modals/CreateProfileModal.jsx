@@ -657,6 +657,7 @@ export default function CreateProfileModal({ ProfileType }) {
               label: profileName,
               filter: {
                 // PlaceOfBirth,
+                AgeRangeValue,
                 NationalityValue,
                 HeightRangeValue,
                 PlayerPositionAutoCompleteValue:

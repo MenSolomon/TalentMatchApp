@@ -220,32 +220,32 @@ const BackEndDataCatalog = ({ children }) => {
   // MOROCCO  PREMIER LEAGUE ID: 5575 v3 200
   // COTE D'IVOIRE PREMIER LEAGUE ID: 386
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const url =
-        "https://v3.football.api-sports.io/players?league=570&season=2023";
-      // "https://v3.football.api-sports.io/players?id=276&season=2019";
-      const options = {
-        method: "GET",
-        headers: {
-          "x-rapidapi-host": "v3.football.api-sports.io",
-          "x-rapidapi-key": "48fbd72f828e84cbac320dad600443fd",
-        },
-      };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const url =
+  //       "https://v3.football.api-sports.io/players?league=570&season=2023";
+  //     // "https://v3.football.api-sports.io/players?id=276&season=2019";
+  //     const options = {
+  //       method: "GET",
+  //       headers: {
+  //         "x-rapidapi-host": "v3.football.api-sports.io",
+  //         "x-rapidapi-key": "48fbd72f828e84cbac320dad600443fd",
+  //       },
+  //     };
 
-      try {
-        const response = await fetch(url, options);
-        const result = await response.json();
-        console.log(result, "FootballAPI2");
-        // dispatch(set(result.response));
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  //     try {
+  //       const response = await fetch(url, options);
+  //       const result = await response.json();
+  //       console.log(result, "FootballAPI2");
+  //       // dispatch(set(result.response));
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
 
-    // Call the fetchData function when the component mounts
-    fetchData();
-  }, []);
+  //   // Call the fetchData function when the component mounts
+  //   fetchData();
+  // }, []);
 
   // useEffect(()=>{
 
