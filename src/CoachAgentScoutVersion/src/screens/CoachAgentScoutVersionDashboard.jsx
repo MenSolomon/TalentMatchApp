@@ -129,8 +129,14 @@ const CoachAgentScoutVersionDashboard = () => {
     const fetchData = async () => {
       const items = []; // Array to store messages
       const usersItems = []; // Array to store user profiles
-      const agentConnections = userLoginDetailsObject?.AgentandScoutConnections;
-      const playerConnections = userLoginDetailsObject?.Connections;
+      const agentConnections =
+        userLoginDetailsObject?.AgentandScoutConnections === undefined
+          ? []
+          : userLoginDetailsObject?.AgentandScoutConnections;
+      const playerConnections =
+        userLoginDetailsObject?.Connections === undefined
+          ? []
+          : userLoginDetailsObject?.Connections;
 
       const allScoutsandAgentsConnections = [
         ...playerConnections,
