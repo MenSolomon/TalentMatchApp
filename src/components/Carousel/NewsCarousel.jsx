@@ -389,7 +389,7 @@ const NewsCarousel = ({ NewsArray }) => {
         // width: "93vw",
       }}
     >
-      {rows.length === 0
+      {rows?.length === 0
         ? rows?.map((data, index) => {
             const {
               firstName,
@@ -542,7 +542,7 @@ const NewsCarousel = ({ NewsArray }) => {
               </Carousel.Item>
             );
           })
-        : rows.map((data, index) => {
+        : rows?.map((data, index) => {
             const {
               firstName,
               surName,
@@ -565,7 +565,7 @@ const NewsCarousel = ({ NewsArray }) => {
 
             const videos = data?.videos;
 
-            const clubObject = allClubsInDatabase.find((data) => {
+            const clubObject = allClubsInDatabase?.find((data) => {
               return data.clubName === clubName;
             });
 
