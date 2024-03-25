@@ -471,7 +471,7 @@ const CoachAgentScoutVersionInbox = () => {
                       // justifyContent: "center",
                     }}
                   >
-                    <div
+                    {/* <div
                       style={{
                         width: "6px",
                         height: "6px",
@@ -479,7 +479,7 @@ const CoachAgentScoutVersionInbox = () => {
                         background: "green",
                       }}
                     ></div>{" "}
-                    <div style={{ fontSize: ".7em" }}>Online</div>
+                    <div style={{ fontSize: ".7em" }}>Online</div> */}
                   </div>
                 </div>
               </div>
@@ -559,7 +559,7 @@ const CoachAgentScoutVersionInbox = () => {
                 <div style={{ flex: ".8" }}>
                   <TextField
                     id="outlined-basic"
-                    label="Outlined"
+                    label="Type here"
                     variant="outlined"
                     multiline
                     fullWidth
