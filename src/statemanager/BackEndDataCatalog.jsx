@@ -65,126 +65,6 @@ const BackEndDataCatalog = ({ children }) => {
 
   // Function to merge statistics for a player
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const url = "http://localhost:3001/api/sportmonks";
-
-      try {
-        const response = await fetch(url);
-        const result = await response.json();
-        setSpDat(result.data);
-        console.log(result, "SPORTMONK");
-
-        // Given array
-        // const dataArray = [
-        //   ...result.data.statistics,
-        // ]; /* Your array goes here */
-        // **** OLD
-        // const allPlayersArray = [...result.data];
-
-        // allPlayersArray.map((data, index) => {
-        //   const statisticsObject = {};
-
-        //   // Accumulate values for each statistic type
-        //   data.statistics.forEach((player) => {
-        //     player.details.forEach((statistic) => {
-        //       const { name } = statistic.type;
-        //       const totalValue = statistic.value.total || 0;
-
-        //       if (statisticsObject[name]) {
-        //         statisticsObject[name] += totalValue;
-        //       } else {
-        //         statisticsObject[name] = totalValue;
-        //       }
-        //     });
-        //   });
-
-        //   // Convert accumulated values to the desired array format
-        //   const accumulatedStatisticsArray = Object.entries(
-        //     statisticsObject
-        //   ).map(([name, value]) => ({
-        //     name,
-        //     value,
-        //   }));
-
-        //   console.log(accumulatedStatisticsArray, "Medici");
-        // });
-        // '8888 OLD'
-
-        const allPlayersArray = [...result.data];
-
-        const updatedPlayersArray = allPlayersArray.map((player) => {
-          const statisticsObject = {};
-
-          // Accumulate values for each statistic type
-          player.statistics.forEach((stat) => {
-            stat.details.forEach((detail) => {
-              const { name } = detail.type;
-              const totalValue = detail.value.total || 0;
-
-              if (statisticsObject[name]) {
-                statisticsObject[name] += totalValue;
-              } else {
-                statisticsObject[name] = totalValue;
-              }
-            });
-          });
-
-          // Convert accumulated values to the desired array format
-          const accumulatedStatisticsArray = Object.entries(
-            statisticsObject
-          ).map(([name, value]) => ({
-            name,
-            value,
-          }));
-
-          // Add the new statistics array to the player object
-          return {
-            ...player,
-            statistics: accumulatedStatisticsArray,
-          };
-        });
-
-        // Output the updated array
-        console.log(updatedPlayersArray, "New players");
-
-        if (updatedPlayersArray.length > 0) {
-          dispatch(setPlayersFromApi(updatedPlayersArray));
-        }
-
-        // console.log(dataArray, "Medici");
-
-        // const statisticsArray = dataArray.map((player) => {
-        //   const playerStatistics = player.details.reduce((acc, statistic) => {
-        //     const index = acc.findIndex(
-        //       (item) => item.name === statistic.type.name
-        //     );
-        //     if (index !== -1) {
-        //       acc[index].value += statistic.value.total;
-        //     } else {
-        //       acc.push({
-        //         name: statistic.type.name,
-        //         value: statistic.value.total,
-        //       });
-        //     }
-        //     return acc;
-        //   }, []);
-
-        //   return { statistics: playerStatistics };
-        // });
-
-        // console.log(statisticsArray, "Medici2");
-
-        // Output the updated array
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    // Call the fetchData function when the component mounts
-    fetchData();
-  }, []);
-
   // https://api.sportmonks.com/v3/football/players/172104?api_token=S8oul8IWiFmwZNVgnTCMq6chLdo6VIt2ZbHxXAFcepZVp8rHCzc0O4jEc9SR&include=statistics.details.type
 
   // const { accountId } = loginUserObject;
@@ -710,7 +590,7 @@ const BackEndDataCatalog = ({ children }) => {
         await Promise.all(
           playersSnapshot.docs.map(async (playerDoc) => {
             const playerId = playerDoc.id;
-            console.log("Player ID:", playerId);
+            // console.log("Player ID:", playerId);
 
             const videosQuery = query(
               collection(db, `players_database/${playerId}/videos`)
@@ -756,7 +636,7 @@ const BackEndDataCatalog = ({ children }) => {
         doc(db, "users_db", loginUserObject?.accountId),
         // { includeMetadataChanges: true },
         (doc) => {
-          console.log(doc.data());
+          // console.log(doc.data());
 
           if (doc.data() !== undefined) {
             dispatch(setUserDetailsObject(doc.data()));

@@ -545,6 +545,8 @@ const PlayerDetails = () => {
             instaImg={instagram}
             instagram={selectedPlayerArray[0]?.Social_media[0]?.Instagram}
             facebook={selectedPlayerArray[0]?.Social_media[0]?.Facebook}
+            playerName={`${selectedPlayerArray[0]?.firstName} ${selectedPlayerArray[0]?.surName}`}
+            PlayerId={selectedPlayerArray[0]?.Account_creator_id}
           />
         </div>
       </div>

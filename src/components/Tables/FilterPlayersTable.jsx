@@ -17,6 +17,7 @@ import {
   Avatar,
   Card,
   Checkbox,
+  CircularProgress,
   FormControlLabel,
   Tooltip,
 } from "@mui/material";
@@ -33,6 +34,10 @@ import {
   selectCurrentProfileFilterObject,
   selectUserSavedProfiles,
 } from "../../statemanager/slices/SavedProfileSlice";
+import { useEffect } from "react";
+import { collection, getDocs, query } from "firebase/firestore";
+import { db } from "../../Firebase/Firebase";
+import { useQuery } from "@tanstack/react-query";
 
 function createData(
   name,
@@ -112,14 +117,12 @@ function Row(props) {
           "& > *": { borderBottom: "unset" },
 
           color: "white",
-        }}
-      >
+        }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
-          >
+            onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
@@ -141,8 +144,7 @@ function Row(props) {
 
               alignItems: "center",
             }}
-            className="primaryTextColor"
-          >
+            className="primaryTextColor">
             <Avatar
               sx={{ width: 30, height: 30, marginRight: 1 }}
               src={row.playerImage}
@@ -203,8 +205,7 @@ function Row(props) {
                     gap: "1vw",
                     height: "30vh",
                   }}
-                  colSpan={3}
-                >
+                  colSpan={3}>
                   {/* // Profile Image  */}
                   <div style={{ flex: ".15" }}>
                     <Avatar
@@ -259,15 +260,13 @@ function Row(props) {
                     style={{
                       flex: ".2",
                       //    background: "yellow"
-                    }}
-                  >
+                    }}>
                     <div
                       style={{
                         width: "100%",
                         height: "100%",
                         // background: "red",
-                      }}
-                    >
+                      }}>
                       <PlayerOverallAttributes />
                     </div>
                   </div>
@@ -284,8 +283,7 @@ function Row(props) {
                         position: "relative",
                         paddingTop: "1vh",
                       }}
-                      className="tableVideo"
-                    >
+                      className="tableVideo">
                       <video
                         // id={`video-${index}`}
                         src="/believerJuggling.mp4"
@@ -294,8 +292,7 @@ function Row(props) {
                         // height="10vh"
                         style={{ position: "absolute" }}
                         // autoPlay={true}
-                        controls
-                      ></video>
+                        controls></video>
                     </div>
                   </div>
                 </TableCell>{" "}
@@ -429,7 +426,47 @@ export default function FilteredPlayersTable() {
   const currentProfileNameSelected = useSelector(selectCurrentProfile);
 
   const savedUserProfiles = useSelector(selectUserSavedProfiles);
-  const MatchedPlayersArray = useSelector(selectPlayersDatabase);
+  // const MatchedPlayersArray = useSelector(selectPlayersDatabase);
+
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     const playersQuery = query(collection(db, "players_database"));
+  //     const playersSnapshot = await getDocs(playersQuery);
+  //     const allProducts = [];
+  //     const playersSnapshotData = await playersSnapshot.forEach((doc) => {
+  //       // save them to allProducts array
+  //       allProducts.push(doc.data());
+  //     });
+  //     console.log("playersSnapshotData", allProducts);
+  //     return allProducts;
+  //   };
+  //   fetch();
+  // }, []);
+
+  const {
+    status,
+    data: MatchedPlayersArray,
+    error,
+    refetch,
+    isFetching: isMatchedPlayersArrayFetching,
+  } = useQuery({
+    queryKey: ["fetchAllPlayers"],
+    queryFn: async () => {
+      const playersQuery = query(collection(db, "players_database"));
+      const playersSnapshot = await getDocs(playersQuery);
+      const allProducts = [];
+      const playersSnapshotData = await playersSnapshot.forEach((doc) => {
+        // save them to allProducts array
+        allProducts.push(doc.data());
+      });
+      // console.log("playersSnapshotData", allProducts);
+      return allProducts;
+    },
+    // refetchOnMount: true,
+    // refetchOnWindowFocus: true,
+  });
+  // remount component when usequery completes fetch
+  useEffect(() => {}, [MatchedPlayersArray]);
 
   const currentProfileFilterObjectInEffect = savedUserProfiles.find((data) => {
     return (
@@ -437,7 +474,7 @@ export default function FilteredPlayersTable() {
     );
   });
 
-  const ExistingPlayerProfile = MatchedPlayersArray.filter((data) => {
+  const ExistingPlayerProfile = MatchedPlayersArray?.filter((data) => {
     const {
       Nationality,
       position,
@@ -481,7 +518,7 @@ export default function FilteredPlayersTable() {
     return numberOfMatches >= 5;
   });
 
-  console.log("All Players", MatchedPlayersArray);
+  // console.log("All Players", MatchedPlayersArray);
 
   const allClubsInDatabase = useSelector(selectClubsInDatabase);
 
@@ -542,7 +579,7 @@ export default function FilteredPlayersTable() {
       }
     );
 
-    const ExistingPlayerProfile = MatchedPlayersArray.filter((data) => {
+    const ExistingPlayerProfile = MatchedPlayersArray?.filter((data) => {
       const {
         Nationality,
         position,
@@ -588,12 +625,14 @@ export default function FilteredPlayersTable() {
       return numberOfMatches >= 5;
     });
 
-    console.log(ExistingPlayerProfile + "Mawu");
+    // console.log(ExistingPlayerProfile + "Mawu");
     setPossiblePlayerMatch(ExistingPlayerProfile);
     // alert(ExistingPlayerProfile.length);
   }, [currentProfileNameSelected, savedUserProfiles]);
 
-  const rows = PossiblePlayerMatch?.map((data, index) => {
+  const rows = PossiblePlayerMatch?.sort(
+    (a, b) => b.boostPoints - a.boostPoints
+  ).map((data, index) => {
     const {
       firstName,
       surName,
@@ -636,19 +675,10 @@ export default function FilteredPlayersTable() {
     );
   });
 
-  console.log("Table Row", rows);
+  // console.log("Table Row", rows);
 
   return (
     <div style={{ height: "42.5vh", width: "100%" }}>
-      {/* <TableContainer>
-        <Table
-          aria-label="collapsible table"
-          sx={{ width: "100%", height: "80%" }}
-        >
-       
-        </Table>
-      </TableContainer> */}
-
       {PossiblePlayerMatch?.length === 0 ? (
         " No Matches "
       ) : (
@@ -663,12 +693,10 @@ export default function FilteredPlayersTable() {
               borderTopLeftRadius: ".4vw",
               borderTopRightRadius: ".4vw",
             }}
-            component={Card}
-          >
+            component={Card}>
             <Table
               aria-label="collapsible table"
-              sx={{ width: "100%", height: "80%" }}
-            >
+              sx={{ width: "100%", height: "80%" }}>
               <TableHead>
                 <TableRow>
                   {/* <TableCell /> */}
@@ -711,44 +739,29 @@ export default function FilteredPlayersTable() {
               overflowY: "scroll",
               borderRadius: "0vw",
             }}
-            component={Card}
-          >
+            component={Card}>
             <Table
               aria-label="collapsible table"
-              sx={{ width: "100%", height: "80%" }}
-            >
-              {/* <TableHead
-      sx={{
-        // visibility: "hidden",
-        height: "0vh",
-        backround: "red",
-      }}
-    >
-      <TableRow>
-        <TableCell />
-
-        <TableCell>
-          {" "}
-          <Checkbox />{" "}
-        </TableCell>
-        <TableCell>Personal</TableCell>
-        <TableCell align="right">Age</TableCell>
-        <TableCell align="right">Foot</TableCell>
-        <TableCell align="right">Height</TableCell>
-        <TableCell align="right">Country</TableCell>
-        <TableCell align="right">Club</TableCell>
-        <TableCell align="right">Market value</TableCell>
-        <TableCell align="right">Contract Expiry</TableCell>
-      </TableRow>
-    </TableHead> */}
+              sx={{ width: "100%", height: "80%" }}>
               <TableBody
                 sx={{
                   overflowY: "scroll",
                   maxHeight: "20vh",
-                }}
-              >
+                }}>
                 {/* <div style={{ overflowY: "scroll", height: "300px" }}> */}
-                {rows.map((row, key) => (
+                {/* {isMatchedPlayersArrayFetching ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignSelf: "center",
+                    }}>
+                    <CircularProgress />
+                  </div>
+                ) : (
+                  rows?.map((row, key) => <Row key={key} row={row} />)
+                )} */}
+                {rows?.map((row, key) => (
                   <Row key={key} row={row} />
                 ))}
                 {/* </div> */}

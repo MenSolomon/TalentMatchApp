@@ -1,14 +1,41 @@
-import { Avatar, Button, IconButton } from "@mui/material";
+import { Avatar, Button, Chip, IconButton, Switch } from "@mui/material";
 import PlayerSkeletonImage from "../assets/images/PlayerSkeleton.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../statemanager/slices/ThemeProviderSlice";
 import UploadPlayerToAgencyModal from "../components/Modals/UploadPlayerToAgencyModal";
 import NewsCard from "../../../components/Cards/NewsCard/NewsCard";
-import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
+import {
+  selectSubscriptionFeatures,
+  selectUserDetailsObject,
+} from "../../../statemanager/slices/LoginUserDataSlice";
 import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
+import { useEffect, useState } from "react";
+import {
+  setContactSelectedForMessaging,
+  setWarningAlertModalCounter,
+  setWarningAlertModalMessage,
+} from "../../../statemanager/slices/OtherComponentStatesSlice";
+import { auth, db } from "../../../Firebase/Firebase";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
 
 const CoachAgentScoutVersionDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
+  const userLoginDetailsObject = useSelector(selectUserDetailsObject);
+
+  const [latestMessages, setLatestMessages] = useState([]);
 
   const { primaryTextColor } = ThemeProvider;
 
@@ -48,8 +75,193 @@ const CoachAgentScoutVersionDashboard = () => {
     },
   ];
 
+  const compareDates = (a, b) => {
+    const dateA = new Date(a.dateSent);
+    const dateB = new Date(b.dateSent);
+    return dateB - dateA;
+  };
+
+  // Sorting the array
+  useEffect(() => {
+    // const fetchData = async () => {
+    //   const items = [];
+
+    //   if (userLoginDetailsObject && userLoginDetailsObject.Connections) {
+    //     for (const connection of userLoginDetailsObject.Connections) {
+    //       const querySnapshot = await getDocs(
+    //         collection(
+    //           db,
+    //           `Chats/${userLoginDetailsObject.accountId}/Contacts/Messages/${connection}`
+    //         )
+    //       );
+    //       querySnapshot.forEach((doc) => {
+    //         // doc.data() is never undefined for query doc snapshots
+    //         console.log(doc.id, " => ", doc.data());
+    //         items.push(doc.data());
+    //       });
+    //     }
+    //     // Do something with the fetched data
+    //     console.log(items, "AllChatMessages");
+    //   }
+
+    //   const usersItems = []; // Array to store documents
+
+    //   try {
+    //     const videosQuery = query(
+    //       collection(db, `users_db`),
+    //       where("accountId", "in", userLoginDetailsObject.Connections)
+    //     );
+
+    //     const videosSnapshot = await getDocs(videosQuery);
+
+    //     videosSnapshot.forEach((doc) => {
+    //       usersItems.push(doc.data());
+    //     });
+
+    //     // Now items array contains all the documents
+    //     console.log(usersItems);
+    //     // setConnections(items);
+    //   } catch (error) {
+    //     console.log("Error getting documents: ", error);
+    //   }
+
+    // };
+    const fetchData = async () => {
+      const items = []; // Array to store messages
+      const usersItems = []; // Array to store user profiles
+      const agentConnections = userLoginDetailsObject?.AgentandScoutConnections;
+      const playerConnections = userLoginDetailsObject?.Connections;
+
+      const allScoutsandAgentsConnections = [
+        ...playerConnections,
+        ...agentConnections,
+      ];
+      if (userLoginDetailsObject && allScoutsandAgentsConnections) {
+        // Fetch messages for each connection
+        // *********** Retrieving all messages *********
+        for (const connection of allScoutsandAgentsConnections) {
+          const querySnapshot = await getDocs(
+            collection(
+              db,
+              `Chats/${userLoginDetailsObject.accountId}/Contacts/Messages/${connection}`
+            )
+          );
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+            items.push(doc.data());
+          });
+        }
+
+        // Retrieve all data of user docs in the  connections  ***************
+        try {
+          const senderIds = items.map((message) => message.senderId);
+          const usersQuery = query(
+            collection(db, `users_db`),
+            where("accountId", "in", senderIds)
+          );
+          const usersSnapshot = await getDocs(usersQuery);
+          usersSnapshot.forEach((doc) => {
+            usersItems.push(doc.data());
+          });
+
+          // Adding profileImage to filtered messages ***************
+          items.forEach((message) => {
+            const sender = usersItems.find(
+              (user) => user.accountId === message.senderId
+            );
+            if (sender) {
+              message.profileImage = sender.profileImage;
+            }
+          });
+
+          /// Getting the latest message of each connection *************
+          const groupedMessages = {};
+          items.forEach((message) => {
+            if (
+              !(message.senderId in groupedMessages) ||
+              new Date(message.dateSent) >
+                new Date(groupedMessages[message.senderId].dateSent)
+            ) {
+              groupedMessages[message.senderId] = message;
+            }
+          });
+
+          // Convert groupedMessages object to array
+          const latestMessagesTempDB = Object.values(groupedMessages);
+
+          setLatestMessages(
+            latestMessagesTempDB
+              .filter(
+                (data) => data.senderId !== userLoginDetailsObject.accountId
+              )
+              .sort(compareDates)
+          );
+
+          // Do something with the latest messages
+          console.log(latestMessagesTempDB, "latestMessage");
+        } catch (error) {
+          console.log("Error getting documents: ", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [userLoginDetailsObject]);
+
   const userLoginObject = useSelector(selectUserDetailsObject);
+  const { accountId } = userLoginObject;
+  const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
   const allPlayersInDatabase = useSelector(selectPlayersDatabase);
+  const dispatch = useDispatch();
+  // state to manage ability to set visibility
+  const { canHideVisibility } = subscriptionFeaturesObject;
+  // triggerWarningAlertModal
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
+  // function to set profile visibility
+  const handleVisibility = async (event) => {
+    if (canHideVisibility == true) {
+      // setIsVisible(event.target.checked);
+      if (event.target.checked === true) {
+        const canHideVisibilityRef = doc(db, `users_db`, accountId);
+        await updateDoc(canHideVisibilityRef, {
+          isVisible: true,
+        });
+        fetchIsVisibleFn();
+      } else if (event.target.checked === false) {
+        const canHideVisibilityRef = doc(db, `users_db`, accountId);
+        await updateDoc(canHideVisibilityRef, {
+          isVisible: false,
+        });
+        fetchIsVisibleFn();
+      }
+    } else if (canHideVisibility == false) {
+      triggerWarningAlertModal(
+        "Upgrade subscription to change profile visibility"
+      );
+    }
+  };
+
+  // usequery to get isVisible value
+
+  const fetchIsVisible = async () => {
+    const canHideVisibilityRef = doc(db, `users_db`, accountId);
+    const canHideVisibilitySnap = await getDoc(canHideVisibilityRef);
+    // console.log(canHideVisibilitySnap.data().isVisible);
+    return canHideVisibilitySnap.exists()
+      ? canHideVisibilitySnap.data().isVisible
+      : [];
+  };
+
+  const {
+    status,
+    data: canHideVisibilityValue,
+    error,
+    refetch: fetchIsVisibleFn,
+  } = useQuery({ queryKey: ["fetchIsVisible"], queryFn: fetchIsVisible });
 
   const playersInPossessionDetails =
     userLoginObject?.playersInPossession &&
@@ -77,7 +289,7 @@ const CoachAgentScoutVersionDashboard = () => {
   const playerWithHighestViews =
     sortedPlayers.length > 0 ? sortedPlayers[0] : null;
 
-  console.log(playerWithHighestViews, "arrayWithHeighetView");
+  // console.log(playerWithHighestViews, "arrayWithHeighetView");
 
   return (
     <div
@@ -89,16 +301,25 @@ const CoachAgentScoutVersionDashboard = () => {
           // height: "100%",
           // width: "100%",
         }
-      }>
+      }
+    >
       {/* // Heading Area   style={{ flex: ".1" }}*/}
-      <div className="md:basis-[10%] sm:basis-[10%]">
+      <div className="md:basis-[10%] sm:basis-[10%] grid md:grid-cols-2 sm:grid-cols-2">
         <h3 style={{ margin: 0, float: "left" }} className="primaryTextColor">
           Profile dashboard
-        </h3>{" "}
-        {/* <IconButton sx={{ float: "right" }}>
-          {" "}
-          <BoxIcon IconClassName="bxs-video-plus" />{" "}
-        </IconButton> */}
+        </h3>
+        <div className="flex justify-self-end">
+          <Switch
+            checked={canHideVisibilityValue}
+            onChange={handleVisibility}
+            inputProps={{ "aria-label": "controlled" }}
+          />
+          <Chip
+            variant="contained"
+            label={canHideVisibilityValue ? "Visible" : "Hidden"}
+            color={canHideVisibilityValue ? "success" : "error"}
+          />
+        </div>
       </div>
 
       {/* // Cards  (upload video card , analytics summary card and other information card) */}
@@ -114,7 +335,8 @@ const CoachAgentScoutVersionDashboard = () => {
               // display: "grid",
               // placeItems: "center",
               // position: "relative",
-            }}>
+            }}
+          >
             {/* // DASHED BORDER DIV */}
             <div
               className="cardBackground md:w-[88%] md:h-[90%] md:grid md:place-items-center md:absolute     sm:w-[88%] sm:h-[90%] sm:grid sm:place-items-center sm:relative"
@@ -126,7 +348,8 @@ const CoachAgentScoutVersionDashboard = () => {
                 // position: "absolute",
                 // display: "grid",
                 // placeItems: "center",
-              }}>
+              }}
+            >
               <img
                 src={PlayerSkeletonImage}
                 style={{ width: "200px", color: "red" }}
@@ -155,13 +378,15 @@ const CoachAgentScoutVersionDashboard = () => {
               paddingRight: "2vw",
               paddingTop: "3vh",
               paddingBottom: "2vh",
-            }}>
+            }}
+          >
             {/* // PROFILE ANALYTICS TOTAL VIEWS */}
             <div
               style={{
                 flex: ".3",
                 borderBottom: `1px solid ${primaryTextColor}`,
-              }}>
+              }}
+            >
               <h5>Profile Analytics</h5>
 
               <h6>Total players under management</h6>
@@ -179,7 +404,8 @@ const CoachAgentScoutVersionDashboard = () => {
                 flex: ".35",
                 paddingTop: "2vh",
                 borderBottom: `1px solid ${primaryTextColor}`,
-              }}>
+              }}
+            >
               <h6>Summary</h6>
               <h6 className="secondaryTextColor">Last 28 days</h6>
               <h6>Most viewed player</h6>
@@ -210,7 +436,8 @@ const CoachAgentScoutVersionDashboard = () => {
             // display: "flex",
             // flexDirection: "column",
             // gap: "2.4vh",
-          }}>
+          }}
+        >
           <div
             className="cardBackground md:basis-[50%] md:relative md:flex-col md:flex   sm:basis-[50%] sm:relative sm:flex-col sm:flex"
             style={{
@@ -223,7 +450,8 @@ const CoachAgentScoutVersionDashboard = () => {
               // position: "relative",
               // display: "flex",
               // flexDirection: "column",
-            }}>
+            }}
+          >
             <div style={{ flex: ".2" }}>
               <h5>Recent messages</h5>
             </div>
@@ -234,22 +462,34 @@ const CoachAgentScoutVersionDashboard = () => {
                 overflowY: "scroll",
                 flex: ".8",
                 maxHeight: "26vh",
-              }}>
-              {dummyRecentMessages.map((data, index) => {
-                const { message, userAvatar, date, userName } = data;
+              }}
+            >
+              {latestMessages.length === 0 ? (
+                <span>No messages yet</span>
+              ) : (
+                latestMessages.map((data, index) => {
+                  const {
+                    message,
+                    senderId,
+                    senderName,
+                    profileImage,
+                    dateSent,
+                  } = data;
 
-                return (
-                  <div key={index}>
-                    <RecentMessageCard
-                      message={message}
-                      userAvatar={userAvatar}
-                      date={date}
-                      userName={userName}
-                    />
-                    {/* <br /> */}
-                  </div>
-                );
-              })}
+                  return (
+                    <div key={index}>
+                      <RecentMessageCard
+                        message={message}
+                        userAvatar={profileImage}
+                        date={dateSent}
+                        userName={senderName}
+                        accountId={senderId}
+                      />
+                      {/* <br /> */}
+                    </div>
+                  );
+                })
+              )}
               <br />
             </div>
           </div>
@@ -263,7 +503,8 @@ const CoachAgentScoutVersionDashboard = () => {
               paddingRight: "2vw",
               paddingTop: "3vh",
               paddingBottom: "2vh",
-            }}>
+            }}
+          >
             <h5>Latest news</h5>
 
             {newData.map((data, index) => {
@@ -288,7 +529,34 @@ const CoachAgentScoutVersionDashboard = () => {
 
 export default CoachAgentScoutVersionDashboard;
 
-const RecentMessageCard = ({ message, userAvatar, date, userName }) => {
+const RecentMessageCard = ({
+  message,
+  userAvatar,
+  date,
+  userName,
+  accountId,
+}) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleMessageUserSelect = () => {
+    // alert(accountId, " for messaging");
+    dispatch(
+      setContactSelectedForMessaging({
+        contactId: accountId,
+        name: userName,
+        profileImage: userAvatar,
+      })
+    );
+
+    navigate("/multiStudio/messages");
+  };
+
+  const parsedTimestamp = new Date(date);
+  const formattedRelativeTime = formatDistanceToNow(parsedTimestamp, {
+    addSuffix: true,
+  });
+
   return (
     <div
       className="md:20vw md:h-[10vh]  sm:20vw sm:h-[10vh]"
@@ -300,7 +568,9 @@ const RecentMessageCard = ({ message, userAvatar, date, userName }) => {
         display: "flex",
         padding: ".3vw",
         cursor: "pointer",
-      }}>
+      }}
+      onClick={handleMessageUserSelect}
+    >
       <div style={{ flex: ".22" }}>
         <Avatar src={userAvatar} sx={{ width: 50, height: 50 }} />
       </div>
@@ -309,7 +579,9 @@ const RecentMessageCard = ({ message, userAvatar, date, userName }) => {
         <div>
           {" "}
           <span style={{ fontWeight: "bolder" }}> {userName} </span>{" "}
-          <span style={{ float: "right" }}>{date} </span>
+          <span style={{ float: "right", fontSize: ".7em" }}>
+            {formattedRelativeTime}{" "}
+          </span>
         </div>
         <p>{message?.length === 20 ? `${message}...` : message}</p>{" "}
       </div>

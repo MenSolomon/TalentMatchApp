@@ -1,12 +1,13 @@
 import {
   Button,
+  CircularProgress,
   IconButton,
   InputAdornment,
   InputLabel,
   OutlinedInput,
   TextField,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import {
   Facebook,
@@ -27,7 +28,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectTempUsersDatabase } from "../statemanager/slices/TempDatabaseSlice";
 import { useForm } from "react-hook-form";
 import {
+  setIsSubscriptionActive,
   setLoginStatus,
+  setNextBillingDate,
   setUserDetailsObject,
 } from "../statemanager/slices/LoginUserDataSlice";
 import { selectUsersDatabase } from "../statemanager/slices/DatabaseSlice";
@@ -39,6 +42,7 @@ import {
   getDocs,
   onSnapshot,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { auth, db } from "../Firebase/Firebase";
@@ -46,6 +50,11 @@ import { setUserSavedProfiles } from "../statemanager/slices/SavedProfileSlice";
 import { setUserNotifications } from "../statemanager/slices/NofiticationsSlice";
 import { setPlayerSelectedByClubOrScoutInPlayerManagement } from "../statemanager/slices/PlayersInAgencySlice";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  setWarningAlertModalCounter,
+  setWarningAlertModalMessage,
+} from "../statemanager/slices/OtherComponentStatesSlice";
+import { setPriceID } from "../statemanager/slices/SignupStepperSlice";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -64,15 +73,22 @@ const Login = () => {
   const Navigate = useNavigate();
   const dispatch = useDispatch();
   const AllUsersDatabase = useSelector(selectUsersDatabase);
-
+  // isLoading state
+  const [isLoading, setIsLoading] = useState(false);
   const resetErrorMessage = () => {
     setErrorMessage("");
+  };
+
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
   };
 
   const onSubmit = (formData) => {
     // use google signinwithemailandpassword to get the current userid
     signInWithEmailAndPassword(auth, formData.email, formData.password)
       .then(async (userCredential) => {
+        setIsLoading(true);
         // Signed in
         const user = userCredential.user;
         const accountId = user.uid;
@@ -83,31 +99,100 @@ const Login = () => {
 
         if (user) {
           dispatch(setLoginStatus(true));
-          dispatch(
-            setUserDetailsObject({
-              Nationality: userInfoSnap.data().Nationality,
-              email: userInfoSnap.data().email,
-              CountryCode: userInfoSnap.data().CountryCode,
-              stripeLink: userInfoSnap.data().stripeLink,
-              DateOfBirth: userInfoSnap.data().DateOfBirth,
-              organization: userInfoSnap.data().organization,
-              phoneNumber: userInfoSnap.data().phoneNumber,
-              subscriptionPackage: userInfoSnap.data().subscriptionPackage,
-              surname: userInfoSnap.data().surname,
-              paymentDetails: {
-                phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
-              },
-              accountId: userInfoSnap.data().accountId,
-              firstName: userInfoSnap.data().firstName,
-              role: userInfoSnap.data().role,
-              dateCreated: {
-                seconds: userInfoSnap.data().dateCreated.seconds,
-                nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
-              },
-              stripeId: userInfoSnap.data().stripeId,
-              subscriptionPrice: userInfoSnap.data().subscriptionPrice,
-            })
-          );
+          try {
+            // get subscription
+            const subscriptionsRef = collection(
+              db,
+              "users_db",
+              accountId,
+              "subscriptions"
+            );
+
+            const queryActiveOrTrialing = query(
+              subscriptionsRef,
+              where("status", "in", ["trialing", "active"])
+            );
+
+            const subscriptionDocPromise = new Promise((resolve, reject) => {
+              onSnapshot(queryActiveOrTrialing, async (snapshot) => {
+                const doc = snapshot.docs[0];
+                const length = snapshot.docs.length;
+                if (doc?.data().status === "active") {
+                  resolve(doc);
+                } else if (length == 0) {
+                  dispatch(setIsSubscriptionActive(false));
+                  dispatch(setNextBillingDate("N/A"));
+                  resolve(null);
+                }
+              });
+            });
+
+            const docData = await subscriptionDocPromise;
+            // if an active subscription exist get the product id and store it
+            if (docData) {
+              // get product id from database if an active
+              const productID = await docData.data().items[0].plan.product;
+              const priceID = await docData.data().items[0].plan.id;
+
+              dispatch(
+                setUserDetailsObject({
+                  Nationality: userInfoSnap.data().Nationality,
+                  email: userInfoSnap.data().email,
+                  CountryCode: userInfoSnap.data().CountryCode,
+                  stripeLink: userInfoSnap.data().stripeLink,
+                  DateOfBirth: userInfoSnap.data().DateOfBirth,
+                  organization: userInfoSnap.data().organization,
+                  phoneNumber: userInfoSnap.data().phoneNumber,
+                  subscriptionPackage: productID,
+                  surname: userInfoSnap.data().surname,
+                  paymentDetails: {
+                    phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
+                  },
+                  accountId: userInfoSnap.data().accountId,
+                  firstName: userInfoSnap.data().firstName,
+                  role: userInfoSnap.data().role,
+                  dateCreated: {
+                    seconds: userInfoSnap.data().dateCreated.seconds,
+                    nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
+                  },
+                  stripeId: userInfoSnap.data().stripeId,
+                  subscriptionPrice: priceID,
+                  playersInPossession: userInfoSnap.data().playersInPossession,
+                })
+              );
+              await updateDoc(userInfoRef, {
+                subscriptionPackage: productID,
+                subscriptionPrice: priceID,
+              });
+            } else if (!docData) {
+              dispatch(
+                setUserDetailsObject({
+                  Nationality: userInfoSnap.data().Nationality,
+                  email: userInfoSnap.data().email,
+                  CountryCode: userInfoSnap.data().CountryCode,
+                  stripeLink: userInfoSnap.data().stripeLink,
+                  DateOfBirth: userInfoSnap.data().DateOfBirth,
+                  organization: userInfoSnap.data().organization,
+                  phoneNumber: userInfoSnap.data().phoneNumber,
+                  subscriptionPackage: null,
+                  surname: userInfoSnap.data().surname,
+                  paymentDetails: {
+                    phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
+                  },
+                  accountId: userInfoSnap.data().accountId,
+                  firstName: userInfoSnap.data().firstName,
+                  role: userInfoSnap.data().role,
+                  dateCreated: {
+                    seconds: userInfoSnap.data().dateCreated.seconds,
+                    nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
+                  },
+                  stripeId: userInfoSnap.data().stripeId,
+                  subscriptionPrice: null,
+                  playersInPossession: userInfoSnap.data().playersInPossession,
+                })
+              );
+            }
+          } catch (error) {}
 
           const savedProfileSubCollectionRef = collection(
             db,
@@ -131,6 +216,7 @@ const Login = () => {
             const q = query(notificationsSubCollectionRef);
             const allNotifications = onSnapshot(q, async (querySnapshot) => {
               const notificationItems = [];
+              ``;
               querySnapshot.forEach((doc) => {
                 notificationItems.push(doc.data());
               });
@@ -200,13 +286,38 @@ const Login = () => {
             allProfiles();
           };
         }
-        // ...
       })
       .catch((error) => {
+        setIsLoading(false);
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.error("Error code:", errorCode);
-        console.error("Error message:", errorMessage);
+        // console.error("Error code:", errorCode);
+        // console.error("Error message:", errorMessage);
+        switch (errorCode) {
+          case "auth/wrong-password":
+            triggerWarningAlertModal("The password you entered was wrong");
+            break;
+          case "auth/missing-password":
+            triggerWarningAlertModal("Please enter a password");
+            break;
+          case "auth/network=request-failed":
+            triggerWarningAlertModal("Please check your internet connectivity");
+            break;
+          case "auth/user-not-found":
+            triggerWarningAlertModal("Account doesn't exist");
+            break;
+          case "auth/user-disabled":
+            triggerWarningAlertModal("Account has been disabled");
+            break;
+          case "auth/invalid-email":
+            triggerWarningAlertModal("Please enter an email");
+          case "auth/invalid-login-credentials":
+            triggerWarningAlertModal(
+              "This account does not exist or your credentials are wrong"
+            );
+            break;
+          default:
+        }
       });
   };
 
@@ -357,19 +468,23 @@ const Login = () => {
                 <div> </div>
 
                 <div>
-                  <Button
-                    type="submit"
-                    className="md:w-[15vw] sm:w-[30vw]"
-                    sx={{
-                      // width: "15vw",
-                      height: "7vh",
-                      background: "#5585FE",
-                      color: "white",
-                      borderRadius: "1vw",
-                      fontWeight: "bold",
-                    }}>
-                    Login
-                  </Button>
+                  {isLoading ? (
+                    <CircularProgress />
+                  ) : (
+                    <Button
+                      type="submit"
+                      className="md:w-[15vw] sm:w-[30vw]"
+                      sx={{
+                        // width: "15vw",
+                        height: "7vh",
+                        background: "#5585FE",
+                        color: "white",
+                        borderRadius: "1vw",
+                        fontWeight: "bold",
+                      }}>
+                      Login
+                    </Button>
+                  )}
                 </div>
               </form>
             </div>

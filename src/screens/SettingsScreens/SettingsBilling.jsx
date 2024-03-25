@@ -18,12 +18,16 @@ import { useSelector } from "react-redux";
 import {
   selectIsSubscriptionActive,
   selectNextBillingDate,
+  selectUserDetailsObject,
 } from "../../statemanager/slices/LoginUserDataSlice";
+import { useQuery } from "@tanstack/react-query";
 
 function SettingsBilling() {
   const navigate = useNavigate();
-  // state to store price id
-  const [priceId, setPriceId] = useState();
+
+  const userDetailsObject = useSelector(selectUserDetailsObject);
+  const { subscriptionPackage, accountId } = userDetailsObject;
+
   // state to display circular progress animation
   const [isLoading, setIsLoading] = useState(false);
   // state to set subscription status
@@ -31,10 +35,11 @@ function SettingsBilling() {
   // state to set next billing date
   const nextBillingDate = useSelector(selectNextBillingDate);
 
-  // product details arry
+  // product details array
   // We take the names from a dublicate array in the src directory to prevent unecessary reads from firestore
   const productids = productDetails;
-  const subscriptionStatusRedux = useSelector(selectIsSubscriptionActive);
+  const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
+
   useEffect(() => {
     const activeQueryFn = () => {
       const activeProductsQuery = query(
@@ -69,36 +74,15 @@ function SettingsBilling() {
         });
       });
     };
-    // get product id
-    const getProductId = async () => {
-      // uid
-      const currentUser = await auth.currentUser;
-      const subscriptionProductRef = doc(db, "users_db", currentUser.uid);
-      const subscriptionProductSnap = await getDoc(subscriptionProductRef);
-      await setPriceId(subscriptionProductSnap.data().subscriptionPackage);
-    };
-
     // get status of subscription
     const getSubscriptionStatus = async () => {
-      // get current uid
-      const currentUser = await auth.currentUser;
-      // alert(currentUser.uid);
-      // Check if an active subscription exists
-      const userRef = collection(
-        db,
-        `users_db/${currentUser.uid}/subscriptions`
-      );
-      const q = query(userRef, where("status", "in", ["trialing", "active"]));
-      const docSnap = await getDocs(q);
-
-      if (subscriptionStatusRedux === false) {
+      if (isSubscriptionActive === false) {
         setSubscriptionStatus("Inactive");
-      } else if (subscriptionStatusRedux === true) {
+      } else if (isSubscriptionActive === true) {
         setSubscriptionStatus("Active");
       }
     };
-    activeQueryFn();
-    getProductId();
+    // activeQueryFn();
     getSubscriptionStatus();
   }, []);
 
@@ -164,11 +148,11 @@ function SettingsBilling() {
               }}>
               <div className="padding" style={{ flex: ".7" }}>
                 {productids.map((item) => {
-                  if (priceId === item.id) {
+                  if (subscriptionPackage === item.id) {
                     return <div>{item.name}</div>;
                   }
                 })}
-                {subscriptionStatus}
+                {isSubscriptionActive ? "Active" : "Inactive"}
               </div>
               <div style={{ flex: ".3" }}>
                 <div style={{ padding: "5px 0px" }}>

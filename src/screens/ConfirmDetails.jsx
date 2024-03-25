@@ -243,8 +243,8 @@ const ConfirmDetails = () => {
                   dispatch(setLoginStatus(true));
 
                   await setDoc(doc(db, `players_database`, user.uid), {
-                    id: uuid,
-                    Account_creator_id: uuid,
+                    id: user.uid,
+                    Account_creator_id: user.uid,
                     player_profile_image: "",
                     firstName: userData?.firstName,
                     surName: userData?.surname,
@@ -252,6 +252,7 @@ const ConfirmDetails = () => {
                     Nationality: userData?.Nationality,
                     dateCreated: serverTimestamp(),
                     Age: currentAge,
+                    boostPoints:0,
                     position: userData?.PlayerPosition,
                     date_of_birth: userData?.DateOfBirth,
                     jerseyNumber: "",
@@ -593,6 +594,8 @@ const ConfirmDetails = () => {
                     role: roleSelected,
                     dateCreated: serverTimestamp(),
                     accountId: user.uid,
+                    boostPoints:0,
+                    isVisible: true,
                   });
 
                   dispatch(setCompletedSteps({}));
@@ -639,7 +642,7 @@ const ConfirmDetails = () => {
                 const user = userCredential.user;
                 // save credentials
                 dispatch(setCredentials(user.uid));
-                alert(user.uid);
+                // alert(user.uid);
                 // set login status to true
                 dispatch(setLoginStatus(true));
 
@@ -648,8 +651,11 @@ const ConfirmDetails = () => {
                   role: roleSelected,
                   dateCreated: serverTimestamp(),
                   accountId: user.uid,
+                  boostPoints:0,
+                  isVisible: true,
+                  playersInPossession: [],
                 });
-                alert("Other Accs");
+                // alert("Other Accs");
 
                 dispatch(setCompletedSteps({}));
                 dispatch(setRoleSelected(""));

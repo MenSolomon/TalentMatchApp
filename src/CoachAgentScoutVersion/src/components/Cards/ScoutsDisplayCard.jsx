@@ -1,15 +1,18 @@
-import { Avatar, Card, Chip } from "@mui/material";
+import { Avatar, Card, Chip, Stack } from "@mui/material";
 
 const ScoutsDisplayCard = ({
   backgroundUrl,
-  avatarUrl,
+  playerImageUrl,
   UserName,
   AgencyName,
   style,
+  handleConnect,
+  handleDelete,
+  deleteBtnVisible,
 }) => {
   return (
     <Card
-      className="cardBackground primaryTextColor md:flex md:flex-col md:w-[20vw] md:h-[23vh]  sm:flex sm:flex-col sm:w-[100%] sm:h-[23vh]"
+      className="playerCard primaryTextColor md:flex md:flex-col md:w-[30vw] md:h-[23vh]  sm:flex sm:flex-col sm:w-[100%] sm:h-[23vh]"
       style={{
         ...style,
         // display: "flex",
@@ -17,32 +20,32 @@ const ScoutsDisplayCard = ({
         // width: "20vw",
         // height: "23vh",
         borderRadius: "1vw",
-        background: "red",
+        marginBottom: "3vh",
       }}
     >
-      <div
+      {/* <div
         style={{
           flex: ".5",
           backgroundImage: `url(${backgroundUrl})`,
           backgroundSize: "cover",
           //   paddingLeft: ".5vw",
           //   paddingRight: ".5w",
-        }}
-      ></div>
+        }}></div> */}
       <div
         className="md:flex sm:flex"
         style={{
-          flex: ".5",
-          // display: "flex",
+          flex: "1",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           paddingLeft: ".5vw",
           paddingRight: ".5vw",
-          paddingTop: "5%",
           gap: ".3vw",
         }}
       >
         {/* AVATAR */}
         <div style={{ flex: ".2" }}>
-          <Avatar src={avatarUrl}></Avatar>
+          <Avatar src={playerImageUrl}></Avatar>
         </div>
         {/* NAME AND AGENCY OR CLUB NAME */}
         <div style={{ flex: ".5" }}>
@@ -53,7 +56,22 @@ const ScoutsDisplayCard = ({
         </div>
         {/* SIGN UP CHIP */}
         <div style={{ flex: ".3" }}>
-          <Chip sx={{ cursor: "pointer" }} label="Remind" color="primary" />
+          <Stack direction="row" spacing={1}>
+            <Chip
+              sx={{ cursor: "pointer" }}
+              label="Connect"
+              color="primary"
+              onClick={handleConnect}
+            />
+            {deleteBtnVisible && (
+              <Chip
+                sx={{ cursor: "pointer" }}
+                color="error"
+                label="Delete"
+                onClick={handleDelete}
+              />
+            )}
+          </Stack>
         </div>
       </div>
     </Card>

@@ -7,12 +7,15 @@ import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserD
 import { selectPlayerSelectedToView } from "../../../statemanager/slices/PlayersInAgencySlice";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../Firebase/Firebase";
+import CreateShowInterestModal from "../../Modals/CreateShowInterestModal";
 
 const SocialAndContactAreaCard = ({
   instagram,
   facebook,
   instaImg,
   facebookImg,
+  playerName,
+  PlayerId,
 }) => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
   const { primaryTextColor } = themeProviderObject;
@@ -149,14 +152,15 @@ const SocialAndContactAreaCard = ({
         sx={{ fontSize: ".8em" }}
       />
 
-      <BasicButton
+      {/* <BasicButton
         style={{
           textTransform: "none",
           color: "white",
           fontWeight: "bold",
         }}
         innerText={"Show interest"}
-      />
+      /> */}
+      <CreateShowInterestModal playerId={PlayerId} playerName={playerName} />
     </div>
   );
 };

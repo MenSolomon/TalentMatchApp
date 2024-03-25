@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import PlayerViewCardFromPlayersScreen from "../components/Cards/PlayerViewCardFromPlayersScreen";
 
 import { Pagination } from "@mui/material";
-import { selectPlayersInAgencyArray } from "../../../statemanager/slices/PlayersInAgencySlice";
 import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
 import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
 import { useState } from "react";
@@ -30,13 +29,13 @@ const CoachAgentScoutVersionPlayers = () => {
       return matchedPlayer;
     });
 
-  console.log(
-    playersInPossessionDetails,
-    allPlayersInDatabase,
-    "PROAS",
-    userLoginObject?.playersInPossession,
-    userLoginObject
-  );
+  // console.log(
+  //   playersInPossessionDetails,
+  //   allPlayersInDatabase,
+  //   "PROAS",
+  //   userLoginObject?.playersInPossession,
+  //   userLoginObject
+  // );
 
   // Pagination settings
   const PlayersPerPage = browserWidth <= 1024 ? 4 : 9;
@@ -67,8 +66,7 @@ const CoachAgentScoutVersionPlayers = () => {
           // height: "100%",
           // width: "100%",
         }
-      }
-    >
+      }>
       <div className="md:basis-[10%] sm:basis-[10%]">
         <h3 style={{ margin: 0, float: "left" }}>Players</h3>{" "}
       </div>
@@ -118,8 +116,7 @@ const CoachAgentScoutVersionPlayers = () => {
 
       <div
         className="md:basis-[10%]   sm:basis-[10%]"
-        style={{ display: "grid", placeContent: "center" }}
-      >
+        style={{ display: "grid", placeContent: "center" }}>
         {playersInPossessionDetails === undefined ? (
           ""
         ) : (

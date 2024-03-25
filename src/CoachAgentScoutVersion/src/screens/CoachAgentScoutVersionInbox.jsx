@@ -20,17 +20,30 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
 import { v4 } from "uuid";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  onSnapshot,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "../../../Firebase/Firebase";
 import moment from "moment/moment";
 import { selectuserMessages } from "../../../statemanager/slices/MessagesSlice";
+import { selectContactSelectedForMessaging } from "../../../statemanager/slices/OtherComponentStatesSlice";
+import { formatDistanceToNow } from "date-fns";
 
 const CoachAgentScoutVersionInbox = () => {
-  const [messageArray, setMessage] = useState([]);
+  const [messageArray, setMessageArray] = useState([]);
   const [selectedUser, setSelectedUser] = useState([]);
   const [messageText, setMessageText] = useState("");
 
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
+  const selectedUserDetailsObject = useSelector(
+    selectContactSelectedForMessaging
+  );
 
   const dummyUserArray = [
     {
@@ -99,6 +112,12 @@ const CoachAgentScoutVersionInbox = () => {
 
   const [AllUsersAndMessages, setAllUsersAndMessages] = useState([]);
 
+  const AaallUsersAndMessages = userLoginDetailsObject?.Connections;
+  const allScoutsandAgentsConnections =
+    userLoginDetailsObject?.AgentandScoutConnections;
+
+  console.log("Letter from overseas", AaallUsersAndMessages);
+
   const allMessages = useSelector(selectuserMessages);
 
   useEffect(() => {
@@ -165,12 +184,12 @@ const CoachAgentScoutVersionInbox = () => {
       if (messageText !== "") {
         const userToSelfMessageRef = doc(
           db,
-          `Chats/${userLoginDetailsObject.accountId}/Messages`,
+          `Chats/${userLoginDetailsObject.accountId}/Contacts/Messages/${contactId}`,
           uuid
         );
         await setDoc(userToSelfMessageRef, {
           messageId: uuid,
-          senderId: userLoginDetailsObject.accountId,
+          senderId: userLoginDetailsObject?.accountId,
           recepientId: contactId,
           senderName: `${userLoginDetailsObject?.firstName} ${userLoginDetailsObject?.surname} `,
           recepientName: contactId,
@@ -181,12 +200,12 @@ const CoachAgentScoutVersionInbox = () => {
         // Message to other
         const userToOthersMessageRef = doc(
           db,
-          `Chats/${contactId}/Messages/`,
+          `Chats/${contactId}/Contacts/Messages/${userLoginDetailsObject.accountId}`,
           uuid
         );
         await setDoc(userToOthersMessageRef, {
           messageId: uuid,
-          senderId: userLoginDetailsObject.accountId,
+          senderId: userLoginDetailsObject?.accountId,
           recepientId: contactId,
           senderName: `${userLoginDetailsObject?.firstName} ${userLoginDetailsObject?.surname} `,
           recepientName: contactId,
@@ -207,6 +226,89 @@ const CoachAgentScoutVersionInbox = () => {
   // profileName;
   // time;
   // message;
+
+  //   const citiesRef = db.collection("users_db");
+  const [connections, setConnections] = useState([]);
+  let isDocumentsRetrieved = false; // Flag to track if documents are retrieved
+
+  // Function to retrieve documents
+  async function retrieveDocuments() {
+    if (!isDocumentsRetrieved) {
+      // Check if documents are already retrieved
+      isDocumentsRetrieved = true; // Update flag to indicate retrieval
+
+      const items = []; // Array to store documents
+
+      try {
+        const videosQuery = query(
+          collection(db, `users_db`),
+          where("accountId", "in", [
+            ...AaallUsersAndMessages,
+            ...allScoutsandAgentsConnections,
+          ])
+        );
+
+        const videosSnapshot = await getDocs(videosQuery);
+
+        videosSnapshot.forEach((doc) => {
+          items.push(doc.data());
+        });
+
+        // Now items array contains all the documents
+        console.log(items);
+        setConnections(items);
+      } catch (error) {
+        console.log("Error getting documents: ", error);
+      }
+    }
+  }
+
+  useEffect(() => {
+    retrieveDocuments();
+  }, []);
+
+  // Use Effect to retrive all messages
+
+  const compareDates = (a, b) => {
+    const dateA = new Date(a.dateSent);
+    const dateB = new Date(b.dateSent);
+    return dateA - dateB;
+  };
+
+  // Sorting the array
+
+  useEffect(() => {
+    // selectedUserDetailsObject?.contactId.length === 0 ?
+
+    const userToSelfMessageRef = collection(
+      db,
+      `Chats/${
+        selectedUserDetailsObject?.contactId === ""
+          ? "empty"
+          : selectedUserDetailsObject?.contactId
+      }/Contacts/Messages/${userLoginDetailsObject?.accountId}`
+    );
+
+    const q = query(userToSelfMessageRef);
+    const alldata = onSnapshot(q, (querySnapshot) => {
+      const items = [];
+      querySnapshot.forEach((doc) => {
+        items.push(doc.data());
+
+        // alert(doc.id());
+      });
+      // alert("messages");
+
+      console.log(items, "allmessages");
+      setMessageArray(items.sort(compareDates));
+    });
+    return () => {
+      alldata();
+    };
+  }, [selectedUserDetailsObject]);
+
+  // Call the function to retrieve documents
+  // retrieveDocuments();
 
   useEffect(() => {
     console.log(selectedUser?.contactId);
@@ -258,29 +360,46 @@ const CoachAgentScoutVersionInbox = () => {
           className="md:basis-[80%] sm:flex-col  sm:flex sm:flex-shrink-0 sm:basis-[80%]"
           style={{ overflowY: "scroll" }}
         >
-          {AllUsersAndMessages?.length === 0 ? (
+          {AaallUsersAndMessages === undefined ||
+          AaallUsersAndMessages?.length === 0 ? (
             <h4 className="primaryTextColor" style={{ textAlign: "center" }}>
               No contacts yet
             </h4>
           ) : (
-            AllUsersAndMessages?.map((data, index) => {
-              const { contactId, name, image, messages } = data;
+            // AllUsersAndMessages?.map((data, index) => {
+            //   const { contactId, name, image, messages } = data;
 
+            //   return (
+            //     <span
+            //       onClick={() => {
+            //         setSelectedUser({ contactId: contactId, name, messages });
+            //         setMessageText("");
+            //         // alert(contactId);
+            //       }}
+            //       key={index}
+            //     >
+            //       <MessageContactCard
+            //         profileImage={image}
+            //         profileName={name}
+            //         time={messages[messages.length - 1].time}
+            //         message={messages[messages.length - 1].message}
+            //       />
+            //     </span>
+            //   );
+            // })
+            connections.map((data, key) => {
               return (
                 <span
-                  onClick={() => {
-                    setSelectedUser({ contactId: contactId, name, messages });
-                    setMessageText("");
-                    // alert(contactId);
-                  }}
-                  key={index}
+                  style={{ marginBottom: "1vh", marginTop: "1vh" }}
+                  key={key}
                 >
                   <MessageContactCard
-                    profileImage={image}
-                    profileName={name}
-                    time={messages[messages.length - 1].time}
-                    message={messages[messages.length - 1].message}
-                  />
+                    profileImage={data?.profileImage}
+                    profileName={`${data?.firstName} ${data?.surname}`}
+                    time={""}
+                    message={""}
+                    accountId={data?.accountId}
+                  />{" "}
                 </span>
               );
             })
@@ -302,7 +421,7 @@ const CoachAgentScoutVersionInbox = () => {
       >
         {/* // Pagination and delete message area */}
         {/* style={{ flex: "1", display: "grid", placeContent: "center" }} */}
-        {selectedUser.length === 0 ? (
+        {selectedUserDetailsObject?.contactId.length === 0 ? (
           <div className="md:basis-[100%] md:grid md:place-content-center    sm:basis-[100%] sm:grid sm:place-content-center">
             {" "}
             <h5 style={{ textAlign: "center" }}>
@@ -314,7 +433,7 @@ const CoachAgentScoutVersionInbox = () => {
             <div
               style={{
                 flex: ".12",
-                background: "yellow",
+                // background: "yellow",
                 borderBottom: "1px solid #f2f2f2",
                 display: "flex",
               }}
@@ -331,10 +450,13 @@ const CoachAgentScoutVersionInbox = () => {
                 }}
               >
                 <div style={{ flex: ".26" }}>
-                  <Avatar src={""} sx={{ width: 50, height: 50 }} />
+                  <Avatar
+                    src={selectedUserDetailsObject?.profileImage}
+                    sx={{ width: 50, height: 50 }}
+                  />
                 </div>
                 <div style={{ flex: ".74" }}>
-                  <div>{selectedUser.name}</div>
+                  <div>{selectedUserDetailsObject?.name}</div>
 
                   <div
                     style={{
@@ -370,7 +492,7 @@ const CoachAgentScoutVersionInbox = () => {
               }}
             >
               <div style={{ flex: ".85", overflowY: "scroll" }}>
-                {selectedUser.messages.length === 0 ? (
+                {messageArray.length === 0 ? (
                   <h4
                     className="primaryTextColor"
                     style={{ textAlign: "center" }}
@@ -378,8 +500,8 @@ const CoachAgentScoutVersionInbox = () => {
                     No messages yet
                   </h4>
                 ) : (
-                  selectedUser.messages &&
-                  selectedUser.messages.map((data, index) => {
+                  messageArray &&
+                  messageArray.map((data, index) => {
                     const {
                       senderId,
                       recepientId,
@@ -390,31 +512,30 @@ const CoachAgentScoutVersionInbox = () => {
                     } = data;
 
                     // Assuming userLoginDetailsObject contains the accountId of the logged-in user
-                    const loggedInUserAccountId =
-                      userLoginDetailsObject?.accountId;
 
-                    if (senderId === loggedInUserAccountId) {
+                    if (senderId === userLoginDetailsObject?.accountId) {
                       return (
                         <LoginUserMessage
                           key={index}
                           message={message}
                           dateSent={dateSent}
-                          profileImage={""}
+                          profileImage={userLoginDetailsObject?.profileImage}
                         />
                       );
-                    } else {
+                    } else if (
+                      senderId === selectedUserDetailsObject?.contactId
+                    ) {
                       return (
                         <OtherUserMessage
                           key={index}
                           message={message}
                           dateSent={dateSent}
-                          profileImage={""}
+                          profileImage={selectedUserDetailsObject?.profileImage}
                         />
                       );
                     }
                   })
                 )}
-                ;
               </div>
 
               {/* // TEXT FIELD AND SEND BUTTON AREA */}
@@ -451,7 +572,7 @@ const CoachAgentScoutVersionInbox = () => {
                 >
                   <IconButton
                     onClick={() => {
-                      handleMessageSend(selectedUser?.contactId);
+                      handleMessageSend(selectedUserDetailsObject?.contactId);
                     }}
                     sx={{ marginLeft: ".5vw" }}
                   >
@@ -470,6 +591,11 @@ const CoachAgentScoutVersionInbox = () => {
 export default CoachAgentScoutVersionInbox;
 
 const OtherUserMessage = ({ message, dateSent, profileImage }) => {
+  const parsedTimestamp = new Date(dateSent);
+  const formattedRelativeTime = formatDistanceToNow(parsedTimestamp, {
+    addSuffix: true,
+  });
+
   return (
     <li
       className="md:flex md:flex-col  sm:flex sm:flex-col"
@@ -477,7 +603,7 @@ const OtherUserMessage = ({ message, dateSent, profileImage }) => {
         padding: "0vh 1vw",
         // display: "flex",
         // flexDirection: "column",
-        background: "red",
+        // background: "red",
       }}
     >
       <div
@@ -522,6 +648,10 @@ const OtherUserMessage = ({ message, dateSent, profileImage }) => {
 };
 
 const LoginUserMessage = ({ message, dateSent, profileImage }) => {
+  const parsedTimestamp = new Date(dateSent);
+  const formattedRelativeTime = formatDistanceToNow(parsedTimestamp, {
+    addSuffix: true,
+  });
   return (
     <li
       className="md:flex md:flex-col  sm:flex sm:flex-col"

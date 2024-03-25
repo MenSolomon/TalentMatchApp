@@ -22,10 +22,7 @@ import {
   Search,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInAgencySlice";
-import PlayerViewCardFromPlayersScreen from "../Cards/PlayerViewCardFromPlayersScreen";
 import GroupedRadio from "../../../../components/Radio/GroupedRadio";
-import BasicAutoComplete from "../../../../components/Autocompletes/BasicAutoComplete";
 import BasicSelect from "../../../../components/Selects/BasicSelect";
 import ClubAutoComplete from "../../../../components/Autocompletes/ClubAutoComplete";
 import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";

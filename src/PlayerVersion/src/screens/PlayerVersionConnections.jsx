@@ -1,53 +1,35 @@
-import {
-  Circle,
-  Delete,
-  EmojiEmotions,
-  Reply,
-  Search,
-  Send,
-} from "@mui/icons-material";
+import { EmojiEmotions, Send } from "@mui/icons-material";
 import {
   Avatar,
   Button,
   CircularProgress,
   IconButton,
-  InputAdornment,
-  Pagination,
   TextField,
 } from "@mui/material";
 
-import avatarImage from "../assets/images/avatar.jpg";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
-import { v4 } from "uuid";
 import {
   addDoc,
   collection,
   deleteDoc,
-  doc,
   getDocs,
-  onSnapshot,
   query,
-  setDoc,
   where,
 } from "firebase/firestore";
 import { auth, db } from "../../../Firebase/Firebase";
-import moment from "moment/moment";
-import { selectuserMessages } from "../../../statemanager/slices/MessagesSlice";
-import CountrySelect from "../components/AutoComplete/CountrySelect";
+// import CountrySelect from "../components/AutoComplete/CountrySelect";
 import { useQuery } from "@tanstack/react-query";
-import ScoutsDisplayCard from "../components/Cards/ScoutsDisplayCard";
 import BasicSelect from "../../../components/Selects/BasicSelect";
 import {
-  setSnackbarMessage,
-  setSnackbarTriggerCounter,
   setWarningAlertModalCounter,
   setWarningAlertModalMessage,
 } from "../../../statemanager/slices/OtherComponentStatesSlice";
-import MessageContactCardForConnectionsScreen from "../components/Cards/MessageContactCardForConnectionsScreen";
+import CountrySelect from "../../../CoachAgentScoutVersion/src/components/AutoComplete/CountrySelect";
+import ScoutsDisplayCard from "../../../CoachAgentScoutVersion/src/components/Cards/ScoutsDisplayCard";
 
-const CoachAgentScoutVersionConnetions = () => {
+const PlayerVersionConnections = () => {
   const dispatch = useDispatch();
   const [selectedUser, setSelectedUser] = useState([]);
   const [countryCode, setCountryCode] = React.useState("");
@@ -57,68 +39,9 @@ const CoachAgentScoutVersionConnetions = () => {
   const [role, setRole] = useState("Agent");
   const { accountId } = userLoginDetailsObject;
 
-  const connection = userLoginDetailsObject?.AgentandScoutConnections;
-
   const triggerWarningAlertModal = (message) => {
     dispatch(setWarningAlertModalMessage(message));
     dispatch(setWarningAlertModalCounter());
-  };
-
-  const submitConnectionRequest = async (
-    targetedAccountID,
-    targetedAccountName,
-    targetedAccountRole
-  ) => {
-    const uuid = v4();
-
-    alert(targetedAccountID);
-
-    // FOR PLAYER ACC HOLDER
-    const userNotificationRef = doc(
-      db,
-      `users_db/${userLoginDetailsObject.accountId}/Notifications`,
-      uuid
-    );
-
-    /// FOR SELF
-    const scoutNotificationRef = doc(
-      db,
-      `users_db/${targetedAccountID}/Notifications`,
-      uuid
-    );
-
-    //Notification sent
-
-    await setDoc(userNotificationRef, {
-      NotificationId: uuid,
-      requestAccepted: false,
-      dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-      senderAddress: userLoginDetailsObject.email,
-      senderId: userLoginDetailsObject.accountId,
-      type: "Connection request",
-      message: `Your interest with ${targetedAccountName} has been established`,
-      readStatus: false,
-      targetAccountRole: targetedAccountRole,
-    });
-
-    await setDoc(scoutNotificationRef, {
-      NotificationId: uuid,
-      requestAccepted: false,
-      dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-      senderAddress: userLoginDetailsObject.email,
-      senderId: userLoginDetailsObject.accountId,
-      type: "Connection request",
-      message: `${userLoginDetailsObject.firstName} has shown interest in your profile. Accept to view message sent`,
-      readStatus: false,
-      targetAccountRole: targetedAccountRole,
-    });
-
-    dispatch(
-      setSnackbarMessage(
-        `You have succesfully requested a connection with ${targetedAccountName}`
-      )
-    );
-    dispatch(setSnackbarTriggerCounter());
   };
 
   // function to add scounts and agents to connections
@@ -179,7 +102,7 @@ const CoachAgentScoutVersionConnetions = () => {
           return agentOrScoutFullName !== currentUserName; // Strict equality check
         });
 
-        // console.log("currentUserFilteredOut", currentUserFilteredOut);
+        console.log("currentUserFilteredOut", currentUserFilteredOut);
         return currentUserFilteredOut;
       } catch (error) {
         console.log(error);
@@ -237,10 +160,10 @@ const CoachAgentScoutVersionConnetions = () => {
 
         // Extract the data from the documents
         const queryConnectionsSnap = snapshot.docs.map((doc) => doc.data());
-        // console.log(
-        //   "agentAndScoutsInConnectionsList",
-        //   agentAndScoutsInConnectionsList
-        // );
+        console.log(
+          "agentAndScoutsInConnectionsList",
+          agentAndScoutsInConnectionsList
+        );
         // Return the data (no need for unnecessary parenthesis)
         return queryConnectionsSnap;
       } catch (error) {
@@ -249,49 +172,6 @@ const CoachAgentScoutVersionConnetions = () => {
     },
     refetchOnWindowFocus: false,
   });
-
-  // Retreive all connections
-
-  const AaallUsersAndMessages = userLoginDetailsObject?.Connections;
-  const allScoutsandAgentsConnections =
-    userLoginDetailsObject?.AgentandScoutConnections;
-  const [connections, setConnections] = useState([]);
-  let isDocumentsRetrieved = false; // Flag to track if documents are retrieved
-  async function retrieveDocuments() {
-    if (!isDocumentsRetrieved) {
-      // Check if documents are already retrieved
-      isDocumentsRetrieved = true; // Update flag to indicate retrieval
-
-      const items = []; // Array to store documents
-
-      try {
-        const videosQuery = query(
-          collection(db, `users_db`),
-          where("accountId", "in", [
-            ...AaallUsersAndMessages,
-            ...allScoutsandAgentsConnections,
-          ])
-        );
-
-        const videosSnapshot = await getDocs(videosQuery);
-
-        videosSnapshot.forEach((doc) => {
-          items.push(doc.data());
-        });
-
-        // Now items array contains all the documents
-        console.log(items);
-        setConnections(items);
-      } catch (error) {
-        console.log("Error getting documents: ", error);
-      }
-    }
-  }
-
-  useEffect(() => {
-    retrieveDocuments();
-  }, []);
-
   return (
     <div
       className="primaryTextColor md:gap-[1em] md:flex-row md:flex md:w-[100%] md:h-[100%]    sm:flex sm:w-[100%] sm:gap-[3.5em] sm:flex-col sm:h-[100%]"
@@ -313,10 +193,10 @@ const CoachAgentScoutVersionConnetions = () => {
           <h5 style={{ fontWeight: "bolder", margin: "0" }}>Connections</h5>
           <h6 className="">Filter</h6>
           {/* <span style={{ fontSize: ".8em" }}>
-            102Messages <Circle sx={{ width: 7 }} /> 40 unread
-          </span> */}
+              102Messages <Circle sx={{ width: 7 }} /> 40 unread
+            </span> */}
           {/* // SEARCH INBOX */}
-          <div className="md:inline-flex md:gap-[1.5vw] ">
+          <div className="md:inline-flex">
             {/* Country Select */}
             <CountrySelect
               className="sm:w-[80%] md:w-[90%]"
@@ -351,46 +231,33 @@ const CoachAgentScoutVersionConnetions = () => {
 
         {/* //  CONNECTIONS */}
         <div
-          className="md:basis-[70%] md:mt-[2vh] sm:flex-col sm:flex sm:flex-shrink-0 sm:basis-[70%] content-center"
+          className="md:basis-[70%] sm:flex-col sm:flex sm:flex-shrink-0 sm:basis-[70%] content-center"
           style={{ overflowY: "scroll" }}>
           {countryName === ""
-            ? agentAndScoutsList
-                ?.filter((agent) => !connections.includes(agent.accountId))
-                .map((person) => {
-                  return (
-                    <div
-                      className="sm:min-h-1vh md:min-h-0.5vh "
-                      key={person.accountId}>
-                      <ScoutsDisplayCard
-                        style={{ width: "25vw", height: "15vh" }}
-                        AgencyName={person.organization}
-                        UserName={`${person.firstName} ${person.surname}`}
-                        playerImageUrl={person.profileImage}
-                        handleConnect={() => {
-                          submitConnectionRequest(
-                            person.accountId,
-                            `${person.firstName} ${person.surname}`,
-                            person.role
-                          );
-                          // handleConnection(person);
-                        }}
-                      />
-                    </div>
-                  );
-                })
+            ? agentAndScoutsList?.map((person) => {
+                return (
+                  <div
+                    className="sm:min-h-1vh md:min-h-0.5vh"
+                    key={person.accountId}>
+                    <ScoutsDisplayCard
+                      AgencyName={person.organization}
+                      UserName={`${person.firstName} ${person.surname}`}
+                      handleConnect={() => {
+                        handleConnection(person);
+                      }}
+                    />
+                  </div>
+                );
+              })
             : agentAndScoutsList
-                ?.filter((agent) => !connection.includes(agent.accountId))
-                .filter(
+                ?.filter(
                   (person) =>
                     person.Nationality === countryName && person.role === role
                 )
-                .map((filtered, index) => {
+                .map((filtered) => {
                   return (
-                    <div
-                      key={index}
-                      className="sm:min-h-1vh md:min-h-0.5vh md:w-[5vw]">
+                    <div className="sm:min-h-1vh md:min-h-0.5vh">
                       <ScoutsDisplayCard
-                        style={{ width: "25vw", height: "15vh" }}
                         AgencyName={filtered.organization}
                         UserName={`${filtered.firstName} ${filtered.surname}`}
                         handleConnect={() => handleConnection(filtered)}
@@ -403,43 +270,141 @@ const CoachAgentScoutVersionConnetions = () => {
 
       {/* USER ADDED CONNECTIONS */}
       <div
-        // cardBackground
-        className=" md:flex md:flex-col md:pl-[1.5vw] md:basis-[40%]  sm:basis-[40%]      sm:flex sm:flex-shrink-0 sm:flex-col sm:pl-[0vw]"
+        className="cardBackground md:flex md:flex-col md:pl-[1.5vw] md:basis-[40%]  sm:basis-[40%]      sm:flex sm:flex-shrink-0 sm:flex-col sm:pl-[0vw]"
         style={{
           // flex: ".65",
           // background: "red",
-          display: "flex",
-          flexDirection: "column",
+          // display: "flex",
+          // flexDirection: "column",
           // paddingLeft: "1.5vw",
           borderRadius: "1vw",
           overflowY: "scroll",
         }}>
         {/* // Pagination and delete message area */}
         {/* style={{ flex: "1", display: "grid", placeContent: "center" }} */}
-        Filter for player connections and agent/scout connections
-        {AaallUsersAndMessages === undefined ||
-        AaallUsersAndMessages?.length === 0 ? (
-          <h4 className="primaryTextColor" style={{ textAlign: "center" }}>
-            No contacts yet
-          </h4>
+        {selectedUser.length === 0 ? (
+          <div className="md:basis-[100%] md:grid md:place-content-center    sm:basis-[100%] sm:grid sm:place-content-center">
+            {agentAndScoutsInConnectionsList === null ? (
+              <h5 style={{ textAlign: "center" }}>See connections here</h5>
+            ) : isfetchingAgentAndScoutsInConnectionsList ? (
+              <CircularProgress />
+            ) : (
+              agentAndScoutsInConnectionsList?.map((connections) => {
+                return (
+                  <div className="sm:min-h-1vh md:min-h-0.5vh">
+                    <ScoutsDisplayCard
+                      AgencyName={connections.organization}
+                      UserName={`${connections.firstName} ${connections.surname}`}
+                      handleDelete={() => handleDelete(connections.accountId)}
+                      deleteBtnVisible={true}
+                    />
+                  </div>
+                );
+              })
+            )}
+          </div>
         ) : (
-          connections.map((data, key) => {
-            return (
-              <span style={{ marginBottom: "1vh", marginTop: "1vh" }} key={key}>
-                <MessageContactCardForConnectionsScreen
-                  profileImage={data?.profileImage}
-                  profileName={`${data?.firstName} ${data?.surname}`}
-                  time={""}
-                  message={""}
-                  accountId={data?.accountId}
-                />{" "}
-              </span>
-            );
-          })
+          <>
+            <div
+              style={{
+                flex: ".12",
+                background: "yellow",
+                borderBottom: "1px solid #f2f2f2",
+                display: "flex",
+              }}>
+              <div
+                style={{
+                  flex: ".35",
+                  // background: "red",
+                  display: "flex",
+                  padding: ".2vw",
+                  gap: ".4vw",
+                  // alignItems: "center",
+                  // justifyContent: "center",
+                }}>
+                <div style={{ flex: ".26" }}>
+                  <Avatar src={""} sx={{ width: 50, height: 50 }} />
+                </div>
+                <div style={{ flex: ".74" }}>
+                  <div>{selectedUser.name}</div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: ".3vw",
+                      alignItems: "center",
+                      // justifyContent: "center",
+                    }}>
+                    <div
+                      style={{
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        background: "green",
+                      }}></div>{" "}
+                    <div style={{ fontSize: ".7em" }}>Online</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                flex: ".88",
+                // background: "white",
+                paddingTop: ".5vh",
+                color: "black",
+                display: "flex",
+                flexDirection: "column",
+                maxHeight: "75vh",
+              }}>
+              <div style={{ flex: ".85", overflowY: "scroll" }}></div>
+
+              {/* // TEXT FIELD AND SEND BUTTON AREA */}
+              <div style={{ flex: ".15", display: "flex" }}>
+                <div
+                  style={{
+                    flex: ".1",
+                    // background: "red",
+                  }}>
+                  <IconButton sx={{ marginLeft: ".5vw" }}>
+                    <EmojiEmotions sx={{ color: "#5585FE" }} />
+                  </IconButton>
+                </div>
+
+                <div style={{ flex: ".8" }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Outlined"
+                    variant="outlined"
+                    multiline
+                    fullWidth
+                    maxRows={4}
+                    minRows={1}
+                    value={messageText}
+                    onChange={(e) => [setMessageText(e.target.value)]}
+                  />
+                </div>
+                <div
+                  style={{
+                    flex: ".1",
+                    // background: "red",
+                  }}>
+                  <IconButton
+                    onClick={() => {
+                      handleMessageSend(selectedUser?.contactId);
+                    }}
+                    sx={{ marginLeft: ".5vw" }}>
+                    <Send sx={{ color: "#5585FE" }} />
+                  </IconButton>
+                </div>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>
   );
 };
 
-export default CoachAgentScoutVersionConnetions;
+export default PlayerVersionConnections;

@@ -22,8 +22,6 @@ import {
   Search,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInAgencySlice";
-import PlayerViewCardFromPlayersScreen from "../Cards/PlayerViewCardFromPlayersScreen";
 import DatePickerTool from "../../../../components/DatePicker/DatePicker";
 import GroupedRadio from "../../../../components/Radio/GroupedRadio";
 import BasicAutoComplete from "../../../../components/Autocompletes/BasicAutoComplete";
@@ -256,7 +254,6 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
   const triggerWarningAlertModal = (message) => {
     dispatch(setWarningAlertModalMessage(message));
     dispatch(setWarningAlertModalCounter());
-    console.log(userLoginObject?.playersInPossession.length);
   };
 
   const onSubmit = (formData, e) => {
@@ -404,6 +401,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                 id: uuid,
                 Account_creator_id: userLoginObject?.accountId,
                 // ... (other fields)
+                boostPoints: 0,
                 player_profile_image: url,
                 firstName: FirstName,
                 surName: Surname,
@@ -1296,13 +1294,13 @@ export default function UploadPlayerToAgencyModal() {
   const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
   const subscriptionStatus = useSelector(selectIsSubscriptionActive);
   // state to hold maximum number of profiles
-  const { maxProfiles } = subscriptionFeaturesObject;
+  const { maxPlayersInAgency } = subscriptionFeaturesObject;
   // state to hold subscription status
 
   const handleOpen = () => {
-    // console.log(maxProfiles);
     if (subscriptionStatus === true) {
-      if (userLoginObject?.playersInPossession.length < maxProfiles) {
+      if (userLoginObject?.playersInPossession.length < maxPlayersInAgency) {
+        // console.log(userLoginObject?.playersInPossession.length);
         setOpen(true);
       } else {
         triggerWarningAlertModal(

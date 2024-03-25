@@ -1,19 +1,47 @@
-import { Avatar, Button, IconButton } from "@mui/material";
+import { Avatar, Button, Chip, IconButton, Switch } from "@mui/material";
 import BoxIcon from "../components/Icons/BoxIcon";
 import VideoImage from "../assets/images/videoImage.svg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../statemanager/slices/ThemeProviderSlice";
 import UploadVideoModal from "../components/Modals/UploadVideosModal";
 import NewsCard from "../../../components/Cards/NewsCard/NewsCard";
-import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
+import {
+  selectSubscriptionFeatures,
+  selectUserDetailsObject,
+} from "../../../statemanager/slices/LoginUserDataSlice";
 import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { useQuery } from "@tanstack/react-query";
+import {
+  setContactSelectedForMessaging,
+  setWarningAlertModalCounter,
+  setWarningAlertModalMessage,
+} from "../../../statemanager/slices/OtherComponentStatesSlice";
+import { db } from "../../../Firebase/Firebase";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
 
 const PlayerVersionDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
-
+  const dispatch = useDispatch();
   const { primaryTextColor } = ThemeProvider;
 
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
+  const [latestMessages, setLatestMessages] = useState([]);
+
+  const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
+  const { accountId } = userLoginDetailsObject;
+  // state to manage ability to set visibility
+  const { canHideVisibility } = subscriptionFeaturesObject;
   const playerDatabase = useSelector(selectPlayersDatabase);
 
   const playerProfileObject = playerDatabase.find((data) => {
@@ -56,6 +84,138 @@ const PlayerVersionDashboard = () => {
     },
   ];
 
+  // triggerWarningAlertModal
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
+  // function to set profile visibility
+  const handleVisibility = async (event) => {
+    if (canHideVisibility == true) {
+      // setIsVisible(event.target.checked);
+      if (event.target.checked === true) {
+        const canHideVisibilityRef = doc(db, `users_db`, accountId);
+        await updateDoc(canHideVisibilityRef, {
+          isVisible: true,
+        });
+        fetchIsVisibleFn();
+      } else if (event.target.checked === false) {
+        const canHideVisibilityRef = doc(db, `users_db`, accountId);
+        await updateDoc(canHideVisibilityRef, {
+          isVisible: false,
+        });
+        fetchIsVisibleFn();
+      }
+    } else if (canHideVisibility == false) {
+      triggerWarningAlertModal(
+        "Upgrade subscription to change profile visibility"
+      );
+    }
+  };
+
+  // usequery to get isVisible value
+
+  const fetchIsVisible = async () => {
+    const canHideVisibilityRef = doc(db, `users_db`, accountId);
+    const canHideVisibilitySnap = await getDoc(canHideVisibilityRef);
+    // console.log(canHideVisibilitySnap.data().isVisible);
+    return canHideVisibilitySnap.exists()
+      ? canHideVisibilitySnap.data().isVisible
+      : [];
+  };
+
+  const {
+    status,
+    data: canHideVisibilityValue,
+    error,
+    refetch: fetchIsVisibleFn,
+  } = useQuery({ queryKey: ["fetchIsVisible"], queryFn: fetchIsVisible });
+
+  /// BLOCK FOR RETRIEVEING RECENT MESSAGES
+
+  const compareDates = (a, b) => {
+    const dateA = new Date(a.dateSent);
+    const dateB = new Date(b.dateSent);
+    return dateB - dateA;
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const items = []; // Array to store messages
+      const usersItems = []; // Array to store user profiles
+
+      if (userLoginDetailsObject && userLoginDetailsObject.Connections) {
+        // Fetch messages for each connection
+        // *********** Retrieving all messages *********
+        for (const connection of userLoginDetailsObject.Connections) {
+          const querySnapshot = await getDocs(
+            collection(
+              db,
+              `Chats/${userLoginDetailsObject.accountId}/Contacts/Messages/${connection}`
+            )
+          );
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+            items.push(doc.data());
+          });
+        }
+
+        // Retrieve all data of user docs in the  connections  ***************
+        try {
+          const senderIds = items.map((message) => message.senderId);
+          const usersQuery = query(
+            collection(db, `users_db`),
+            where("accountId", "in", senderIds)
+          );
+          const usersSnapshot = await getDocs(usersQuery);
+          usersSnapshot.forEach((doc) => {
+            usersItems.push(doc.data());
+          });
+
+          // Adding profileImage to filtered messages ***************
+          items.forEach((message) => {
+            const sender = usersItems.find(
+              (user) => user.accountId === message.senderId
+            );
+            if (sender) {
+              message.profileImage = sender.profileImage;
+            }
+          });
+
+          /// Getting the latest message of each connection *************
+          const groupedMessages = {};
+          items.forEach((message) => {
+            if (
+              !(message.senderId in groupedMessages) ||
+              new Date(message.dateSent) >
+                new Date(groupedMessages[message.senderId].dateSent)
+            ) {
+              groupedMessages[message.senderId] = message;
+            }
+          });
+
+          // Convert groupedMessages object to array
+          const latestMessagesTempDB = Object.values(groupedMessages);
+
+          setLatestMessages(
+            latestMessagesTempDB
+              .filter(
+                (data) => data.senderId !== userLoginDetailsObject.accountId
+              )
+              .sort(compareDates)
+          );
+
+          // Do something with the latest messages
+          console.log(latestMessagesTempDB, "latestMessage");
+        } catch (error) {
+          console.log("Error getting documents: ", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [userLoginDetailsObject]);
+
   return (
     <div
       className="md:flex md:flex-col md:h-[100%] md:w-[100%] sm:flex sm:flex-col sm:h-[100%] sm:w-[100%]"
@@ -69,10 +229,22 @@ const PlayerVersionDashboard = () => {
       }
     >
       {/* // Heading Area */}
-      <div className="md:basis-[10%] sm:basis-[10%]">
+      <div className="md:basis-[10%] sm:basis-[10%] grid md:grid-cols-2 sm:grid-cols-2">
         <h3 style={{ margin: 0, float: "left" }} className="primaryTextColor">
           Profile dashboard
-        </h3>{" "}
+        </h3>
+        <div className="flex justify-self-end">
+          <Switch
+            checked={canHideVisibilityValue}
+            onChange={handleVisibility}
+            inputProps={{ "aria-label": "controlled" }}
+          />
+          <Chip
+            variant="contained"
+            label={canHideVisibilityValue ? "Visible" : "Hidden"}
+            color={canHideVisibilityValue ? "success" : "error"}
+          />
+        </div>
       </div>
 
       {/* // Cards  (upload video card , analytics summary card and other information card) */}
@@ -209,21 +381,32 @@ const PlayerVersionDashboard = () => {
                 maxHeight: "26vh",
               }}
             >
-              {dummyRecentMessages.map((data, index) => {
-                const { message, userAvatar, date, userName } = data;
+              {latestMessages.length === 0 ? (
+                <span>No messages yet</span>
+              ) : (
+                latestMessages.map((data, index) => {
+                  const {
+                    message,
+                    senderId,
+                    senderName,
+                    profileImage,
+                    dateSent,
+                  } = data;
 
-                return (
-                  <div key={index}>
-                    <RecentMessageCard
-                      message={message}
-                      userAvatar={userAvatar}
-                      date={date}
-                      userName={userName}
-                    />
-                    {/* <br /> */}
-                  </div>
-                );
-              })}
+                  return (
+                    <div key={index}>
+                      <RecentMessageCard
+                        message={message}
+                        userAvatar={profileImage}
+                        date={dateSent}
+                        userName={senderName}
+                        accountId={senderId}
+                      />
+                      {/* <br /> */}
+                    </div>
+                  );
+                })
+              )}
               <br />
             </div>
           </div>
@@ -262,7 +445,33 @@ const PlayerVersionDashboard = () => {
 
 export default PlayerVersionDashboard;
 
-const RecentMessageCard = ({ message, userAvatar, date, userName }) => {
+const RecentMessageCard = ({
+  message,
+  userAvatar,
+  date,
+  userName,
+  accountId,
+}) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleMessageUserSelect = () => {
+    // alert(accountId, " for messaging");
+    dispatch(
+      setContactSelectedForMessaging({
+        contactId: accountId,
+        name: userName,
+        profileImage: userAvatar,
+      })
+    );
+
+    navigate("/multiStudio/messages");
+  };
+
+  const parsedTimestamp = new Date(date);
+  const formattedRelativeTime = formatDistanceToNow(parsedTimestamp, {
+    addSuffix: true,
+  });
   return (
     <div
       className="md:20vw md:h-[10vh]  sm:20vw sm:h-[10vh]"
@@ -275,6 +484,7 @@ const RecentMessageCard = ({ message, userAvatar, date, userName }) => {
         padding: ".3vw",
         cursor: "pointer",
       }}
+      onClick={handleMessageUserSelect}
     >
       <div style={{ flex: ".22" }}>
         <Avatar src={userAvatar} sx={{ width: 50, height: 50 }} />
@@ -284,7 +494,9 @@ const RecentMessageCard = ({ message, userAvatar, date, userName }) => {
         <div>
           {" "}
           <span style={{ fontWeight: "bolder" }}> {userName} </span>{" "}
-          <span style={{ float: "right" }}>{date} </span>
+          <span style={{ float: "right", fontSize: ".7em" }}>
+            {formattedRelativeTime}{" "}
+          </span>
         </div>
         <p>{message?.length === 20 ? `${message}...` : message}</p>{" "}
       </div>

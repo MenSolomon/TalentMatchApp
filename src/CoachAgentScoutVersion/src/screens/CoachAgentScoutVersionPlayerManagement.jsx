@@ -1,13 +1,26 @@
-import { Avatar, Card, IconButton, Tooltip } from "@mui/material";
+import {
+  Alert,
+  Avatar,
+  Badge,
+  Card,
+  Chip,
+  CircularProgress,
+  IconButton,
+  Snackbar,
+  Tooltip,
+} from "@mui/material";
 import PlayerManagementTabs from "../components/Tabs/PlayerManagementTabs";
-import { selectPlayersInAgencyArray } from "../statemanager/slices/PlayersInAgencySlice";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Facebook, Instagram, Twitter } from "@mui/icons-material";
+import {
+  CheckCircleOutline,
+  ErrorOutline,
+  Facebook,
+  Instagram,
+  Twitter,
+} from "@mui/icons-material";
 import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
-import BasicButton from "../../../components/Buttons/BasicButton";
-import BasicButtonWithEndIcon from "../../../components/Buttons/BasicButtonWithEndIcon";
 import EditPlayerProfileModal from "../components/Modals/EditPlayerModal";
 import TransferPlayerModal from "../components/Modals/TransferPlayerModal";
 import {
@@ -16,23 +29,49 @@ import {
 } from "../../../statemanager/slices/PlayersInAgencySlice";
 import ConfirmClubExitModal from "../components/Modals/ConfirmClubExitModal";
 import { selectPlayersDatabase } from "../../../statemanager/slices/DatabaseSlice";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../../Firebase/Firebase";
+import BasicButtonWithEndIcon from "../../../components/Buttons/BasicButtonWithEndIcon";
+import {
+  selectCurrentBrowserSize,
+  setWarningAlertModalCounter,
+  setWarningAlertModalMessage,
+} from "../../../statemanager/slices/OtherComponentStatesSlice";
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { useQuery } from "@tanstack/react-query";
 
 const CoachAgentScoutVersionPlayerManagement = () => {
   const { playerId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userLoginObject = useSelector(selectUserDetailsObject);
+  const browserSize = useSelector(selectCurrentBrowserSize);
+  let browserWidth = parseInt(browserSize?.width, 10);
   const currentPlayerInfoObject = useSelector(
     selectPlayerSelectedByClubOrScoutInPlayerManagement
   );
+  const [isBoosting, setIsBoosting] = useState(false);
   const [filteredPlayerArray, setFilteredPlayerArray] = useState([]);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [alertMessage, setAlertMessage] = useState();
+  const handleCloseSnackBar = () => {
+    setOpenSnackBar(false);
+  };
   const [playerData, setPlayerData] = useState({
     firstName: "",
     surName: "",
     player_profile_image: "",
     Age: "",
+    boostPoints: "",
+    id: "",
     position: "",
     jerseyNumber: "",
     clubName: "",
@@ -128,6 +167,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         surName,
         player_profile_image,
         Age,
+        boostPoints,
+        id,
         position,
         jerseyNumber,
         clubName,
@@ -136,12 +177,14 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         Social_media,
       } = filteredPlayerArray[0];
 
-      console.log(Social_media, "Social_media");
+      // console.log(Social_media, "Social_media");
       setPlayerData({
         firstName,
         surName,
         player_profile_image,
         Age,
+        boostPoints,
+        id,
         position,
         jerseyNumber,
         clubName,
@@ -156,6 +199,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         surName: "",
         player_profile_image: "",
         Age: "",
+        boostPoints: "",
+        id: "",
         position: "",
         jerseyNumber: "",
         CountryCode: "",
@@ -163,9 +208,38 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         Social_media: [],
       });
     }
-  }, [filteredPlayerArray]);
+  }, [filteredPlayerArray, openSnackBar]);
 
-  // Retriving Videos of
+  const fetchPlayerBoostPoints = async (key) => {
+    try {
+      const playerRef = doc(
+        db,
+        `players_database/${currentPlayerInfoObject?.id}`
+      );
+      const playerSnap = await getDoc(playerRef);
+      const playerSnapBoostPoint = playerSnap.data().boostPoints;
+
+      return playerSnapBoostPoint;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const {
+    status,
+    data: playerBoostPoints,
+    error,
+    refetch: refetchPlayerBoostPoints,
+  } = useQuery({
+    queryKey: ["fetchPlayerBoostPoints"],
+    queryFn: fetchPlayerBoostPoints,
+    refetchOnMount: true,
+  });
+
+  const triggerWarningAlertModal = (message) => {
+    dispatch(setWarningAlertModalMessage(message));
+    dispatch(setWarningAlertModalCounter());
+  };
 
   // Destructuring the items of playerData
 
@@ -173,6 +247,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     firstName,
     surName,
     Age,
+    boostPoints,
+    id,
     player_profile_image,
     position,
     jerseyNumber,
@@ -186,6 +262,26 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     // Open the link in a new tab or window
     window.open(link, "_blank");
   };
+
+  // const handleaddboost = async () => {
+  //   const playersRef = collection(db, "players_database");
+
+  //   try {
+  //     const snapshot = await getDocs(playersRef);
+  //     const updatePromises = []; // Array to store promises for individual updates
+
+  //     snapshot.forEach((doc) => {
+  //       const updatePromise = updateDoc(doc.ref, { boostPoints: 0 });
+  //       updatePromises.push(updatePromise);
+  //     });
+
+  //     await Promise.all(updatePromises); // Wait for all updates to finish
+  //     console.log("Boost points reset successfully for all players.");
+  //   } catch (error) {
+  //     console.error("Error resetting boost points:", error);
+  //     // Handle errors appropriately, e.g., notifying user or logging the error
+  //   }
+  // };
   return (
     <div
       className="md:w-[100%] md:h-[100%] md:flex md:flex-col md:gap-[0px]   sm:gap-[50px]   sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
@@ -212,6 +308,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
           }}
         >
           {/* // Image Canvas */}
+
           <Card
             className="md:w-[8.5vw] md:h-[18vh] md:float-right  sm:float-left sm:w-[30vw] sm:h-[18vh]"
             style={{
@@ -252,6 +349,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
           style={{ flex: ".6", paddingLeft: "1vw" }}
         >
           <h2 style={{ margin: "0" }}> {firstName} </h2>
+
           <h1 style={{ margin: "0" }}>{surName} </h1>
         </div>
         {/* Jersey Number*/}
@@ -266,7 +364,6 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         // style={{ background: "red" }}
       >
         {/* Player basic information */}
-
         <div
           className=" sm:basis-[22%]  md:basis-[22%]"
           style={{
@@ -310,6 +407,17 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             <div style={{ flex: ".08", display: "flex" }}>
               <h6 style={{ width: "100%", fontWeight: "bolder" }}>
                 Position :<span style={{ float: "right" }}>{position}</span>
+              </h6>
+            </div>
+
+            {/* Postion Area */}
+            <div style={{ flex: ".08", display: "flex" }}>
+              <h6 style={{ width: "100%", fontWeight: "bolder" }}>
+                Boost Points :
+                <Chip
+                  label={playerBoostPoints}
+                  sx={{ backgroundColor: "#F7B900" }}
+                />
               </h6>
             </div>
 
@@ -371,14 +479,54 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               {/* // Edit Profile button */}
               {/*  */}
               <EditPlayerProfileModal />
+              {isBoosting ? (
+                <CircularProgress />
+              ) : (
+                <BasicButtonWithEndIcon
+                  innerText={"Boost"}
+                  endIcon={"bolt"}
+                  style={{
+                    width: browserWidth >= 1024 ? "9vw" : "40vw",
+                    height: "6vh",
+                    marginBottom: "1.5vh",
+                  }}
+                  onClick={async () => {
+                    setIsBoosting(true);
 
+                    try {
+                      const functions = getFunctions();
+                      const incrementBoostFn = httpsCallable(
+                        functions,
+                        "incrementBoost"
+                      );
+                      const result = await incrementBoostFn({
+                        id: currentPlayerInfoObject.id,
+                      });
+                      if (result) {
+                        console.log("result", result);
+                        setAlertMessage(`${result.data.message}`);
+                        setIsBoosting(false);
+                        setOpenSnackBar(true);
+                        // refetch the boostpoints
+                        refetchPlayerBoostPoints();
+                      } else if (result == undefined || result == null) {
+                        setIsBoosting(false);
+                      }
+                    } catch (error) {
+                      console.log("cloudFn Error", error);
+                    }
+                    // triggerWarningAlertModal(`${result.data.message}`)
+
+                    // console.log(result)
+                  }}
+                />
+              )}
               {userLoginObject?.role === "Club" ? <TransferPlayerModal /> : ""}
 
               {userLoginObject?.role === "Club" ? <ConfirmClubExitModal /> : ""}
             </div>
           </Card>
         </div>
-
         {/* // TABS AND SUBSCREEMS SECTION */}
         <div className="md:basis-[78%] sm:basis-[78%]">
           <PlayerManagementTabs
@@ -386,13 +534,30 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               userLoginObject?.role === "Club"
                 ? subscreensTabArrayClubVersion
                 : userLoginObject?.role === "Coach" ||
-                  userLoginObject?.role === "Scout"
+                  userLoginObject?.role === "Scout" ||
+                  userLoginObject?.role === "Agent"
                 ? subscreensTabArrayScoutAndCoach
                 : subscreensTabArrayEmpty
             }
           />
         </div>
       </div>
+      <Snackbar
+        open={openSnackBar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackBar}>
+        <Alert
+          icon={
+            alertMessage == "Boost completed" ? (
+              <CheckCircleOutline fontSize="inherit" />
+            ) : (
+              <ErrorOutline fontSize="inherit" />
+            )
+          }
+          severity={alertMessage == "Boost completed" ? "success" : "error"}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

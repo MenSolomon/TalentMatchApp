@@ -5,8 +5,9 @@ import {
   setContactSelectedForMessaging,
 } from "../../../../statemanager/slices/OtherComponentStatesSlice";
 import { formatDistanceToNow } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
-const MessageContactCard = ({
+const MessageContactCardForConnectionsScreen = ({
   profileImage,
   message,
   time,
@@ -14,6 +15,7 @@ const MessageContactCard = ({
   accountId,
 }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleMessageUserSelect = () => {
     // alert(accountId, " for messaging");
@@ -24,6 +26,8 @@ const MessageContactCard = ({
         profileImage: profileImage,
       })
     );
+
+    navigate("/multiStudio/messages");
   };
 
   const selectedContactDetails = useSelector(selectContactSelectedForMessaging);
@@ -41,10 +45,7 @@ const MessageContactCard = ({
         borderRadius: ".5vw",
         paddingTop: "1vh",
         paddingRight: ".5vw",
-        borderBottom:
-          selectedContactDetails.contactId === accountId
-            ? "3px solid #5585fe"
-            : "",
+
         // borderLeft: "3px solid white",
         // border: "1px solid black",
       }}
@@ -111,4 +112,4 @@ const MessageContactCard = ({
   );
 };
 
-export default MessageContactCard;
+export default MessageContactCardForConnectionsScreen;
