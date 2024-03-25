@@ -369,7 +369,6 @@ const CoachAgentScoutVersionConnetions = () => {
           {countryName === ""
             ? agentAndScoutsList
                 ?.filter((agent) => !connections.includes(agent.accountId))
-                ?.filter((agent) => !connection?.includes(agent.accountId))
                 .map((person) => {
                   return (
                     <div

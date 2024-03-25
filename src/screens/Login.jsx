@@ -194,7 +194,9 @@ const Login = () => {
                 })
               );
             }
-          } catch (error) {}
+          } catch (error) {
+            console.error(error);
+          }
 
           const savedProfileSubCollectionRef = collection(
             db,
