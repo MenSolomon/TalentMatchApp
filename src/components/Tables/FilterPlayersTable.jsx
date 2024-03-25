@@ -528,6 +528,7 @@ export default function FilteredPlayersTable() {
   const [rows, setRows] = React.useState([]);
 
   React.useEffect(() => {
+    // alert(profileName);
     const currentProfileFilterObjectInEffect = savedUserProfiles.find(
       (data) => {
         return data.label.toLowerCase() === profileName.trim().toLowerCase();
@@ -699,54 +700,58 @@ export default function FilteredPlayersTable() {
     // console.log(ExistingPlayerProfile + "Mawu");
     setPossiblePlayerMatch(sortedPlayers);
 
-    const temporalRows = PossiblePlayerMatch?.sort(
-      (a, b) => b.boostPoints - a.boostPoints
-    ).map((data, index) => {
-      const {
-        firstName,
-        surName,
-        Age,
-        position,
-        CountryCode,
-        Nationality,
-        jerseyNumber,
-        player_profile_image,
-        clubName,
-        Statistics,
-        preferredFoot,
-        height,
-        marketValue,
-        contractStartDate,
-        id,
-      } = data;
+    const temporalRows = sortedPlayers
+      ?.sort((a, b) => b.boostPoints - a.boostPoints)
+      .map((data, index) => {
+        const {
+          firstName,
+          surName,
+          Age,
+          position,
+          CountryCode,
+          Nationality,
+          jerseyNumber,
+          player_profile_image,
+          clubName,
+          Statistics,
+          preferredFoot,
+          height,
+          marketValue,
+          contractStartDate,
+          id,
+        } = data;
 
-      const clubObject = allClubsInDatabase.find((data) => {
-        return data.clubName === clubName;
+        const clubObject = allClubsInDatabase.find((data) => {
+          return data.clubName === clubName;
+        });
+
+        const ClubLogo = clubObject === undefined ? "" : clubObject?.clubImage;
+
+        return createData(
+          `${firstName} ${surName}`,
+          Age,
+          preferredFoot,
+          height,
+          CountryCode,
+          marketValue,
+          ClubLogo,
+          clubName,
+          contractStartDate,
+          player_profile_image,
+          id,
+          Nationality,
+          Statistics[0],
+          Statistics[1]
+        );
       });
-
-      const ClubLogo = clubObject === undefined ? "" : clubObject?.clubImage;
-
-      return createData(
-        `${firstName} ${surName}`,
-        Age,
-        preferredFoot,
-        height,
-        CountryCode,
-        marketValue,
-        ClubLogo,
-        clubName,
-        contractStartDate,
-        player_profile_image,
-        id,
-        Nationality,
-        Statistics[0],
-        Statistics[1]
-      );
-    });
     setRows(temporalRows);
 
     // alert(ExistingPlayerProfile.length);
   }, [profileName, MatchedPlayersArray]);
+
+  // useEffect(() => {
+  //   alert(profileName + "   " + rows.length);
+  // }, [rows]);
 
   // useEffect(() => {
   //   alert("row  " + rows.length);
@@ -854,7 +859,6 @@ export default function FilteredPlayersTable() {
               </TableHead>
             </Table>
           </TableContainer>
-
           <TableContainer
             className="cardBackground primaryTextColor"
             sx={{
@@ -893,6 +897,7 @@ export default function FilteredPlayersTable() {
               </TableBody>{" "}
             </Table>
           </TableContainer>
+          {rows?.length} players matched
         </>
       )}
     </div>
