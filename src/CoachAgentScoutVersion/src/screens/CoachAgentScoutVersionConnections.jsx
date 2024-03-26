@@ -19,7 +19,10 @@ import {
 import avatarImage from "../assets/images/avatar.jpg";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
+import {
+  selectIsSubscriptionActive,
+  selectUserDetailsObject,
+} from "../../../statemanager/slices/LoginUserDataSlice";
 import { v4 } from "uuid";
 import {
   addDoc,
@@ -56,7 +59,7 @@ const CoachAgentScoutVersionConnetions = () => {
   const rolesArray = ["Agent", "Scout"];
   const [role, setRole] = useState("Agent");
   const { accountId } = userLoginDetailsObject;
-
+  const subscriptionStatus = useSelector(selectIsSubscriptionActive);
   const connection = userLoginDetailsObject?.AgentandScoutConnections;
 
   const triggerWarningAlertModal = (message) => {
@@ -367,11 +370,17 @@ const CoachAgentScoutVersionConnetions = () => {
                         UserName={`${person.firstName} ${person.surname}`}
                         playerImageUrl={person.profileImage}
                         handleConnect={() => {
-                          submitConnectionRequest(
-                            person.accountId,
-                            `${person.firstName} ${person.surname}`,
-                            person.role
-                          );
+                          if (subscriptionStatus == true) {
+                            submitConnectionRequest(
+                              person.accountId,
+                              `${person.firstName} ${person.surname}`,
+                              person.role
+                            );
+                          } else {
+                            triggerWarningAlertModal(
+                              "You need an active subscription"
+                            );
+                          }
                           // handleConnection(person);
                         }}
                       />
@@ -393,7 +402,15 @@ const CoachAgentScoutVersionConnetions = () => {
                         style={{ width: "25vw", height: "15vh" }}
                         AgencyName={filtered.organization}
                         UserName={`${filtered.firstName} ${filtered.surname}`}
-                        handleConnect={() => handleConnection(filtered)}
+                        handleConnect={() => {
+                          if (subscriptionStatus == true) {
+                            handleConnection(filtered);
+                          } else {
+                            triggerWarningAlertModal(
+                              "You need an active subscription"
+                            );
+                          }
+                        }}
                       />
                     </div>
                   );
