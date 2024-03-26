@@ -177,7 +177,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         Social_media,
       } = filteredPlayerArray[0];
 
-      console.log(Social_media, "Social_media");
+      // console.log(Social_media, "Social_media");
       setPlayerData({
         firstName,
         surName,
@@ -509,6 +509,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                         setOpenSnackBar(true);
                         // refetch the boostpoints
                         refetchPlayerBoostPoints();
+                      } else if (result == undefined || result == null) {
+                        setIsBoosting(false);
                       }
                     } catch (error) {
                       console.log("cloudFn Error", error);

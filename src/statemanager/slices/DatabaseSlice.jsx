@@ -5,6 +5,7 @@ export const DatabaseSlice = createSlice({
   initialState: {
     usersDatabase: [],
     playersDatabase: [],
+    ApiPlayersDatabase: [],
   },
 
   reducers: {
@@ -14,11 +15,17 @@ export const DatabaseSlice = createSlice({
     setPlayersDatabase: (state, action) => {
       state.playersDatabase = action.payload;
     },
+    setApiPlayersDatabase: (state, action) => {
+      state.ApiPlayersDatabase = action.payload;
+    },
   },
 });
 
 export const selectUsersDatabase = (state) => state.Database.usersDatabase;
 export const selectPlayersDatabase = (state) => state.Database.playersDatabase;
+export const selectApiPlayersDatabase = (state) =>
+  state.Database.ApiPlayersDatabase;
 
-export const { setUsersDatabase, setPlayersDatabase } = DatabaseSlice.actions;
+export const { setUsersDatabase, setPlayersDatabase, setApiPlayersDatabase } =
+  DatabaseSlice.actions;
 export default DatabaseSlice.reducer;

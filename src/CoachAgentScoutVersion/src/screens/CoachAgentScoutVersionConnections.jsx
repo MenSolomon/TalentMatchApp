@@ -19,7 +19,10 @@ import {
 import avatarImage from "../assets/images/avatar.jpg";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
+import {
+  selectIsSubscriptionActive,
+  selectUserDetailsObject,
+} from "../../../statemanager/slices/LoginUserDataSlice";
 import { v4 } from "uuid";
 import {
   addDoc,
@@ -56,7 +59,7 @@ const CoachAgentScoutVersionConnetions = () => {
   const rolesArray = ["Agent", "Scout"];
   const [role, setRole] = useState("Agent");
   const { accountId } = userLoginDetailsObject;
-
+  const subscriptionStatus = useSelector(selectIsSubscriptionActive);
   const connection = userLoginDetailsObject?.AgentandScoutConnections;
 
   const triggerWarningAlertModal = (message) => {
@@ -179,7 +182,7 @@ const CoachAgentScoutVersionConnetions = () => {
           return agentOrScoutFullName !== currentUserName; // Strict equality check
         });
 
-        console.log("currentUserFilteredOut", currentUserFilteredOut);
+        // console.log("currentUserFilteredOut", currentUserFilteredOut);
         return currentUserFilteredOut;
       } catch (error) {
         console.log(error);
@@ -237,10 +240,10 @@ const CoachAgentScoutVersionConnetions = () => {
 
         // Extract the data from the documents
         const queryConnectionsSnap = snapshot.docs.map((doc) => doc.data());
-        console.log(
-          "agentAndScoutsInConnectionsList",
-          agentAndScoutsInConnectionsList
-        );
+        // console.log(
+        //   "agentAndScoutsInConnectionsList",
+        //   agentAndScoutsInConnectionsList
+        // );
         // Return the data (no need for unnecessary parenthesis)
         return queryConnectionsSnap;
       } catch (error) {
@@ -368,7 +371,7 @@ const CoachAgentScoutVersionConnetions = () => {
         >
           {countryName === ""
             ? agentAndScoutsList
-                ?.filter((agent) => !connection?.includes(agent.accountId))
+                ?.filter((agent) => !connections.includes(agent.accountId))
                 .map((person) => {
                   return (
                     <div
@@ -381,11 +384,17 @@ const CoachAgentScoutVersionConnetions = () => {
                         UserName={`${person.firstName} ${person.surname}`}
                         playerImageUrl={person.profileImage}
                         handleConnect={() => {
-                          submitConnectionRequest(
-                            person.accountId,
-                            `${person.firstName} ${person.surname}`,
-                            person.role
-                          );
+                          if (subscriptionStatus == true) {
+                            submitConnectionRequest(
+                              person.accountId,
+                              `${person.firstName} ${person.surname}`,
+                              person.role
+                            );
+                          } else {
+                            triggerWarningAlertModal(
+                              "You need an active subscription"
+                            );
+                          }
                           // handleConnection(person);
                         }}
                       />
@@ -408,7 +417,15 @@ const CoachAgentScoutVersionConnetions = () => {
                         style={{ width: "25vw", height: "15vh" }}
                         AgencyName={filtered.organization}
                         UserName={`${filtered.firstName} ${filtered.surname}`}
-                        handleConnect={() => handleConnection(filtered)}
+                        handleConnect={() => {
+                          if (subscriptionStatus == true) {
+                            handleConnection(filtered);
+                          } else {
+                            triggerWarningAlertModal(
+                              "You need an active subscription"
+                            );
+                          }
+                        }}
                       />
                     </div>
                   );

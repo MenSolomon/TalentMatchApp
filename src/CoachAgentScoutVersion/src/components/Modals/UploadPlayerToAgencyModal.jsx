@@ -401,6 +401,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                 id: uuid,
                 Account_creator_id: userLoginObject?.accountId,
                 // ... (other fields)
+                boostPoints: 0,
                 player_profile_image: url,
                 firstName: FirstName,
                 surName: Surname,
