@@ -1,38 +1,152 @@
 import NewsCard from "../components/Cards/NewsCard/NewsCard";
 import { useEffect, useState } from "react";
+import MultipleSelect from "../components/Selects/MultipleSelect";
+import Newselect from "../components/Selects/NewsSelect";
+import goalNewsImage from "../assets/images/goalnews.jpg";
+import NinetyminsImage from "../assets/images/NinetyMins.jpg";
+import onefootballImage from "../assets/images/Onefootball.png";
+import espnImage from "../assets/images/espn.svg";
 
 const News = () => {
   const [getData, setGetData] = useState([]);
   console.log(getData);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const url =
-        "https://football-news-aggregator-live.p.rapidapi.com/news/espn";
-      const options = {
-        method: "GET",
-        headers: {
-          "X-RapidAPI-Key":
-            "bea5221632mshb257d90c38fc46ap1de3f1jsn4b3eec934310",
-          "X-RapidAPI-Host": "football-news-aggregator-live.p.rapidapi.com",
-        },
-      };
+  const [espn, setEspn] = useState([]);
+  const [Ninetymins, setNinetymins] = useState([]);
+  const [oneFootball, setoneFootball] = useState([]);
+  const [goal, setGoal] = useState([]);
 
-      try {
-        const response = await fetch(url, options);
-        const result = await response.text();
-        const array = result;
-        console.log(array);
-        setGetData(array);
-        console.log(getData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const url =
+  //       "https://football-news-aggregator-live.p.rapidapi.com/news/espn";
+  //     const options = {
+  //       method: "GET",
+  //       headers: {
+  //         "X-RapidAPI-Key":
+  //           "bea5221632mshb257d90c38fc46ap1de3f1jsn4b3eec934310",
+  //         "X-RapidAPI-Host": "football-news-aggregator-live.p.rapidapi.com",
+  //       },
+  //     };
 
-    fetchData();
-  }, []);
+  //     try {
+  //       const response = await fetch(url, options);
+  //       const result = await response.text();
+  //       const array = result;
+  //       console.log(array);
+  //       setGetData(array);
+  //       console.log(getData);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
 
+  //   fetchData();
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const url =
+  //       "https://football-news-aggregator-live.p.rapidapi.com/news/goal";
+  //     const options = {
+  //       method: "GET",
+  //       headers: {
+  //         "X-RapidAPI-Key":
+  //           "ab05e36d7cmsh2e30315d4df830fp15fa40jsn35c4f9206e1a",
+  //         "X-RapidAPI-Host": "football-news-aggregator-live.p.rapidapi.com",
+  //       },
+  //     };
+
+  //     try {
+  //       const response = await fetch(url, options);
+  //       const result = await response.text();
+  //       console.log(result);
+  //       setGoal(result);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const url =
+  //       "https://football-news-aggregator-live.p.rapidapi.com/news/onefootball";
+  //     const options = {
+  //       method: "GET",
+  //       headers: {
+  //         "X-RapidAPI-Key":
+  //           "ab05e36d7cmsh2e30315d4df830fp15fa40jsn35c4f9206e1a",
+  //         "X-RapidAPI-Host": "football-news-aggregator-live.p.rapidapi.com",
+  //       },
+  //     };
+
+  //     try {
+  //       const response = await fetch(url, options);
+  //       const result = await response.text();
+  //       console.log(result);
+  //       setoneFootball(result);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const url =
+  //       "https://football-news-aggregator-live.p.rapidapi.com/news/90mins";
+  //     const options = {
+  //       method: "GET",
+  //       headers: {
+  //         "X-RapidAPI-Key":
+  //           "ab05e36d7cmsh2e30315d4df830fp15fa40jsn35c4f9206e1a",
+  //         "X-RapidAPI-Host": "football-news-aggregator-live.p.rapidapi.com",
+  //       },
+  //     };
+
+  //     try {
+  //       const response = await fetch(url, options);
+  //       const result = await response.text();
+  //       console.log(result);
+  //       setNinetymins(result);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const url =
+  //       "https://football-news-aggregator-live.p.rapidapi.com/news/espn";
+  //     const options = {
+  //       method: "GET",
+  //       headers: {
+  //         "X-RapidAPI-Key":
+  //           "ab05e36d7cmsh2e30315d4df830fp15fa40jsn35c4f9206e1a",
+  //         "X-RapidAPI-Host": "football-news-aggregator-live.p.rapidapi.com",
+  //       },
+  //     };
+
+  //     try {
+  //       const response = await fetch(url, options);
+  //       const result = await response.text();
+  //       console.log(result);
+  //       setEspn(result);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
   // API FOR NEWS
 
   const newData = [
@@ -253,6 +367,10 @@ const News = () => {
     },
   ];
 
+  // const newsSources = ["90mins", "One Football", "ESPN", "GOAL", "FourFourtwo"];
+
+  const [selectedSources, setSelectedSources] = useState("GOAL");
+
   return (
     <div
       style={{
@@ -270,9 +388,18 @@ const News = () => {
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "center",
+          gap: "4vw",
         }}
       >
         <h4>Latest News</h4>
+        {/* <Newselect
+          selectArray={newsSources}
+          selectedValues={(e) => {
+            setSelectedSources(e);
+          }}
+        /> */}
+
+        {/* {selectedSources} */}
       </div>
       <div
         style={{
@@ -288,6 +415,71 @@ const News = () => {
           borderRadius: "20px",
         }}
       >
+        {/* {selectedSources === "90mins"
+          ? Ninetymins?.map((data, index) => {
+              const { title, img, url } = data;
+              return (
+                <NewsCard
+                  key={index}
+                  title={title}
+                  image={img}
+                  url={url}
+                  source={NinetyminsImage}
+                />
+              );
+            })
+          : selectedSources === "One Football"
+          ? oneFootball?.map((data, index) => {
+              const { title, img, url } = data;
+              return (
+                <NewsCard
+                  key={index}
+                  title={title}
+                  image={img}
+                  url={url}
+                  source={onefootballImage}
+                />
+              );
+            })
+          : selectedSources === "ESPN"
+          ? espn?.map((data, index) => {
+              const { title, img, url } = data;
+              return (
+                <NewsCard
+                  key={index}
+                  title={title}
+                  image={img}
+                  url={url}
+                  source={espnImage}
+                />
+              );
+            })
+          : selectedSources === "GOAL"
+          ? goal?.map((data, index) => {
+              const { title, img, url } = data;
+              return (
+                <NewsCard
+                  key={index}
+                  title={title}
+                  image={img}
+                  url={url}
+                  source={goalNewsImage}
+                />
+              );
+            })
+          : newData?.map((data, index) => {
+              const { title, img, url } = data;
+              return (
+                <NewsCard
+                  key={index}
+                  title={title}
+                  image={img}
+                  url={url}
+                  source={espnImage}
+                />
+              );
+            })} */}
+
         {newData &&
           newData?.map((data, index) => {
             const { title, img, url } = data;

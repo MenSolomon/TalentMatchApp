@@ -112,11 +112,17 @@ const CoachAgentScoutVersionInbox = () => {
 
   const [AllUsersAndMessages, setAllUsersAndMessages] = useState([]);
 
-  const AaallUsersAndMessages = userLoginDetailsObject?.Connections;
+  const AaallUsersAndMessages =
+    userLoginDetailsObject?.Connections === undefined
+      ? []
+      : userLoginDetailsObject?.Connections;
   const allScoutsandAgentsConnections =
-    userLoginDetailsObject?.AgentandScoutConnections;
+    userLoginDetailsObject?.AgentandScoutConnections === undefined
+      ? []
+      : userLoginDetailsObject?.AgentandScoutConnections;
 
   console.log("Letter from overseas", AaallUsersAndMessages);
+  console.log("Letter from overseas2", allScoutsandAgentsConnections);
 
   const allMessages = useSelector(selectuserMessages);
 
@@ -217,7 +223,7 @@ const CoachAgentScoutVersionInbox = () => {
         setMessageText("");
       }
     } catch (error) {
-      alert("error");
+      // alert("error");
       console.error(error);
     }
   };
@@ -360,8 +366,7 @@ const CoachAgentScoutVersionInbox = () => {
           className="md:basis-[80%] sm:flex-col  sm:flex sm:flex-shrink-0 sm:basis-[80%]"
           style={{ overflowY: "scroll" }}
         >
-          {AaallUsersAndMessages === undefined ||
-          AaallUsersAndMessages?.length === 0 ? (
+          {connections === undefined || connections?.length === 0 ? (
             <h4 className="primaryTextColor" style={{ textAlign: "center" }}>
               No contacts yet
             </h4>
@@ -387,7 +392,7 @@ const CoachAgentScoutVersionInbox = () => {
             //     </span>
             //   );
             // })
-            connections.map((data, key) => {
+            connections?.map((data, key) => {
               return (
                 <span
                   style={{ marginBottom: "1vh", marginTop: "1vh" }}

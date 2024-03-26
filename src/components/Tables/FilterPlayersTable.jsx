@@ -26,7 +26,7 @@ import { Star, StarBorder } from "@mui/icons-material";
 import PlayerOverallAttributes from "../Charts/Bars/PlayerOverallAttributes";
 import { useSelector } from "react-redux";
 import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInAgencySlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { selectPlayersDatabase } from "../../statemanager/slices/DatabaseSlice";
 import { selectClubsInDatabase } from "../../statemanager/slices/ClubsInDatabaseSlice";
 import {
@@ -117,12 +117,14 @@ function Row(props) {
           "& > *": { borderBottom: "unset" },
 
           color: "white",
-        }}>
+        }}
+      >
         <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}>
+            onClick={() => setOpen(!open)}
+          >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
@@ -144,7 +146,8 @@ function Row(props) {
 
               alignItems: "center",
             }}
-            className="primaryTextColor">
+            className="primaryTextColor"
+          >
             <Avatar
               sx={{ width: 30, height: 30, marginRight: 1 }}
               src={row.playerImage}
@@ -205,7 +208,8 @@ function Row(props) {
                     gap: "1vw",
                     height: "30vh",
                   }}
-                  colSpan={3}>
+                  colSpan={3}
+                >
                   {/* // Profile Image  */}
                   <div style={{ flex: ".15" }}>
                     <Avatar
@@ -260,13 +264,15 @@ function Row(props) {
                     style={{
                       flex: ".2",
                       //    background: "yellow"
-                    }}>
+                    }}
+                  >
                     <div
                       style={{
                         width: "100%",
                         height: "100%",
                         // background: "red",
-                      }}>
+                      }}
+                    >
                       <PlayerOverallAttributes />
                     </div>
                   </div>
@@ -283,7 +289,8 @@ function Row(props) {
                         position: "relative",
                         paddingTop: "1vh",
                       }}
-                      className="tableVideo">
+                      className="tableVideo"
+                    >
                       <video
                         // id={`video-${index}`}
                         src="/believerJuggling.mp4"
@@ -292,7 +299,8 @@ function Row(props) {
                         // height="10vh"
                         style={{ position: "absolute" }}
                         // autoPlay={true}
-                        controls></video>
+                        controls
+                      ></video>
                     </div>
                   </div>
                 </TableCell>{" "}
@@ -423,6 +431,8 @@ const rows = [
 ];
 
 export default function FilteredPlayersTable() {
+  const { profileName } = useParams();
+
   const currentProfileNameSelected = useSelector(selectCurrentProfile);
 
   const savedUserProfiles = useSelector(selectUserSavedProfiles);
@@ -467,58 +477,6 @@ export default function FilteredPlayersTable() {
   });
   // remount component when usequery completes fetch
   useEffect(() => {}, [MatchedPlayersArray]);
-
-  const currentProfileFilterObjectInEffect = savedUserProfiles.find((data) => {
-    return (
-      data.label.toLowerCase() === currentProfileNameSelected.toLowerCase()
-    );
-  });
-
-  const ExistingPlayerProfile = MatchedPlayersArray?.filter((data) => {
-    const {
-      Nationality,
-      position,
-      // date_of_birth,
-      Statsitics,
-      height,
-    } = data;
-
-    // Define the variables to compare
-    const variablesToCompare = [
-      Nationality.toLowerCase() ===
-        currentProfileFilterObjectInEffect?.filter.NationalityValue.toLowerCase(),
-      Nationality.toLowerCase() ===
-        currentProfileFilterObjectInEffect?.filter.NationalityValue.toLowerCase(),
-      data?.Age >=
-        currentProfileFilterObjectInEffect?.filter.AgeRangeValue[0] &&
-        data?.Age <=
-          currentProfileFilterObjectInEffect?.filter.AgeRangeValue[1],
-      height >=
-        currentProfileFilterObjectInEffect?.filter.HeightRangeValue[0] &&
-        height <=
-          currentProfileFilterObjectInEffect?.filter.HeightRangeValue[1],
-      data?.marketValue >=
-        currentProfileFilterObjectInEffect?.filter.MarketValue[0] &&
-        data?.marketValue <=
-          currentProfileFilterObjectInEffect?.filter.MarketValue[1],
-      currentProfileFilterObjectInEffect?.filter?.PlayerPositionAutoCompleteValue.toLowerCase() ===
-        position.toLowerCase(),
-      data?.preferredFoot.toLowerCase() ===
-        currentProfileFilterObjectInEffect?.filter.PrefferedFootRadioValue.toLowerCase(),
-      currentProfileFilterObjectInEffect?.filter.ContractStatusCheckBoxes.includes(
-        data?.clubName
-      ),
-      // Add more variables to compare as needed
-    ];
-
-    // Count the number of matches
-    const numberOfMatches = variablesToCompare.filter((match) => match).length;
-
-    // Check if at least 4 variables match
-    return numberOfMatches >= 5;
-  });
-
-  // console.log("All Players", MatchedPlayersArray);
 
   const allClubsInDatabase = useSelector(selectClubsInDatabase);
 
@@ -566,114 +524,283 @@ export default function FilteredPlayersTable() {
   // const [PossiblePlayerMatch, setPossiblePlayerMatch] = React.useState(
   //   ExistingPlayerProfile
   // );
-  const [PossiblePlayerMatch, setPossiblePlayerMatch] = React.useState(
-    ExistingPlayerProfile
-  );
+  const [PossiblePlayerMatch, setPossiblePlayerMatch] = React.useState([]);
+  const [rows, setRows] = React.useState([]);
 
   React.useEffect(() => {
+    // alert(profileName);
     const currentProfileFilterObjectInEffect = savedUserProfiles.find(
       (data) => {
-        return (
-          data.label.toLowerCase() === currentProfileNameSelected.toLowerCase()
-        );
+        return data.label.toLowerCase() === profileName.trim().toLowerCase();
       }
     );
+
+    console.log("filterObjectsOnline", currentProfileFilterObjectInEffect);
 
     const ExistingPlayerProfile = MatchedPlayersArray?.filter((data) => {
       const {
         Nationality,
         position,
-        // date_of_birth,
+        Age,
         Statsitics,
+        contractEndDate,
+        preferredFoot,
         height,
+        clubName,
       } = data;
+      const filterNationalityValue =
+        currentProfileFilterObjectInEffect?.filter.NationalityValue.toLowerCase();
+      const filterPositionRangeSliderValues =
+        currentProfileFilterObjectInEffect?.filter.PositionRangeSliderValues;
+      const filterPlayerPosition =
+        currentProfileFilterObjectInEffect?.filter
+          .PlayerPositionAutoCompleteValue;
+      const filterpreferredFoot =
+        currentProfileFilterObjectInEffect?.filter.PrefferedFootRadioValue;
+      // const defenceValues = Statsitics.find(
+      //   (data) => data?.Season === "Overall"
+      // ).Defence;
+      // const attackValues = Statsitics.find(
+      //   (data) => data?.Season === "Overall"
+      // ).Attack;
+      // const distributionValues = Statsitics.find(
+      //   (data) => data?.Season === "Overall"
+      // ).Distribution;
+      // const disciplineValues = Statsitics.find(
+      //   (data) => data?.Season === "Overall"
+      // ).Discipline;
+      // const generalValues = Statsitics.find(
+      //   (data) => data?.Season === "Overall"
+      // ).General;
+      const filterFirstHeightRange =
+        currentProfileFilterObjectInEffect?.filter.HeightRangeValue[0];
+      const filterSecondHeightRange =
+        currentProfileFilterObjectInEffect?.filter.HeightRangeValue[1];
+      const filterFirstAgeRange =
+        currentProfileFilterObjectInEffect?.filter?.AgeRangeValue[0];
+      const filterSecondAgeRange =
+        currentProfileFilterObjectInEffect?.filter?.AgeRangeValue[1];
+
+      const filterStatistics =
+        currentProfileFilterObjectInEffect?.filter?.positionRangeSliderValues;
+      const filterContractStatus =
+        currentProfileFilterObjectInEffect?.filter?.ContractStatusCheckBoxes;
+
+      const sampleDate = new Date(contractEndDate);
+      // Get the current date
+      const currentDate = new Date();
+      // Calculate the difference in milliseconds
+      const diffMilliseconds = sampleDate - currentDate;
+
+      // Convert milliseconds to months
+      const monthsDifference = diffMilliseconds / (1000 * 60 * 60 * 24 * 30.44); // Approximate average number of days in a month
+
+      // const filterAgeRange =
+      //   currentProfileFilterObjectInEffect?.filter.AgeRangeValue;
 
       // Define the variables to compare
+      // filterPlayerPosition === "Any" ? 1*2 :( playerPosition === "Winger (W)" ||  playerPosition === "Striker (ST)" )? (attackValues.filterPlayerPosition.Goals >= filterPositionRangeSliderValues.Goals[0] && attackValues.filterPlayerPosition.Goals <= filterPositionRangeSliderValues.Goals[1] )? 1 : 0
       const variablesToCompare = [
-        Nationality.toLowerCase() ===
-          currentProfileFilterObjectInEffect?.filter.NationalityValue.toLowerCase(),
-        Nationality.toLowerCase() ===
-          currentProfileFilterObjectInEffect?.filter.NationalityValue.toLowerCase(),
-        data?.Age >=
-          currentProfileFilterObjectInEffect?.filter.AgeRangeValue[0] &&
-          data?.Age <=
-            currentProfileFilterObjectInEffect?.filter.AgeRangeValue[1],
-        height >=
-          currentProfileFilterObjectInEffect?.filter.HeightRangeValue[0] &&
-          height <=
-            currentProfileFilterObjectInEffect?.filter.HeightRangeValue[1],
-        data?.marketValue >=
-          currentProfileFilterObjectInEffect?.filter.MarketValue[0] &&
-          data?.marketValue <=
-            currentProfileFilterObjectInEffect?.filter.MarketValue[1],
-        currentProfileFilterObjectInEffect?.filter?.PlayerPositionAutoCompleteValue.toLowerCase() ===
-          position.toLowerCase(),
-        data?.preferredFoot.toLowerCase() ===
-          currentProfileFilterObjectInEffect?.filter.PrefferedFootRadioValue.toLowerCase(),
-        currentProfileFilterObjectInEffect?.filter.ContractStatusCheckBoxes.includes(
-          data?.clubName
-        ),
+        Nationality.toLowerCase() === filterNationalityValue ? 3 : 0,
+
+        preferredFoot === filterpreferredFoot || filterpreferredFoot === "Any"
+          ? 1
+          : 0,
+        height >= filterFirstHeightRange && height <= filterSecondHeightRange
+          ? 1
+          : 0,
+
+        Age >= filterFirstAgeRange && Age <= filterSecondAgeRange ? 2 : 0,
+
+        filterContractStatus === "Any"
+          ? 1
+          : filterContractStatus ===
+              "Contract Expiring in less than 6 months" && monthsDifference <= 6
+          ? 1
+          : filterContractStatus ===
+              "Contract Expiring in more than 6 months" && monthsDifference >= 6
+          ? 1
+          : clubName === filterContractStatus
+          ? 1
+          : 0,
         // Add more variables to compare as needed
       ];
 
-      // Count the number of matches
-      const numberOfMatches = variablesToCompare.filter(
-        (match) => match
-      ).length;
+      // COMPARING STAS
+      // const variablesToCompare = [
+      //   // Your existing comparisons...
+      //   // Example: Nationality, PreferredFoot, Height, Age, etc.
 
+      //   // Add comparisons based on position-specific statistics
+      //   ...Object.entries(filterStatistics).map(([statistic, range]) => {
+      //     let playerStatValue = 0;
+
+      //     // Determine which statistics object to use based on player position
+      //     let statsObject;
+      //     if (
+      //       [
+      //         "Goalkeeper (GK)",
+      //         "Center Back (CB)",
+      //         "Left Back (LB)",
+      //         "Right Back (RB)",
+      //         "Wing Back (WB)",
+      //       ].includes(data.position)
+      //     ) {
+      //       // For Goalkeeper and Defender positions, use Defence statistics
+      //       statsObject = data.Statistics.find(
+      //         (stat) => stat.Season === "Overall"
+      //       )?.Defence;
+      //     } else if (
+      //       [
+      //         "Defensive Midfielder (DM)",
+      //         "Attacking Midfielder (AM)",
+      //         "Central Midfielder (CM)",
+      //       ].includes(data.position)
+      //     ) {
+      //       // For Midfielder positions, use Distribution statistics
+      //       statsObject = data.Statistics.find(
+      //         (stat) => stat.Season === "Overall"
+      //       )?.Distribution;
+      //     } else if (["Winger (W)", "Striker (ST)"].includes(data.position)) {
+      //       // For Winger and Striker positions, use Attack statistics
+      //       statsObject = data.Statistics.find(
+      //         (stat) => stat.Season === "Overall"
+      //       )?.Attack;
+      //     }
+
+      //     // Extract the statistic value for comparison
+      //     if (statsObject && statistic in statsObject) {
+      //       playerStatValue = statsObject[statistic];
+      //     }
+
+      //     // Extract the range for comparison
+      //     const [minRange, maxRange] = range;
+
+      //     // Check if the player's statistic falls within the specified range
+      //     return playerStatValue >= minRange && playerStatValue <= maxRange
+      //       ? 1
+      //       : 0;
+      //   }),
+      // ];
+
+      const numberOfMatches = variablesToCompare.reduce(
+        (accumulator, currentValue) => accumulator + currentValue,
+        0
+      );
+
+      data.numberOfMatches = numberOfMatches;
       // Check if at least 4 variables match
       return numberOfMatches >= 5;
     });
 
-    // console.log(ExistingPlayerProfile + "Mawu");
-    setPossiblePlayerMatch(ExistingPlayerProfile);
-    // alert(ExistingPlayerProfile.length);
-  }, [currentProfileNameSelected, savedUserProfiles]);
-
-  const rows = PossiblePlayerMatch?.sort(
-    (a, b) => b.boostPoints - a.boostPoints
-  ).map((data, index) => {
-    const {
-      firstName,
-      surName,
-      Age,
-      position,
-      CountryCode,
-      Nationality,
-      jerseyNumber,
-      player_profile_image,
-      clubName,
-      Statistics,
-      preferredFoot,
-      height,
-      marketValue,
-      contractStartDate,
-      id,
-    } = data;
-
-    const clubObject = allClubsInDatabase.find((data) => {
-      return data.clubName === clubName;
+    const sortedPlayers = ExistingPlayerProfile?.sort((player1, player2) => {
+      return player2.numberOfMatches - player1.numberOfMatches;
     });
 
-    const ClubLogo = clubObject === undefined ? "" : clubObject?.clubImage;
+    // console.log(ExistingPlayerProfile + "Mawu");
+    setPossiblePlayerMatch(sortedPlayers);
 
-    return createData(
-      `${firstName} ${surName}`,
-      Age,
-      preferredFoot,
-      height,
-      CountryCode,
-      marketValue,
-      ClubLogo,
-      clubName,
-      contractStartDate,
-      player_profile_image,
-      id,
-      Nationality,
-      Statistics[0],
-      Statistics[1]
-    );
-  });
+    const temporalRows = sortedPlayers
+      ?.sort((a, b) => b.boostPoints - a.boostPoints)
+      .map((data, index) => {
+        const {
+          firstName,
+          surName,
+          Age,
+          position,
+          CountryCode,
+          Nationality,
+          jerseyNumber,
+          player_profile_image,
+          clubName,
+          Statistics,
+          preferredFoot,
+          height,
+          marketValue,
+          contractStartDate,
+          id,
+        } = data;
+
+        const clubObject = allClubsInDatabase.find((data) => {
+          return data.clubName === clubName;
+        });
+
+        const ClubLogo = clubObject === undefined ? "" : clubObject?.clubImage;
+
+        return createData(
+          `${firstName} ${surName}`,
+          Age,
+          preferredFoot,
+          height,
+          CountryCode,
+          marketValue,
+          ClubLogo,
+          clubName,
+          contractStartDate,
+          player_profile_image,
+          id,
+          Nationality,
+          Statistics[0],
+          Statistics[1]
+        );
+      });
+    setRows(temporalRows);
+
+    // alert(ExistingPlayerProfile.length);
+  }, [profileName, MatchedPlayersArray]);
+
+  // useEffect(() => {
+  //   alert(profileName + "   " + rows.length);
+  // }, [rows]);
+
+  // useEffect(() => {
+  //   alert("row  " + rows.length);
+  // }, [rows]);
+
+  // const rows = PossiblePlayerMatch?.sort(
+  //   (a, b) => b.boostPoints - a.boostPoints
+  // ).map((data, index) => {
+  //   const {
+  //     firstName,
+  //     surName,
+  //     Age,
+  //     position,
+  //     CountryCode,
+  //     Nationality,
+  //     jerseyNumber,
+  //     player_profile_image,
+  //     clubName,
+  //     Statistics,
+  //     preferredFoot,
+  //     height,
+  //     marketValue,
+  //     contractStartDate,
+  //     id,
+  //   } = data;
+
+  //   const clubObject = allClubsInDatabase.find((data) => {
+  //     return data.clubName === clubName;
+  //   });
+
+  //   const ClubLogo = clubObject === undefined ? "" : clubObject?.clubImage;
+
+  //   return createData(
+  //     `${firstName} ${surName}`,
+  //     Age,
+  //     preferredFoot,
+  //     height,
+  //     CountryCode,
+  //     marketValue,
+  //     ClubLogo,
+  //     clubName,
+  //     contractStartDate,
+  //     player_profile_image,
+  //     id,
+  //     Nationality,
+  //     Statistics[0],
+  //     Statistics[1]
+  //   );
+  // });
 
   // console.log("Table Row", rows);
 
@@ -693,10 +820,12 @@ export default function FilteredPlayersTable() {
               borderTopLeftRadius: ".4vw",
               borderTopRightRadius: ".4vw",
             }}
-            component={Card}>
+            component={Card}
+          >
             <Table
               aria-label="collapsible table"
-              sx={{ width: "100%", height: "80%" }}>
+              sx={{ width: "100%", height: "80%" }}
+            >
               <TableHead>
                 <TableRow>
                   {/* <TableCell /> */}
@@ -730,7 +859,6 @@ export default function FilteredPlayersTable() {
               </TableHead>
             </Table>
           </TableContainer>
-
           <TableContainer
             className="cardBackground primaryTextColor"
             sx={{
@@ -739,15 +867,18 @@ export default function FilteredPlayersTable() {
               overflowY: "scroll",
               borderRadius: "0vw",
             }}
-            component={Card}>
+            component={Card}
+          >
             <Table
               aria-label="collapsible table"
-              sx={{ width: "100%", height: "80%" }}>
+              sx={{ width: "100%", height: "80%" }}
+            >
               <TableBody
                 sx={{
                   overflowY: "scroll",
                   maxHeight: "20vh",
-                }}>
+                }}
+              >
                 {/* <div style={{ overflowY: "scroll", height: "300px" }}> */}
                 {/* {isMatchedPlayersArrayFetching ? (
                   <div
@@ -755,7 +886,8 @@ export default function FilteredPlayersTable() {
                       display: "flex",
                       justifyContent: "center",
                       alignSelf: "center",
-                    }}>
+                    }}
+                  >
                     <CircularProgress />
                   </div>
                 ) : (
@@ -768,6 +900,7 @@ export default function FilteredPlayersTable() {
               </TableBody>{" "}
             </Table>
           </TableContainer>
+          {rows?.length} players matched
         </>
       )}
     </div>
