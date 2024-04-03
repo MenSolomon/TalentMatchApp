@@ -39,6 +39,8 @@ import {
   selectUsersDatabase,
 } from "../statemanager/slices/DatabaseSlice";
 import {
+  setCloseCircularLoadBackdrop,
+  setOpenCircularLoadBackdrop,
   setWarningAlertModalCounter,
   setWarningAlertModalMessage,
 } from "../statemanager/slices/OtherComponentStatesSlice";
@@ -131,6 +133,36 @@ const ConfirmDetails = () => {
     await navigate("/login");
   };
 
+  // Age formqatter for player age
+  const formats = [
+    "ddd, DD MMM YYYY HH:mm:ss [GMT]", // Format for "Sun, 01 Apr 2001 23:00:00 GMT"
+    "ddd, MMM D, YYYY, h:mm:ss A", // Format for "Thu, Feb 26, 1998, 12:00:00 AM"
+  ];
+
+  // Function to parse the date and calculate age
+  function calculateAge(dateString) {
+    let momentDate;
+    for (const format of formats) {
+      momentDate = moment(dateString, format, true);
+      if (momentDate.isValid()) {
+        break; // Exit loop if valid date is found
+      }
+    }
+
+    if (!momentDate.isValid()) {
+      return "Invalid date format";
+    }
+
+    const currentDate = moment();
+    const hasBirthdayOccurred = currentDate.isSameOrAfter(
+      momentDate.year(currentDate.year())
+    );
+
+    const ageDifference =
+      currentDate.year() - momentDate.year() - (hasBirthdayOccurred ? 0 : 1);
+    return Math.round(ageDifference);
+  }
+
   const handleStartFreeTrial = async () => {
     // const email = location.state.email;
     // const password = location.state.password;
@@ -141,6 +173,7 @@ const ConfirmDetails = () => {
 
     try {
       const uuid = uuidv4();
+
       if (roleSelected === "") {
         triggerWarningAlertModal(
           "Please complete step 1 (Select your role before starting trial)"
@@ -192,7 +225,8 @@ const ConfirmDetails = () => {
         } else {
           if (roleSelected === "Player") {
             // Existing player code
-
+            dispatch(setOpenCircularLoadBackdrop());
+            // await console.log("Player createion started");
             const ExistingPlayerProfile = allPlayersInDatabase.filter(
               (data) => {
                 const {
@@ -233,16 +267,41 @@ const ConfirmDetails = () => {
                 "Oops, our system detected a possible existing player in our database. Please recheck player details. If it happens that he doesn't exist, you can send an account verification request, and our support team will verify and be with you shortly. Thank you."
               );
             } else {
-              var givenDate = moment(userData?.DateOfBirth, "MMMM D, YYYY");
+              // Define possible date formats
+
+              const formattedDate = moment(DateOfBirth, [
+                "ddd, DD MMM YYYY HH:mm:ss [GMT]",
+                "ddd, MMM DD, YYYY, h:mm:ss A",
+              ]).format("MMM D, YYYY");
+
+              alert(formattedDate, "Age");
+              console.log(formattedDate, "Format Age");
+
+              var givenDate = moment(formattedDate, "MMM D, YYYY");
               var currentDate = moment();
+              // Check if the birthday has occurred this year
               var hasBirthdayOccurred = currentDate.isSameOrAfter(
                 moment(givenDate).year(currentDate.year())
               );
+              // Calculate the positive difference
               var ageDifference =
                 currentDate.year() -
                 givenDate.year() -
                 (hasBirthdayOccurred ? 0 : 1);
+
+              // Calculate the guessed age
               var currentAge = Math.round(ageDifference);
+
+              // alert(currentAge, "Age");
+
+              // console.log(currentAge, DateOfBirth, "Age");
+
+              // e.$d.toLocaleDateString("en-US", {
+              //   year: "numeric",
+              //   month: "long",
+              //   day: "numeric",
+              // })
+
               // trigger handleGoogleLogin
               // await handleGoogleLogin(auth, email, password);
               // // Set the document in the database
@@ -255,24 +314,27 @@ const ConfirmDetails = () => {
                   dispatch(setCredentials(user.uid));
                   // set login status to true
                   dispatch(setLoginStatus(true));
+                  let url = "";
 
-                  const base64Data = selectedFile.replace(
-                    /^data:(.*);base64,/,
-                    ""
-                  );
+                  if (selectedFile.length > 0) {
+                    const base64Data = selectedFile.replace(
+                      /^data:(.*);base64,/,
+                      ""
+                    );
 
-                  const profileImageRef = ref(
-                    storage,
-                    `verificationImage/${userData.firstName + "-" + uuid}`
-                  );
-                  // Upload the image
-                  //  await uploadBytes(profileImageRef, selectedFile);
-                  await uploadString(profileImageRef, base64Data, "base64");
+                    const profileImageRef = ref(
+                      storage,
+                      `verificationImage/${userData.firstName + "-" + uuid}`
+                    );
+                    // Upload the image
+                    //  await uploadBytes(profileImageRef, selectedFile);
+                    await uploadString(profileImageRef, base64Data, "base64");
 
-                  // Get the download URL
-                  const url = await getDownloadURL(profileImageRef);
-                  // We have to clear the sessionStorage for all the datat stored
-                  // alert("Storing ID IMAGe", url);
+                    // Get the download URL
+                    url = await getDownloadURL(profileImageRef);
+                    // We have to clear the sessionStorage for all the datat stored
+                    // alert("Storing ID IMAGe", url);
+                  }
 
                   await setDoc(doc(db, `players_database`, user.uid), {
                     id: user.uid,
@@ -284,7 +346,7 @@ const ConfirmDetails = () => {
                     Nationality: userData?.Nationality,
                     dateCreated: serverTimestamp(),
                     Age: currentAge,
-                    boostPoints:0,
+                    boostPoints: 0,
                     position: userData?.PlayerPosition,
                     date_of_birth: userData?.DateOfBirth,
                     jerseyNumber: "",
@@ -626,7 +688,7 @@ const ConfirmDetails = () => {
                     role: roleSelected,
                     dateCreated: serverTimestamp(),
                     accountId: user.uid,
-                    boostPoints:0,
+                    boostPoints: 0,
                     isVisible: true,
                     userIDWithMRZImage: url,
                   });
@@ -654,6 +716,7 @@ const ConfirmDetails = () => {
                   sessionStorage.setItem("lastName", "");
                   sessionStorage.setItem("nationality", "");
                   sessionStorage.setItem("birthDate", "");
+                  dispatch(setCloseCircularLoadBackdrop());
 
                   await navigate("/login");
                 })
@@ -674,6 +737,7 @@ const ConfirmDetails = () => {
                 });
             }
           } else {
+            dispatch(setOpenCircularLoadBackdrop());
             // invoke google createUserWithEmailAndPassword method
             await createUserWithEmailAndPassword(auth, email, password)
               .then(async (userCredential) => {
@@ -684,31 +748,35 @@ const ConfirmDetails = () => {
                 // set login status to true
                 dispatch(setLoginStatus(true));
 
-                // Write a code to check if the image
-                const base64Data = selectedFile.replace(
-                  /^data:(.*);base64,/,
-                  ""
-                );
+                let url = "";
 
-                const profileImageRef = ref(
-                  storage,
-                  `verificationImage/${userData.firstName + "-" + uuid}`
-                );
-                // Upload the image
-                //  await uploadBytes(profileImageRef, selectedFile);
-                await uploadString(profileImageRef, base64Data, "base64");
+                if (selectedFile?.length > 0) {
+                  // Write a code to check if the image
+                  const base64Data = selectedFile.replace(
+                    /^data:(.*);base64,/,
+                    ""
+                  );
 
-                // Get the download URL
-                const url = await getDownloadURL(profileImageRef);
-                // We have to clear the sessionStorage for all the datat stored
-                // alert("Storing ID IMAGe", url);
+                  const profileImageRef = ref(
+                    storage,
+                    `verificationImage/${userData.firstName + "-" + uuid}`
+                  );
+                  // Upload the image
+                  //  await uploadBytes(profileImageRef, selectedFile);
+                  await uploadString(profileImageRef, base64Data, "base64");
+
+                  // Get the download URL
+                  url = await getDownloadURL(profileImageRef);
+                  // We have to clear the sessionStorage for all the datat stored
+                  // alert("Storing ID IMAGe", url);
+                }
 
                 await setDoc(doc(db, `users_db`, user.uid), {
                   ...userData,
                   role: roleSelected,
                   dateCreated: serverTimestamp(),
                   accountId: user.uid,
-                  boostPoints:0,
+                  boostPoints: 0,
                   isVisible: true,
                   playersInPossession: [],
                   userIDWithMRZImage: url,
@@ -738,6 +806,7 @@ const ConfirmDetails = () => {
                 sessionStorage.setItem("lastName", "");
                 sessionStorage.setItem("nationality", "");
                 sessionStorage.setItem("birthDate", "");
+                dispatch(setCloseCircularLoadBackdrop());
 
                 await navigate("/login");
               })
@@ -764,6 +833,13 @@ const ConfirmDetails = () => {
     } catch (error) {
       console.error("Error fetching document:", error);
       alert("Error in createing player database");
+
+      dispatch(setCloseCircularLoadBackdrop());
+
+      triggerWarningAlertModal(
+        "Error creating your account please wait a while and try again"
+      );
+
       // Handle the error as needed
     }
   };

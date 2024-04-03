@@ -192,7 +192,7 @@ export default function UploadIDCardAccount() {
               "
             style={style}
           >
-            <h2>Upload images of ID or passport {firstName} x</h2>
+            <h2>Upload images of ID or passport </h2>
             <div
               style={{
                 height: "100%",
@@ -203,7 +203,7 @@ export default function UploadIDCardAccount() {
             >
               <div
                 style={{
-                  flex: ".5",
+                  flex: "1",
 
                   display: "flex",
                   alignItems: "center",
@@ -267,7 +267,7 @@ export default function UploadIDCardAccount() {
               </div>
 
               {/* // Right Image */}
-              <div
+              {/* <div
                 style={{
                   flex: ".5",
 
@@ -293,7 +293,7 @@ export default function UploadIDCardAccount() {
                 >
                   Upload
                 </Button>
-              </div>
+              </div> */}
             </div>
 
             <Button

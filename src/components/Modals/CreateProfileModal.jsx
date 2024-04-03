@@ -101,14 +101,56 @@ export default function CreateProfileModal({ ProfileType }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => {
-    console.log(
-      "userSavedProfiles.length:",
-      userSavedProfiles.length,
-      "maxProfiles:",
-      subscriptionFeaturesObject?.maxProfiles
+  const StripeCheckout = async (priceID) => {
+    const currentUser = auth.currentUser;
+    const usersDbRef = collection(db, "users_db");
+    const currentUserDocRef = doc(usersDbRef, currentUser.uid);
+    const checkoutSessionsCollectionRef = collection(
+      currentUserDocRef,
+      "checkout_sessions"
     );
-    setOpen(true);
+
+    const newCheckoutSessionDocRef = await addDoc(
+      checkoutSessionsCollectionRef,
+      {
+        price: priceID,
+        success_url: window.location.origin,
+        cancel_url: window.location.origin,
+      }
+    );
+
+    // Wait for the CheckoutSession to get attached by the extension
+    onSnapshot(newCheckoutSessionDocRef, (snap) => {
+      const { error, url } = snap.data();
+      if (error) {
+        // Show an error to your customer and
+        // inspect your Cloud Function logs in the Firebase console.
+        alert(`An error occurred: ${error.message}`);
+      }
+      if (url) {
+        // We have a Stripe Checkout URL, let's redirect.
+        window.location.assign(url);
+      }
+    });
+  };
+
+  const handleOpen = async () => {
+    // console.log(
+    //   "userSavedProfiles.length:",
+    //   userSavedProfiles.length,
+    //   "maxProfiles:",
+    //   subscriptionFeaturesObject?.maxProfiles
+    // );
+
+    const { accountId } = loginUserDetails;
+    const productIDRef = doc(db, `users_db/${accountId}`);
+    const productIdSnap = await getDoc(productIDRef);
+    const priceID = await productIdSnap.data().subscriptionPrice;
+    if (isSubscriptionActive == false) {
+      StripeCheckout(priceID);
+    } else {
+      setOpen(true);
+    }
   };
   const handleClose = () => {
     setOpen(false);
@@ -392,39 +434,6 @@ export default function CreateProfileModal({ ProfileType }) {
   //   console.log(currentUser.uid);
   // }, []);
 
-  const StripeCheckout = async (priceID) => {
-    const currentUser = auth.currentUser;
-    const usersDbRef = collection(db, "users_db");
-    const currentUserDocRef = doc(usersDbRef, currentUser.uid);
-    const checkoutSessionsCollectionRef = collection(
-      currentUserDocRef,
-      "checkout_sessions"
-    );
-
-    const newCheckoutSessionDocRef = await addDoc(
-      checkoutSessionsCollectionRef,
-      {
-        price: priceID,
-        success_url: window.location.origin,
-        cancel_url: window.location.origin,
-      }
-    );
-
-    // Wait for the CheckoutSession to get attached by the extension
-    onSnapshot(newCheckoutSessionDocRef, (snap) => {
-      const { error, url } = snap.data();
-      if (error) {
-        // Show an error to your customer and
-        // inspect your Cloud Function logs in the Firebase console.
-        alert(`An error occurred: ${error.message}`);
-      }
-      if (url) {
-        // We have a Stripe Checkout URL, let's redirect.
-        window.location.assign(url);
-      }
-    });
-  };
-
   // FUNCTION FOR CREATING PROFILE
 
   // const { productID } = selectProductID;
@@ -433,171 +442,174 @@ export default function CreateProfileModal({ ProfileType }) {
     // set isLoading to true
 
     const { accountId } = loginUserDetails;
+
+    const profileMax =
+      subscriptionFeaturesObject?.maxProfiles === undefined
+        ? 0
+        : subscriptionFeaturesObject?.maxProfiles;
+
+    alert(profileMax + " = " + userSavedProfiles.length);
     const uuid = uuidv4();
-    // get product id form database if the redux state is empty
-    const productIDRef = doc(db, `users_db/${accountId}`);
-    const productIdSnap = await getDoc(productIDRef);
-    const productID = await productIdSnap.data().subscriptionPackage;
-    const priceID = await productIdSnap.data().subscriptionPrice;
 
-    if (isSubscriptionActive == true) {
-      // first check if the user has exceeded the max allowed profiles
-      if (userSavedProfiles.length < subscriptionFeaturesObject?.maxProfiles) {
-        if (userSavedProfiles.length < 1) {
-          alert("can add");
-          // This is the rest of users in the database devoid of the current user logged in
+    // first check if the user has exceeded the max allowed profiles
+    if (
+      userSavedProfiles.length === 0 ||
+      userSavedProfiles.length < profileMax
+    ) {
+      if (userSavedProfiles.length < 1) {
+        alert("can add");
+        // This is the rest of users in the database devoid of the current user logged in
 
-          // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
+        // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
 
-          // alert(accountId);
+        // alert(accountId);
+        ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
+        const savedProfileSubCollectionRef = doc(
+          db,
+          `users_db/${accountId}/SavedProfiles`,
+          "Default"
+        );
+
+        setDoc(savedProfileSubCollectionRef, {
+          label: "Default",
+          dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+          filter: currentProfileFilterObject,
+          labelId: "Default",
+        });
+
+        handleClose();
+
+        /// REset the filter object after createion
+        dispatch(
+          setCurrentProfileFilterObject({
+            // PlaceOfBirth: "Any",
+            NationalityValue: "Any",
+            AgeRangeValue: [0, 40],
+            HeightRangeValue: [0, 2.5],
+            positionRangeSliderValues: {
+              "Clean sheet": [0, 100],
+              Saves: [0, 100],
+              "Long pass accuracy": [0, 100],
+              Interception: [0, 100],
+
+              Blocks: [0, 100],
+              "Successful tackles rate %": [0, 100],
+              "pass success": [0, 100],
+              "total passes": [0, 100],
+              assists: [0, 100],
+
+              Goals: [0, 100],
+              "Goal/match played ratio": [0, 100],
+              Assists: [0, 100],
+              // "Shots per game": [0, 100],
+            },
+            MarketValue: "0 - 99,999",
+            SalaryExpectationValue: "0 - 4,999",
+
+            ClubCountryValue: "Any",
+            // CaptainRadioValue: "Any",
+            PrefferedFootRadioValue: "Any",
+            PlayerDivisionValue: "Any",
+            ContractStatusCheckBoxes: "Any",
+
+            // REview below
+            PlayerPositionAutoCompleteValue: "Any",
+            PlayerAlternatePositionAutoCompleteValue: "None",
+
+            previousProfile: "",
+          })
+        );
+      } else {
+        alert("can add 2");
+
+        const savedProfileSubCollectionRef = doc(
+          db,
+          `users_db/${accountId}/SavedProfiles`,
+          uuid
+        );
+        if (profileName !== "" && profileName.toLowerCase() !== "") {
           ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
-          const savedProfileSubCollectionRef = doc(
-            db,
-            `users_db/${accountId}/SavedProfiles`,
-            "Default"
-          );
 
-          setDoc(savedProfileSubCollectionRef, {
-            label: "Default",
-            dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-            filter: currentProfileFilterObject,
-            labelId: "Default",
+          const profileNameMatch = userSavedProfiles.filter((data) => {
+            const { label } = data;
+            return (
+              label.replace(/\s/g, "").toLowerCase() ===
+              profileName.replace(/\s/g, "").toLowerCase()
+            );
           });
 
-          handleClose();
+          console.log("ProfileLabelMatxh", profileNameMatch);
+          // This it to make sure that we dont create a profile with the same name
 
-          /// REset the filter object after createion
-          dispatch(
-            setCurrentProfileFilterObject({
-              // PlaceOfBirth: "Any",
-              NationalityValue: "Any",
-              AgeRangeValue: [0, 40],
-              HeightRangeValue: [0, 2.5],
-              positionRangeSliderValues: {
-                "Clean sheet": [0, 100],
-                Saves: [0, 100],
-                "Long pass accuracy": [0, 100],
-                Interception: [0, 100],
-
-                Blocks: [0, 100],
-                "Successful tackles rate %": [0, 100],
-                "pass success": [0, 100],
-                "total passes": [0, 100],
-                assists: [0, 100],
-
-                Goals: [0, 100],
-                "Goal/match played ratio": [0, 100],
-                Assists: [0, 100],
-                // "Shots per game": [0, 100],
-              },
-              MarketValue: "0 - 99,999",
-              SalaryExpectationValue: "0 - 4,999",
-
-              ClubCountryValue: "Any",
-              // CaptainRadioValue: "Any",
-              PrefferedFootRadioValue: "Any",
-              PlayerDivisionValue: "Any",
-              ContractStatusCheckBoxes: "Any",
-
-              // REview below
-              PlayerPositionAutoCompleteValue: "Any",
-              PlayerAlternatePositionAutoCompleteValue: "None",
-
-              previousProfile: "",
-            })
-          );
-        } else {
-          const savedProfileSubCollectionRef = doc(
-            db,
-            `users_db/${accountId}/SavedProfiles`,
-            uuid
-          );
-          if (profileName !== "" && profileName.toLowerCase() !== "") {
-            ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
-
-            const profileNameMatch = userSavedProfiles.filter((data) => {
-              const { label } = data;
-              return (
-                label.replace(/\s/g, "").toLowerCase() ===
-                profileName.replace(/\s/g, "").toLowerCase()
-              );
+          if (profileNameMatch.length <= 0) {
+            setDoc(savedProfileSubCollectionRef, {
+              label: profileName,
+              dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+              filter: currentProfileFilterObject,
+              labelId: uuid,
             });
 
-            console.log("ProfileLabelMatxh", profileNameMatch);
-            // This it to make sure that we dont create a profile with the same name
+            handleClose();
+            dispatch(
+              setCurrentProfileFilterObject({
+                // PlaceOfBirth: "Any",
+                NationalityValue: "Any",
+                AgeRangeValue: [0, 40],
+                HeightRangeValue: [0, 2.5],
+                positionRangeSliderValues: {
+                  "Clean sheet": [0, 100],
+                  Saves: [0, 100],
+                  "Long pass accuracy": [0, 100],
+                  Interception: [0, 100],
 
-            if (profileNameMatch.length <= 0) {
-              setDoc(savedProfileSubCollectionRef, {
-                label: profileName,
-                dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-                filter: currentProfileFilterObject,
-                labelId: uuid,
-              });
+                  Blocks: [0, 100],
+                  "Successful tackles rate %": [0, 100],
+                  "pass success": [0, 100],
+                  "total passes": [0, 100],
+                  assists: [0, 100],
 
-              handleClose();
-              dispatch(
-                setCurrentProfileFilterObject({
-                  // PlaceOfBirth: "Any",
-                  NationalityValue: "Any",
-                  AgeRangeValue: [0, 40],
-                  HeightRangeValue: [0, 2.5],
-                  positionRangeSliderValues: {
-                    "Clean sheet": [0, 100],
-                    Saves: [0, 100],
-                    "Long pass accuracy": [0, 100],
-                    Interception: [0, 100],
+                  Goals: [0, 100],
+                  "Goal/match played ratio": [0, 100],
+                  Assists: [0, 100],
+                  // "Shots per game": [0, 100],
+                },
+                SalaryExpectationValue: "0 - 4,999",
 
-                    Blocks: [0, 100],
-                    "Successful tackles rate %": [0, 100],
-                    "pass success": [0, 100],
-                    "total passes": [0, 100],
-                    assists: [0, 100],
+                MarketValue: "0 - 99,999",
 
-                    Goals: [0, 100],
-                    "Goal/match played ratio": [0, 100],
-                    Assists: [0, 100],
-                    // "Shots per game": [0, 100],
-                  },
-                  SalaryExpectationValue: "0 - 4,999",
+                ClubCountryValue: "Any",
+                // CaptainRadioValue: "Any",
+                PrefferedFootRadioValue: "Any",
+                PlayerDivisionValue: "Any",
+                ContractStatusCheckBoxes: "Any",
+                // REview below
+                PlayerPositionAutoCompleteValue: "Any",
+                PlayerAlternatePositionAutoCompleteValue: "None",
+                previousProfile: "",
+              })
+            );
+            /// Snackbar show
+            dispatch(setSnackbarMessage(`"${profileName}" filter created`));
+            dispatch(setSnackbarTriggerCounter());
 
-                  MarketValue: "0 - 99,999",
-
-                  ClubCountryValue: "Any",
-                  // CaptainRadioValue: "Any",
-                  PrefferedFootRadioValue: "Any",
-                  PlayerDivisionValue: "Any",
-                  ContractStatusCheckBoxes: "Any",
-                  // REview below
-                  PlayerPositionAutoCompleteValue: "Any",
-                  PlayerAlternatePositionAutoCompleteValue: "None",
-                  previousProfile: "",
-                })
-              );
-              /// Snackbar show
-              dispatch(setSnackbarMessage(`"${profileName}" filter created`));
-              dispatch(setSnackbarTriggerCounter());
-
-              setProfileName("");
-            } else {
-              triggerWarningAlertModal(
-                "Please change your profile name a similar name already exists"
-              );
-            }
+            setProfileName("");
           } else {
             triggerWarningAlertModal(
-              "Please enter a profile name (cannot be name default)"
+              "Please change your profile name a similar name already exists"
             );
           }
+        } else {
+          triggerWarningAlertModal(
+            "Please enter a profile name (cannot be name default)"
+          );
         }
-      } else if (
-        userSavedProfiles.length == subscriptionFeaturesObject?.maxProfiles
-      ) {
-        triggerWarningAlertModal(
-          "You have reached the maximum profiles allowed! Upgrade to add more"
-        );
       }
-    } else if (isSubscriptionActive == false) {
-      StripeCheckout(priceID);
+    } else if (
+      userSavedProfiles.length == subscriptionFeaturesObject?.maxProfiles
+    ) {
+      triggerWarningAlertModal(
+        "You have reached the maximum profiles allowed! Upgrade to add more"
+      );
     }
 
     // changing the click current clicked value to the edited name
@@ -1462,11 +1474,11 @@ export default function CreateProfileModal({ ProfileType }) {
                   // position: "absolute",
                   // bottom: 50,
                 }}
-                onClick={
+                onClick={() => {
                   ProfileType === "Edit"
-                    ? handleSaveProfile
-                    : handleCreateProfile
-                }
+                    ? handleSaveProfile()
+                    : handleCreateProfile();
+                }}
               >
                 {ProfileType === "Edit" ? "Save" : "Create"}
               </Button>

@@ -90,10 +90,10 @@ const Login = () => {
         const accountId = user.uid;
         // get userDetails
         const userInfoRef = doc(db, `users_db/${accountId}`);
-        alert(accountId);
+        // alert(accountId);
 
         const userInfoSnap = await getDoc(userInfoRef);
-        alert(userInfoSnap?.data()?.Nationality);
+        // alert(userInfoSnap?.data()?.Nationality);
 
         if (user) {
           dispatch(setLoginStatus(true));
@@ -171,7 +171,7 @@ const Login = () => {
                 if (docSnap.exists()) {
                   const playerData = docSnap.data();
 
-                  if (items[0].role === "Player") {
+                  if (userInfoSnap?.data()?.role === "Player") {
                     const firestoreTimestamp = playerData.dateCreated;
                     const date = firestoreTimestamp.toDate();
                     const options = {

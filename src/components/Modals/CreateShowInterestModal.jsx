@@ -130,10 +130,11 @@ export default function CreateShowInterestModal({ playerName, playerId }) {
             component="h2"
             sx={{ fontWeight: "bold" }}
           >
-            Player Name: {playerName} {playerId}
+            Player Name: {playerName}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 4 }}>
-            <TextField
+            Send Request to show interest and establish connections
+            {/* <TextField
               onChange={(e) => {
                 setMessage(e.target.value);
               }}
@@ -144,7 +145,7 @@ export default function CreateShowInterestModal({ playerName, playerId }) {
               //   defaultValue="Messages"
               sx={{ width: "45vw" }}
               type="text"
-            />
+            /> */}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 4 }}>
             <Button
@@ -158,7 +159,7 @@ export default function CreateShowInterestModal({ playerName, playerId }) {
                 background: "#5585FE",
               }}
             >
-              submit
+              Send request
             </Button>
           </Typography>
         </Box>

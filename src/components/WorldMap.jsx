@@ -1,31 +1,33 @@
 import { VectorMap } from "@react-jvectormap/core";
 import { worldMill } from "@react-jvectormap/world";
+import { useSelector } from "react-redux";
+import { selectPlayersDatabase } from "../statemanager/slices/DatabaseSlice";
 const WorldMaps = () => {
-  const countries = {
-    IN: 88,
-    CN: 33,
-    RU: 79,
-    MY: 2,
-    GB: 100,
-    FK: 10,
-    AR: 800,
-    VE: 90,
-    GH: 70,
-    NG: 89,
-    BF: 79,
-    EG: 22,
-    CM: 89,
-    DZ: 79,
-    ML: 22,
-    SN: 199,
-    ZA: 88,
-    US: 30,
-    JP: 12,
-    BR: 89,
-    CD: 79,
-    AO: 22,
-    AU: 79,
-  };
+  // const countries = {
+  //   IN: 88,
+  //   CN: 33,
+  //   RU: 79,
+  //   MY: 2,
+  //   GB: 100,
+  //   FK: 10,
+  //   AR: 800,
+  //   VE: 90,
+  //   GH: 120,
+  //   NG: 89,
+  //   BF: 79,
+  //   EG: 22,
+  //   CM: 89,
+  //   DZ: 79,
+  //   ML: 22,
+  //   SN: 199,
+  //   ZA: 88,
+  //   US: 30,
+  //   JP: 12,
+  //   BR: 89,
+  //   CD: 79,
+  //   AO: 22,
+  //   AU: 79,
+  // };
 
   const missingCountries = [
     { name: "Singapore", LatLng: [1.3521, 103.8198] },
@@ -33,6 +35,14 @@ const WorldMaps = () => {
   ];
 
   const colorScale = ["#5585FE", "#0e328e"];
+
+  const PlayersDatabase = useSelector(selectPlayersDatabase);
+
+  const countries = PlayersDatabase.reduce((acc, obj) => {
+    const { CountryCode } = obj;
+    acc[CountryCode] = (acc[CountryCode] || 0) + 1;
+    return acc;
+  }, {});
 
   return (
     <div style={{ width: "80%", height: "80%" }}>
@@ -55,7 +65,7 @@ const WorldMaps = () => {
               scale: colorScale,
               values: countries,
               min: 0,
-              max: 100,
+              max: 20,
             },
           ],
         }}

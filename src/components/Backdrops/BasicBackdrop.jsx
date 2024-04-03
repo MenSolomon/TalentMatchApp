@@ -1,11 +1,15 @@
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 // import Button from "@mui/material/Button";
-import { selectCircularLoadBackdropTriggerState } from "../../statemanager/slices/OtherComponentStatesSlice";
-import { useSelector } from "react-redux";
+import {
+  selectCircularLoadBackdropTriggerState,
+  setCloseCircularLoadBackdrop,
+} from "../../statemanager/slices/OtherComponentStatesSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function BasicBackdrop() {
   const backdropOpen = useSelector(selectCircularLoadBackdropTriggerState);
+
   return (
     <div>
       {/* <Button onClick={handleOpen}>Show backdrop</Button> */}
