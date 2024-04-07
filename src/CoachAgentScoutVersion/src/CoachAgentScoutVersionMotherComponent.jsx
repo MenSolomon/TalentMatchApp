@@ -1,6 +1,6 @@
 import { NotificationAdd } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import avatarImage from "./assets/images/avatar.jpg";
@@ -32,75 +32,64 @@ const CoachAgentScoutVersionMotherComponent = () => {
   const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
   // state to hold maximum number of profiles
   const { maxPlayersInAgency } = subscriptionFeaturesObject;
-  const [menuButtonsArray, setMenuButtonsArray] = useState();
+  const [menuButtonsArray, setMenuButtonsArray] = useState([]);
+
+  const memoizedMenuButtons = useMemo(() => {
+    if (maxPlayersInAgency === 0) {
+      return [
+        { name: "Home", icon: "home", path: "/" },
+        {
+          name: "Dashboard",
+          icon: "dashboard",
+          path: "/multiStudio/dashboard",
+        },
+        {
+          name: "Connections",
+          icon: "monitoring",
+          path: "/multiStudio/connections",
+        },
+        {
+          name: "Messages",
+          icon: "move_to_inbox",
+          path: "/multiStudio/messages",
+        },
+        {
+          name: "Analytics",
+          icon: "monitoring",
+          path: "/multiStudio/analytics",
+        },
+      ];
+    } else {
+      return [
+        { name: "Home", icon: "home", path: "/" },
+        {
+          name: "Dashboard",
+          icon: "dashboard",
+          path: "/multiStudio/dashboard",
+        },
+        { name: "Players", icon: "people-group", path: "/multiStudio/players" },
+        {
+          name: "Connections",
+          icon: "monitoring",
+          path: "/multiStudio/connections",
+        },
+        {
+          name: "Messages",
+          icon: "move_to_inbox",
+          path: "/multiStudio/messages",
+        },
+        {
+          name: "Analytics",
+          icon: "monitoring",
+          path: "/multiStudio/analytics",
+        },
+      ];
+    }
+  }, [maxPlayersInAgency]);
 
   useEffect(() => {
-    const renderTopHalfMenu = async () => {
-      // Dynamically Render Menu Buttons Based on Features
-      if (maxPlayersInAgency === 0) {
-        setMenuButtonsArray([
-          { name: "Home", icon: "home", path: "/" },
-
-          {
-            name: "Dashboard",
-            icon: "dashboard",
-            path: "/multiStudio/dashboard",
-          },
-          // The none values are for the savedFilters which is an accordion and not a button.. skipped over it in the map
-          {
-            name: "Connections",
-            icon: "monitoring",
-            path: "/multiStudio/connections",
-          },
-          {
-            name: "Messages",
-            icon: "move_to_inbox",
-            path: "/multiStudio/messages",
-          },
-          {
-            name: "Analytics",
-            icon: "monitoring",
-            path: "/multiStudio/analytics",
-          },
-        ]);
-      } else {
-        setMenuButtonsArray([
-          { name: "Home", icon: "home", path: "/" },
-
-          {
-            name: "Dashboard",
-            icon: "dashboard",
-            path: "/multiStudio/dashboard",
-          },
-          // The none values are for the savedFilters which is an accordion and not a button.. skipped over it in the map
-
-          {
-            name: "Players",
-            icon: "people-group",
-            path: "/multiStudio/players",
-          },
-          // { name: "Statistics", icon: "bar_chart_4_bars", path: "/Statistics" },
-          // { name: "Favourites", icon: "favorite", path: "/favorites" },
-          {
-            name: "Connections",
-            icon: "monitoring",
-            path: "/multiStudio/connections",
-          },
-          {
-            name: "Messages",
-            icon: "move_to_inbox",
-            path: "/multiStudio/messages",
-          },
-          {
-            name: "Analytics",
-            icon: "monitoring",
-            path: "/multiStudio/analytics",
-          },
-        ]);
-      }
-    };
-    renderTopHalfMenu();
-  }, [menuButtonsArray]);
+    setMenuButtonsArray(memoizedMenuButtons);
+  }, [memoizedMenuButtons]);
 
   const menuButtonsArrayTWO2 = [
     // { name: "Add Agency", icon: "follow_the_signs", path: "none" },

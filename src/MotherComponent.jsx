@@ -391,9 +391,8 @@ const MotherComponent = () => {
             // get product id from database if an active
             const productID = await docData.data().items[0].plan.product;
             const priceID = await docData.data().items[0].plan.id;
-            console.log("prodId", productID, "priceID", priceID);
+            // alert(await docData.data().items[0].plan.product);
             //get and store maxProfiles
-            const userInfoRef = await doc(db, `users_db/${accountId}`);
             const featuresRef = await doc(db, `products/${productID}`);
             const featuresSnap = await getDoc(featuresRef);
             const features = await featuresSnap.data().features;

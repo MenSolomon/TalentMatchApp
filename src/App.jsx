@@ -80,6 +80,7 @@ import { setPriceID } from "./statemanager/slices/SignupStepperSlice";
 import CoachAgentScoutVersionConnetions from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionConnections";
 import PlayerVersionConnections from "./PlayerVersion/src/screens/PlayerVersionConnections";
 import ProductDetails from "./utils/ProductDetails";
+import BuyBoostPoints from "./screens/BuyBoostPoints";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -568,6 +569,7 @@ const App = () => {
             path="/changeSubscription"
             element={<ChangeSubscriptionPackagePage />}
           />
+          <Route path="/buyBoostPoints" element={<BuyBoostPoints />} />
         </Route>
 
         {/* END OF PROTECTED ROUTES */}

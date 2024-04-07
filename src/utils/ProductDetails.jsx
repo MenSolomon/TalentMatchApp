@@ -57,6 +57,13 @@ export const productDetails = [
     details: [],
   },
   {
+    id: "prod_PsoKSsFkDq1dcy",
+    name: "Agent Starter",
+    role: "Agent",
+    details: [],
+  },
+
+  {
     id: "prod_Ps1JzpXiJ69kzn",
     name: "Basic",
     role: "Basic",

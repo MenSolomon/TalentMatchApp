@@ -1,23 +1,12 @@
 import {
   Button,
-  Card,
   CircularProgress,
   Divider,
   Paper,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import FilteredPlayersTable from "../../components/Tables/FilterPlayersTable";
-import { auth, db, functions } from "../../Firebase/Firebase";
-import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-  getDoc,
-  doc,
-  getDocs,
-} from "firebase/firestore";
+import React, { useState } from "react";
+import { functions } from "../../Firebase/Firebase";
 import { productDetails } from "../../utils/ProductDetails";
 import { httpsCallable } from "firebase/functions";
 import { useNavigate } from "react-router-dom";
@@ -46,52 +35,6 @@ function SettingsBilling() {
   // We take the names from a dublicate array in the src directory to prevent unecessary reads from firestore
   const productids = productDetails;
   const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
-
-  useEffect(() => {
-    // const activeQueryFn = () => {
-    //   const activeProductsQuery = query(
-    //     collection(db, "products"),
-    //     where("active", "==", true)
-    //   );
-
-    //   onSnapshot(activeProductsQuery, (snapshot) => {
-    //     snapshot.docChanges().forEach((change) => {
-    //       const { doc } = change;
-    //       console.log(
-    //         `Product ${doc.id} ${
-    //           change.type === "added" ? "added" : "changed"
-    //         }:`,
-    //         doc.data()
-    //       );
-
-    //       // Fetch and log prices only for added or modified products
-    //       if (change.type === "added" || change.type === "modified") {
-    //         onSnapshot(doc.ref.collection("prices"), (priceSnapshot) => {
-    //           priceSnapshot.docChanges().forEach((priceChange) => {
-    //             const { doc } = priceChange;
-    //             console.log(
-    //               `Price ${
-    //                 priceChange.type === "added" ? "added" : "changed"
-    //               } for product ${doc.ref.parent.id}:`,
-    //               doc.data()
-    //             );
-    //           });
-    //         });
-    //       }
-    //     });
-    //   });
-    // };
-    // get status of subscription
-    const getSubscriptionStatus = async () => {
-      if (isSubscriptionActive === false) {
-        setSubscriptionStatus("Inactive");
-      } else if (isSubscriptionActive === true) {
-        setSubscriptionStatus("Active");
-      }
-    };
-    // activeQueryFn();
-    getSubscriptionStatus();
-  }, [isSubscriptionActive]);
 
   const handleCustomerPortal = async () => {
     const createPortalLink = httpsCallable(

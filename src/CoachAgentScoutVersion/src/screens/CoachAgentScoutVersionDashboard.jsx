@@ -1,4 +1,4 @@
-import { Avatar, Button, Chip, IconButton, Switch } from "@mui/material";
+import { Avatar, Button, Chip, Stack, Switch } from "@mui/material";
 import PlayerSkeletonImage from "../assets/images/PlayerSkeleton.png";
 import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../statemanager/slices/ThemeProviderSlice";
@@ -34,6 +34,9 @@ import { formatDistanceToNow } from "date-fns";
 const CoachAgentScoutVersionDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
+  const { boostPoints } = userLoginDetailsObject;
+
+  const navigate = useNavigate();
 
   const [latestMessages, setLatestMessages] = useState([]);
 
@@ -314,6 +317,19 @@ const CoachAgentScoutVersionDashboard = () => {
       <div className="md:basis-[10%] sm:basis-[10%] grid md:grid-cols-2 sm:grid-cols-2">
         <h3 style={{ margin: 0, float: "left" }} className="primaryTextColor">
           Profile dashboard
+          <Stack direction="row" spacing={1}>
+            <Chip
+              label={`${boostPoints} Boost Points`}
+              color="primary"
+              variant="contained"
+            />
+            <Chip
+              label="Buy Points"
+              color="success"
+              variant="contained"
+              onClick={() => navigate("/buyBoostPoints")}
+            />
+          </Stack>
         </h3>
         <div className="flex justify-self-end">
           <Switch

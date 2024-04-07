@@ -76,6 +76,7 @@ const UserLoginDataSlicePersistConfig = {
     "subscriptionFeatures",
     "isSubscriptionActive",
     "selectSubscriptionFeatures",
+    "selectBoostPoints",
   ],
 };
 
