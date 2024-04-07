@@ -146,15 +146,7 @@ const BuyBoostPoints = () => {
                 details: prods.data.details,
               },
             ]);
-            // console.log({
-            //   name: prods.data.name,
-            //   image: prods.data.images,
-            //   price: priceDoc.data().unit_amount,
-            //   id: prods.id,
-            //   priceId: priceDoc.id,
-            //   description: prods.data.description,
-            //   details: prods.data.details,
-            // });
+
             // disable loading
             setIsProductsLoading(false);
           });
@@ -409,7 +401,12 @@ const BuyBoostPoints = () => {
                     price={item.price / 100}
                     isButtonTriggered={isButtonTriggered}
                     featuresHighlightArray={item.details}
-                    onClick={async () => {
+                    // onClick={async () => {
+                    //   // display loading sign
+                    //   setIsButtonTriggered(true);
+                    //   StripeBoostPointsCheckout(item.priceId);
+                    // }}
+                    onClick={() => {
                       console.log(
                         "id:",
                         item.id,
@@ -420,29 +417,9 @@ const BuyBoostPoints = () => {
                         "price:",
                         item.price / 100,
                         "priceId",
-                        item.priceId
-                      );
-
-                      // display loading sign
-                      // setIsButtonTriggered(true);
-                      StripeBoostPointsCheckout(
-                        "price_1P2z5nDkt4D42P0jcgzQgw4T"
+                        priceId
                       );
                     }}
-                    // onClick={() => {
-                    //   console.log(
-                    //     "id:",
-                    //     item.id,
-                    //     "name:",
-                    //     item.name,
-                    //     "descr:",
-                    //     item.description,
-                    //     "price:",
-                    //     item.price / 100,
-                    //     "priceId",
-                    //     item.priceId
-                    //   );
-                    // }}
                   />
                 ))}
               </div>

@@ -111,20 +111,31 @@ const ChangeSubscriptionPackagePage = () => {
         );
         const allProducts = [];
         const basicProduct = [];
-
+        const productRoles = [];
         const querySnapshot = await getDocs(q);
 
         // get all the products
         querySnapshot.forEach(async (doc) => {
           // save them to allProducts array
           allProducts.push({ id: doc.id, data: doc.data() });
+          // get all the procut names and save into the product roles array
+          productRoles.push({ id: doc.id, name: doc.data().name });
+
           // get and store basic
           if (doc.data().name == "Basic") {
             await basicProduct.push({ id: doc.id, data: doc.data() });
           }
         });
+
+        // get the products that correspond to the role
+        const selectedIds = [];
+
+        productRoles
+          .filter(({ name }) => name.includes(roleSelected))
+          .forEach(({ id }) => selectedIds.push(id));
+
         // check the user's role with the roles in productsDetails file and get the products for that role
-        const selectedIds = productIds
+        selectedIds
           .filter((prodId) => prodId.role === roleSelected)
           .map((prodId) => prodId.id);
         // check the allProducts array and get the contents of the product/prices collection
