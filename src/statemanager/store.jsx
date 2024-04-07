@@ -72,7 +72,11 @@ const UserLoginDataSlicePersistConfig = {
   version: 1,
   storage,
   blacklist: ["logInStatus", "userDetailsObject", "credentials"],
-  whitelist: ["subscriptionFeatures", "isSubscriptionActive"],
+  whitelist: [
+    "subscriptionFeatures",
+    "isSubscriptionActive",
+    "selectSubscriptionFeatures",
+  ],
 };
 
 const reducer = combineReducers({

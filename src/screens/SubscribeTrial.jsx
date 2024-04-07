@@ -1,25 +1,10 @@
 import {
-  Button,
+  CircularProgress,
   Card,
-  CardHeader,
-  Checkbox,
-  Divider,
-  IconButton,
-  Paper,
   Stack,
+  Switch,
   Typography,
 } from "@mui/material";
-import FreeTrialMenu from "../components/Menu/FreeTrialMenu";
-import FreetrialStepper from "../components/Stepper/FreetrialStepper";
-import { Add, AddAPhoto } from "@mui/icons-material";
-import FreetrialCard from "../components/Cards/FreetrialCard";
-import { Avatar } from "antd";
-import Item from "antd/es/list/Item";
-// import SubscribeTrialCardHeader from "../components/Cards/SubscribeTrialCardHeader";
-import iconImage from "../assets/images/kudus.webp";
-// import SubscribeTrialLeftPaper from "../components/Paper/SubscribeTrialLeftPaper";
-// import SubscribeTrialRightPaper from "../components/Paper/SubscribeTrialRightPaper";
-import logoImage from "../assets/images/AppLogoBlue.png";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -39,6 +24,7 @@ import BasicButton from "../components/Buttons/BasicButton";
 import {
   selectUserSignUpData,
   setProductPackage,
+  setSelectedBasicProductArray,
   setSelectedProductArray,
   setUserSignUpData,
 } from "../statemanager/slices/UserDataSlice";
@@ -95,6 +81,7 @@ const SubscribeTrial = () => {
 
   // Get all products
   const [products, setProducts] = useState([]);
+  const [basic, setBasic] = useState([]);
   const productIds = productDetails;
 
   const [fetchCounter, setFetchCounter] = useState(0);
@@ -105,6 +92,7 @@ const SubscribeTrial = () => {
     const FetchProducts = async () => {
       const q = query(collection(db, "products"), where("active", "==", true));
       const allProducts = [];
+      const basicProduct = [];
 
       try {
         const querySnapshot = await getDocs(q);
@@ -113,34 +101,68 @@ const SubscribeTrial = () => {
         querySnapshot.forEach((doc) => {
           // save them to allProducts array
           allProducts.push({ id: doc.id, data: doc.data() });
+          // get and store basic
+          if (doc.data().name == "Basic") {
+            basicProduct.push({ id: doc.id, data: doc.data() });
+          }
         });
 
+        // set basic state
+        await basicProduct.map(async (prods) => {
+          const priceSnap = await getDocs(
+            collection(db, `products/prod_Ps1JzpXiJ69kzn/prices`)
+          );
+
+          priceSnap.forEach((priceDoc) => {
+            // setFetchCounter((prevFetchCounter) => prevFetchCounter + 1);
+            setBasic((prevProducts) => [
+              ...prevProducts,
+              {
+                name: prods.data.name,
+                details: prods.data.details,
+                image: prods.data.images,
+                price: priceDoc.data().unit_amount,
+                interval: priceDoc.data().interval,
+                id: prods.id,
+                priceId: priceDoc.id,
+              },
+            ]);
+
+            // disable loading
+            setIsProductsLoading(false);
+          });
+        });
+
+        // set appropriate product
         const selectedIds = productIds
           .filter((prodId) => prodId.role === roleSelected)
           .map((prodId) => prodId.id);
 
-        const productPromises = allProducts.map(async (prods) => {
+        await allProducts.map(async (prods) => {
           if (selectedIds.includes(prods.id)) {
             const priceSnap = await getDocs(
               collection(db, `products/${prods.id}/prices`)
             );
 
             priceSnap.forEach((priceDoc) => {
-              console.log({
-                name: prods.data.name,
-                image: prods.data.images,
-                price: priceDoc.data().unit_amount,
-                id: prods.id,
-                priceId: priceDoc.id,
-              });
+              // console.log({
+              //   name: prods.data.name,
+              //   image: prods.data.images,
+              //   price: priceDoc.data().unit_amount,
+              //   interval: priceDoc.data().interval,
+              //   id: prods.id,
+              //   priceId: priceDoc.id,
+              // });
               // set counter to +1
               setFetchCounter((prevFetchCounter) => prevFetchCounter + 1);
               setProducts((prevProducts) => [
                 ...prevProducts,
                 {
                   name: prods.data.name,
+                  details: prods.data.details,
                   image: prods.data.images,
                   price: priceDoc.data().unit_amount,
+                  interval: priceDoc.data().interval,
                   id: prods.id,
                   priceId: priceDoc.id,
                 },
@@ -170,7 +192,21 @@ const SubscribeTrial = () => {
   //
   useEffect(() => {
     dispatch(setSelectedProductArray(products));
-  }, [products]);
+    dispatch(setSelectedBasicProductArray(basic));
+  }, [products, basic]);
+
+  const [duration, setDuration] = useState("month");
+  const filteredProducts = products?.filter((item) => {
+    switch (duration) {
+      case "month":
+        return item.interval === "month";
+      case "year":
+        return item.interval === "year";
+      default:
+        console.warn("Unexpected duration value:", duration);
+        return false; // Handle unexpected values gracefully
+    }
+  });
   return (
     <div
       className="md:w-[100%] md:flex-row md:h-[100%] md:flex   
@@ -184,8 +220,7 @@ const SubscribeTrial = () => {
         // gap: "5vw",
         paddingLeft: "4%",
         // flexDirection: "column",
-      }}
-    >
+      }}>
       <div
         className="md:flex md:justify-end md:basis-[55%]   sm:flex sm:justify-center sm:basis-[0.5] "
         style={{
@@ -194,8 +229,7 @@ const SubscribeTrial = () => {
           // display: "flex",
           // justifyContent: "flex-end",
           paddingRight: "10px",
-        }}
-      >
+        }}>
         {/* // LEFT PAPER  */}
 
         <div
@@ -209,14 +243,12 @@ const SubscribeTrial = () => {
               // display: "flex",
               // flexDirection: "column",
             }
-          }
-        >
+          }>
           <div
             style={{
               flex: "0.5",
               display: "flex",
-            }}
-          >
+            }}>
             <div
               style={{
                 flex: "0.3",
@@ -224,8 +256,7 @@ const SubscribeTrial = () => {
                 display: "flex",
                 justifyContent: "flex-end",
                 alignItems: "center",
-              }}
-            >
+              }}>
               {/* 
 
  */}
@@ -251,14 +282,12 @@ const SubscribeTrial = () => {
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                }}
-              >
+                }}>
                 <div>
                   <h5 style={{ fontWeight: "bold" }}>
                     Start your free trial for 30 <br /> days
@@ -270,8 +299,7 @@ const SubscribeTrial = () => {
                       style={{ color: "#5585FE", cursor: "pointer" }}
                       onClick={() => {
                         navigate("/create-account/freetrial");
-                      }}
-                    >
+                      }}>
                       change your membership
                     </span>
                   </small>
@@ -288,8 +316,32 @@ const SubscribeTrial = () => {
               flexDirection: "column",
               gap: "5px",
               // background: "red",
-            }}
-          >
+            }}>
+            {/* Duration Switch */}
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Typography
+                variant="h4"
+                sx={{ color: duration == "year" ? "#5585FE" : null }}>
+                Yearly
+              </Typography>
+              <Switch
+                defaultChecked
+                inputProps={{ "aria-label": "ant design" }}
+                size="large"
+                onChange={(event) => {
+                  if (event.target.checked == true) {
+                    setDuration("month");
+                  } else if (event.target.checked == false) {
+                    setDuration("year");
+                  }
+                }}
+              />
+              <Typography
+                variant="h4"
+                sx={{ color: duration == "month" ? "#5585FE" : null }}>
+                Monthly
+              </Typography>
+            </Stack>
             <FormControl>
               <FormLabel id="demo-radio-buttons-group-label">
                 {" "}
@@ -313,14 +365,15 @@ const SubscribeTrial = () => {
                   dispatch(setPriceID(priceId));
                   // save product id
                   dispatch(setProductID(id));
-                }}
-              >
+                }}>
                 {isProductsLoading == true ? (
-                  <div>Loading...</div>
-                ) : (
-                  products.map((item) => (
+                  <div>
+                    <CircularProgress />
+                  </div>
+                ) : filteredProducts.length > 0 ? (
+                  filteredProducts.map((item) => (
                     <FormControlLabel
-                      key={item.id}
+                      key={item.price}
                       value={JSON.stringify({
                         id: item.id,
                         priceId: item.priceId,
@@ -333,15 +386,44 @@ const SubscribeTrial = () => {
                             style={{
                               marginLeft: "16vw",
                               fontWeight: "bolder",
-                            }}
-                          >
-                            $ {item.price / 100} per Month
+                            }}>
+                            $ {item.price / 100}{" "}
+                            {item.interval == "month"
+                              ? "Monthly"
+                              : item.interval == "year"
+                              ? "Yearly"
+                              : null}
                           </span>{" "}
                         </div>
                       }
                     />
                   ))
+                ) : (
+                  <p>No products found for the selected duration.</p>
                 )}
+                {/* Basic Package */}
+                {basic.map((item) => (
+                  <FormControlLabel
+                    key={item.price}
+                    value={JSON.stringify({
+                      id: item.id,
+                      priceId: item.priceId,
+                    })}
+                    control={<Radio />}
+                    label={
+                      <div style={{ width: "100%" }}>
+                        {item.name}
+                        <span
+                          style={{
+                            marginLeft: "16vw",
+                            fontWeight: "bolder",
+                          }}>
+                          $ {item.price / 100}{" "}
+                        </span>
+                      </div>
+                    }
+                  />
+                ))}
               </RadioGroup>
             </FormControl>
           </div>
@@ -356,8 +438,7 @@ const SubscribeTrial = () => {
           // justifyContent: "flex-start",
           // background: "red",
           padding: "10px 10px",
-        }}
-      >
+        }}>
         <Card
           className="md:w-[25vw] md:h-[42vh]    sm:w-[100%] sm:h-[30vh] sm:pb-[1.5vh] sm:text-[.85em] "
           sx={{
@@ -366,8 +447,7 @@ const SubscribeTrial = () => {
             borderRadius: "5px",
             paddingBottom: "2vh",
             padding: ".5vw",
-          }}
-        >
+          }}>
           <h5
           // style={{ color: "#5585FE" }}
           >
@@ -375,10 +455,7 @@ const SubscribeTrial = () => {
           </h5>
           <ul style={{ width: "90%", ...ulStyle }}>
             {" "}
-            <li style={{ margin: 0 }}>
-              {roleSelected} Membership{" "}
-              <span style={{ float: "right", fontWeight: "bolder" }}>$0</span>{" "}
-            </li>
+            <li style={{ margin: 0 }}>{roleSelected} Membership </li>
             <li style={{ margin: 0 }}>
               {
                 products.find((data) => {
@@ -386,12 +463,16 @@ const SubscribeTrial = () => {
                 })?.name
               }
               <span style={{ float: "right", fontWeight: "bolder" }}>
-                $
-                {packageValue === ""
-                  ? 0
-                  : products.find((data) => {
-                      return data.id === packageValue;
-                    })?.price / 100}
+                <Typography variant="h5">
+                  {" "}
+                  $
+                  {packageValue === ""
+                    ? 0
+                    : (products.find((data) => data.id === packageValue)
+                        ?.price ??
+                        basic.find((data) => data.id === packageValue)?.price) /
+                      100}
+                </Typography>
               </span>{" "}
             </li>
           </ul>
@@ -400,11 +481,24 @@ const SubscribeTrial = () => {
           >
             Whats Included
           </h5>
-          <ul style={{ listStyleType: "disc", ...ulStyle }}>
-            <li style={{ margin: 0 }}>Get full database access</li>
-            <li style={{ margin: 0 }}>Get upload one player proile</li>
-            <li style={{ margin: 0 }}>Create up to 5 match profiles</li>
-          </ul>
+          {packageValue === ""
+            ? null
+            : (products.find((data) => data.id === packageValue)?.details ??
+                basic.find((data) => data.id === packageValue)?.details) && (
+                <ul style={{ listStyleType: "disc", ...ulStyle }}>
+                  {(
+                    (products.find((data) => data.id === packageValue)
+                      ?.details ??
+                      basic.find((data) => data.id === packageValue)
+                        ?.details) ||
+                    []
+                  ).map((detail) => (
+                    <li style={{ margin: 0 }} key={detail}>
+                      {detail}
+                    </li>
+                  ))}
+                </ul>
+              )}
 
           <div
             onClick={() => {
@@ -423,8 +517,7 @@ const SubscribeTrial = () => {
                   })
                 );
               }
-            }}
-          >
+            }}>
             <BasicButton
               style={{
                 width: "90%",
@@ -432,8 +525,7 @@ const SubscribeTrial = () => {
                 marginBottom: browserWidth >= 1024 ? "" : "1.5vh",
                 marginLeft: "5%",
               }}
-              innerText="Start Trial"
-            >
+              innerText="Start Trial">
               {" "}
             </BasicButton>
           </div>

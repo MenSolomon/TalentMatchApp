@@ -46,7 +46,7 @@ const FreeTrial = () => {
           // flexWrap: "wrap",
         }}
       >
-        <FreetrialCard name="Coach" roleImage="/CoachBlue.png" />
+        {/* <FreetrialCard name="Coach" roleImage="/CoachBlue.png" /> */}
         <FreetrialCard
           name="Player"
           roleImage="/PlayerBlue.png"

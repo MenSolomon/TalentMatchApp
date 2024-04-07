@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 import {
   selectUserDetailsObject,
+  setIsSubscriptionActive,
   setLoginStatus,
   setUserDetailsObject,
 } from "../../statemanager/slices/LoginUserDataSlice";
@@ -364,6 +365,7 @@ const CoachAgentScoutVersionMotherComponent = () => {
                           dispatch(setLoginStatus(false));
                           dispatch(setUserDetailsObject({}));
                           dispatch(setUserSavedProfiles([]));
+                          dispatch(setIsSubscriptionActive(true));
                         }}>
                         <NavBarButton
                           ButtonName={name}

@@ -6,10 +6,11 @@ import { KeyboardArrowDown } from "@mui/icons-material";
 import { Navigate, useNavigate } from "react-router-dom";
 import { auth } from "../../../../Firebase/Firebase";
 import { signOut } from "firebase/auth";
-import { setSubscriptionFeatures } from "../../../../statemanager/slices/LoginUserDataSlice";
+
 import { useDispatch } from "react-redux";
 
 export default function ProfileMenu({ style, name }) {
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -66,7 +67,7 @@ export default function ProfileMenu({ style, name }) {
                 canHideVisibility: false,
                 maxPlayersInAgency: 1,
                 maxProfiles: 1,
-                maxVideosPerPlayer: 1,
+                maxVideosPerPlayer: 0,
               })
             );
             handleClose();

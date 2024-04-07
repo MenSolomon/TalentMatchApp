@@ -1,23 +1,14 @@
 import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { Add, Close, Settings } from "@mui/icons-material";
-import {
-  Card,
-  TextField,
-  IconButton,
-  Tooltip,
-  CircularProgress,
-} from "@mui/material";
+import { Card, TextField, IconButton, Tooltip } from "@mui/material";
 import CountrySelect from "../Autocompletes/CountrySelect";
 import IconTooltip from "../Tooltips/IconToolTip";
 import BasicAutoComplete from "../Autocompletes/BasicAutoComplete";
 import GroupedRadio from "../Radio/GroupedRadio";
-import CheckboxesGroup from "../CheckBoxes/GroupedCheckBox";
 import RangeSlider from "../Slider/RangeSlider";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -27,10 +18,7 @@ import {
 } from "../../statemanager/slices/LoginUserDataSlice";
 import BasicButton from "../Buttons/BasicButton";
 import { useNavigate } from "react-router-dom";
-import {
-  selectTempUsersDatabase,
-  setTempUsersDatabase,
-} from "../../statemanager/slices/TempDatabaseSlice";
+import { selectTempUsersDatabase } from "../../statemanager/slices/TempDatabaseSlice";
 import {
   selectCurrentProfile,
   selectCurrentProfileFilterObject,
@@ -44,7 +32,6 @@ import {
   selectAutoCompletePlayerPosition,
   selectEditFilterModalButtonClicked,
   selectFilterModalType,
-  selectSnackbarMessage,
   selectSoccerPostions,
   setAutoCompletePlayerPosition,
   setEditFilterModalButtonClicked,
@@ -57,21 +44,16 @@ import {
 import BasicSelect from "../Selects/BasicSelect";
 import {
   addDoc,
-  arrayUnion,
   collection,
   doc,
   getDoc,
-  getDocs,
   onSnapshot,
-  query,
   setDoc,
   updateDoc,
-  where,
 } from "firebase/firestore";
 import { auth, db } from "../../Firebase/Firebase";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
-import { selectProductID } from "../../statemanager/slices/SignupStepperSlice";
 
 const style = {
   // position: "absolute",
@@ -101,14 +83,56 @@ export default function CreateProfileModal({ ProfileType }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => {
-    console.log(
-      "userSavedProfiles.length:",
-      userSavedProfiles.length,
-      "maxProfiles:",
-      subscriptionFeaturesObject?.maxProfiles
+  const StripeCheckout = async (priceID) => {
+    const currentUser = auth.currentUser;
+    const usersDbRef = collection(db, "users_db");
+    const currentUserDocRef = doc(usersDbRef, currentUser.uid);
+    const checkoutSessionsCollectionRef = collection(
+      currentUserDocRef,
+      "checkout_sessions"
     );
-    setOpen(true);
+
+    const newCheckoutSessionDocRef = await addDoc(
+      checkoutSessionsCollectionRef,
+      {
+        price: priceID,
+        success_url: window.location.origin,
+        cancel_url: window.location.origin,
+      }
+    );
+
+    // Wait for the CheckoutSession to get attached by the extension
+    onSnapshot(newCheckoutSessionDocRef, (snap) => {
+      const { error, url } = snap.data();
+      if (error) {
+        // Show an error to your customer and
+        // inspect your Cloud Function logs in the Firebase console.
+        alert(`An error occurred: ${error.message}`);
+      }
+      if (url) {
+        // We have a Stripe Checkout URL, let's redirect.
+        window.location.assign(url);
+      }
+    });
+  };
+
+  const handleOpen = async () => {
+    // console.log(
+    //   "userSavedProfiles.length:",
+    //   userSavedProfiles.length,
+    //   "maxProfiles:",
+    //   subscriptionFeaturesObject?.maxProfiles
+    // );
+
+    const { accountId } = loginUserDetails;
+    const productIDRef = doc(db, `users_db/${accountId}`);
+    const productIdSnap = await getDoc(productIDRef);
+    const priceID = await productIdSnap.data().subscriptionPrice;
+    if (isSubscriptionActive == false) {
+      StripeCheckout(priceID);
+    } else {
+      setOpen(true);
+    }
   };
   const handleClose = () => {
     setOpen(false);
@@ -219,7 +243,12 @@ export default function CreateProfileModal({ ProfileType }) {
   const loginUserDetails = useSelector(selectUserDetailsObject);
   const userSavedProfiles = useSelector(selectUserSavedProfiles);
   const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
-  const { maxProfiles } = subscriptionFeaturesObject;
+
+  // state to hold maximum number of profiles
+  const { maxPlayersInAgency } = subscriptionFeaturesObject;
+  const { email } = loginUserDetails;
+  const allUsers = useSelector(selectTempUsersDatabase);
+
   const currentProfileFilterObject = useSelector(
     selectCurrentProfileFilterObject
   );
@@ -390,39 +419,6 @@ export default function CreateProfileModal({ ProfileType }) {
   //   console.log(currentUser.uid);
   // }, []);
 
-  const StripeCheckout = async (priceID) => {
-    const currentUser = auth.currentUser;
-    const usersDbRef = collection(db, "users_db");
-    const currentUserDocRef = doc(usersDbRef, currentUser.uid);
-    const checkoutSessionsCollectionRef = collection(
-      currentUserDocRef,
-      "checkout_sessions"
-    );
-
-    const newCheckoutSessionDocRef = await addDoc(
-      checkoutSessionsCollectionRef,
-      {
-        price: priceID,
-        success_url: window.location.origin,
-        cancel_url: window.location.origin,
-      }
-    );
-
-    // Wait for the CheckoutSession to get attached by the extension
-    onSnapshot(newCheckoutSessionDocRef, (snap) => {
-      const { error, url } = snap.data();
-      if (error) {
-        // Show an error to your customer and
-        // inspect your Cloud Function logs in the Firebase console.
-        alert(`An error occurred: ${error.message}`);
-      }
-      if (url) {
-        // We have a Stripe Checkout URL, let's redirect.
-        window.location.assign(url);
-      }
-    });
-  };
-
   // FUNCTION FOR CREATING PROFILE
 
   // const { productID } = selectProductID;
@@ -431,171 +427,174 @@ export default function CreateProfileModal({ ProfileType }) {
     // set isLoading to true
 
     const { accountId } = loginUserDetails;
+
+    const profileMax =
+      subscriptionFeaturesObject?.maxProfiles === undefined
+        ? 0
+        : subscriptionFeaturesObject?.maxProfiles;
+
+    alert(profileMax + " = " + userSavedProfiles.length);
     const uuid = uuidv4();
-    // get product id form database if the redux state is empty
-    const productIDRef = doc(db, `users_db/${accountId}`);
-    const productIdSnap = await getDoc(productIDRef);
-    const productID = await productIdSnap.data().subscriptionPackage;
-    const priceID = await productIdSnap.data().subscriptionPrice;
 
-    if (isSubscriptionActive == true) {
-      // first check if the user has exceeded the max allowed profiles
-      if (userSavedProfiles.length < subscriptionFeaturesObject?.maxProfiles) {
-        if (userSavedProfiles.length < 1) {
-          alert("can add");
-          // This is the rest of users in the database devoid of the current user logged in
+    // first check if the user has exceeded the max allowed profiles
+    if (
+      userSavedProfiles.length === 0 ||
+      userSavedProfiles.length < profileMax
+    ) {
+      if (userSavedProfiles.length < 1) {
+        alert("can add");
+        // This is the rest of users in the database devoid of the current user logged in
 
-          // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
+        // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
 
-          // alert(accountId);
+        // alert(accountId);
+        ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
+        const savedProfileSubCollectionRef = doc(
+          db,
+          `users_db/${accountId}/SavedProfiles`,
+          "Default"
+        );
+
+        setDoc(savedProfileSubCollectionRef, {
+          label: "Default",
+          dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+          filter: currentProfileFilterObject,
+          labelId: "Default",
+        });
+
+        handleClose();
+
+        /// REset the filter object after createion
+        dispatch(
+          setCurrentProfileFilterObject({
+            // PlaceOfBirth: "Any",
+            NationalityValue: "Any",
+            AgeRangeValue: [0, 40],
+            HeightRangeValue: [0, 2.5],
+            positionRangeSliderValues: {
+              "Clean sheet": [0, 100],
+              Saves: [0, 100],
+              "Long pass accuracy": [0, 100],
+              Interception: [0, 100],
+
+              Blocks: [0, 100],
+              "Successful tackles rate %": [0, 100],
+              "pass success": [0, 100],
+              "total passes": [0, 100],
+              assists: [0, 100],
+
+              Goals: [0, 100],
+              "Goal/match played ratio": [0, 100],
+              Assists: [0, 100],
+              // "Shots per game": [0, 100],
+            },
+            MarketValue: "0 - 99,999",
+            SalaryExpectationValue: "0 - 4,999",
+
+            ClubCountryValue: "Any",
+            // CaptainRadioValue: "Any",
+            PrefferedFootRadioValue: "Any",
+            PlayerDivisionValue: "Any",
+            ContractStatusCheckBoxes: "Any",
+
+            // REview below
+            PlayerPositionAutoCompleteValue: "Any",
+            PlayerAlternatePositionAutoCompleteValue: "None",
+
+            previousProfile: "",
+          })
+        );
+      } else {
+        alert("can add 2");
+
+        const savedProfileSubCollectionRef = doc(
+          db,
+          `users_db/${accountId}/SavedProfiles`,
+          uuid
+        );
+        if (profileName !== "" && profileName.toLowerCase() !== "") {
           ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
-          const savedProfileSubCollectionRef = doc(
-            db,
-            `users_db/${accountId}/SavedProfiles`,
-            "Default"
-          );
 
-          setDoc(savedProfileSubCollectionRef, {
-            label: "Default",
-            dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-            filter: currentProfileFilterObject,
-            labelId: "Default",
+          const profileNameMatch = userSavedProfiles.filter((data) => {
+            const { label } = data;
+            return (
+              label.replace(/\s/g, "").toLowerCase() ===
+              profileName.replace(/\s/g, "").toLowerCase()
+            );
           });
 
-          handleClose();
+          console.log("ProfileLabelMatxh", profileNameMatch);
+          // This it to make sure that we dont create a profile with the same name
 
-          /// REset the filter object after createion
-          dispatch(
-            setCurrentProfileFilterObject({
-              // PlaceOfBirth: "Any",
-              NationalityValue: "Any",
-              AgeRangeValue: [0, 40],
-              HeightRangeValue: [0, 2.5],
-              positionRangeSliderValues: {
-                "Clean sheet": [0, 100],
-                Saves: [0, 100],
-                "Long pass accuracy": [0, 100],
-                Interception: [0, 100],
-
-                Blocks: [0, 100],
-                "Successful tackles rate %": [0, 100],
-                "pass success": [0, 100],
-                "total passes": [0, 100],
-                assists: [0, 100],
-
-                Goals: [0, 100],
-                "Goal/match played ratio": [0, 100],
-                Assists: [0, 100],
-                // "Shots per game": [0, 100],
-              },
-              MarketValue: "0 - 99,999",
-              SalaryExpectationValue: "0 - 4,999",
-
-              ClubCountryValue: "Any",
-              // CaptainRadioValue: "Any",
-              PrefferedFootRadioValue: "Any",
-              PlayerDivisionValue: "Any",
-              ContractStatusCheckBoxes: "Any",
-
-              // REview below
-              PlayerPositionAutoCompleteValue: "Any",
-              PlayerAlternatePositionAutoCompleteValue: "None",
-
-              previousProfile: "",
-            })
-          );
-        } else {
-          const savedProfileSubCollectionRef = doc(
-            db,
-            `users_db/${accountId}/SavedProfiles`,
-            uuid
-          );
-          if (profileName !== "" && profileName.toLowerCase() !== "") {
-            ///. HAVE TO WRITE A TRY CATCH BLOCK TO DETECT ANY ERRORS
-
-            const profileNameMatch = userSavedProfiles.filter((data) => {
-              const { label } = data;
-              return (
-                label.replace(/\s/g, "").toLowerCase() ===
-                profileName.replace(/\s/g, "").toLowerCase()
-              );
+          if (profileNameMatch.length <= 0) {
+            setDoc(savedProfileSubCollectionRef, {
+              label: profileName,
+              dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+              filter: currentProfileFilterObject,
+              labelId: uuid,
             });
 
-            console.log("ProfileLabelMatxh", profileNameMatch);
-            // This it to make sure that we dont create a profile with the same name
+            handleClose();
+            dispatch(
+              setCurrentProfileFilterObject({
+                // PlaceOfBirth: "Any",
+                NationalityValue: "Any",
+                AgeRangeValue: [0, 40],
+                HeightRangeValue: [0, 2.5],
+                positionRangeSliderValues: {
+                  "Clean sheet": [0, 100],
+                  Saves: [0, 100],
+                  "Long pass accuracy": [0, 100],
+                  Interception: [0, 100],
 
-            if (profileNameMatch.length <= 0) {
-              setDoc(savedProfileSubCollectionRef, {
-                label: profileName,
-                dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-                filter: currentProfileFilterObject,
-                labelId: uuid,
-              });
+                  Blocks: [0, 100],
+                  "Successful tackles rate %": [0, 100],
+                  "pass success": [0, 100],
+                  "total passes": [0, 100],
+                  assists: [0, 100],
 
-              handleClose();
-              dispatch(
-                setCurrentProfileFilterObject({
-                  // PlaceOfBirth: "Any",
-                  NationalityValue: "Any",
-                  AgeRangeValue: [0, 40],
-                  HeightRangeValue: [0, 2.5],
-                  positionRangeSliderValues: {
-                    "Clean sheet": [0, 100],
-                    Saves: [0, 100],
-                    "Long pass accuracy": [0, 100],
-                    Interception: [0, 100],
+                  Goals: [0, 100],
+                  "Goal/match played ratio": [0, 100],
+                  Assists: [0, 100],
+                  // "Shots per game": [0, 100],
+                },
+                SalaryExpectationValue: "0 - 4,999",
 
-                    Blocks: [0, 100],
-                    "Successful tackles rate %": [0, 100],
-                    "pass success": [0, 100],
-                    "total passes": [0, 100],
-                    assists: [0, 100],
+                MarketValue: "0 - 99,999",
 
-                    Goals: [0, 100],
-                    "Goal/match played ratio": [0, 100],
-                    Assists: [0, 100],
-                    // "Shots per game": [0, 100],
-                  },
-                  SalaryExpectationValue: "0 - 4,999",
+                ClubCountryValue: "Any",
+                // CaptainRadioValue: "Any",
+                PrefferedFootRadioValue: "Any",
+                PlayerDivisionValue: "Any",
+                ContractStatusCheckBoxes: "Any",
+                // REview below
+                PlayerPositionAutoCompleteValue: "Any",
+                PlayerAlternatePositionAutoCompleteValue: "None",
+                previousProfile: "",
+              })
+            );
+            /// Snackbar show
+            dispatch(setSnackbarMessage(`"${profileName}" filter created`));
+            dispatch(setSnackbarTriggerCounter());
 
-                  MarketValue: "0 - 99,999",
-
-                  ClubCountryValue: "Any",
-                  // CaptainRadioValue: "Any",
-                  PrefferedFootRadioValue: "Any",
-                  PlayerDivisionValue: "Any",
-                  ContractStatusCheckBoxes: "Any",
-                  // REview below
-                  PlayerPositionAutoCompleteValue: "Any",
-                  PlayerAlternatePositionAutoCompleteValue: "None",
-                  previousProfile: "",
-                })
-              );
-              /// Snackbar show
-              dispatch(setSnackbarMessage(`"${profileName}" filter created`));
-              dispatch(setSnackbarTriggerCounter());
-
-              setProfileName("");
-            } else {
-              triggerWarningAlertModal(
-                "Please change your profile name a similar name already exists"
-              );
-            }
+            setProfileName("");
           } else {
             triggerWarningAlertModal(
-              "Please enter a profile name (cannot be name default)"
+              "Please change your profile name a similar name already exists"
             );
           }
+        } else {
+          triggerWarningAlertModal(
+            "Please enter a profile name (cannot be name default)"
+          );
         }
-      } else if (
-        userSavedProfiles.length == subscriptionFeaturesObject?.maxProfiles
-      ) {
-        triggerWarningAlertModal(
-          "You have reached the maximum profiles allowed! Upgrade to add more"
-        );
       }
-    } else if (isSubscriptionActive == false) {
-      StripeCheckout(priceID);
+    } else if (
+      userSavedProfiles.length == subscriptionFeaturesObject?.maxProfiles
+    ) {
+      triggerWarningAlertModal(
+        "You have reached the maximum profiles allowed! Upgrade to add more"
+      );
     }
 
     // changing the click current clicked value to the edited name
@@ -981,8 +980,7 @@ export default function CreateProfileModal({ ProfileType }) {
               dispatch(setCurrentProfile(previousProfileClicked));
               dispatch(setEditFilterModalButtonClicked());
               // }
-            }}
-          >
+            }}>
             <Settings />
           </IconButton>
         </Tooltip>
@@ -997,10 +995,16 @@ export default function CreateProfileModal({ ProfileType }) {
       ) : (
         <Card
           onClick={() => {
-            handleOpen();
-            dispatch(setFilterModalType("Create"));
-            // reset the cureent profile to an empty string
-            dispatch(setCurrentProfile(""));
+            if (maxPlayersInAgency == 0) {
+              triggerWarningAlertModal(
+                "Please Upgrade Your Subscription To Add More Profiles"
+              );
+            } else if (maxPlayersInAgency > 0) {
+              handleOpen();
+              dispatch(setFilterModalType("Create"));
+              // reset the cureent profile to an empty string
+              dispatch(setCurrentProfile(""));
+            }
           }}
           sx={{
             width: 145,
@@ -1016,16 +1020,14 @@ export default function CreateProfileModal({ ProfileType }) {
             // background: "#1B1E2B",
             color: "white",
             cursor: "pointer",
-          }}
-        >
+          }}>
           <div
             style={{
               flex: ".93",
               fontSize: "1em",
               display: "grid",
               placeItems: "center",
-            }}
-          >
+            }}>
             {" "}
             Create new profile{" "}
           </div>
@@ -1033,8 +1035,7 @@ export default function CreateProfileModal({ ProfileType }) {
             style={{
               flex: ".07",
               display: "flex",
-            }}
-          >
+            }}>
             {" "}
             <Add sx={{ marginTop: "4.4vh", color: "gold" }} />{" "}
           </div>
@@ -1052,15 +1053,13 @@ export default function CreateProfileModal({ ProfileType }) {
           backdrop: {
             timeout: 500,
           },
-        }}
-      >
+        }}>
         <Fade in={open}>
           <div
             className="cardBackground primaryTextColor md:flex md:flex-col md:pt-[3vh]
             md:w-[85%] md:h-[97%] md:p-[2vw] md:absolute     sm:flex sm:flex-col sm:pt-[3vh]
             sm:w-[100%] sm:h-[100%] sm:p-[2vw] sm:absolute md:top-[50%] md:left-[50%]    sm:top-[50%] sm:left-[50%]"
-            style={style}
-          >
+            style={style}>
             {/* HEader MEssage */}
             <div
               className="md:flex md:flex-row md:gap-[4vw]  sm:flex sm:flex-col sm:gap-[4vw]"
@@ -1069,8 +1068,7 @@ export default function CreateProfileModal({ ProfileType }) {
                 // background: "green",
                 // display: "flex",
                 // gap: "4vw",
-              }}
-            >
+              }}>
               <h2 className="secondaryTextColor">
                 {" "}
                 {ProfileType === "Edit"
@@ -1116,8 +1114,7 @@ export default function CreateProfileModal({ ProfileType }) {
                   // paddingLeft: "92%",
                   fontSize: "2em",
                   position: "absolute",
-                }}
-              >
+                }}>
                 {/* <IconButton size="small" sx={{ background: "#5585FE" }}> */}
                 <Close onClick={handleClose} style={{ color: "white" }} />{" "}
                 {/* </IconButton> */}
@@ -1125,8 +1122,7 @@ export default function CreateProfileModal({ ProfileType }) {
             </div>
             <div
               className="md:flex md:flex-row md:overflow-y-hidden md:gap-[0%] sm:flex-col  sm:gap-[2vh] sm:flex sm:overflow-y-scroll"
-              style={{ flex: ".85" }}
-            >
+              style={{ flex: ".85" }}>
               {/* // Personal information */}
               <div
                 className="md:flex md:flex-col md:relative md:gap-[2vh] md:ml-[2%]  sm:ml-[0%] sm:flex sm:flex-col  sm:relative sm:gap-[2vh] "
@@ -1137,8 +1133,7 @@ export default function CreateProfileModal({ ProfileType }) {
                   // flexDirection: "column",
                   paddingRight: "1.5vw",
                   // position: "relative",
-                }}
-              >
+                }}>
                 {" "}
                 <h4 className="secondaryTextColor">
                   Personal Information{" "}
@@ -1194,14 +1189,12 @@ export default function CreateProfileModal({ ProfileType }) {
                   // display: "flex",
                   // flexDirection: "column",
                   // background: "yellow",
-                }}
-              >
+                }}>
                 <div
                   className="sm:ml-[2%]"
                   style={{
                     flex: ".1",
-                  }}
-                >
+                  }}>
                   {" "}
                   <h4 className="secondaryTextColor">
                     Player Information{" "}
@@ -1227,8 +1220,7 @@ export default function CreateProfileModal({ ProfileType }) {
                     display: "flex",
                     flexDirection: "column",
                     gap: "3vh",
-                  }}
-                >
+                  }}>
                   <BasicAutoComplete
                     style={{
                       // ...inputStyles,
@@ -1404,8 +1396,7 @@ export default function CreateProfileModal({ ProfileType }) {
                   // gap: "2vh",
                   // flexDirection: "column",
                   // background: "green",
-                }}
-              >
+                }}>
                 <h4 className="secondaryTextColor">
                   Other Information{" "}
                   <IconTooltip
@@ -1448,8 +1439,7 @@ export default function CreateProfileModal({ ProfileType }) {
             {/* // Button Area */}
             <div
               // className="md:flex md:flex-row md:overflow-y-hidden md:gap-[0%] sm:flex-col-reverse   sm:gap-[2vh] sm:flex sm:overflow-y-scroll"
-              style={{ flex: ".05" }}
-            >
+              style={{ flex: ".05" }}>
               <Button
                 className="md:absolute md:bottom-[-6%] md:w-[23vw] sm:w-[100%] sm:absolute sm:bottom-[2%]"
                 sx={{
@@ -1460,12 +1450,11 @@ export default function CreateProfileModal({ ProfileType }) {
                   // position: "absolute",
                   // bottom: 50,
                 }}
-                onClick={
+                onClick={() => {
                   ProfileType === "Edit"
-                    ? handleSaveProfile
-                    : handleCreateProfile
-                }
-              >
+                    ? handleSaveProfile()
+                    : handleCreateProfile();
+                }}>
                 {ProfileType === "Edit" ? "Save" : "Create"}
               </Button>
             </div>
