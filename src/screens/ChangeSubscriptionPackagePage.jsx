@@ -101,6 +101,7 @@ const ChangeSubscriptionPackagePage = () => {
       // get user's role
       const roleSelected = await roleSnap.data().role;
       await setRole(roleSelected);
+      console.log(roleSelected);
       try {
         const q = query(
           collection(db, "products"),

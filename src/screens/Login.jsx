@@ -28,9 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectTempUsersDatabase } from "../statemanager/slices/TempDatabaseSlice";
 import { useForm } from "react-hook-form";
 import {
-  setIsSubscriptionActive,
   setLoginStatus,
-  setNextBillingDate,
   setUserDetailsObject,
 } from "../statemanager/slices/LoginUserDataSlice";
 import { selectUsersDatabase } from "../statemanager/slices/DatabaseSlice";
@@ -42,7 +40,6 @@ import {
   getDocs,
   onSnapshot,
   query,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { auth, db } from "../Firebase/Firebase";
@@ -54,7 +51,6 @@ import {
   setWarningAlertModalCounter,
   setWarningAlertModalMessage,
 } from "../statemanager/slices/OtherComponentStatesSlice";
-import { setPriceID } from "../statemanager/slices/SignupStepperSlice";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -101,102 +97,47 @@ const Login = () => {
 
         if (user) {
           dispatch(setLoginStatus(true));
-          try {
-            // get subscription
-            const subscriptionsRef = collection(
-              db,
-              "users_db",
-              accountId,
-              "subscriptions"
-            );
-
-            const queryActiveOrTrialing = query(
-              subscriptionsRef,
-              where("status", "in", ["trialing", "active"])
-            );
-
-            const subscriptionDocPromise = new Promise((resolve, reject) => {
-              onSnapshot(queryActiveOrTrialing, async (snapshot) => {
-                const doc = snapshot.docs[0];
-                const length = snapshot.docs.length;
-                if (doc?.data().status === "active") {
-                  resolve(doc);
-                } else if (length == 0) {
-                  dispatch(setIsSubscriptionActive(false));
-                  dispatch(setNextBillingDate("N/A"));
-                  resolve(null);
-                }
-              });
-            });
-
-            const docData = await subscriptionDocPromise;
-            // if an active subscription exist get the product id and store it
-            if (docData) {
-              // get product id from database if an active
-              const productID = await docData.data().items[0].plan.product;
-              const priceID = await docData.data().items[0].plan.id;
-
-              dispatch(
-                setUserDetailsObject({
-                  Nationality: userInfoSnap.data().Nationality,
-                  email: userInfoSnap.data().email,
-                  CountryCode: userInfoSnap.data().CountryCode,
-                  stripeLink: userInfoSnap.data().stripeLink,
-                  DateOfBirth: userInfoSnap.data().DateOfBirth,
-                  organization: userInfoSnap.data().organization,
-                  phoneNumber: userInfoSnap.data().phoneNumber,
-                  subscriptionPackage: productID,
-                  surname: userInfoSnap.data().surname,
-                  paymentDetails: {
-                    phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
-                  },
-                  accountId: userInfoSnap.data().accountId,
-                  firstName: userInfoSnap.data().firstName,
-                  role: userInfoSnap.data().role,
-                  dateCreated: {
-                    seconds: userInfoSnap.data().dateCreated.seconds,
-                    nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
-                  },
-                  stripeId: userInfoSnap.data().stripeId,
-                  subscriptionPrice: priceID,
-                  playersInPossession: userInfoSnap.data().playersInPossession,
-                })
-              );
-              await updateDoc(userInfoRef, {
-                subscriptionPackage: productID,
-                subscriptionPrice: priceID,
-              });
-            } else if (!docData) {
-              dispatch(
-                setUserDetailsObject({
-                  Nationality: userInfoSnap.data().Nationality,
-                  email: userInfoSnap.data().email,
-                  CountryCode: userInfoSnap.data().CountryCode,
-                  stripeLink: userInfoSnap.data().stripeLink,
-                  DateOfBirth: userInfoSnap.data().DateOfBirth,
-                  organization: userInfoSnap.data().organization,
-                  phoneNumber: userInfoSnap.data().phoneNumber,
-                  subscriptionPackage: null,
-                  surname: userInfoSnap.data().surname,
-                  paymentDetails: {
-                    phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
-                  },
-                  accountId: userInfoSnap.data().accountId,
-                  firstName: userInfoSnap.data().firstName,
-                  role: userInfoSnap.data().role,
-                  dateCreated: {
-                    seconds: userInfoSnap.data().dateCreated.seconds,
-                    nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
-                  },
-                  stripeId: userInfoSnap.data().stripeId,
-                  subscriptionPrice: null,
-                  playersInPossession: userInfoSnap.data().playersInPossession,
-                })
-              );
-            }
-          } catch (error) {
-            console.error(error);
-          }
+          dispatch(
+            setUserDetailsObject({
+              Nationality: userInfoSnap.data().Nationality,
+              email: userInfoSnap.data().email,
+              CountryCode: userInfoSnap.data().CountryCode,
+              stripeLink:
+                userInfoSnap?.data()?.stripeLink === undefined
+                  ? ""
+                  : userInfoSnap?.data()?.stripeLink,
+              DateOfBirth: userInfoSnap.data().DateOfBirth,
+              organization: userInfoSnap.data().organization,
+              phoneNumber: userInfoSnap.data().phoneNumber,
+              subscriptionPackage: userInfoSnap.data().subscriptionPackage,
+              surname: userInfoSnap.data().surname,
+              profileImage:
+                userInfoSnap.data().profileImage === undefined
+                  ? ""
+                  : userInfoSnap.data().profileImage,
+              // paymentDetails: {
+              //   phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
+              // },
+              accountId: userInfoSnap.data().accountId,
+              firstName: userInfoSnap.data().firstName,
+              role: userInfoSnap.data().role,
+              dateCreated: {
+                seconds: userInfoSnap.data().dateCreated.seconds,
+                nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
+              },
+              stripeId: userInfoSnap.data().stripeId,
+              subscriptionPrice: userInfoSnap.data().subscriptionPrice,
+              playersInPossession: userInfoSnap.data().playersInPossession,
+              Connections:
+                userInfoSnap.data()?.Connections === undefined
+                  ? []
+                  : userInfoSnap.data()?.Connections,
+              AgentandScoutConnections:
+                userInfoSnap.data()?.AgentandScoutConnections === undefined
+                  ? []
+                  : userInfoSnap.data()?.AgentandScoutConnections,
+            })
+          );
 
           const savedProfileSubCollectionRef = collection(
             db,
@@ -220,7 +161,6 @@ const Login = () => {
             const q = query(notificationsSubCollectionRef);
             const allNotifications = onSnapshot(q, async (querySnapshot) => {
               const notificationItems = [];
-              ``;
               querySnapshot.forEach((doc) => {
                 notificationItems.push(doc.data());
               });
@@ -290,6 +230,7 @@ const Login = () => {
             allProfiles();
           };
         }
+        // ...
       })
       .catch((error) => {
         setIsLoading(false);
@@ -398,7 +339,7 @@ const Login = () => {
                 <span
                   style={{ color: "#5585FE", cursor: "pointer" }}
                   onClick={() => {
-                    Navigate("/create-account/freetrial");
+                    Navigate("/membership-plans");
                   }}>
                   Choose a plan
                 </span>{" "}

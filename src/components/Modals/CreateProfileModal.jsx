@@ -84,6 +84,7 @@ export default function CreateProfileModal({ ProfileType }) {
   const [open, setOpen] = useState(false);
 
   const StripeCheckout = async (priceID) => {
+    console.log(priceID);
     const currentUser = auth.currentUser;
     const usersDbRef = collection(db, "users_db");
     const currentUserDocRef = doc(usersDbRef, currentUser.uid);
@@ -120,7 +121,7 @@ export default function CreateProfileModal({ ProfileType }) {
     const { accountId } = loginUserDetails;
     const productIDRef = doc(db, `users_db/${accountId}`);
     const productIdSnap = await getDoc(productIDRef);
-    const priceID = await productIdSnap.data().subscriptionPrice;
+    const priceID = await productIdSnap.data()?.subscriptionPrice;
     if (isSubscriptionActive == false) {
       StripeCheckout(priceID);
     } else {
