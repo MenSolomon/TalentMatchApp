@@ -36,6 +36,8 @@ const MatchedPlayerCard = ({
   PlayerCountry,
   PlayerCountryCode,
   PlayerId,
+  // This is a temporal solution it is the only key identify to show the difference between player from Api (goalserve) from and player created on the platform
+  DoesClubLogoKeyExist,
 }) => {
   const navigate = useNavigate();
   const userLoginObject = useSelector(selectUserDetailsObject);
@@ -341,9 +343,16 @@ const MatchedPlayerCard = ({
                   zIndex: "1000",
                 }}
               >
-                <Tooltip title="Verified">
-                  <Verified sx={{ color: "#5585FE" }} />{" "}
-                </Tooltip>{" "}
+                {DoesClubLogoKeyExist === true ? (
+                  <Tooltip title="Verified">
+                    <Verified sx={{ color: "#5585FE" }} />{" "}
+                  </Tooltip>
+                ) : (
+                  ""
+                )}
+                {/* {
+                  DoesClubLogoKeyExist === true  :  <Tooltip title="Verified"><Verified sx={{ color: "#5585FE" }} /></Tooltip>{" "} : ""
+                } */}
                 {/* Verified */}
               </span>
             }

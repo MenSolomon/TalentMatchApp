@@ -3,6 +3,7 @@ import pitch from "../../assets/images/pitch.jpg";
 import FootBallPitch from "../../components/Cards/FootBallPitch";
 import PlayerPositionStatsBarGraphSummary from "../../components/Charts/Bars/PlayerPositionStatsBarGraphSummary";
 import PlayerOverallAttributes from "../../components/Charts/Bars/PlayerOverallAttributes";
+import BasicButton from "../../components/Buttons/BasicButton";
 // import PlayerPositionStatsBarGraphSummary from "../../components/Charts/Bars/PlayerPositionStatsBarGraphSummary";
 
 const PlayerBio = ({
@@ -168,15 +169,25 @@ const PlayerBio = ({
                 background: "transparent",
               }}
             >
-              <PlayerPositionStatsBarGraphSummary />
+              {/* <PlayerPositionStatsBarGraphSummary /> */}
+              <PlayerOverallAttributes />
             </Card>{" "}
           </div>
-          <div className="div" style={{ flex: ".35" }}>
+          <div
+            className="div"
+            style={{
+              flex: ".35",
+            }}
+          >
             <Card
               className="primaryColor"
               sx={{
                 width: "100%",
                 height: "100%",
+                display: "flex",
+                gap: "2vh",
+                flexDirection: "column",
+                padding: "2vh 1vw 0vh 1vw",
                 // background:
                 //   "linear-gradient(133deg, rgba(218,233,234,1) 0%, rgba(189,202,203,1) 35%, rgba(221,234,235,1) 73%, rgba(218,233,234,1) 100%)",
                 // borderBottom: "1px solid #0d818e",
@@ -187,7 +198,11 @@ const PlayerBio = ({
                 background: "transparent",
               }}
             >
-              <PlayerOverallAttributes />
+              <BasicButton innerText="Request last 5 games detailed stats" />
+
+              <BasicButton innerText="Request last 15 games detailed stats" />
+
+              <BasicButton innerText="Request last 30 games detailed stats" />
             </Card>{" "}
           </div>
         </div>
