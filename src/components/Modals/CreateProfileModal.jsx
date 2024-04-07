@@ -117,13 +117,6 @@ export default function CreateProfileModal({ ProfileType }) {
   };
 
   const handleOpen = async () => {
-    // console.log(
-    //   "userSavedProfiles.length:",
-    //   userSavedProfiles.length,
-    //   "maxProfiles:",
-    //   subscriptionFeaturesObject?.maxProfiles
-    // );
-
     const { accountId } = loginUserDetails;
     const productIDRef = doc(db, `users_db/${accountId}`);
     const productIdSnap = await getDoc(productIDRef);
@@ -244,7 +237,7 @@ export default function CreateProfileModal({ ProfileType }) {
   const userSavedProfiles = useSelector(selectUserSavedProfiles);
   const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
   // state to hold maximum number of profiles
-  const { maxPlayersInAgency } = subscriptionFeaturesObject;
+  const { maxPlayersInAgency, maxProfiles } = subscriptionFeaturesObject;
   const { email } = loginUserDetails;
   const allUsers = useSelector(selectTempUsersDatabase);
   const currentProfileFilterObject = useSelector(
