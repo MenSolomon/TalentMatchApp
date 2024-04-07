@@ -75,6 +75,8 @@ const ChangeSubscriptionPackagePage = () => {
   // state to store all products
   const [monthlyPackage, setMonthlyPackage] = useState([]);
   const [yearlyPackage, setYearlyPackage] = useState([]);
+  const [basic, setBasic] = useState([]);
+
   // product details array
   const productIds = productDetails;
   // state to render loading effect whiles products is being set
@@ -108,13 +110,18 @@ const ChangeSubscriptionPackagePage = () => {
           where("active", "==", true)
         );
         const allProducts = [];
+        const basicProduct = [];
 
         const querySnapshot = await getDocs(q);
 
         // get all the products
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach(async (doc) => {
           // save them to allProducts array
           allProducts.push({ id: doc.id, data: doc.data() });
+          // get and store basic
+          if (doc.data().name == "Basic") {
+            await basicProduct.push({ id: doc.id, data: doc.data() });
+          }
         });
         // check the user's role with the roles in productsDetails file and get the products for that role
         const selectedIds = productIds
@@ -171,6 +178,32 @@ const ChangeSubscriptionPackagePage = () => {
               // });
             });
           }
+        });
+
+        // set basic state
+        await basicProduct?.map(async (prods) => {
+          const priceSnap = await getDocs(
+            collection(db, `products/prod_Ps1JzpXiJ69kzn/prices`)
+          );
+
+          priceSnap.forEach((priceDoc) => {
+            // setFetchCounter((prevFetchCounter) => prevFetchCounter + 1);
+            setBasic((prevProducts) => [
+              ...prevProducts,
+              {
+                name: prods.data.name,
+                details: prods.data.details,
+                image: prods.data.images,
+                price: priceDoc.data().unit_amount,
+                interval: priceDoc.data().interval,
+                id: prods.id,
+                priceId: priceDoc.id,
+              },
+            ]);
+
+            // disable loading
+            setIsProductsLoading(false);
+          });
         });
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -548,6 +581,41 @@ const ChangeSubscriptionPackagePage = () => {
                         // }}
                       />
                     ))}
+                {/* Basic */}
+                {basic?.map((item) => (
+                  <SubscriptionCard
+                    key={item.id}
+                    title={item.name}
+                    description={item.description}
+                    price={item.price / 100}
+                    isButtonTriggered={isButtonTriggered}
+                    featuresHighlightArray={item.details}
+                    onClick={async () => {
+                      // display loading sign
+                      setIsButtonTriggered(true);
+                      // get current uid
+                      const currentUser = await auth.currentUser;
+                      // alert(accountId);
+                      // Check if an active subscription exists
+                      const userRef = collection(
+                        db,
+                        `users_db/${accountId}/subscriptions`
+                      );
+                      const q = query(userRef, where("status", "==", "active"));
+                      const docSnap = await getDocs(q);
+
+                      if (docSnap.size !== 0) {
+                        triggerWarningAlertModal(
+                          "An active subscription already exists. \n Cancel the existing one first"
+                        );
+                        // disable loading sign
+                        setIsButtonTriggered(false);
+                      } else {
+                        StripeCheckout(item.id, item.priceId);
+                      }
+                    }}
+                  />
+                ))}
               </div>
             </div>
           )}

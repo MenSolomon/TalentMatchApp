@@ -48,39 +48,39 @@ function SettingsBilling() {
   const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
 
   useEffect(() => {
-    const activeQueryFn = () => {
-      const activeProductsQuery = query(
-        collection(db, "products"),
-        where("active", "==", true)
-      );
+    // const activeQueryFn = () => {
+    //   const activeProductsQuery = query(
+    //     collection(db, "products"),
+    //     where("active", "==", true)
+    //   );
 
-      onSnapshot(activeProductsQuery, (snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          const { doc } = change;
-          console.log(
-            `Product ${doc.id} ${
-              change.type === "added" ? "added" : "changed"
-            }:`,
-            doc.data()
-          );
+    //   onSnapshot(activeProductsQuery, (snapshot) => {
+    //     snapshot.docChanges().forEach((change) => {
+    //       const { doc } = change;
+    //       console.log(
+    //         `Product ${doc.id} ${
+    //           change.type === "added" ? "added" : "changed"
+    //         }:`,
+    //         doc.data()
+    //       );
 
-          // Fetch and log prices only for added or modified products
-          if (change.type === "added" || change.type === "modified") {
-            onSnapshot(doc.ref.collection("prices"), (priceSnapshot) => {
-              priceSnapshot.docChanges().forEach((priceChange) => {
-                const { doc } = priceChange;
-                console.log(
-                  `Price ${
-                    priceChange.type === "added" ? "added" : "changed"
-                  } for product ${doc.ref.parent.id}:`,
-                  doc.data()
-                );
-              });
-            });
-          }
-        });
-      });
-    };
+    //       // Fetch and log prices only for added or modified products
+    //       if (change.type === "added" || change.type === "modified") {
+    //         onSnapshot(doc.ref.collection("prices"), (priceSnapshot) => {
+    //           priceSnapshot.docChanges().forEach((priceChange) => {
+    //             const { doc } = priceChange;
+    //             console.log(
+    //               `Price ${
+    //                 priceChange.type === "added" ? "added" : "changed"
+    //               } for product ${doc.ref.parent.id}:`,
+    //               doc.data()
+    //             );
+    //           });
+    //         });
+    //       }
+    //     });
+    //   });
+    // };
     // get status of subscription
     const getSubscriptionStatus = async () => {
       if (isSubscriptionActive === false) {
@@ -91,7 +91,7 @@ function SettingsBilling() {
     };
     // activeQueryFn();
     getSubscriptionStatus();
-  }, []);
+  }, [isSubscriptionActive]);
 
   const handleCustomerPortal = async () => {
     const createPortalLink = httpsCallable(
