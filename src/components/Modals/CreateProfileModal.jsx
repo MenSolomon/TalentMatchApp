@@ -236,10 +236,12 @@ export default function CreateProfileModal({ ProfileType }) {
   const loginUserDetails = useSelector(selectUserDetailsObject);
   const userSavedProfiles = useSelector(selectUserSavedProfiles);
   const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
+
   // state to hold maximum number of profiles
   const { maxPlayersInAgency, maxProfiles } = subscriptionFeaturesObject;
   const { email } = loginUserDetails;
   const allUsers = useSelector(selectTempUsersDatabase);
+
   const currentProfileFilterObject = useSelector(
     selectCurrentProfileFilterObject
   );

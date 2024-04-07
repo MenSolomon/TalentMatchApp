@@ -18,8 +18,8 @@ const Discipline = ({ Period }) => {
 
   return (
     <div
-      className="primaryColor  sm:flex sm:flex-col sm:gap-[7vh]  md:gap-[5vw] "
-      style={{ width: "100%", height: "100%", display: "flex" }}
+      className="primaryColor  sm:flex sm:flex-col sm:gap-[7vh]  md:gap-[5vw] md:flex-row  lg:flex-row max:flex-row "
+      style={{ width: "100%", height: "100%" }}
     >
       <CardDisplay
         CardName="Yellow Cards"
