@@ -45,18 +45,6 @@ export const productDetails = [
     ],
   },
   {
-    id: "prod_PaUCj9WT4b4zWI",
-    name: "Coach Starter",
-    role: "Coach",
-    details: [],
-  },
-  {
-    id: "prod_PaUB3JqrDbTutg",
-    name: "Coach Premium",
-    role: "Coach",
-    details: [],
-  },
-  {
     id: "prod_PaUAvtceTmYGJV",
     name: "Agent Premium",
     role: "Agent",
@@ -68,4 +56,45 @@ export const productDetails = [
     role: "Agent",
     details: [],
   },
+  {
+    id: "prod_Ps1JzpXiJ69kzn",
+    name: "Basic",
+    role: "Basic",
+  },
 ];
+
+import { doc, updateDoc } from "firebase/firestore";
+import React, { useState } from "react";
+import { Button } from "@mui/material";
+import { db } from "../Firebase/Firebase";
+
+export default function ProductDetails() {
+  const [prod, setProd] = useState("prod_Ps1JzpXiJ69kzn");
+  const uploadFeatures = async () => {
+    const docRef = doc(db, `products/${prod}`);
+    await updateDoc(docRef, {
+      features: {
+        canHideVisibility: false,
+        maxPlayersInAgency: 0,
+        maxProfiles: 1,
+        maxVideosPerPlayer: 0,
+        maxConnections: 1,
+        maxCountries: 3,
+      },
+    });
+  };
+
+  const uploadDetails = async () => {
+    const docRef = doc(db, `products/${prod}`);
+    await updateDoc(docRef, {
+      details: ["Save 1 Player Profiles", "Connect to 1 Account"],
+    });
+  };
+
+  return (
+    <div>
+      <Button onClick={uploadFeatures}>Update Features</Button>
+      <Button onClick={uploadDetails}>Update Details</Button>
+    </div>
+  );
+}

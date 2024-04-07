@@ -6,8 +6,10 @@ import { KeyboardArrowDown } from "@mui/icons-material";
 import { Navigate, useNavigate } from "react-router-dom";
 import { auth } from "../../../../Firebase/Firebase";
 import { signOut } from "firebase/auth";
+import { useDispatch } from "react-redux";
 
 export default function ProfileMenu({ style, name }) {
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {

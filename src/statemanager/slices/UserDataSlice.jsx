@@ -24,6 +24,7 @@ export const UserDataSlice = createSlice({
     blobImageWithoutMrz: "",
     productPackage: "",
     selectedProductArray: [],
+    selectedBasicProductArray: [],
   },
 
   reducers: {
@@ -45,6 +46,9 @@ export const UserDataSlice = createSlice({
     setSelectedProductArray: (state, action) => {
       state.selectedProductArray = action.payload;
     },
+    setSelectedBasicProductArray: (state, action) => {
+      state.selectedBasicProductArray = action.payload;
+    },
     setProductPackage: (state, action) => {
       state.productPackage = action.payload;
     },
@@ -62,6 +66,8 @@ export const selectBlobImageWithoutMrz = (state) =>
   state.UserData.blobImageWithoutMrz;
 export const selectSelectedProductArray = (state) =>
   state.UserData.selectedProductArray;
+export const selectSelectedBasicProductArray = (state) =>
+  state.UserData.selectedBasicProductArray;
 export const selectProductPackage = (state) => state.UserData.productPackage;
 
 export const {
@@ -72,5 +78,6 @@ export const {
   setBlobImageWithoutMrz,
   setProductPackage,
   setSelectedProductArray,
+  setSelectedBasicProductArray,
 } = UserDataSlice.actions;
 export default UserDataSlice.reducer;

@@ -79,6 +79,7 @@ import { auth, db } from "./Firebase/Firebase";
 import { setPriceID } from "./statemanager/slices/SignupStepperSlice";
 import CoachAgentScoutVersionConnetions from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionConnections";
 import PlayerVersionConnections from "./PlayerVersion/src/screens/PlayerVersionConnections";
+import ProductDetails from "./utils/ProductDetails";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -435,12 +436,10 @@ const App = () => {
               variant="contained"
               color="success"
               size="small"
-              onClick={() => navigate("/changeSubscription")}
-            >
+              onClick={() => navigate("/changeSubscription")}>
               Get One
             </Button>
-          }
-        >
+          }>
           No or Inactive Subscrtiption
         </Alert>
       )}
@@ -507,8 +506,7 @@ const App = () => {
           {/* COACH AGENT AND SCOUT VERSION */}
           <Route
             path="/multiStudio"
-            element={<CoachAgentScoutVersionMotherComponent />}
-          >
+            element={<CoachAgentScoutVersionMotherComponent />}>
             <Route path="/multiStudio/favorite" element={<Error404 />} />
             <Route path="/multiStudio/help" element={<Error404 />} />
             <Route path="/multiStudio/settings" element={<Settings />} />
@@ -558,6 +556,7 @@ const App = () => {
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/productUpload" element={<ProductDetails />} />
 
         <Route path="/membership-plans" element={<MembershipPlanPage />} />
 

@@ -7,6 +7,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectUserDetailsObject,
+  setIsSubscriptionActive,
   setLoginStatus,
   setUserDetailsObject,
 } from "../../statemanager/slices/LoginUserDataSlice";
@@ -58,8 +59,7 @@ export default function ProfileMenu({ style, name }) {
           float: "right",
         }}
         src={loginUserDetails?.profileImage && loginUserDetails?.profileImage}
-        onClick={handleClick}
-      ></Avatar>
+        onClick={handleClick}></Avatar>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
@@ -67,16 +67,14 @@ export default function ProfileMenu({ style, name }) {
         onClose={handleClose}
         MenuListProps={{
           "aria-labelledby": "basic-button",
-        }}
-      >
+        }}>
         <MenuItem
           sx={{ color: "black" }}
           color="secondary"
           onClick={() => {
             handleClose();
             Navigate("/settings");
-          }}
-        >
+          }}>
           Profile
         </MenuItem>
         {/* <MenuItem sx={{ color: "black" }} onClick={handleClose}>
@@ -86,7 +84,6 @@ export default function ProfileMenu({ style, name }) {
           sx={{ color: "black" }}
           onClick={() => {
             handleClose();
-            Navigate("/login");
             dispatch(setLoginStatus(false));
             dispatch(setUserDetailsObject({}));
             dispatch(setUserSavedProfiles([]));
@@ -96,8 +93,9 @@ export default function ProfileMenu({ style, name }) {
                 name: "",
               })
             );
-          }}
-        >
+            dispatch(setIsSubscriptionActive(true));
+            Navigate("/login");
+          }}>
           Logout
         </MenuItem>
       </Menu>

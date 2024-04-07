@@ -409,8 +409,7 @@ const CreateAccount = () => {
         // background: "red",
         display: "flex",
         flexDirection: "column",
-      }}
-    >
+      }}>
       {/* CREATE NEW ACCOUNT */}
       <div
         className="accountHeader"
@@ -419,8 +418,7 @@ const CreateAccount = () => {
           // background: "red",
           display: "flex",
           flexDirection: "column",
-        }}
-      >
+        }}>
         <div
           style={{
             flex: "0.5",
@@ -429,8 +427,7 @@ const CreateAccount = () => {
             justifyContent: "center",
             gap: "10px",
             alignItems: "center",
-          }}
-        >
+          }}>
           <img src={logoImage} style={{ width: "100px" }} />
           <h2>Create new account</h2>
         </div>
@@ -460,14 +457,12 @@ const CreateAccount = () => {
           paddingRight: "10%",
 
           // paddingTop: "25vh", sm
-        }}
-      >
+        }}>
         <div style={{ flex: ".7" }}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div
               className="md:flex md:flex-row      sm:flex sm:flex-col"
-              style={{ gap: "2vw", marginBottom: "1.5vh" }}
-            >
+              style={{ gap: "2vw", marginBottom: "1.5vh" }}>
               {/* setfirstName
 setSurname */}
               <div>
@@ -534,8 +529,7 @@ setSurname */}
             {/* EMAIL AND PHONE NUMBER */}
             <div
               className="md:flex md:flex-row      sm:flex sm:flex-col"
-              style={{ gap: "2vw", marginBottom: "1.5vh" }}
-            >
+              style={{ gap: "2vw", marginBottom: "1.5vh" }}>
               <div>
                 <TextField
                   className="md:w-[15vw] sm:w-[80vw]"
@@ -601,8 +595,7 @@ setSurname */}
             {/*ORGANIZATION/CLUB NAME AND PASSWORDS*/}
             <div
               className="md:flex md:flex-row      sm:flex sm:flex-col"
-              style={{ gap: "2vw", marginBottom: "1vh" }}
-            >
+              style={{ gap: "2vw", marginBottom: "1vh" }}>
               {roleSelected === "Club" ? (
                 <ClubAutoComplete
                   ListArray={clubsInDatabase}
@@ -695,8 +688,7 @@ setSurname */}
                   // alignItems: "center",
                   // justifyContent: "center",
                   paddingRight: "13%",
-                }}
-              >
+                }}>
                 <div>
                   <BasicSelect
                     inputStyle={{
@@ -757,8 +749,7 @@ setSurname */}
                 marginTop: "1vh",
 
                 // color: buttonColor,
-              }}
-            >
+              }}>
               Create Account
             </Button>
             <div className="md:hidden sm:h-[3vh] "></div>
@@ -776,16 +767,14 @@ setSurname */}
                 border: "1px dashed black",
                 borderRadius: "1vw",
                 padding: "1vw",
-              }}
-            >
+              }}>
               {/* Selected files in column*/}
               <div
                 style={{
                   // background: "peru",
                   display: "flex",
                   flexDirection: "column",
-                }}
-              >
+                }}>
                 {/* column Top style  */}
                 <div style={{ flex: "0.2" }}></div>
                 {/* End of column Top style  */}
@@ -798,8 +787,7 @@ setSurname */}
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                  }}
-                >
+                  }}>
                   <Person sx={{ fontSize: "5em" }} />
                 </div>
                 {/* End of CloudCircleOutlined  */}
@@ -814,8 +802,7 @@ setSurname */}
                       textAlign: "center",
                       // gap: "5px",
                       // background: "green",
-                    }}
-                  >
+                    }}>
                     <div>
                       <h5>Drag and drop image of your ID card</h5>
                       <small>

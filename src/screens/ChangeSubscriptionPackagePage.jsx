@@ -8,7 +8,10 @@ import {
   InputLabel,
   OutlinedInput,
   Radio,
+  Stack,
+  Switch,
   TextField,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import FormControl from "@mui/material/FormControl";
@@ -70,7 +73,8 @@ const ChangeSubscriptionPackagePage = () => {
   const Navigate = useNavigate();
 
   // state to store all products
-  const [products, setProducts] = useState([]);
+  const [monthlyPackage, setMonthlyPackage] = useState([]);
+  const [yearlyPackage, setYearlyPackage] = useState([]);
   // product details array
   const productIds = productDetails;
   // state to render loading effect whiles products is being set
@@ -94,6 +98,7 @@ const ChangeSubscriptionPackagePage = () => {
       const currentUser = auth.currentUser;
       const roleRef = await doc(db, `users_db`, accountId);
       const roleSnap = await getDoc(roleRef);
+      // get user's role
       const roleSelected = await roleSnap.data().role;
       await setRole(roleSelected);
       try {
@@ -110,11 +115,11 @@ const ChangeSubscriptionPackagePage = () => {
           // save them to allProducts array
           allProducts.push({ id: doc.id, data: doc.data() });
         });
-
+        // check the user's role with the roles in productsDetails file and get the products for that role
         const selectedIds = productIds
           .filter((prodId) => prodId.role === roleSelected)
           .map((prodId) => prodId.id);
-
+        // check the allProducts array and get the contents of the product/prices collection
         allProducts.map(async (prods) => {
           if (selectedIds.includes(prods.id)) {
             const priceSnap = await getDocs(
@@ -124,20 +129,45 @@ const ChangeSubscriptionPackagePage = () => {
             priceSnap.forEach((priceDoc) => {
               // set counter to +1
               setFetchCounter((prevFetchCounter) => prevFetchCounter + 1);
-              setProducts((prevProducts) => [
-                ...prevProducts,
-                {
-                  name: prods.data.name,
-                  image: prods.data.images,
-                  price: priceDoc.data().unit_amount,
-                  id: prods.id,
-                  priceId: priceDoc.id,
-                  description: prods.data.description,
-                  details: prods.data.details,
-                },
-              ]);
+              if (priceDoc.data().interval == "month") {
+                setMonthlyPackage((prevProducts) => [
+                  ...prevProducts,
+                  {
+                    name: prods.data.name,
+                    image: prods.data.images,
+                    price: priceDoc.data().unit_amount,
+                    id: prods.id,
+                    priceId: priceDoc.id,
+                    description: prods.data.description,
+                    details: prods.data.details,
+                  },
+                ]);
+              } else if (priceDoc.data().interval == "year") {
+                setYearlyPackage((prevProducts) => [
+                  ...prevProducts,
+                  {
+                    name: prods.data.name,
+                    image: prods.data.images,
+                    price: priceDoc.data().unit_amount,
+                    id: prods.id,
+                    priceId: priceDoc.id,
+                    description: prods.data.description,
+                    details: prods.data.details,
+                  },
+                ]);
+              }
+
               // disable loading
               setIsProductsLoading(false);
+              // console.log({
+              //   name: prods.data.name,
+              //   image: prods.data.images,
+              //   price: priceDoc.data().unit_amount,
+              //   id: prods.id,
+              //   priceId: priceDoc.id,
+              //   description: prods.data.description,
+              //   details: prods.data.details,
+              // });
             });
           }
         });
@@ -197,6 +227,8 @@ const ChangeSubscriptionPackagePage = () => {
       }
     });
   };
+
+  const [duration, setDuration] = useState("monthly");
   return (
     <div
       className="md:w-[100%] md:h-[100vh] md:flex md:flex-col  
@@ -374,7 +406,32 @@ const ChangeSubscriptionPackagePage = () => {
             {" "}
             Unlock powerful features as a {role}
           </h3>
-
+          <div className="flex justify-center">
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Typography
+                variant="h4"
+                sx={{ color: duration == "yearly" ? "#5585FE" : null }}>
+                Yearly
+              </Typography>
+              <Switch
+                defaultChecked
+                inputProps={{ "aria-label": "ant design" }}
+                size="large"
+                onChange={(event) => {
+                  if (event.target.checked == true) {
+                    setDuration("monthly");
+                  } else if (event.target.checked == false) {
+                    setDuration("yearly");
+                  }
+                }}
+              />
+              <Typography
+                variant="h4"
+                sx={{ color: duration == "monthly" ? "#5585FE" : null }}>
+                Monthly
+              </Typography>
+            </Stack>
+          </div>
           {/* Subcscription Cards */}
           {isProductsLoading == true ? (
             <div style={{ textAlign: "center" }}>
@@ -391,40 +448,105 @@ const ChangeSubscriptionPackagePage = () => {
                 className="md:flex md:flex-row md:h-[150vh] md:gap-[30px]     
             sm:flex sm:flex-col sm:h-[130vh] sm:gap-[10px]
             ">
-                {products.map((item) => (
-                  <SubscriptionCard
-                    key={item.id}
-                    title={item.name}
-                    description={item.description}
-                    price={item.price / 100}
-                    isButtonTriggered={isButtonTriggered}
-                    featuresHighlightArray={item.details}
-                    onClick={async () => {
-                      // display loading sign
-                      setIsButtonTriggered(true);
-                      // get current uid
-                      const currentUser = await auth.currentUser;
-                      // alert(accountId);
-                      // Check if an active subscription exists
-                      const userRef = collection(
-                        db,
-                        `users_db/${accountId}/subscriptions`
-                      );
-                      const q = query(userRef, where("status", "==", "active"));
-                      const docSnap = await getDocs(q);
+                {duration == "monthly"
+                  ? monthlyPackage.map((item) => (
+                      <SubscriptionCard
+                        key={item.id}
+                        title={item.name}
+                        description={item.description}
+                        price={item.price / 100}
+                        isButtonTriggered={isButtonTriggered}
+                        featuresHighlightArray={item.details}
+                        onClick={async () => {
+                          // display loading sign
+                          setIsButtonTriggered(true);
+                          // get current uid
+                          const currentUser = await auth.currentUser;
+                          // alert(accountId);
+                          // Check if an active subscription exists
+                          const userRef = collection(
+                            db,
+                            `users_db/${accountId}/subscriptions`
+                          );
+                          const q = query(
+                            userRef,
+                            where("status", "==", "active")
+                          );
+                          const docSnap = await getDocs(q);
 
-                      if (docSnap.size !== 0) {
-                        triggerWarningAlertModal(
-                          "An active subscription already exists. \n Cancel the existing one first"
-                        );
-                        // disable loading sign
-                        setIsButtonTriggered(false);
-                      } else {
-                        StripeCheckout(item.id, item.priceId);
-                      }
-                    }}
-                  />
-                ))}
+                          if (docSnap.size !== 0) {
+                            triggerWarningAlertModal(
+                              "An active subscription already exists. \n Cancel the existing one first"
+                            );
+                            // disable loading sign
+                            setIsButtonTriggered(false);
+                          } else {
+                            StripeCheckout(item.id, item.priceId);
+                          }
+                        }}
+                        // onClick={() => {
+                        //   console.log(
+                        //     "id:",
+                        //     item.id,
+                        //     "name:",
+                        //     item.name,
+                        //     "descr:",
+                        //     item.description,
+                        //     "price:",
+                        //     item.price / 100
+                        //   );
+                        // }}
+                      />
+                    ))
+                  : yearlyPackage.map((item) => (
+                      <SubscriptionCard
+                        key={item.id}
+                        title={item.name}
+                        description={item.description}
+                        price={item.price / 100}
+                        isButtonTriggered={isButtonTriggered}
+                        featuresHighlightArray={item.details}
+                        onClick={async () => {
+                          // display loading sign
+                          setIsButtonTriggered(true);
+                          // get current uid
+                          const currentUser = await auth.currentUser;
+                          // alert(accountId);
+                          // Check if an active subscription exists
+                          const userRef = collection(
+                            db,
+                            `users_db/${accountId}/subscriptions`
+                          );
+                          const q = query(
+                            userRef,
+                            where("status", "==", "active")
+                          );
+                          const docSnap = await getDocs(q);
+
+                          if (docSnap.size !== 0) {
+                            triggerWarningAlertModal(
+                              "An active subscription already exists. \n Cancel the existing one first"
+                            );
+                            // disable loading sign
+                            setIsButtonTriggered(false);
+                          } else {
+                            StripeCheckout(item.id, item.priceId);
+                          }
+                        }}
+                        // onClick={() => {
+                        //   console.log(
+                        //     "id:",
+                        //     item.id,
+                        //     "name:",
+                        //     item.name,
+                        //     "descr:",
+                        //     item.description,
+                        //     "price:",
+                        //     item.price / 100
+                        //   );
+                        // }}
+                      />
+                    ))}
               </div>
             </div>
           )}
@@ -448,7 +570,7 @@ const ChangeSubscriptionPackagePage = () => {
 
 export default ChangeSubscriptionPackagePage;
 
-const SubscriptionCard = ({
+export const SubscriptionCard = ({
   title,
   description,
   price,
