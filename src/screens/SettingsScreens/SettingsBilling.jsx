@@ -1,4 +1,11 @@
-import { Button, Card, CircularProgress, Divider, Paper } from "@mui/material";
+import {
+  Button,
+  Card,
+  CircularProgress,
+  Divider,
+  Paper,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import FilteredPlayersTable from "../../components/Tables/FilterPlayersTable";
 import { auth, db, functions } from "../../Firebase/Firebase";
@@ -157,7 +164,7 @@ function SettingsBilling() {
               <div style={{ flex: ".3" }}>
                 <div style={{ padding: "5px 0px" }}>
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     onClick={() => navigate("/changeSubscription")}>
                     Change Package
                   </Button>
@@ -190,9 +197,15 @@ function SettingsBilling() {
           <div style={{ flex: ".3" }}>
             <div style={{ padding: "10px 0px" }}>
               {isLoading ? (
-                <CircularProgress />
+                <>
+                  <CircularProgress />
+                  <Typography>
+                    Please wait.. Redirecting you to Stripe
+                  </Typography>
+                </>
               ) : (
                 <Button
+                  variant={"contained"}
                   onClick={() => {
                     handleCustomerPortal();
                     setIsLoading(true);
@@ -202,8 +215,7 @@ function SettingsBilling() {
                     justifyContent: "start",
                     // padding: "10px",
                   }}
-                  size="small"
-                  variant="outlined">
+                  size="small">
                   Manage Subscription
                 </Button>
               )}
