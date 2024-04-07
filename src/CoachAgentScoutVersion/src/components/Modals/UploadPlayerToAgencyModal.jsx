@@ -69,8 +69,8 @@ import { selectPlayersDatabase } from "../../../../statemanager/slices/DatabaseS
 import { selectClubsInDatabase } from "../../../../statemanager/slices/ClubsInDatabaseSlice";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import DatePickerToolCreatePlayer from "../DatePicker/DatePickerToolCreatePlayer";
-import DatePickerForEditPlayerModal from "../DatePicker/DatePickerForUploadPlayerModal";
+import DatePickerForEditPlayerModal from "../DatePicker/DatePickerForEditPlayerModal";
+import DatePickerToolCreateAccount from "../../../../components/DatePicker/DatePickerCreateAccout";
 
 const style = {
   position: "absolute",
@@ -823,7 +823,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
             // Handle the case where no active/trialing subscription exists
             console.log("No active or trialing subscriptions found.");
             // set isLoading to true
-            setIsloading(true);
+            // setIsloading(true);
           }
         });
       } catch (error) {
@@ -972,7 +972,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
                         {...register("Surname", { required: true })}
                       />
                     </div>
-                    <DatePickerToolCreatePlayer
+                    <DatePickerToolCreateAccount
                       // style={{ width: "23vw" }}
                       containerStyle={{ marginTop: "-1vh" }}
                       label="Date of birth *"
