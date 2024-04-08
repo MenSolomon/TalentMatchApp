@@ -113,7 +113,8 @@ exports.buyBoostPoints = onCall(async (request) => {
     const boostPurchaseTimeQuery = await boostPurchaseTimeRef.where("created", "==", latestItem.price.created).get();
     if (boostPurchaseTimeQuery.empty) {
     // Extract purchased boost points from description
-      const purchasedBoostPoints = 10;
+      const description = latestItem.description;
+      const purchasedBoostPoints = parseInt(description.match(/\d+/)[0]);
 
       // Update user boost points
       await db.collection("users_db").doc(uid).update({
