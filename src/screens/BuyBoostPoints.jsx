@@ -58,6 +58,7 @@ import {
   setProductID,
 } from "../statemanager/slices/SignupStepperSlice";
 import { selectUserDetailsObject } from "../statemanager/slices/LoginUserDataSlice";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 // This code gets all the products then filters through to display the ones that march the role of the user
 // Based on the selected package a stripe checkout is initated
@@ -108,19 +109,17 @@ const BuyBoostPoints = () => {
         // get all the products
 
         querySnapshot.forEach(async (doc) => {
-          const product = { id: doc.id, data: doc.data() };
+          const product = {
+            id: doc.id,
+            data: doc.data(),
+            name: doc.data().name,
+          };
           allBoostProducts.push(product); // Save all products for potential use elsewhere
 
           // Filter based on specific IDs (replace with your filtering logic)
-          if (
-            [
-              "prod_Psk1hNzIaiIRw9",
-              "prod_PskaDN9hV5Nmi4",
-              "prod_PskaFN9V1B55wr",
-            ].includes(doc.id)
-          ) {
-            filteredProducts.push(product);
-          }
+          await allBoostProducts
+            .filter(({ name }) => name.includes("Boost"))
+            .forEach((boostProduct) => filteredProducts.push(boostProduct));
         });
 
         // Use filteredProducts for further processing or rendering
@@ -132,6 +131,7 @@ const BuyBoostPoints = () => {
           );
 
           priceSnap.forEach((priceDoc) => {
+            // console.log("priceSnap:", priceSnap);
             // set counter to +1
             setFetchCounter((prevFetchCounter) => prevFetchCounter + 1);
             setBoostProducts((prevProducts) => [
@@ -180,13 +180,32 @@ const BuyBoostPoints = () => {
       checkoutSessionsCollectionRef,
       {
         price: priceID,
+        mode: "payment",
         success_url: window.location.origin,
         cancel_url: window.location.origin,
       }
     );
 
     // Wait for the CheckoutSession to get attached by the extension
-    onSnapshot(newCheckoutSessionDocRef, (snap) => {
+    onSnapshot(newCheckoutSessionDocRef, async (snap) => {
+      // trigger the callable here
+      try {
+        const functions = getFunctions();
+        const buyBoostPointsFn = httpsCallable(functions, "buyBoostPoints");
+        const result = await buyBoostPointsFn({
+          id: accountId,
+        });
+        if (result) {
+          console.log("result", result);
+          // Add a snack that says purchase complete
+          // refetch the boostpoints
+          // refetchPlayerBoostPoints();
+        } else if (result == undefined || result == null) {
+          console.log(result);
+        }
+      } catch (error) {
+        console.log("cloudFn Error", error);
+      }
       const { error, url } = snap.data();
       if (error) {
         // Show an error to your customer and
@@ -401,24 +420,105 @@ const BuyBoostPoints = () => {
                     price={item.price / 100}
                     isButtonTriggered={isButtonTriggered}
                     featuresHighlightArray={item.details}
-                    // onClick={async () => {
-                    //   // display loading sign
-                    //   setIsButtonTriggered(true);
-                    //   StripeBoostPointsCheckout(item.priceId);
-                    // }}
-                    onClick={() => {
-                      console.log(
-                        "id:",
-                        item.id,
-                        "name:",
-                        item.name,
-                        "descr:",
-                        item.description,
-                        "price:",
-                        item.price / 100,
-                        "priceId",
-                        priceId
-                      );
+                    onClick={async () => {
+                      // display loading sign
+                      // setIsButtonTriggered(true);
+                      // StripeBoostPointsCheckout(item.priceId);
+
+                      // TRIGGER CLOUD FN
+                      try {
+                        const functions = getFunctions();
+                        const buyBoostPointsFn = httpsCallable(
+                          functions,
+                          "buyBoostPoints"
+                        );
+                        const result = await buyBoostPointsFn();
+                        if (result) {
+                          console.log("result", result);
+                      // Add a snack that says purchase complete
+                          // refetch the boostpoints
+                          // refetchPlayerBoostPoints();
+                        } else if (result == undefined || result == null) {
+                           console.log(result)
+                        }
+                      } catch (error) {
+                        console.log("cloudFn Error", error);
+                      }
+
+                      // TESTING QUERY
+                      // try {
+                      //   const q = query(
+                      //     collection(db, `users_db/${accountId}/payments`)
+                      //   );
+                      //   const querySnapshot = await getDocs(q);
+
+                      //   const filteredItems = [];
+
+                      //   // Filter documents by status and price type
+                      //   for (const doc of querySnapshot.docs) {
+                      //     const payment = doc.data();
+                      //     if (
+                      //       payment.items &&
+                      //       payment.items.length > 0 &&
+                      //       payment.items[0].price
+                      //     ) {
+                      //       const type = payment.items[0].price.type;
+                      //       if (
+                      //         payment.status === "succeeded" &&
+                      //         type === "one_time"
+                      //       ) {
+                      //         filteredItems.push(payment.items);
+                      //       }
+                      //       // Use type value as needed
+                      //     }
+                      //   }
+                      //   console.log("filteredItems", filteredItems);
+
+                      //   const filtered = [];
+
+                      //   for (const itemsArray of filteredItems) {
+                      //     // Assuming itemsArray is an array containing objects like the one you provided
+                      //     for (const item of itemsArray) {
+                      //       filtered.push(item);
+                      //     }
+                      //   }
+
+                      //   console.log("filtered", filtered);
+
+                      //   // Find item with latest created timestamp
+                      //   const latestItem = filtered.reduce((prev, current) => {
+                      //     // Check if prev is null or if current has a higher created timestamp
+                      //     if (
+                      //       !prev ||
+                      //       current.price.created > prev.price.created
+                      //     ) {
+                      //       return current;
+                      //     } else {
+                      //       return prev;
+                      //     }
+                      //   }, null);
+
+                      //   console.log("latestItem", latestItem);
+
+                      //   // Check if the latest item's purchase time exists in the boostPurchaseTime collection
+                      //   const boostPurchaseTimeRef = collection(
+                      //     db,
+                      //     `users_db/${accountId}/boostPurchaseTime`
+                      //   );
+                      //   const boostPurchaseTimeQuery = query(
+                      //     boostPurchaseTimeRef,
+                      //     where("created", "==", latestItem.price.created)
+                      //   );
+                      //   const boostPurchaseTimeSnapshot = await getDocs(
+                      //     boostPurchaseTimeQuery
+                      //   );
+
+                      //   if (!isEmpty(boostPurchaseTimeSnapshot.docs)) {
+                      //     status = null;
+                      //   }
+                      // } catch (error) {
+                      //   console.log(error);
+                      // }
                     }}
                   />
                 ))}

@@ -105,3 +105,39 @@ export default function ProductDetails() {
     </div>
   );
 }
+
+
+// exports.processBoostPointsPayment = functions.firestore
+//     .document("users_db/{userId}/payments/{paymentId}")
+//     .onWrite(async (change, context) => {
+//       const paymentData = change.after.data();
+
+//       // Filter payments based on specified conditions
+//       if (
+//         !paymentData ||
+//         !Array.isArray(paymentData.items) ||
+//       paymentData.status !== "succeeded" ||
+//       !paymentData.items.some((item) => item.price.type === "one_time")
+//       ) {
+//         return null;
+//       }
+
+//       const items = paymentData.items.sort((a, b) => b.created - a.created);
+//       const latestItem = items[0];
+
+//       // Check timestamp within one minute
+//       const minuteAgo = Date.now() - 60 * 1000;
+//       if (latestItem.created < minuteAgo) {
+//         return null;
+//       }
+
+//       // Extract boost points from description
+//       const boostPoints = parseInt(latestItem.description.match(/\d+/)[0]);
+
+//       // Update user's boost points
+//       const userId = context.params.userId; // Get user ID from path parameter
+//       const userDoc = admin.firestore().collection("users_db").doc(userId);
+//       await userDoc.update({
+//         boostPoints: admin.firestore.FieldValue.increment(boostPoints),
+//       });
+//     });
