@@ -186,37 +186,40 @@ const BuyBoostPoints = () => {
       }
     );
 
-    // Wait for the CheckoutSession to get attached by the extension
-    onSnapshot(newCheckoutSessionDocRef, async (snap) => {
-      // trigger the callable here
+    const onSnapshotPromise = new Promise((resolve, reject) => {
+      // Wait for the CheckoutSession to get attached by the extension
+      onSnapshot(newCheckoutSessionDocRef, async (snap) => {
+        // trigger the callable here
+        const { error, url } = snap.data();
+        resolve(snap.exists());
+        if (error) {
+          // Show an error to your customer and
+          // inspect your Cloud Function logs in the Firebase console.
+          alert(`An error occurred: ${error.message}`);
+        }
+        if (url) {
+          // We have a Stripe Checkout URL, let's redirect.
+          window.location.assign(url);
+        }
+      });
+    });
+
+    const onSnapshotPromiseResult = await onSnapshotPromise;
+
+    if (onSnapshotPromiseResult) {
       try {
         const functions = getFunctions();
         const buyBoostPointsFn = httpsCallable(functions, "buyBoostPoints");
-        const result = await buyBoostPointsFn({
-          id: accountId,
-        });
+        const result = await buyBoostPointsFn();
         if (result) {
           console.log("result", result);
-          // Add a snack that says purchase complete
-          // refetch the boostpoints
-          // refetchPlayerBoostPoints();
         } else if (result == undefined || result == null) {
           console.log(result);
         }
       } catch (error) {
         console.log("cloudFn Error", error);
       }
-      const { error, url } = snap.data();
-      if (error) {
-        // Show an error to your customer and
-        // inspect your Cloud Function logs in the Firebase console.
-        alert(`An error occurred: ${error.message}`);
-      }
-      if (url) {
-        // We have a Stripe Checkout URL, let's redirect.
-        window.location.assign(url);
-      }
-    });
+    }
   };
 
   return (
@@ -269,13 +272,6 @@ const BuyBoostPoints = () => {
             style={{ flex: ".15", display: "flex" }}>
             {" "}
             <img style={{ width: "120px" }} src={logoImage} />
-            {/* <Avatar
-    src="/static/images/avatar/1.jpg"
-    style={{ background: "blue", color: "blue" }}
-  >
-    r
-  </Avatar>{" "}
-  <h4 style={{ marginLeft: ".7vw", marginTop: "1vh" }}>Talent Match</h4> */}
           </div>
         ) : (
           ""
@@ -423,27 +419,25 @@ const BuyBoostPoints = () => {
                     onClick={async () => {
                       // display loading sign
                       // setIsButtonTriggered(true);
-                      // StripeBoostPointsCheckout(item.priceId);
+                      StripeBoostPointsCheckout(item.priceId);
 
                       // TRIGGER CLOUD FN
-                      try {
-                        const functions = getFunctions();
-                        const buyBoostPointsFn = httpsCallable(
-                          functions,
-                          "buyBoostPoints"
-                        );
-                        const result = await buyBoostPointsFn();
-                        if (result) {
-                          console.log("result", result);
-                      // Add a snack that says purchase complete
-                          // refetch the boostpoints
-                          // refetchPlayerBoostPoints();
-                        } else if (result == undefined || result == null) {
-                           console.log(result)
-                        }
-                      } catch (error) {
-                        console.log("cloudFn Error", error);
-                      }
+                      // try {
+                      //   const functions = getFunctions();
+                      //   const buyBoostPointsFn = httpsCallable(
+                      //     functions,
+                      //     "buyBoostPoints"
+                      //   );
+                      //   const result = await buyBoostPointsFn();
+                      //   if (result) {
+                      //     console.log("result", result);
+                      //     Navigate(-1);
+                      //   } else if (result == undefined || result == null) {
+                      //     console.log(result);
+                      //   }
+                      // } catch (error) {
+                      //   console.log("cloudFn Error", error);
+                      // }
 
                       // TESTING QUERY
                       // try {
@@ -525,18 +519,6 @@ const BuyBoostPoints = () => {
               </div>
             </div>
           )}
-        </div>
-
-        {/* // Footer  */}
-
-        <div
-          style={{
-            width: "100%",
-            height: "55vh",
-            // background: "red",
-            paddingTop: "30vh",
-          }}>
-          {" "}
         </div>
       </div>
     </div>
