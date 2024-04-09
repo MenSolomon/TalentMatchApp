@@ -101,6 +101,7 @@ const Login = () => {
             setUserDetailsObject({
               Nationality: userInfoSnap.data().Nationality,
               email: userInfoSnap.data().email,
+              boostPoints: userInfoSnap.data().boostPoints,
               CountryCode: userInfoSnap.data().CountryCode,
               stripeLink:
                 userInfoSnap?.data()?.stripeLink === undefined

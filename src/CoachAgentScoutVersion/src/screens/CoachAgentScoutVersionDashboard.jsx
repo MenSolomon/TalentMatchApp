@@ -5,6 +5,7 @@ import { selectThemeProviderObject } from "../statemanager/slices/ThemeProviderS
 import UploadPlayerToAgencyModal from "../components/Modals/UploadPlayerToAgencyModal";
 import NewsCard from "../../../components/Cards/NewsCard/NewsCard";
 import {
+  selectIsSubscriptionActive,
   selectSubscriptionFeatures,
   selectUserDetailsObject,
 } from "../../../statemanager/slices/LoginUserDataSlice";
@@ -35,6 +36,7 @@ const CoachAgentScoutVersionDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
   const { boostPoints } = userLoginDetailsObject;
+  const subscriptionStatus = useSelector(selectIsSubscriptionActive);
 
   const navigate = useNavigate();
 
@@ -319,7 +321,9 @@ const CoachAgentScoutVersionDashboard = () => {
           Profile dashboard
           <Stack direction="row" spacing={1}>
             <Chip
-              label={`${boostPoints} Boost Points`}
+              label={`${
+                boostPoints == undefined ? 0 : boostPoints
+              } Boost Points`}
               color="primary"
               variant="contained"
             />
@@ -327,7 +331,13 @@ const CoachAgentScoutVersionDashboard = () => {
               label="Buy Points"
               color="success"
               variant="contained"
-              onClick={() => navigate("/buyBoostPoints")}
+              onClick={() => {
+                if (subscriptionStatus == true) {
+                  navigate("/buyBoostPoints");
+                } else {
+                  triggerWarningAlertModal("You need an active subscription");
+                }
+              }}
             />
           </Stack>
         </h3>

@@ -11,12 +11,14 @@ import {
 } from "../statemanager/slices/OtherComponentStatesSlice";
 import ChoosePlanPageDrawer from "../components/Drawer/ChoosePlanPageDrawer";
 import {
+  FieldValue,
   addDoc,
   arrayUnion,
   collection,
   doc,
   getDoc,
   getDocs,
+  increment,
   onSnapshot,
   query,
   updateDoc,
@@ -158,100 +160,143 @@ const BuyBoostPoints = () => {
         cancel_url: window.location.origin,
       }
     );
-    onSnapshot(newCheckoutSessionDocRef, async (snap) => {
-      // trigger the callable here
-      const { error, url } = snap.data();
 
-      if (error) {
-        // Show an error to your customer and
-        // inspect your Cloud Function logs in the Firebase console.
-        alert(`An error occurred: ${error.message}`);
-      }
-      if (url) {
-        // We have a Stripe Checkout URL, let's redirect.
-        window.location.assign(url);
-      }
+    const newCheckoutSessionPromise = new Promise((resolve) => {
+      onSnapshot(newCheckoutSessionDocRef, async (snap) => {
+        // trigger the callable here
+        const { error, url } = snap.data();
+
+        if (error) {
+          // Show an error to your customer and
+          // inspect your Cloud Function logs in the Firebase console.
+          alert(`An error occurred: ${error.message}`);
+        }
+        if (url) {
+          // We have a Stripe Checkout URL, let's redirect.
+          window.location.assign(url);
+        }
+        resolve(snap.data());
+      });
     });
 
     // PAYMENTS SNAPSHOT
-    // const paymentsCollectionRef = collection(currentUserDocRef, "payments");
-    // const q = query(
-    //   paymentsCollectionRef,
-    //   where("active", "==", true),
-    //   where("items", "array-contains", {
-    //     price: {
-    //       type: "one_time",
-    //     },
-    //   })
-    // );
-    // const querySnapshot = await getDocs(q);
-    // let allProducts = [];
-    // querySnapshot.forEach(async (doc) => {
-    //   // save them to allProducts array
-    //   allProducts.push(doc.data());
-    // });
+    const newCheckoutSessionPromiseResult = await newCheckoutSessionPromise;
+    if (newCheckoutSessionPromiseResult) {
+      const currentUser = auth.currentUser;
+      // All Payments query with includes succeeded and failed transcactions
+      const paymentsCollectionQuery = query(
+        collection(db, `users_db/${currentUser.uid}/payments`),
+        where("status", "==", "succeeded")
+      );
+      const paymentsCollectionSnaphot = await getDocs(paymentsCollectionQuery);
 
-    // const onSnapshotPromise = new Promise((resolve, reject) => {
-    //   // Wait for the CheckoutSession to get attached by the extension
-    //   try {
-    //     const filteredItems = [];
-    //     // Filter documents by status and price type
-    //     for (const doc of paymentsRef.docs) {
-    //       const payment = doc.data();
-    //       if (
-    //         payment.items &&
-    //         payment.items.length > 0 &&
-    //         payment.items[0].price
-    //       ) {
-    //         const type = payment.items[0].price.type;
-    //         if (payment.status === "succeeded" && type === "one_time") {
-    //           filteredItems.push(payment.items);
-    //         }
-    //         // Use type value as needed
-    //       }
-    //     }
+      //succeededPayments doc with includes id of only succeeded transcactions
+      const succeededPaymentsDocRef = doc(
+        db,
+        `users_db/${currentUser.uid}/succeededPayments`,
+        "paymentIds"
+      );
 
-    //     const filtered = [];
+      // add BoostPoints Fn
+      const addBoostPoints = async (description) => {
+        let purchasedBoostPoints;
 
-    //     for (const itemsArray of filteredItems) {
-    //       // Assuming itemsArray is an array containing objects like the one you provided
-    //       for (const item of itemsArray) {
-    //         filtered.push(item);
-    //       }
-    //     }
+        switch (description) {
+          case "500 Boost Points":
+            purchasedBoostPoints = 500;
+            break;
+          case "100 Boost Points":
+            purchasedBoostPoints = 100;
+            break;
+          default:
+            // Handle other cases if needed
+            break;
+        }
+        try {
+          const userRef = doc(db, `users_db/${currentUser.uid}`);
+          await updateDoc(userRef, {
+            boostPoints: increment(purchasedBoostPoints),
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
-    //     // Find item with latest created timestamp
-    //     const latestItem = filtered.reduce((prev, current) => {
-    //       // Check if prev is null or if current has a higher created timestamp
-    //       if (!prev || current.price.created > prev.price.created) {
-    //         return current;
-    //       } else {
-    //         return prev;
-    //       }
-    //     }, null);
+      try {
+        const succeededPaymentsDocPromise = new Promise(
+          async (resolve, reject) => {
+            const succeededPaymentsDocSnap = await getDoc(
+              succeededPaymentsDocRef
+            );
+            const succeededPaymentsDoc = succeededPaymentsDocSnap?.data().ids;
+            // returns an array of ids
+            resolve(succeededPaymentsDoc);
+            // returns null if this is the first time the user makes a boostPoint purchase
+            reject([]);
+          }
+        );
 
-    //     resolve(latestItem.price.created);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // });
+        const succeededPaymentsDocResult = await succeededPaymentsDocPromise;
 
-    // const onSnapshotPromiseResult = await onSnapshotPromise;
+        if (succeededPaymentsDocResult) {
+          // Filter documents by status and price type
+          const boostPointsPayments = [];
+          for (const doc of paymentsCollectionSnaphot.docs) {
+            const payment = doc.data();
+            if (
+              payment.items &&
+              payment.items.length > 0 &&
+              payment.items[0].price
+            ) {
+              const type = payment.items[0].price.type;
+              if (payment.status === "succeeded" && type === "one_time") {
+                boostPointsPayments.push(payment.items);
+              }
+            }
+          }
 
-    // if (onSnapshotPromiseResult == true) {
-    //   try {
-    //     const functions = getFunctions();
-    //     const buyBoostPointsFn = httpsCallable(functions, "buyBoostPoints");
-    //     const result = await buyBoostPointsFn();
-    //     if (result) {
-    //       console.log("result", result);
-    //     } else if (result == undefined || result == null) {
-    //       console.log(result);
-    //     }
-    //   } catch (error) {
-    //     console.log("cloudFn Error", error);
-    //   }
-    // }
+          const boostPointsPaymentsDestructured = [];
+
+          for (const itemsArray of boostPointsPayments) {
+            // Assuming itemsArray is an array containing objects like the one you provided
+            for (const item of itemsArray) {
+              boostPointsPaymentsDestructured.push(item);
+            }
+          }
+
+          // });
+          // Check if any of the boostPointsPaymentsDestructured ids are in succeededPaymentsDocResult as a Promise
+          const latestPaymentPromise = new Promise((resolve) => {
+            const latestPayment = [];
+            for (const item of boostPointsPaymentsDestructured) {
+              if (!succeededPaymentsDocResult.includes(item.id)) {
+                latestPayment.push(item);
+              }
+            }
+            resolve(latestPayment);
+          });
+
+          const latestPaymentPromiseResult = await latestPaymentPromise;
+
+          // console.log(latestPaymentPromiseResult[0].description);
+
+          if (latestPaymentPromiseResult != []) {
+            // Now you can use the purchasedBoostPoints variable accordingly
+            addBoostPoints(latestPaymentPromiseResult[0].description);
+
+            await updateDoc(succeededPaymentsDocRef, {
+              ids: arrayUnion(latestPaymentPromiseResult[0].id),
+            });
+          } else if (latestPaymentPromiseResult == []) {
+            return null;
+          }
+          // add boost points li_1P3bFSDkt4D42P0jenhKoxx2
+          //add that id to succededPayments collection
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -449,143 +494,147 @@ const BuyBoostPoints = () => {
                     isButtonTriggered={isButtonTriggered}
                     featuresHighlightArray={item.details}
                     onClick={async () => {
-                      // display loading sign
-                      // setIsButtonTriggered(true);
-                      // StripeBoostPointsCheckout(item.priceId);
-                      // console.log({
-                      //   name: item.name,
-                      //   priceId: item.priceId,
-                      // });
-
-                      const currentUser = auth.currentUser;
-                      // All Payments query with includes succeeded and failed transcactions
-                      const paymentsCollectionQuery = query(
-                        collection(db, `users_db/${currentUser.uid}/payments`),
-                        where("status", "==", "succeeded")
-                      );
-                      const paymentsCollectionSnaphot = await getDocs(
-                        paymentsCollectionQuery
-                      );
-
-                      //succeededPayments doc with includes id of only succeeded transcactions
-                      const succeededPaymentsDocRef = doc(
-                        db,
-                        `users_db/${currentUser.uid}/succeededPayments`,
-                        "paymentIds"
-                      );
-
-                      // add BoostPoints Fn
-                      const addBoostPoints = async (description) => {
-                        let purchasedBoostPoints;
-
-                        switch (description) {
-                          case "500 Points":
-                            purchasedBoostPoints = 500;
-                            break;
-                          case "100 Points":
-                            purchasedBoostPoints = 100;
-                            break;
-                          default:
-                            // Handle other cases if needed
-                            break;
-                        }
-                        try {
-                          const userRef = doc(
-                            db,
-                            `users_db/${currentUser.uid}`
-                          );
-                          await updateDoc(userRef, {
-                            boostPoints: purchasedBoostPoints,
-                          });
-                        } catch (error) {
-                          console.log(error);
-                        }
-                      };
-
-                      try {
-                        const succeededPaymentsDocPromise = new Promise(
-                          async (resolve, reject) => {
-                            const succeededPaymentsDocSnap = await getDoc(
-                              succeededPaymentsDocRef
-                            );
-                            const succeededPaymentsDoc =
-                              succeededPaymentsDocSnap?.data().ids;
-                            // returns an array of ids
-                            resolve(succeededPaymentsDoc);
-                            // returns null if this is the first time the user makes a boostPoint purchase
-                            reject(null);
-                          }
-                        );
-
-                        const succeededPaymentsDocResult =
-                          await succeededPaymentsDocPromise;
-
-                        if (succeededPaymentsDocResult == null) {
-                          addBoostPoints();
-                        } else {
-                          // Filter documents by status and price type
-                          const boostPointsPayments = [];
-                          for (const doc of paymentsCollectionSnaphot.docs) {
-                            const payment = doc.data();
-                            if (
-                              payment.items &&
-                              payment.items.length > 0 &&
-                              payment.items[0].price
-                            ) {
-                              const type = payment.items[0].price.type;
-                              if (
-                                payment.status === "succeeded" &&
-                                type === "one_time"
-                              ) {
-                                boostPointsPayments.push(payment.items);
-                              }
-                            }
-                          }
-
-                          const boostPointsPaymentsDestructured = [];
-
-                          for (const itemsArray of boostPointsPayments) {
-                            // Assuming itemsArray is an array containing objects like the one you provided
-                            for (const item of itemsArray) {
-                              boostPointsPaymentsDestructured.push(item);
-                            }
-                          }
-                          // console.log(boostPointsPaymentsDestructured);
-
-                          // await updateDoc(succeededPaymentsDocRef, {
-                          //   ids: boostPointsPaymentsDestructured,
-                          // });
-                          // Check if any of the boostPointsPaymentsDestructured ids are in succeededPaymentsDocResult as a Promise
-                          const latestPaymentPromise = new Promise(
-                            (resolve) => {
-                              const latestPayment = {};
-                              for (const item of boostPointsPaymentsDestructured) {
-                                if (
-                                  !succeededPaymentsDocResult.includes(item.id)
-                                ) {
-                                  latestPayment[item.id] = { ...item };
-                                }
-                              }
-                              resolve(latestPayment);
-                            }
-                          );
-
-                          const latestPaymentPromiseResult =
-                            await latestPaymentPromise;
-
-                          if (latestPaymentPromiseResult != {}) {
-                            // Now you can use the purchasedBoostPoints variable accordingly
-                            addBoostPoints(
-                              latestPaymentPromiseResult.description
-                            );
-                          }
-                          // add boost points li_1P3bFSDkt4D42P0jenhKoxx2
-                          //add that id to succededPayments collection
-                        }
-                      } catch (error) {
-                        console.log(error);
-                      }
+                      StripeBoostPointsCheckout(item.priceId);
                     }}
+                    // onClick={async () => {
+                    //   // display loading sign
+                    //   // setIsButtonTriggered(true);
+                    //   // StripeBoostPointsCheckout(item.priceId);
+
+                    //   const currentUser = auth.currentUser;
+                    //   // All Payments query with includes succeeded and failed transcactions
+                    //   const paymentsCollectionQuery = query(
+                    //     collection(db, `users_db/${currentUser.uid}/payments`),
+                    //     where("status", "==", "succeeded")
+                    //   );
+                    //   const paymentsCollectionSnaphot = await getDocs(
+                    //     paymentsCollectionQuery
+                    //   );
+
+                    //   //succeededPayments doc with includes id of only succeeded transcactions
+                    //   const succeededPaymentsDocRef = doc(
+                    //     db,
+                    //     `users_db/${currentUser.uid}/succeededPayments`,
+                    //     "paymentIds"
+                    //   );
+
+                    //   // add BoostPoints Fn
+                    //   const addBoostPoints = async (description) => {
+                    //     let purchasedBoostPoints;
+
+                    //     switch (description) {
+                    //       case "500 Boost Points":
+                    //         purchasedBoostPoints = 500;
+                    //         break;
+                    //       case "100 Boost Points":
+                    //         purchasedBoostPoints = 100;
+                    //         break;
+                    //       default:
+                    //         // Handle other cases if needed
+                    //         break;
+                    //     }
+                    //     try {
+                    //       const userRef = doc(
+                    //         db,
+                    //         `users_db/${currentUser.uid}`
+                    //       );
+                    //       await updateDoc(userRef, {
+                    //         boostPoints: increment(purchasedBoostPoints),
+                    //       });
+                    //     } catch (error) {
+                    //       console.log(error);
+                    //     }
+                    //   };
+
+                    //   try {
+                    //     const succeededPaymentsDocPromise = new Promise(
+                    //       async (resolve, reject) => {
+                    //         const succeededPaymentsDocSnap = await getDoc(
+                    //           succeededPaymentsDocRef
+                    //         );
+                    //         const succeededPaymentsDoc =
+                    //           succeededPaymentsDocSnap?.data().ids;
+                    //         // returns an array of ids
+                    //         resolve(succeededPaymentsDoc);
+                    //         // returns null if this is the first time the user makes a boostPoint purchase
+                    //         reject([]);
+                    //       }
+                    //     );
+
+                    //     const succeededPaymentsDocResult =
+                    //       await succeededPaymentsDocPromise;
+
+                    //     if (succeededPaymentsDocResult) {
+                    //       // Filter documents by status and price type
+                    //       const boostPointsPayments = [];
+                    //       for (const doc of paymentsCollectionSnaphot.docs) {
+                    //         const payment = doc.data();
+                    //         if (
+                    //           payment.items &&
+                    //           payment.items.length > 0 &&
+                    //           payment.items[0].price
+                    //         ) {
+                    //           const type = payment.items[0].price.type;
+                    //           if (
+                    //             payment.status === "succeeded" &&
+                    //             type === "one_time"
+                    //           ) {
+                    //             boostPointsPayments.push(payment.items);
+                    //           }
+                    //         }
+                    //       }
+
+                    //       const boostPointsPaymentsDestructured = [];
+
+                    //       for (const itemsArray of boostPointsPayments) {
+                    //         // Assuming itemsArray is an array containing objects like the one you provided
+                    //         for (const item of itemsArray) {
+                    //           boostPointsPaymentsDestructured.push(item);
+                    //         }
+                    //       }
+                    //       // console.log(boostPointsPaymentsDestructured);
+                    //       // });
+                    //       // Check if any of the boostPointsPaymentsDestructured ids are in succeededPaymentsDocResult as a Promise
+                    //       const latestPaymentPromise = new Promise(
+                    //         (resolve) => {
+                    //           const latestPayment = [];
+                    //           for (const item of boostPointsPaymentsDestructured) {
+                    //             if (
+                    //               !succeededPaymentsDocResult.includes(item.id)
+                    //             ) {
+                    //               latestPayment.push(item);
+                    //             }
+                    //           }
+                    //           resolve(latestPayment);
+                    //         }
+                    //       );
+
+                    //       const latestPaymentPromiseResult =
+                    //         await latestPaymentPromise;
+
+                    //       console.log(latestPaymentPromiseResult[0].id);
+                    //       await updateDoc(succeededPaymentsDocRef, {
+                    //         ids: arrayUnion(latestPaymentPromiseResult[0].id),
+                    //       });
+                    //       // if (latestPaymentPromiseResult != []) {
+                    //       //   // Now you can use the purchasedBoostPoints variable accordingly
+                    //       //   addBoostPoints(
+                    //       //     latestPaymentPromiseResult[0].description
+                    //       //   );
+
+                    //       //   await updateDoc(succeededPaymentsDocRef, {
+                    //       //     ids: arrayUnion(latestPaymentPromiseResult[0].id),
+                    //       //   });
+                    //       // } else if (latestPaymentPromiseResult == []) {
+                    //       //   return null;
+                    //       // }
+                    //       // add boost points li_1P3bFSDkt4D42P0jenhKoxx2
+                    //       //add that id to succededPayments collection
+                    //     }
+                    //   } catch (error) {
+                    //     console.log(error);
+                    //   }
+                    // }}
                   />
                 ))}
               </div>
