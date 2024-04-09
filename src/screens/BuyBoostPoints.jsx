@@ -1,38 +1,8 @@
-import {
-  Button,
-  Card,
-  CircularProgress,
-  FormControlLabel,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  Radio,
-  Stack,
-  Switch,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Card, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import FormControl from "@mui/material/FormControl";
-import {
-  CheckCircle,
-  Facebook,
-  Instagram,
-  Mail,
-  Twitter,
-  Visibility,
-  VisibilityOff,
-} from "@mui/icons-material";
-import Avatar from "@mui/material/Avatar";
 import imageBackground from "../assets/images/FootballLogo.jpg";
-import facebookLogo from "../assets/images/facebookImage.svg";
-import GoogleLogo from "../assets/images/google.svg";
 import { useNavigate } from "react-router-dom";
-import WorldMaps from "../components/WorldMap";
 import logoImage from "../assets/images/AppLogoBlue.png";
-import BasicMenu from "../components/Menu/BasicMenu";
-import BasicButton from "../components/Buttons/BasicButton";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectCurrentBrowserSize,
@@ -42,6 +12,7 @@ import {
 import ChoosePlanPageDrawer from "../components/Drawer/ChoosePlanPageDrawer";
 import {
   addDoc,
+  arrayUnion,
   collection,
   doc,
   getDoc,
@@ -53,10 +24,6 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../Firebase/Firebase";
 import { productDetails } from "../utils/ProductDetails";
-import {
-  setPriceID,
-  setProductID,
-} from "../statemanager/slices/SignupStepperSlice";
 import { selectUserDetailsObject } from "../statemanager/slices/LoginUserDataSlice";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
@@ -115,51 +82,56 @@ const BuyBoostPoints = () => {
             name: doc.data().name,
           };
           allBoostProducts.push(product); // Save all products for potential use elsewhere
-
-          // Filter based on specific IDs (replace with your filtering logic)
-          await allBoostProducts
-            .filter(({ name }) => name.includes("Boost"))
-            .forEach((boostProduct) => filteredProducts.push(boostProduct));
         });
 
+        // Filter based on specific IDs (replace with your filtering logic)
+        allBoostProducts
+          .filter(({ name }) => name.includes("Boost Points"))
+          .forEach((boostProduct) => filteredProducts.push(boostProduct));
+
         // Use filteredProducts for further processing or rendering
-        console.log(filteredProducts); // Example usage
+        console.log("filteredProducts", filteredProducts); // Example usage
+
         // check the allBoostProducts array and get the contents of the product/prices collection
-        filteredProducts.map(async (prods) => {
+        const promises = filteredProducts.map(async (prods) => {
           const priceSnap = await getDocs(
             collection(db, `products/${prods.id}/prices`)
           );
 
-          priceSnap.forEach((priceDoc) => {
-            // console.log("priceSnap:", priceSnap);
-            // set counter to +1
-            setFetchCounter((prevFetchCounter) => prevFetchCounter + 1);
-            setBoostProducts((prevProducts) => [
-              ...prevProducts,
-              {
-                name: prods.data.name,
-                image: prods.data.images,
-                price: priceDoc.data().unit_amount,
-                id: prods.id,
-                priceId: priceDoc.id,
-                description: prods.data.description,
-                details: prods.data.details,
-              },
-            ]);
+          const products = [];
+          for (const priceDoc of priceSnap.docs) {
+            products.push({
+              name: prods.data.name,
+              image: prods.data.images,
+              price: priceDoc.data().unit_amount,
+              id: prods.id,
+              priceId: priceDoc.id,
+              description: prods.data.description,
+              details: prods.data.details,
+            });
+          }
 
-            // disable loading
-            setIsProductsLoading(false);
-          });
+          return products;
         });
+
+        // Wait for all promises to resolve
+        const resolvedProducts = await Promise.all(promises);
+
+        // Flatten the array and update the state
+        const flattenedProducts = resolvedProducts.flat();
+        setBoostProducts(flattenedProducts);
+
+        // disable loading
+        setIsProductsLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
 
-    if (fetchCounter == 0) {
+    if (fetchCounter === 0) {
       FetchProducts();
     }
-  }, []);
+  }, [fetchCounter]);
 
   // function to initiate stripe checkout
   const StripeBoostPointsCheckout = async (priceID) => {
@@ -167,8 +139,9 @@ const BuyBoostPoints = () => {
     // get user id
     const currentUser = await auth.currentUser;
 
+    // STRIPE REF
     const usersDbRef = collection(db, "users_db");
-    const currentUserDocRef = doc(usersDbRef, accountId);
+    const currentUserDocRef = doc(usersDbRef, currentUser.uid);
 
     // stripe db actions
     const checkoutSessionsCollectionRef = collection(
@@ -185,41 +158,100 @@ const BuyBoostPoints = () => {
         cancel_url: window.location.origin,
       }
     );
+    onSnapshot(newCheckoutSessionDocRef, async (snap) => {
+      // trigger the callable here
+      const { error, url } = snap.data();
 
-    const onSnapshotPromise = new Promise((resolve, reject) => {
-      // Wait for the CheckoutSession to get attached by the extension
-      onSnapshot(newCheckoutSessionDocRef, async (snap) => {
-        // trigger the callable here
-        const { error, url } = snap.data();
-        resolve(snap.exists());
-        if (error) {
-          // Show an error to your customer and
-          // inspect your Cloud Function logs in the Firebase console.
-          alert(`An error occurred: ${error.message}`);
-        }
-        if (url) {
-          // We have a Stripe Checkout URL, let's redirect.
-          window.location.assign(url);
-        }
-      });
+      if (error) {
+        // Show an error to your customer and
+        // inspect your Cloud Function logs in the Firebase console.
+        alert(`An error occurred: ${error.message}`);
+      }
+      if (url) {
+        // We have a Stripe Checkout URL, let's redirect.
+        window.location.assign(url);
+      }
     });
 
-    const onSnapshotPromiseResult = await onSnapshotPromise;
+    // PAYMENTS SNAPSHOT
+    // const paymentsCollectionRef = collection(currentUserDocRef, "payments");
+    // const q = query(
+    //   paymentsCollectionRef,
+    //   where("active", "==", true),
+    //   where("items", "array-contains", {
+    //     price: {
+    //       type: "one_time",
+    //     },
+    //   })
+    // );
+    // const querySnapshot = await getDocs(q);
+    // let allProducts = [];
+    // querySnapshot.forEach(async (doc) => {
+    //   // save them to allProducts array
+    //   allProducts.push(doc.data());
+    // });
 
-    if (onSnapshotPromiseResult) {
-      try {
-        const functions = getFunctions();
-        const buyBoostPointsFn = httpsCallable(functions, "buyBoostPoints");
-        const result = await buyBoostPointsFn();
-        if (result) {
-          console.log("result", result);
-        } else if (result == undefined || result == null) {
-          console.log(result);
-        }
-      } catch (error) {
-        console.log("cloudFn Error", error);
-      }
-    }
+    // const onSnapshotPromise = new Promise((resolve, reject) => {
+    //   // Wait for the CheckoutSession to get attached by the extension
+    //   try {
+    //     const filteredItems = [];
+    //     // Filter documents by status and price type
+    //     for (const doc of paymentsRef.docs) {
+    //       const payment = doc.data();
+    //       if (
+    //         payment.items &&
+    //         payment.items.length > 0 &&
+    //         payment.items[0].price
+    //       ) {
+    //         const type = payment.items[0].price.type;
+    //         if (payment.status === "succeeded" && type === "one_time") {
+    //           filteredItems.push(payment.items);
+    //         }
+    //         // Use type value as needed
+    //       }
+    //     }
+
+    //     const filtered = [];
+
+    //     for (const itemsArray of filteredItems) {
+    //       // Assuming itemsArray is an array containing objects like the one you provided
+    //       for (const item of itemsArray) {
+    //         filtered.push(item);
+    //       }
+    //     }
+
+    //     // Find item with latest created timestamp
+    //     const latestItem = filtered.reduce((prev, current) => {
+    //       // Check if prev is null or if current has a higher created timestamp
+    //       if (!prev || current.price.created > prev.price.created) {
+    //         return current;
+    //       } else {
+    //         return prev;
+    //       }
+    //     }, null);
+
+    //     resolve(latestItem.price.created);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // });
+
+    // const onSnapshotPromiseResult = await onSnapshotPromise;
+
+    // if (onSnapshotPromiseResult == true) {
+    //   try {
+    //     const functions = getFunctions();
+    //     const buyBoostPointsFn = httpsCallable(functions, "buyBoostPoints");
+    //     const result = await buyBoostPointsFn();
+    //     if (result) {
+    //       console.log("result", result);
+    //     } else if (result == undefined || result == null) {
+    //       console.log(result);
+    //     }
+    //   } catch (error) {
+    //     console.log("cloudFn Error", error);
+    //   }
+    // }
   };
 
   return (
@@ -419,100 +451,140 @@ const BuyBoostPoints = () => {
                     onClick={async () => {
                       // display loading sign
                       // setIsButtonTriggered(true);
-                      StripeBoostPointsCheckout(item.priceId);
+                      // StripeBoostPointsCheckout(item.priceId);
+                      // console.log({
+                      //   name: item.name,
+                      //   priceId: item.priceId,
+                      // });
 
-                      // TRIGGER CLOUD FN
-                      // try {
-                      //   const functions = getFunctions();
-                      //   const buyBoostPointsFn = httpsCallable(
-                      //     functions,
-                      //     "buyBoostPoints"
-                      //   );
-                      //   const result = await buyBoostPointsFn();
-                      //   if (result) {
-                      //     console.log("result", result);
-                      //     Navigate(-1);
-                      //   } else if (result == undefined || result == null) {
-                      //     console.log(result);
-                      //   }
-                      // } catch (error) {
-                      //   console.log("cloudFn Error", error);
-                      // }
+                      const currentUser = auth.currentUser;
+                      // All Payments query with includes succeeded and failed transcactions
+                      const paymentsCollectionQuery = query(
+                        collection(db, `users_db/${currentUser.uid}/payments`),
+                        where("status", "==", "succeeded")
+                      );
+                      const paymentsCollectionSnaphot = await getDocs(
+                        paymentsCollectionQuery
+                      );
 
-                      // TESTING QUERY
-                      // try {
-                      //   const q = query(
-                      //     collection(db, `users_db/${accountId}/payments`)
-                      //   );
-                      //   const querySnapshot = await getDocs(q);
+                      //succeededPayments doc with includes id of only succeeded transcactions
+                      const succeededPaymentsDocRef = doc(
+                        db,
+                        `users_db/${currentUser.uid}/succeededPayments`,
+                        "paymentIds"
+                      );
 
-                      //   const filteredItems = [];
+                      // add BoostPoints Fn
+                      const addBoostPoints = async (description) => {
+                        let purchasedBoostPoints;
 
-                      //   // Filter documents by status and price type
-                      //   for (const doc of querySnapshot.docs) {
-                      //     const payment = doc.data();
-                      //     if (
-                      //       payment.items &&
-                      //       payment.items.length > 0 &&
-                      //       payment.items[0].price
-                      //     ) {
-                      //       const type = payment.items[0].price.type;
-                      //       if (
-                      //         payment.status === "succeeded" &&
-                      //         type === "one_time"
-                      //       ) {
-                      //         filteredItems.push(payment.items);
-                      //       }
-                      //       // Use type value as needed
-                      //     }
-                      //   }
-                      //   console.log("filteredItems", filteredItems);
+                        switch (description) {
+                          case "500 Points":
+                            purchasedBoostPoints = 500;
+                            break;
+                          case "100 Points":
+                            purchasedBoostPoints = 100;
+                            break;
+                          default:
+                            // Handle other cases if needed
+                            break;
+                        }
+                        try {
+                          const userRef = doc(
+                            db,
+                            `users_db/${currentUser.uid}`
+                          );
+                          await updateDoc(userRef, {
+                            boostPoints: purchasedBoostPoints,
+                          });
+                        } catch (error) {
+                          console.log(error);
+                        }
+                      };
 
-                      //   const filtered = [];
+                      try {
+                        const succeededPaymentsDocPromise = new Promise(
+                          async (resolve, reject) => {
+                            const succeededPaymentsDocSnap = await getDoc(
+                              succeededPaymentsDocRef
+                            );
+                            const succeededPaymentsDoc =
+                              succeededPaymentsDocSnap?.data().ids;
+                            // returns an array of ids
+                            resolve(succeededPaymentsDoc);
+                            // returns null if this is the first time the user makes a boostPoint purchase
+                            reject(null);
+                          }
+                        );
 
-                      //   for (const itemsArray of filteredItems) {
-                      //     // Assuming itemsArray is an array containing objects like the one you provided
-                      //     for (const item of itemsArray) {
-                      //       filtered.push(item);
-                      //     }
-                      //   }
+                        const succeededPaymentsDocResult =
+                          await succeededPaymentsDocPromise;
 
-                      //   console.log("filtered", filtered);
+                        if (succeededPaymentsDocResult == null) {
+                          addBoostPoints();
+                        } else {
+                          // Filter documents by status and price type
+                          const boostPointsPayments = [];
+                          for (const doc of paymentsCollectionSnaphot.docs) {
+                            const payment = doc.data();
+                            if (
+                              payment.items &&
+                              payment.items.length > 0 &&
+                              payment.items[0].price
+                            ) {
+                              const type = payment.items[0].price.type;
+                              if (
+                                payment.status === "succeeded" &&
+                                type === "one_time"
+                              ) {
+                                boostPointsPayments.push(payment.items);
+                              }
+                            }
+                          }
 
-                      //   // Find item with latest created timestamp
-                      //   const latestItem = filtered.reduce((prev, current) => {
-                      //     // Check if prev is null or if current has a higher created timestamp
-                      //     if (
-                      //       !prev ||
-                      //       current.price.created > prev.price.created
-                      //     ) {
-                      //       return current;
-                      //     } else {
-                      //       return prev;
-                      //     }
-                      //   }, null);
+                          const boostPointsPaymentsDestructured = [];
 
-                      //   console.log("latestItem", latestItem);
+                          for (const itemsArray of boostPointsPayments) {
+                            // Assuming itemsArray is an array containing objects like the one you provided
+                            for (const item of itemsArray) {
+                              boostPointsPaymentsDestructured.push(item);
+                            }
+                          }
+                          // console.log(boostPointsPaymentsDestructured);
 
-                      //   // Check if the latest item's purchase time exists in the boostPurchaseTime collection
-                      //   const boostPurchaseTimeRef = collection(
-                      //     db,
-                      //     `users_db/${accountId}/boostPurchaseTime`
-                      //   );
-                      //   const boostPurchaseTimeQuery = query(
-                      //     boostPurchaseTimeRef,
-                      //     where("created", "==", latestItem.price.created)
-                      //   );
-                      //   const boostPurchaseTimeSnapshot = await getDocs(
-                      //     boostPurchaseTimeQuery
-                      //   );
+                          // await updateDoc(succeededPaymentsDocRef, {
+                          //   ids: boostPointsPaymentsDestructured,
+                          // });
+                          // Check if any of the boostPointsPaymentsDestructured ids are in succeededPaymentsDocResult as a Promise
+                          const latestPaymentPromise = new Promise(
+                            (resolve) => {
+                              const latestPayment = {};
+                              for (const item of boostPointsPaymentsDestructured) {
+                                if (
+                                  !succeededPaymentsDocResult.includes(item.id)
+                                ) {
+                                  latestPayment[item.id] = { ...item };
+                                }
+                              }
+                              resolve(latestPayment);
+                            }
+                          );
 
-                      //   if (!isEmpty(boostPurchaseTimeSnapshot.docs)) {
-                      //     status = null;
-                      //   }
-                      // } catch (error) {
-                      //   console.log(error);
-                      // }
+                          const latestPaymentPromiseResult =
+                            await latestPaymentPromise;
+
+                          if (latestPaymentPromiseResult != {}) {
+                            // Now you can use the purchasedBoostPoints variable accordingly
+                            addBoostPoints(
+                              latestPaymentPromiseResult.description
+                            );
+                          }
+                          // add boost points li_1P3bFSDkt4D42P0jenhKoxx2
+                          //add that id to succededPayments collection
+                        }
+                      } catch (error) {
+                        console.log(error);
+                      }
                     }}
                   />
                 ))}
