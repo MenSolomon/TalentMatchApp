@@ -396,6 +396,7 @@ const MotherComponent = () => {
             const featuresRef = await doc(db, `products/${productID}`);
             const featuresSnap = await getDoc(featuresRef);
             const features = await featuresSnap.data().features;
+            const userInfoRef = doc(db, `users_db/${accountId}`);
             // save features to redux
             dispatch(setSubscriptionFeatures(features));
             await updateDoc(userInfoRef, {

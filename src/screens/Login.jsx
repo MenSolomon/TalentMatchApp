@@ -340,7 +340,7 @@ const Login = () => {
                 <span
                   style={{ color: "#5585FE", cursor: "pointer" }}
                   onClick={() => {
-                    Navigate("/membership-plans");
+                    Navigate("/create-account/freetrial");
                   }}>
                   Choose a plan
                 </span>{" "}
