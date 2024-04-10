@@ -289,7 +289,7 @@ const CoachAgentScoutVersionDashboard = () => {
     });
 
   // Filter out undefined or null values from the array
-  console.log(playersInPossessionDetails, "debut");
+  // console.log(playersInPossessionDetails, "debut");
   const validPlayers =
     playersInPossessionDetails === undefined
       ? []
@@ -338,6 +338,12 @@ const CoachAgentScoutVersionDashboard = () => {
                   triggerWarningAlertModal("You need an active subscription");
                 }
               }}
+              // onClick={async () => {
+              //   const user = auth.currentUser;
+              //   await setDoc(doc(db, `users_db`, "setDocTest"), {
+              //     test: "test",
+              //   });
+              // }}
             />
           </Stack>
         </h3>
