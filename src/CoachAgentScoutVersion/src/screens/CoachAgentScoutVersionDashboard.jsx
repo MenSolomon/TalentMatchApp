@@ -1,4 +1,4 @@
-import { Avatar, Button, Chip, Stack, Switch } from "@mui/material";
+import { Avatar, Button, Chip, Stack, Switch, Typography } from "@mui/material";
 import PlayerSkeletonImage from "../assets/images/PlayerSkeleton.png";
 import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../statemanager/slices/ThemeProviderSlice";
@@ -35,7 +35,7 @@ import { formatDistanceToNow } from "date-fns";
 const CoachAgentScoutVersionDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
-  const { boostPoints } = userLoginDetailsObject;
+  const { boostPoints, subscriptionPackage } = userLoginDetailsObject;
   const subscriptionStatus = useSelector(selectIsSubscriptionActive);
 
   const navigate = useNavigate();
@@ -321,9 +321,11 @@ const CoachAgentScoutVersionDashboard = () => {
           Profile dashboard
           <Stack direction="row" spacing={1}>
             <Chip
-              label={`${
-                boostPoints == undefined ? 0 : boostPoints
-              } Boost Points`}
+              label={
+                <Typography>
+                  Boost Points: {boostPoints == undefined ? 0 : boostPoints}
+                </Typography>
+              }
               color="primary"
               variant="contained"
             />
@@ -332,18 +334,15 @@ const CoachAgentScoutVersionDashboard = () => {
               color="success"
               variant="contained"
               onClick={() => {
-                if (subscriptionStatus == true) {
+                if (
+                  subscriptionPackage == "prod_Ps1JzpXiJ69kzn" ||
+                  subscriptionStatus == false
+                ) {
+                  triggerWarningAlertModal("You need a paid subscription");
+                } else if (subscriptionStatus == true) {
                   navigate("/buyBoostPoints");
-                } else {
-                  triggerWarningAlertModal("You need an active subscription");
                 }
               }}
-              // onClick={async () => {
-              //   const user = auth.currentUser;
-              //   await setDoc(doc(db, `users_db`, "setDocTest"), {
-              //     test: "test",
-              //   });
-              // }}
             />
           </Stack>
         </h3>

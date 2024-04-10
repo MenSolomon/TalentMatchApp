@@ -461,14 +461,17 @@ const MotherComponent = () => {
         );
 
         // add BoostPoints Fn
-        const addBoostPoints = async (description) => {
+        const addBoostPoints = async (amount) => {
           let purchasedBoostPoints;
 
-          switch (description) {
-            case "500 Boost Points":
+          switch (amount) {
+            case 1600:
+              purchasedBoostPoints = 1000;
+              break;
+            case 900:
               purchasedBoostPoints = 500;
               break;
-            case "100 Boost Points":
+            case 200:
               purchasedBoostPoints = 100;
               break;
             default:
@@ -507,7 +510,7 @@ const MotherComponent = () => {
           );
 
           const succeededPaymentsDocResult = await succeededPaymentsDocPromise;
-          console.log("succeededPaymentsDocResult", succeededPaymentsDocResult);
+          // console.log("succeededPaymentsDocResult", succeededPaymentsDocResult);
           if (
             succeededPaymentsDocResult ||
             succeededPaymentsDocResult == [] ||
@@ -560,7 +563,7 @@ const MotherComponent = () => {
 
             if (latestPaymentPromiseResult?.length > 0) {
               // Now you can use the purchasedBoostPoints variable accordingly
-              addBoostPoints(latestPaymentPromiseResult[0].description);
+              addBoostPoints(latestPaymentPromiseResult[0].amount_total);
               setBoostPointsAlert(true);
 
               // this part sets a new doc if its the users first boost purchase and updates if it's not

@@ -1,4 +1,4 @@
-import { Button, Card, CircularProgress } from "@mui/material";
+import { Button, Card, CircularProgress, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import imageBackground from "../assets/images/FootballLogo.jpg";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import logoImage from "../assets/images/AppLogoBlue.png";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectCurrentBrowserSize,
+  setOpenCircularLoadBackdrop,
   setWarningAlertModalCounter,
   setWarningAlertModalMessage,
 } from "../statemanager/slices/OtherComponentStatesSlice";
@@ -29,6 +30,7 @@ import { auth, db } from "../Firebase/Firebase";
 import { productDetails } from "../utils/ProductDetails";
 import { selectUserDetailsObject } from "../statemanager/slices/LoginUserDataSlice";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import BasicButton from "../components/Buttons/BasicButton";
 
 // This code gets all the products then filters through to display the ones that march the role of the user
 // Based on the selected package a stripe checkout is initated
@@ -378,8 +380,9 @@ const BuyBoostPoints = () => {
                     description={item.description}
                     price={item.price / 100}
                     isButtonTriggered={isButtonTriggered}
-                    featuresHighlightArray={item.details}
+                    image={item.image}
                     onClick={async () => {
+                      dispatch(setOpenCircularLoadBackdrop(true));
                       StripeBoostPointsCheckout(item.priceId);
                     }}
                     // onClick={() => {
@@ -569,67 +572,83 @@ export const BoostPointCard = ({
   title,
   description,
   price,
-  featuresHighlightArray,
+  image,
   onClick,
   isButtonTriggered,
 }) => {
   return (
     <Card
-      sx={{
-        width: "18vw",
-        height: "55vh",
+      className="uploadPlayerModalCard  md:w-[18vw] md:h-[60vh]   
+      sm:w-[70vw] sm:h-[210vh]
+      "
+      onClick={onClick}
+      style={{
+        // width: "18vw",
+        // background: "red",
+
+        // height: "55vh",
         borderRadius: "1vw",
         color: "black",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        padding: "1rem",
       }}>
-      {/* NAME DESCRIPTION AND PRICE AREA */}
-      <div>
-        <h4>{title}</h4>
-        <p style={{ lineHeight: "1.2em" }}>{description}</p>
-        <h1 style={{ marginTop: "1vh" }}>
-          <span style={{ fontSize: ".7em", marginRight: "0.2em" }}>$</span>
-          {price}
-        </h1>
-      </div>
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          padding: ".65vw",
+          display: "flex",
+          flexDirection: "column",
+          gap: ".5vh",
+        }}>
+        {/* // NAME DESCRIPTION AND PRICE AREA */}
 
-      {/* Get Started Button */}
-      <div>
-        {isButtonTriggered ? (
-          <div style={{ textAlign: "center" }}>
-            <CircularProgress />
-          </div>
-        ) : (
-          <Button
-            onClick={onClick}
-            variant="contained"
-            color="primary"
-            fullWidth
-            style={{ marginBottom: "1rem" }}>
-            Get Started
-          </Button>
-        )}
-      </div>
+        <div
+          style={{
+            flex: ".4",
+            // background: "green",
+            display: "flex",
+            flexDirection: "column",
+          }}>
+          <Typography variant="h5" color={"primary"}>
+            {title}
+          </Typography>
 
-      {/* Features */}
-      <div>
-        {featuresHighlightArray &&
-          featuresHighlightArray?.map((data, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: ".8vh",
-              }}>
-              <CheckCircleIcon
-                sx={{ color: "#5585FE", marginRight: "0.5rem" }}
-              />
-              <span>{data}</span>
+          <span style={{ lineHeight: "1em" }}>
+            {/* For personal use and elaboration of the technology */}
+            <Typography variant="h6" color={"primary"}>
+              {description}
+            </Typography>
+          </span>
+          <h1 style={{ marginTop: "1vh" }}>
+            {/* {" "}
+            <span style={{ fontSize: ".7em" }}>$</span> */}
+            <Typography variant="h4" color={"primary"}>
+              $ {price}
+            </Typography>
+          </h1>
+        </div>
+        {/* Image */}
+        <img src={image} />
+        {/* // Get Started button and outlined features  */}
+
+        <div style={{ flex: ".6" }}>
+          {isButtonTriggered ? (
+            <div style={{ textAlign: "center" }}>
+              <CircularProgress />
             </div>
-          ))}
+          ) : (
+            <BasicButton
+              onClick={onClick}
+              style={{
+                width: "100%",
+                // marginTop: "2vh",
+                marginBottom: "2vh",
+              }}
+              innerText="Get Started"
+            />
+          )}
+
+          {}
+        </div>
       </div>
     </Card>
   );
