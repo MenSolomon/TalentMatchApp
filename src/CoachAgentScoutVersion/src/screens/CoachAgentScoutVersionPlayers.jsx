@@ -29,13 +29,13 @@ const CoachAgentScoutVersionPlayers = () => {
       return matchedPlayer;
     });
 
-  console.log(
-    playersInPossessionDetails,
-    allPlayersInDatabase,
-    "PROAS",
-    userLoginObject?.playersInPossession,
-    userLoginObject
-  );
+  // console.log(
+  //   playersInPossessionDetails,
+  //   allPlayersInDatabase,
+  //   "PROAS",
+  //   userLoginObject?.playersInPossession,
+  //   userLoginObject
+  // );
 
   // Pagination settings
   const PlayersPerPage = browserWidth <= 1024 ? 4 : 9;

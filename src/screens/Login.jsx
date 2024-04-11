@@ -101,6 +101,7 @@ const Login = () => {
             setUserDetailsObject({
               Nationality: userInfoSnap.data().Nationality,
               email: userInfoSnap.data().email,
+              boostPoints: userInfoSnap.data().boostPoints,
               CountryCode: userInfoSnap.data().CountryCode,
               stripeLink:
                 userInfoSnap?.data()?.stripeLink === undefined
@@ -286,8 +287,7 @@ const Login = () => {
         // paddingTop: "1.5vh",
 
         color: "white",
-      }}
-    >
+      }}>
       {/* NAVIGATION AREA */}
       <div
         className="md:flex md:basis-[10%]  sm:flex sm:basis-[10%]"
@@ -312,8 +312,7 @@ const Login = () => {
             display: "flex",
             gap: "6vw",
             paddingTop: "1vh",
-          }}
-        >
+          }}>
           {/* <h5>Home</h5>
           <h5>Join</h5> */}
         </div>
@@ -341,9 +340,8 @@ const Login = () => {
                 <span
                   style={{ color: "#5585FE", cursor: "pointer" }}
                   onClick={() => {
-                    Navigate("/membership-plans");
-                  }}
-                >
+                    Navigate("/create-account/freetrial");
+                  }}>
                   Choose a plan
                 </span>{" "}
               </h5>
@@ -381,8 +379,7 @@ const Login = () => {
                   sx={{ marginBottom: "3vh" }}
                   variant="outlined"
                   focused
-                  color="info"
-                >
+                  color="info">
                   <InputLabel htmlFor="outlined-adornment-password">
                     Password
                   </InputLabel>
@@ -397,8 +394,7 @@ const Login = () => {
                           aria-label="toggle password visibility"
                           onClick={handleClickShowPassword}
                           onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
+                          edge="end">
                           {showPassword ? (
                             <VisibilityOff style={iconColor} />
                           ) : (
@@ -431,8 +427,7 @@ const Login = () => {
                         color: "white",
                         borderRadius: "1vw",
                         fontWeight: "bold",
-                      }}
-                    >
+                      }}>
                       Login
                     </Button>
                   )}
@@ -450,8 +445,7 @@ const Login = () => {
               // display: "flex",
               // flexDirection: "column-reverse",
             }
-          }
-        >
+          }>
           {/* //ICON AREA */}
           <div style={{ flex: ".2" }}>
             {" "}

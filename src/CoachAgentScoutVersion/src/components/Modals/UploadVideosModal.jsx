@@ -84,8 +84,7 @@ export default function UploadVideoModal() {
           backdrop: {
             timeout: 500,
           },
-        }}
-      >
+        }}>
         <Fade in={open}>
           <div className="cardBackground primaryTextColor" style={style}>
             <div style={{ flex: "0.1", display: "flex" }}>
@@ -95,8 +94,7 @@ export default function UploadVideoModal() {
                   // background: "yellow",
                   display: "flex",
                   alignItems: "center",
-                }}
-              >
+                }}>
                 <h3>Category</h3>
               </div>
               <div
@@ -106,8 +104,7 @@ export default function UploadVideoModal() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                }}
-              >
+                }}>
                 <div>saving..</div>
                 <Feedback />
                 <Close />
@@ -120,8 +117,7 @@ export default function UploadVideoModal() {
                 // background: "peru",
                 display: "flex",
                 // flexDirection: "column",
-              }}
-            >
+              }}>
               {/* Details */}
               <div
                 style={{
@@ -129,16 +125,14 @@ export default function UploadVideoModal() {
                   // background: "red",
                   display: "flex",
                   flexDirection: "column",
-                }}
-              >
+                }}>
                 <div
                   style={{
                     flex: "0.2",
                     // background: "green",
                     display: "flex",
                     alignItems: "center",
-                  }}
-                >
+                  }}>
                   <h3>Details</h3>
                 </div>
                 <div
@@ -147,15 +141,13 @@ export default function UploadVideoModal() {
                     // background: "yellow",
                     display: "flex",
                     flexDirection: "column",
-                  }}
-                >
+                  }}>
                   <div
                     style={{
                       display: "flex",
                       flexDirection: "column",
                       gap: 20,
-                    }}
-                  >
+                    }}>
                     <BasicSelect
                       label={"Category"}
                       MenuItemArray={CategorySelectArray}
@@ -182,15 +174,13 @@ export default function UploadVideoModal() {
                   display: "flex",
                   flexDirection: "column",
                   padding: "10px",
-                }}
-              >
+                }}>
                 {/* Display Video here */}
                 <div
                   style={{
                     flex: "0.5",
                     background: "black",
-                  }}
-                ></div>
+                  }}></div>
                 {/* End of Display Video here */}
                 <div
                   style={{
@@ -198,15 +188,13 @@ export default function UploadVideoModal() {
                     // background: "blue",
                     display: "flex",
                     flexDirection: "column",
-                  }}
-                >
+                  }}>
                   <div
                     style={{
                       flex: "0.5",
                       // background: "yellow",
                       display: "flex",
-                    }}
-                  >
+                    }}>
                     <div style={{ flex: "0.8" }}>
                       <div style={{ padding: "10px" }}>
                         <h6>Video Link</h6>
@@ -220,8 +208,7 @@ export default function UploadVideoModal() {
                         alignItems: "center",
                         display: "flex",
                         justifyContent: "center",
-                      }}
-                    >
+                      }}>
                       <ContentCopy />
                     </div>
                   </div>
@@ -230,8 +217,7 @@ export default function UploadVideoModal() {
                       flex: "0.5",
                       // background: "peru",
                       display: "flex",
-                    }}
-                  >
+                    }}>
                     <div style={{ flex: "0.8" }}>
                       <div style={{ padding: "10px" }}>
                         <h6>Video Link</h6>
@@ -245,8 +231,7 @@ export default function UploadVideoModal() {
                         alignItems: "center",
                         display: "flex",
                         justifyContent: "center",
-                      }}
-                    >
+                      }}>
                       <ContentCopy />
                     </div>
                   </div>
@@ -263,8 +248,7 @@ export default function UploadVideoModal() {
                 // background: "green",
                 display: "flex",
                 // alignItems: "center",
-              }}
-            >
+              }}>
               <div
                 style={{
                   flex: "0.8",
@@ -272,8 +256,7 @@ export default function UploadVideoModal() {
                   alignItems: "center",
                   display: "flex",
                   // justifyContent: "center",
-                }}
-              >
+                }}>
                 <h5>Checks complete. No issues found.</h5>
               </div>
               <div
@@ -282,8 +265,7 @@ export default function UploadVideoModal() {
                   alignItems: "center",
                   display: "flex",
                   justifyContent: "center",
-                }}
-              >
+                }}>
                 <Button variant="contained">next</Button>
               </div>
             </div>

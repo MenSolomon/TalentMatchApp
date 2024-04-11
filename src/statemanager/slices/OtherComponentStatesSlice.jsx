@@ -14,6 +14,7 @@ export const OtherComponentStatesSlice = createSlice({
     contactSupportModalMessage: "",
     circularLoadBackdropCounter: 0,
     circularLoadBackdropTrigger: false,
+    circularLoadBackdropMessage: "Loading",
     videoBelow15mbSelected: false,
     imageBelow500kbSelected: false,
     currentScreenSize: {
@@ -84,6 +85,9 @@ export const OtherComponentStatesSlice = createSlice({
     setCloseCircularLoadBackdrop: (state) => {
       state.circularLoadBackdropTrigger = false;
     },
+    setCircularLoadBackdropMessage: (state) => {
+      state.circularLoadBackdropMessage = action.payload;
+    },
     setVideoBelow15mbSelected: (state, action) => {
       state.videoBelow15mbSelected = action.payload;
     },
@@ -124,6 +128,8 @@ export const selectWarningAlertModalMessage = (state) =>
   state.OtherComponentStates.warningAlertModalMessage;
 export const selectCircularLoadBackdropTriggerState = (state) =>
   state.OtherComponentStates.circularLoadBackdropTrigger;
+export const selectCircularLoadBackdropMessage = (state) =>
+  state.OtherComponentStates.circularLoadBackdropMessage;
 // export const selectCircularLoadBackdropCounter = (state) =>
 //   state.OtherComponentStates.circularLoadBackdropCounter;
 export const selectVideoBelow15mbSelected = (state) =>
@@ -163,6 +169,7 @@ export const {
   setVideoBelow15mbSelected,
   setImageBelow500kbSelected,
   setCurrentScreenSize,
+  setCircularLoadBackdropMessage,
   setOpenCircularLoadBackdrop,
   setCloseCircularLoadBackdrop,
   setContactSupportModalCounter,

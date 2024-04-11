@@ -242,7 +242,7 @@ function SettingsProfile() {
                   <Button
                     onClick={handleClick}
                     style={{ fontWeight: "lighter" }}>
-                    change profile photo
+                    Change profile photo
                   </Button>
                   <input
                     type="file"

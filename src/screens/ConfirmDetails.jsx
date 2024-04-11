@@ -12,6 +12,7 @@ import moment from "moment/moment";
 import {
   selectImageWithMrzFileStore,
   selectProductPackage,
+  selectSelectedBasicProductArray,
   selectSelectedProductArray,
   selectUserSignUpData,
   setImageWithMrzFileStore,
@@ -32,6 +33,7 @@ import {
   query,
   getDocs,
 } from "firebase/firestore";
+import { sendSignInLinkToEmail } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
 import { auth, db, storage } from "../Firebase/Firebase";
 import {
@@ -66,11 +68,14 @@ const ConfirmDetails = () => {
   const selectedFile = useSelector(selectImageWithMrzFileStore);
 
   const products = useSelector(selectSelectedProductArray);
+  const basic = useSelector(selectSelectedBasicProductArray);
   const packageValue = useSelector(selectProductPackage);
 
   //state to manage user id
   const [agreement, setAgreement] = useState(false);
   const [privacy, setPrivacy] = useState(false);
+  //
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   const {
     firstName,
@@ -162,7 +167,30 @@ const ConfirmDetails = () => {
       currentDate.year() - momentDate.year() - (hasBirthdayOccurred ? 0 : 1);
     return Math.round(ageDifference);
   }
+  const actionCodeSettings = {
+    // URL you want to redirect back to. The domain (www.example.com) for this
+    // URL must be in the authorized domains list in the Firebase Console.
+    url: "http://localhost:5173/create-account/confirm-details",
+    // This must be true.
+    handleCodeInApp: true,
+  };
 
+  const emailLink = async () => {
+    sendSignInLinkToEmail(auth, email, actionCodeSettings)
+      .then(() => {
+        console.log("sendSignInLinkToEmail");
+        // setIsEmailVerified(true);
+        handleStartFreeTrial();
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("errorCode", errorCode);
+        console.log("errorMessage", errorMessage);
+        // setIsEmailVerified(false);
+        triggerWarningAlertModal("Please use a valid email");
+      });
+  };
   const handleStartFreeTrial = async () => {
     // const email = location.state.email;
     // const password = location.state.password;
@@ -220,7 +248,7 @@ const ConfirmDetails = () => {
           }
         });
 
-        if (items.length > 0) {
+        if (0 > 1) {
           triggerWarningAlertModal("Account Exists");
         } else {
           if (roleSelected === "Player") {
@@ -347,6 +375,7 @@ const ConfirmDetails = () => {
                     dateCreated: serverTimestamp(),
                     Age: currentAge,
                     boostPoints: 0,
+                    isBasic: true,
                     position: userData?.PlayerPosition,
                     date_of_birth: userData?.DateOfBirth,
                     jerseyNumber: "",
@@ -689,6 +718,7 @@ const ConfirmDetails = () => {
                     dateCreated: serverTimestamp(),
                     accountId: user.uid,
                     boostPoints: 0,
+                    isBasic: true,
                     isVisible: true,
                     userIDWithMRZImage: url,
                   });
@@ -777,6 +807,7 @@ const ConfirmDetails = () => {
                   dateCreated: serverTimestamp(),
                   accountId: user.uid,
                   boostPoints: 0,
+                  isBasic: true,
                   isVisible: true,
                   playersInPossession: [],
                   userIDWithMRZImage: url,
@@ -858,8 +889,7 @@ const ConfirmDetails = () => {
         // display: "flex",
         padding: "0px 6vw",
         overflowY: "scroll",
-      }}
-    >
+      }}>
       {/*MEMEBERSHIP PLAN HEADER and USER DETAILS SUMMARY */}
 
       <div
@@ -869,16 +899,14 @@ const ConfirmDetails = () => {
           // background: "yellow",
           display: "flex",
           flexDirection: "column",
-        }}
-      >
+        }}>
         {/* MEMBERSHIP PLAN HEADER CARD */}
         <div
           style={{
             flex: "0.3",
             display: "flex",
             paddingLeft: "0%",
-          }}
-        >
+          }}>
           {/* IMAGE AREA */}
           <div
             style={{
@@ -887,8 +915,7 @@ const ConfirmDetails = () => {
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
-            }}
-          >
+            }}>
             {/* 
 
  */}
@@ -915,14 +942,12 @@ const ConfirmDetails = () => {
               display: "flex",
               // justifyContent: "flex-start",
               alignItems: "center",
-            }}
-          >
+            }}>
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <div>
                 <h5 style={{ fontWeight: "bold" }}>
                   Start your free trial for 30 <br /> days
@@ -934,8 +959,7 @@ const ConfirmDetails = () => {
                     style={{ color: "#5585FE", cursor: "pointer" }}
                     onClick={() => {
                       navigate("/create-account/freetrial");
-                    }}
-                  >
+                    }}>
                     change your membership
                   </span>
                 </small>
@@ -952,8 +976,7 @@ const ConfirmDetails = () => {
             padding: "1vh 3vw",
             // background: "green",
             // display: "flex",
-          }}
-        >
+          }}>
           {/* // PADDING CONTAINER */}
           <div style={{ flex: ".6", paddingLeft: "8vw" }}>
             <h5 style={{ marginTop: "1vh" }}>
@@ -966,8 +989,7 @@ const ConfirmDetails = () => {
                 }}
                 onClick={() => {
                   navigate("/create-account/user-form");
-                }}
-              >
+                }}>
                 &nbsp; edit
               </span>{" "}
             </h5>
@@ -981,8 +1003,7 @@ const ConfirmDetails = () => {
                     listStyleType: "disc",
                     color: "#9FA4B1",
                     fontWeight: "bolder",
-                  }}
-                >
+                  }}>
                   <li>
                     First name:{" "}
                     <span style={{ color: "black" }}> {firstName} </span>{" "}
@@ -1037,8 +1058,7 @@ const ConfirmDetails = () => {
                     listStyleType: "disc",
                     color: "#9FA4B1",
                     fontWeight: "bolder",
-                  }}
-                >
+                  }}>
                   <li>
                     First name:{" "}
                     <span style={{ color: "black" }}> {firstName} </span>{" "}
@@ -1134,16 +1154,12 @@ const ConfirmDetails = () => {
             // height: "68%",
             padding: ".5vw",
             marginTop: "3vh",
-          }}
-        >
+          }}>
           <h6 style={{ fontWeight: "bolder" }}>Package Summary</h6>
 
           <ul style={{ width: "90%", fontSize: ".8em" }}>
             {" "}
-            <li>
-              {roleSelected} membership{" "}
-              <span style={{ float: "right", fontWeight: "bolder" }}>$0</span>{" "}
-            </li>
+            <li>{roleSelected} membership</li>
             {/* <li>
               {userData.subscriptionPackage}{" "}
               <span style={{ float: "right", fontWeight: "bolder" }}>
@@ -1160,14 +1176,6 @@ const ConfirmDetails = () => {
                   return data.id === packageValue;
                 })?.name
               }
-              <span style={{ float: "right", fontWeight: "bolder" }}>
-                $
-                {packageValue === ""
-                  ? 0
-                  : products.find((data) => {
-                      return data.id === packageValue;
-                    })?.price / 100}
-              </span>{" "}
             </li>
             <li>
               Subscription total{" "}
@@ -1175,9 +1183,9 @@ const ConfirmDetails = () => {
                 $
                 {packageValue === ""
                   ? 0
-                  : products.find((data) => {
-                      return data.id === packageValue;
-                    })?.price / 100}
+                  : (products.find((data) => data.id === packageValue)?.price ??
+                      basic.find((data) => data.id === packageValue)?.price) /
+                    100}
               </span>{" "}
             </li>
             <li>
@@ -1194,19 +1202,21 @@ const ConfirmDetails = () => {
                 $
                 {packageValue === ""
                   ? 0
-                  : products.find((data) => {
-                      return data.id === packageValue;
-                    })?.price / 100}
+                  : (products.find((data) => data.id === packageValue)?.price ??
+                      basic.find((data) => data.id === packageValue)?.price) /
+                    100}
               </span>{" "}
             </li>{" "}
           </ul>
 
           {/* div to handle Click of start free trial */}
-          <div onClick={handleStartFreeTrial}>
+          <div
+            onClick={() => {
+              emailLink();
+            }}>
             <BasicButton
               style={{ width: "90%", marginLeft: "5%" }}
-              innerText="Start Trial"
-            ></BasicButton>
+              innerText="Start Trial"></BasicButton>
           </div>
           <span
             style={{
@@ -1216,8 +1226,7 @@ const ConfirmDetails = () => {
               alignItems: "center",
               justifyContent: "center",
               textAlign: "center",
-            }}
-          >
+            }}>
             {" "}
             You will be automatically charged or prompted to pay on{" "}
             {oneMonthLater.format("MMMM Do YYYY, h:mm a")} after trial end{" "}

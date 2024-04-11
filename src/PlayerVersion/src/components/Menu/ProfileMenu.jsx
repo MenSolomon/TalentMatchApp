@@ -7,7 +7,10 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { auth } from "../../../../Firebase/Firebase";
 import { signOut } from "firebase/auth";
 
+import { useDispatch } from "react-redux";
+
 export default function ProfileMenu({ style, name }) {
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -22,6 +25,7 @@ export default function ProfileMenu({ style, name }) {
   const Navigate = useNavigate();
 
   const loginUserDetails = useSelector(selectUserDetailsObject);
+  const dispatch = useDispatch();
   const { firstName, surname } = loginUserDetails;
   {
     firstName.substring(0, 10) + " " + surname.substring(0, 10);
@@ -57,13 +61,19 @@ export default function ProfileMenu({ style, name }) {
         </MenuItem>
         <MenuItem
           sx={{ color: "black" }}
-          onClick={() => {
+          onClick={async () => {
+            await dispatch(
+              setSubscriptionFeatures({
+                canHideVisibility: false,
+                maxPlayersInAgency: 1,
+                maxProfiles: 1,
+                maxVideosPerPlayer: 0,
+              })
+            );
             handleClose();
-            console.log("logging out");
+            alert("logging out");
             signOut(auth)
               .then(() => {
-                // Sign-out successful.
-
                 Navigate("/login");
               })
               .catch((error) => {

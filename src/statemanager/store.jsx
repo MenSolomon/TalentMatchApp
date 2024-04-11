@@ -72,7 +72,19 @@ const UserLoginDataSlicePersistConfig = {
   version: 1,
   storage,
   blacklist: ["logInStatus", "userDetailsObject", "credentials"],
-  whitelist: ["subscriptionFeatures", "isSubscriptionActive"],
+  whitelist: [
+    "subscriptionFeatures",
+    "isSubscriptionActive",
+    "selectSubscriptionFeatures",
+    "selectBoostPoints",
+  ],
+};
+
+const OtherComponentStatesPersistConfig = {
+  key: "OtherComponentStates",
+  version: 1,
+  storage,
+  whitelist: ["selectCircularLoadBackdropMessage"],
 };
 
 const reducer = combineReducers({
@@ -94,7 +106,10 @@ const reducer = combineReducers({
     SavedProfilesSlicePersistConfig,
     SavedProfilesReducer
   ),
-  OtherComponentStates: OtherComponentStatesReducer,
+  OtherComponentStates: persistReducer(
+    OtherComponentStatesPersistConfig,
+    OtherComponentStatesReducer
+  ),
   Database: DatabaseReducer,
   clubsInTalentMeetDatabase: ClubsInDatabaseReducer,
   InternetActivities: InternetActivitieReducer,
