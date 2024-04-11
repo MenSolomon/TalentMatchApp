@@ -53,6 +53,7 @@ import {
 } from "./statemanager/slices/LoginUserDataSlice";
 import { useEffect, useState } from "react";
 import {
+  selectCircularLoadBackdropMessage,
   setCurrentBrowserSize,
   setCurrentScreenSize,
 } from "./statemanager/slices/OtherComponentStatesSlice";
@@ -241,7 +242,9 @@ const App = () => {
   const { pathname, search, hash } = location;
   const userLoginObject = useSelector(selectUserDetailsObject);
   const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
-
+  const circularLoadBackdropMessage = useSelector(
+    selectCircularLoadBackdropMessage
+  );
   // this use effect is to redirect studio for the desired role on user change
   useEffect(() => {
     if (
@@ -604,7 +607,7 @@ const App = () => {
       {/* //// Alert Modal to display error messages */}
       <WarningAlertModal />
 
-      <BasicBackdrop />
+      <BasicBackdrop message={circularLoadBackdropMessage} />
       <ContactSupportModal />
     </ThemeProvider>
   );

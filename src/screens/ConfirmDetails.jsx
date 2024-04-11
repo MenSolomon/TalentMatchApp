@@ -375,6 +375,7 @@ const ConfirmDetails = () => {
                     dateCreated: serverTimestamp(),
                     Age: currentAge,
                     boostPoints: 0,
+                    isBasic: true,
                     position: userData?.PlayerPosition,
                     date_of_birth: userData?.DateOfBirth,
                     jerseyNumber: "",
@@ -717,6 +718,7 @@ const ConfirmDetails = () => {
                     dateCreated: serverTimestamp(),
                     accountId: user.uid,
                     boostPoints: 0,
+                    isBasic: true,
                     isVisible: true,
                     userIDWithMRZImage: url,
                   });
@@ -805,6 +807,7 @@ const ConfirmDetails = () => {
                   dateCreated: serverTimestamp(),
                   accountId: user.uid,
                   boostPoints: 0,
+                  isBasic: true,
                   isVisible: true,
                   playersInPossession: [],
                   userIDWithMRZImage: url,

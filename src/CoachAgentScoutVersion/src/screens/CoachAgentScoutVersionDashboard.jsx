@@ -320,7 +320,7 @@ const CoachAgentScoutVersionDashboard = () => {
       {/* // Heading Area   style={{ flex: ".1" }}*/}
       <div className="md:basis-[10%] sm:basis-[10%] grid md:grid-cols-2 sm:grid-cols-2">
         <h3 style={{ margin: 0, float: "left" }} className="primaryTextColor">
-          Profile dashboard
+          Profile Dashboard
           <Stack direction="row" spacing={1}>
             <Chip
               label={

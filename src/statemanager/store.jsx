@@ -80,6 +80,13 @@ const UserLoginDataSlicePersistConfig = {
   ],
 };
 
+const OtherComponentStatesPersistConfig = {
+  key: "OtherComponentStates",
+  version: 1,
+  storage,
+  whitelist: ["selectCircularLoadBackdropMessage"],
+};
+
 const reducer = combineReducers({
   //   files: incomeReducer,
   CollapsePlayerCards: playerDetailsCardsCollapseReducer,
@@ -99,7 +106,10 @@ const reducer = combineReducers({
     SavedProfilesSlicePersistConfig,
     SavedProfilesReducer
   ),
-  OtherComponentStates: OtherComponentStatesReducer,
+  OtherComponentStates: persistReducer(
+    OtherComponentStatesPersistConfig,
+    OtherComponentStatesReducer
+  ),
   Database: DatabaseReducer,
   clubsInTalentMeetDatabase: ClubsInDatabaseReducer,
   InternetActivities: InternetActivitieReducer,

@@ -17,7 +17,11 @@ import {
   selectUserDetailsObject,
 } from "../../statemanager/slices/LoginUserDataSlice";
 import { useQuery } from "@tanstack/react-query";
-import { setOpenCircularLoadBackdrop } from "../../statemanager/slices/OtherComponentStatesSlice";
+import {
+  selectCircularLoadBackdropMessage,
+  setCircularLoadBackdropMessage,
+  setOpenCircularLoadBackdrop,
+} from "../../statemanager/slices/OtherComponentStatesSlice";
 
 function SettingsBilling() {
   const navigate = useNavigate();
@@ -25,7 +29,9 @@ function SettingsBilling() {
 
   const userDetailsObject = useSelector(selectUserDetailsObject);
   const { subscriptionPackage, accountId } = userDetailsObject;
-
+  const circularLoadBackdropMessage = useSelector(
+    selectCircularLoadBackdropMessage
+  );
   // state to display circular progress animation
   const [isLoading, setIsLoading] = useState(false);
   // state to set subscription status
@@ -155,6 +161,11 @@ function SettingsBilling() {
                     handleCustomerPortal();
                     // setIsLoading(true);
                     dispatch(setOpenCircularLoadBackdrop(true));
+                    // dispatch(
+                    //   setCircularLoadBackdropMessage(
+                    //     "Connecting To Stripe Portal"
+                    //   )
+                    // );
                   }}
                   style={{
                     display: "flex",

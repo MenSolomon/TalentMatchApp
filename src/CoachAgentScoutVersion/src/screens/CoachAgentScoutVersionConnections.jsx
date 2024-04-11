@@ -165,6 +165,7 @@ const CoachAgentScoutVersionConnetions = () => {
           agentsAndScoutsRef,
           where("role", "in", ["Agent", "Scout"]),
           where("isVisible", "==", true)
+          // where("isBasic", "==", false)
         );
 
         // Get the documents from Firestore
@@ -320,8 +321,7 @@ const CoachAgentScoutVersionConnetions = () => {
             // flexDirection: "column",background
             // background: "peru",
           }
-        }
-      >
+        }>
         {/* // INBOX HEADER */}
         <div className="md:basis-[20%]  sm:basis-[20%]">
           <h5 style={{ fontWeight: "bolder", margin: "0" }}>Connections</h5>
@@ -357,8 +357,7 @@ const CoachAgentScoutVersionConnetions = () => {
               onClick={() => {
                 setCountryName("");
                 setRole();
-              }}
-            >
+              }}>
               Reset
             </Button>
           </div>
@@ -367,8 +366,7 @@ const CoachAgentScoutVersionConnetions = () => {
         {/* //  CONNECTIONS */}
         <div
           className="md:basis-[70%] md:mt-[2vh] sm:flex-col sm:flex sm:flex-shrink-0 sm:basis-[70%] content-center"
-          style={{ overflowY: "scroll" }}
-        >
+          style={{ overflowY: "scroll" }}>
           {countryName === ""
             ? agentAndScoutsList
                 ?.filter((agent) => !connections.includes(agent.accountId))
@@ -376,8 +374,7 @@ const CoachAgentScoutVersionConnetions = () => {
                   return (
                     <div
                       className="sm:min-h-1vh md:min-h-0.5vh "
-                      key={person.accountId}
-                    >
+                      key={person.accountId}>
                       <ScoutsDisplayCard
                         style={{ width: "25vw", height: "15vh" }}
                         AgencyName={person.organization}
@@ -411,8 +408,7 @@ const CoachAgentScoutVersionConnetions = () => {
                   return (
                     <div
                       key={index}
-                      className="sm:min-h-1vh md:min-h-0.5vh md:w-[5vw]"
-                    >
+                      className="sm:min-h-1vh md:min-h-0.5vh md:w-[5vw]">
                       <ScoutsDisplayCard
                         style={{ width: "25vw", height: "15vh" }}
                         AgencyName={filtered.organization}
@@ -445,8 +441,7 @@ const CoachAgentScoutVersionConnetions = () => {
           // paddingLeft: "1.5vw",
           borderRadius: "1vw",
           overflowY: "scroll",
-        }}
-      >
+        }}>
         {/* // Pagination and delete message area */}
         {/* style={{ flex: "1", display: "grid", placeContent: "center" }} */}
         Filter for player connections and agent/scout connections

@@ -67,7 +67,7 @@ import { selectUserDetailsObject } from "../statemanager/slices/LoginUserDataSli
 const ChangeSubscriptionPackagePage = () => {
   const browserSize = useSelector(selectCurrentBrowserSize);
   // state to display loading sign or button
-  const isButtonTriggered = useSelector(selectCircularLoadBackdropTriggerState);
+  // const isButtonTriggered = useSelector(selectCircularLoadBackdropTriggerState);
   let browserWidth = parseInt(browserSize?.width, 10);
   // Settings for password input
   const [showPassword, setShowPassword] = useState(false);
@@ -503,12 +503,9 @@ const ChangeSubscriptionPackagePage = () => {
                         title={item.name}
                         description={item.description}
                         price={item.price / 100}
-                        isButtonTriggered={isButtonTriggered}
+                        // isButtonTriggered={isButtonTriggered}
                         featuresHighlightArray={item.details}
                         onClick={async () => {
-                          // display loading sign
-                          dispatch(setOpenCircularLoadBackdrop(true));
-
                           // get current uid
                           const currentUser = await auth.currentUser;
                           // alert(accountId);
@@ -524,12 +521,14 @@ const ChangeSubscriptionPackagePage = () => {
                           const docSnap = await getDocs(q);
 
                           if (docSnap.size !== 0) {
+                            // disable loading sign
+                            // dispatch(setOpenCircularLoadBackdrop(false));
                             triggerWarningAlertModal(
                               "An active subscription already exists. \n Cancel the existing one first"
                             );
-                            // disable loading sign
-                            dispatch(setOpenCircularLoadBackdrop(false));
                           } else {
+                            // display loading sign
+                            dispatch(setOpenCircularLoadBackdrop(true));
                             StripeCheckout(item.id, item.priceId);
                           }
                         }}
@@ -553,11 +552,9 @@ const ChangeSubscriptionPackagePage = () => {
                         title={item.name}
                         description={item.description}
                         price={item.price / 100}
-                        isButtonTriggered={isButtonTriggered}
+                        // isButtonTriggered={isButtonTriggered}
                         featuresHighlightArray={item.details}
                         onClick={async () => {
-                          // display loading sign
-                          dispatch(setOpenCircularLoadBackdrop(true));
                           // get current uid
                           const currentUser = await auth.currentUser;
                           // alert(accountId);
@@ -573,12 +570,14 @@ const ChangeSubscriptionPackagePage = () => {
                           const docSnap = await getDocs(q);
 
                           if (docSnap.size !== 0) {
+                            // disable loading sign
+                            // dispatch(setOpenCircularLoadBackdrop(false));
                             triggerWarningAlertModal(
                               "An active subscription already exists. \n Cancel the existing one first"
                             );
-                            // disable loading sign
-                            dispatch(setOpenCircularLoadBackdrop(false));
                           } else {
+                            // display loading sign
+                            dispatch(setOpenCircularLoadBackdrop(true));
                             StripeCheckout(item.id, item.priceId);
                           }
                         }}
@@ -597,17 +596,15 @@ const ChangeSubscriptionPackagePage = () => {
                       />
                     ))}
                 {/* Basic */}
-                {basic?.map((item) => (
+                {/* {basic?.map((item) => (
                   <SubscriptionCard
                     key={item.id}
                     title={item.name}
                     description={item.description}
                     price={item.price / 100}
-                    isButtonTriggered={isButtonTriggered}
+                    // isButtonTriggered={isButtonTriggered}
                     featuresHighlightArray={item.details}
                     onClick={async () => {
-                      // display loading sign
-                      dispatch(setOpenCircularLoadBackdrop(true));
                       // get current uid
                       const currentUser = await auth.currentUser;
                       // alert(accountId);
@@ -621,16 +618,18 @@ const ChangeSubscriptionPackagePage = () => {
 
                       if (docSnap.size !== 0) {
                         triggerWarningAlertModal(
-                          "An active subscription already exists. \n Cancel the existing one first"
+                          "An active subscription already exists. \n Cancel the existing one or wait till the end of billing period"
                         );
                         // disable loading sign
-                        dispatch(setOpenCircularLoadBackdrop(false));
+                        // dispatch(setOpenCircularLoadBackdrop(false));
                       } else {
+                        // display loading sign
+                        dispatch(setOpenCircularLoadBackdrop(true));
                         StripeCheckout(item.id, item.priceId);
                       }
                     }}
                   />
-                ))}
+                ))} */}
               </div>
             </div>
           )}
@@ -660,7 +659,6 @@ export const SubscriptionCard = ({
   price,
   featuresHighlightArray,
   onClick,
-  isButtonTriggered,
 }) => {
   return (
     <Card
@@ -707,21 +705,15 @@ export const SubscriptionCard = ({
         {/* // Get Started button and outlined features  */}
 
         <div style={{ flex: ".6" }}>
-          {isButtonTriggered ? (
-            <div style={{ textAlign: "center" }}>
-              <CircularProgress />
-            </div>
-          ) : (
-            <BasicButton
-              onClick={onClick}
-              style={{
-                width: "100%",
-                // marginTop: "2vh",
-                marginBottom: "2vh",
-              }}
-              innerText="Get Started"
-            />
-          )}
+          <BasicButton
+            onClick={onClick}
+            style={{
+              width: "100%",
+              // marginTop: "2vh",
+              marginBottom: "2vh",
+            }}
+            innerText="Get Started"
+          />
           {/* ///features ROw */}
 
           {featuresHighlightArray &&

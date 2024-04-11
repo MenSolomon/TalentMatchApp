@@ -334,14 +334,16 @@ const MotherComponent = () => {
     }
   }, [themeProviderObject]);
 
+  // SubscriptionValidationChecker
   useEffect(() => {
     // alert("Mother Rendered");
     const currentUser = auth.currentUser;
 
     if (currentUser) {
       const SubscriptionValidationChecker = async () => {
+        // alert("sub chaecker");
         const accountId = await currentUser.uid;
-
+        const userRef = doc(db, `users_db/${accountId}`);
         try {
           // get subscription
           const subscriptionsRef = collection(
@@ -377,6 +379,7 @@ const MotherComponent = () => {
                     subscriptionPrice: null,
                   })
                 );
+
                 dispatch(
                   setSubscriptionFeatures({
                     canHideVisibility: false,
@@ -421,6 +424,10 @@ const MotherComponent = () => {
               })
             );
             dispatch(setPriceID(null));
+            // set isBasic to true to hide this user from the connections list
+            await updateDoc(userRef, {
+              isBasic: true,
+            });
           }
         } catch (error) {
           console.log(error);
