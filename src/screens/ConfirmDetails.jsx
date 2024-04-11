@@ -339,6 +339,7 @@ const ConfirmDetails = () => {
                   await setDoc(doc(db, `players_database`, user.uid), {
                     id: user.uid,
                     Account_creator_id: user.uid,
+                    Current_Account_Owner: user.uid,
                     player_profile_image: "",
                     firstName: userData?.firstName,
                     surName: userData?.surname,

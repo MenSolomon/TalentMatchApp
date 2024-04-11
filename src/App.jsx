@@ -79,6 +79,7 @@ import { auth, db } from "./Firebase/Firebase";
 import { setPriceID } from "./statemanager/slices/SignupStepperSlice";
 import CoachAgentScoutVersionConnetions from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionConnections";
 import PlayerVersionConnections from "./PlayerVersion/src/screens/PlayerVersionConnections";
+import RequestExistingPlayerProfile from "./screens/RequestExistingPlayerProfile";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -579,6 +580,11 @@ const App = () => {
 
           <Route path="/create-account/user-form" element={<CreateAccount />} />
         </Route>
+
+        <Route
+          path="/player profile verification"
+          element={<RequestExistingPlayerProfile />}
+        />
 
         <Route path="*" element={<ErrorPageNotFound />} />
       </Routes>

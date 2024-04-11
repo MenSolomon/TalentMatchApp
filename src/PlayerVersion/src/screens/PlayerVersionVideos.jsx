@@ -9,7 +9,13 @@ import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserD
 import { selectPlayerSelectedByClubOrScoutInPlayerManagement } from "../../../statemanager/slices/PlayersInAgencySlice";
 import VideoComponentRows from "../../../CoachAgentScoutVersion/src/components/Rows/VideoComponentRows";
 import { db } from "../../../Firebase/Firebase";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { selectCurrentBrowserSize } from "../../../statemanager/slices/OtherComponentStatesSlice";
 
 const PlayerVersionVideos = () => {
@@ -22,24 +28,38 @@ const PlayerVersionVideos = () => {
   const [circularLoader, setCircularLoader] = useState(true);
 
   useEffect(() => {
-    const playerObjectRef = collection(
-      db,
-      `players_database/${userDetailsObject.accountId}/videos`
-    );
+    const fetchData = async () => {
+      const qPlayer = query(
+        collection(db, "players_database"),
+        where("Currnet_Account_Owner", "==", userDetailsObject?.accountId)
+      );
+      const querySnapshot = await getDocs(qPlayer);
+      const playerObjectRef = collection(
+        db,
+        `players_database/${querySnapshot.docs[0].data().id}/videos`
+      );
 
-    const q2 = query(playerObjectRef);
-    const allVideos = onSnapshot(q2, (querySnapshot) => {
-      const videosArray = [];
-      querySnapshot.forEach((doc) => {
-        videosArray.push(doc.data());
+      const q2 = query(playerObjectRef);
+      const allVideos = onSnapshot(q2, (querySnapshot) => {
+        const videosArray = [];
+        querySnapshot.forEach((doc) => {
+          videosArray.push(doc.data());
+        });
+
+        console.log(videosArray);
+        setCircularLoader(false);
+        setVideos(videosArray);
       });
-
-      setCircularLoader(false);
-      setVideos(videosArray);
-    });
-    return () => {
-      allVideos();
     };
+
+    return () => {
+      fetchData();
+    };
+
+    // const playerObjectRef = collection(
+    //   db,
+    //   `players_database/${userDetailsObject.accountId}/videos`
+    // );
   }, []);
 
   const VideosPerPage = 3;

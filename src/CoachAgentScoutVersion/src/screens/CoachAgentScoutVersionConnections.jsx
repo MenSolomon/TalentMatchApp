@@ -304,12 +304,12 @@ const CoachAgentScoutVersionConnetions = () => {
 
   return (
     <div
-      className="primaryTextColor md:gap-[1em] md:flex-row md:flex md:w-[100%] md:h-[100%]    sm:flex sm:w-[100%] sm:gap-[3.5em] sm:flex-col sm:h-[100%]"
+      className="primaryTextColor  md:flex-row md:flex md:w-[100%] md:h-[100%]    sm:flex sm:w-[100%]  sm:flex-col sm:h-[100%]"
       // style={{ display: "flex", width: "100%", height: "100%" }}
     >
       {/* MESSAGE OVERVIEW SECTION */}
       <div
-        className="md:flex md:flex-col md:basis-[60%]    sm:basis-[60%] sm:flex sm:flex-col"
+        className="md:flex md:flex-col md:basis-[60%] md:flex-shrink-0   sm:basis-[20%] sm:flex sm:flex-col sm:flex-shrink-0"
         style={
           {
             // flex: ".35",
@@ -320,7 +320,10 @@ const CoachAgentScoutVersionConnetions = () => {
         }
       >
         {/* // INBOX HEADER */}
-        <div className="md:basis-[20%]  sm:basis-[20%]">
+        <div
+          className="md:basis-[20%]  sm:basis-[20%]"
+          // style={{ background: "yellow" }}
+        >
           <h5 style={{ fontWeight: "bolder", margin: "0" }}>Connections</h5>
           <h6 className="">Filter</h6>
           {/* <span style={{ fontSize: ".8em" }}>
@@ -363,8 +366,8 @@ const CoachAgentScoutVersionConnetions = () => {
 
         {/* //  CONNECTIONS */}
         <div
-          className="md:basis-[70%] md:mt-[2vh] sm:flex-col sm:flex sm:flex-shrink-0 sm:basis-[70%] content-center"
-          style={{ overflowY: "scroll" }}
+          className="md:basis-[70%] md:mt-[2vh] md:overflow-y-scroll sm:flex-col sm:flex sm:flex-shrink-0 sm:basis-[70%] content-center "
+          // style={{ overflowY: "hidden" }}
         >
           {countryName === ""
             ? agentAndScoutsList
@@ -376,7 +379,7 @@ const CoachAgentScoutVersionConnetions = () => {
                       key={person.accountId}
                     >
                       <ScoutsDisplayCard
-                        style={{ width: "25vw", height: "15vh" }}
+                        // style={{ width: "25vw", height: "15vh" }}
                         AgencyName={person.organization}
                         UserName={`${person.firstName} ${person.surname}`}
                         playerImageUrl={person.profileImage}
@@ -419,10 +422,10 @@ const CoachAgentScoutVersionConnetions = () => {
       {/* USER ADDED CONNECTIONS */}
       <div
         // cardBackground
-        className=" md:flex md:flex-col md:pl-[1.5vw] md:basis-[40%]  sm:basis-[40%]      sm:flex sm:flex-shrink-0 sm:flex-col sm:pl-[0vw]"
+        className=" md:flex md:flex-col md:pl-[1.5vw] md:basis-[40%] md:flex-shrink-0  sm:basis-[80%]      sm:flex sm:flex-shrink-0 sm:flex-col sm:pl-[0vw]"
         style={{
           // flex: ".65",
-          // background: "red",
+          // background: "green",
           display: "flex",
           flexDirection: "column",
           // paddingLeft: "1.5vw",

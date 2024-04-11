@@ -71,7 +71,7 @@ const FreeTrial = () => {
             height: "89px",
             // marginBottom: "100vh",
           }}
-          className="sm:mb-[5vh] md:mb-[0vh] "
+          // className="sm:mb-[5vh] md:mb-[0vh] "
         />
       </div>
       {/* /// */}

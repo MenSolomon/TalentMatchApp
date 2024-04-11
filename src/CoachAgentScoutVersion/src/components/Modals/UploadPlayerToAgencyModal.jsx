@@ -316,7 +316,7 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
             ).length;
 
             // Check if at least 4 variables match
-            return numberOfMatches >= 4;
+            return numberOfMatches >= 6;
           });
 
           console.log("MatchedAccounts", ExistingPlayerProfile);
@@ -405,6 +405,8 @@ function CreateAPlayerProfileModal({ turnMotherModalAfterSubmitted }) {
               const playerData = {
                 id: uuid,
                 Account_creator_id: userLoginObject?.accountId,
+                Current_Account_Owner: userLoginObject?.accountId,
+
                 // ... (other fields)
                 player_profile_image: url,
                 firstName: FirstName,

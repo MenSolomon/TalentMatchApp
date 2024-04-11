@@ -78,10 +78,9 @@ const MembershipPlanPage = () => {
         overflow: "scroll",
       }}
     >
-      {/* className="md:block sm:hidden" */}
       {/* NAVIGATION AREA */}
       <div
-        className="md:block md:w-[12.5vh] sm:hidden md:w-[5.5vh] "
+        className="md:block md:w-[12.5vh] sm:hidden md:w-[5.5vh] md:basis-[10%] sm:basis-[10%]"
         style={{
           position: "fixed",
           paddingTop: "2.5vh",
@@ -228,7 +227,7 @@ const MembershipPlanPage = () => {
       </div>
 
       {/* BODY AREA */}
-      <div className="sm:mt-[5vh] md:mt-[10vh]" style={{ flex: ".9" }}>
+      <div className="sm:mt-[5vh] sm:basis-[90%] md:mt-[10vh] md:basis-[90%]">
         {/* CREATE ACCOUNT SECTION */}
 
         {/* // Container housiong the header information  */}
