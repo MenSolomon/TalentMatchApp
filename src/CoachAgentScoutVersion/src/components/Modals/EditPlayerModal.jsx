@@ -68,10 +68,10 @@ import moment from "moment";
 import { selectPlayersDatabase } from "../../../../statemanager/slices/DatabaseSlice";
 import BasicButtonWithEndIcon from "../../../../components/Buttons/BasicButtonWithEndIcon";
 import BasicAutoCompleteForEditPlayerModal from "../AutoComplete/BasicAutoCompleteForEditPlayerModal";
-import DatePickerTool from "../../../../components/DatePicker/DatePicker";
 
-import DatePickerForEditPlayerModal from "../DatePicker/DatePickerForUploadPlayerModal";
 import { selectClubsInDatabase } from "../../../../statemanager/slices/ClubsInDatabaseSlice";
+import DatePickerForEditPlayerModal from "../DatePicker/DatePickerForEditPlayerModal";
+import DatePickerToolCreateAccount from "../../../../components/DatePicker/DatePickerCreateAccout";
 
 const style = {
   position: "absolute",
@@ -712,16 +712,19 @@ const EditPlayerProfileModal = () => {
         open={open}
         onClose={handleClose}
         aria-labelledby="child-modal-title"
-        aria-describedby="child-modal-description">
+        aria-describedby="child-modal-description"
+      >
         <Box
           className="cardBackground primaryTextColor md:overflow-y-hidden md:flex md:flex-col md:h-[94%] md:w-[80%] sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col sm:overflow-y-scroll"
-          sx={{ ...style, paddingBottom: "2vh" }}>
+          sx={{ ...style, paddingBottom: "2vh" }}
+        >
           <div style={{ flex: ".2" }}>
             <h2 id="child-modal-title">
               Edit a player profile{" "}
               <Button
                 sx={{ width: "10%", float: "right" }}
-                onClick={handleClose}>
+                onClick={handleClose}
+              >
                 Back
               </Button>{" "}
             </h2>
@@ -736,7 +739,8 @@ const EditPlayerProfileModal = () => {
                   // height: "80%",
                   // display: "flex",
                   gap: "1vw",
-                }}>
+                }}
+              >
                 {/* LEFT INPUT PLAYER DETAILS */}
                 <div
                   className="md:w-[100%]  md:flex md:flex-col md:basis-[35%]    sm:w-[100%]  sm:flex sm:flex-col sm:basis-[35%]"
@@ -747,7 +751,8 @@ const EditPlayerProfileModal = () => {
                       // flexDirection: "column",
                       // background: "red",
                     }
-                  }>
+                  }
+                >
                   <div
                     style={{
                       flex: "1",
@@ -755,7 +760,8 @@ const EditPlayerProfileModal = () => {
                       gap: "20px",
                       alignItems: "center",
                       flexDirection: "column",
-                    }}>
+                    }}
+                  >
                     {/* <CustomTextField placeholder={"First Name"} />
                 <CustomTextField placeholder={"Surname"} /> */}
                     <div className="md:w-[23vw] sm:w-[100%]">
@@ -790,7 +796,7 @@ const EditPlayerProfileModal = () => {
                         // {...register("Surname", { required: true })}
                       />
                     </div>
-                    <DatePickerForEditPlayerModal
+                    <DatePickerToolCreateAccount
                       style={{ width: browserWidth >= 1024 ? "23vw" : "40vw" }}
                       containerStyle={{ marginTop: "-1vh" }}
                       label="Date of birth *"
@@ -864,7 +870,8 @@ const EditPlayerProfileModal = () => {
                     gap: "20px",
                     // alignItems: "center",
                     // flexDirection: "column",
-                  }}>
+                  }}
+                >
                   <BasicSlider
                     defaultValue={marketValue}
                     rangeName="Market value 000,000 (optional)"
@@ -1003,14 +1010,16 @@ const EditPlayerProfileModal = () => {
                       }}
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
-                      onClick={() => fileInputRef.current.click()}>
+                      onClick={() => fileInputRef.current.click()}
+                    >
                       <div
                         style={{
                           display: "flex",
                           alignItems: "center",
                           justifyItems: "baseline",
                           gap: 10,
-                        }}>
+                        }}
+                      >
                         <AddAPhoto />
                         <Typography sx={{ fontWeight: "600" }}>
                           Select or drag profile Image
@@ -1059,7 +1068,8 @@ const EditPlayerProfileModal = () => {
                             color: "red",
                             // backgroundColor: "white",
                             // left: "10vw",
-                          }}>
+                          }}
+                        >
                           <Close />
                         </IconButton>
                       </div>
@@ -1114,7 +1124,8 @@ const EditPlayerProfileModal = () => {
                     border: ".5vw",
                     // position: "absolute",
                   }}
-                  variant="contained">
+                  variant="contained"
+                >
                   Edit
                 </Button>
               </div>

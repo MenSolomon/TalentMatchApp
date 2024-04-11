@@ -427,7 +427,7 @@ export default function CreateProfileModal({ ProfileType }) {
         ? 0
         : subscriptionFeaturesObject?.maxProfiles;
 
-    alert(profileMax + " = " + userSavedProfiles.length);
+    // alert(profileMax + " = " + userSavedProfiles.length);
     const uuid = uuidv4();
 
     // first check if the user has exceeded the max allowed profiles
@@ -436,7 +436,7 @@ export default function CreateProfileModal({ ProfileType }) {
       userSavedProfiles.length < profileMax
     ) {
       if (userSavedProfiles.length < 1) {
-        alert("can add");
+        // alert("can add");
         // This is the rest of users in the database devoid of the current user logged in
 
         // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
@@ -499,7 +499,7 @@ export default function CreateProfileModal({ ProfileType }) {
           })
         );
       } else {
-        alert("can add 2");
+        // alert("can add 2");
 
         const savedProfileSubCollectionRef = doc(
           db,

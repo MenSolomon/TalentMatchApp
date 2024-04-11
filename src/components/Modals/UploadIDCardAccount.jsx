@@ -143,6 +143,7 @@ export default function UploadIDCardAccount() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       const retrievedMrzProgress = sessionStorage.getItem("mrzProgressLoading");
+      // alert(retrievedMrzProgress);
       setMrzLoader(retrievedMrzProgress);
       // if (retrievedMrzProgress && retrievedMrzProgress.toString() === "true") {
       //   dispatch(setOpenCircularLoadBackdrop);
@@ -297,7 +298,7 @@ export default function UploadIDCardAccount() {
             </div>
 
             <Button
-              onClick={handleOpen}
+              onClick={handleClose}
               // onClick={handleClick}
               variant="contained"
             >
