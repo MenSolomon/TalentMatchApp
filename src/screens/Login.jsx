@@ -94,7 +94,7 @@ const Login = () => {
 
         const userInfoSnap = await getDoc(userInfoRef);
         // alert(userInfoSnap?.data()?.Nationality);
-
+        // Navigate("/");
         if (user) {
           dispatch(setLoginStatus(true));
           dispatch(
@@ -157,13 +157,15 @@ const Login = () => {
               db,
               `users_db/${accountId}/Notifications`
             );
-
+            // user.uid
             const q = query(notificationsSubCollectionRef);
             const allNotifications = onSnapshot(q, async (querySnapshot) => {
               const notificationItems = [];
               querySnapshot.forEach((doc) => {
                 notificationItems.push(doc.data());
               });
+
+              dispatch(setUserNotifications(notificationItems));
               // const citiesRef = collection(db, "cities");
 
               // const q = query(citiesRef, where("capital", "==", true));
@@ -171,74 +173,6 @@ const Login = () => {
               // const docRef = doc(db, "players_database", accountId);
 
               // ****** TURNED OFF THIS VIDEO QUERY BECAUSE THE PLAYERVERSION VIDEOS SCREEN  RETRIEVES THE VIDEO THERE
-
-              const qPlayer = query(
-                collection(db, "players_database"),
-                where("Current_Account_Owner", "==", accountId)
-              );
-
-              try {
-                const querySnapshot = await getDocs(qPlayer);
-                if (!querySnapshot.empty) {
-                  const playerData = querySnapshot.docs[0].data();
-                  console.log("retro", playerData);
-                  // const playerData = docSnap.data();
-
-                  if (userInfoSnap?.data()?.role === "Player") {
-                    const firestoreTimestamp = playerData.dateCreated;
-                    const date = firestoreTimestamp.toDate();
-                    const options = {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      hour: "numeric",
-                      minute: "numeric",
-                      second: "numeric",
-                    };
-                    const dateTimeFormat = new Intl.DateTimeFormat(
-                      "en-US",
-                      options
-                    );
-                    const dateString = dateTimeFormat.format(date);
-                    playerData.dateCreated = dateString;
-
-                    // alert("playerData?.id" + );
-                    // const playerObjectRef = collection(
-                    //   db,
-                    //   `players_database/${
-                    //     querySnapshot.docs[0].data().id
-                    //   }/videos`
-                    // );
-
-                    // const q2 = query(playerObjectRef);
-                    // onSnapshot(q2, (querySnapshot) => {
-                    //   const videosArray = [];
-                    //   querySnapshot.forEach((doc) => {
-                    //     videosArray.push(doc.data());
-                    //   });
-                    //   // alert("data collected");
-                    //   dispatch(
-                    //     setPlayerSelectedByClubOrScoutInPlayerManagement({
-                    //       ...playerData,
-                    //       videos: videosArray,
-                    //     })
-                    //   );
-
-                    //   dispatch(setUserNotifications(notificationItems));
-                    //   Navigate("/");
-                    //   setErrorMessage("");
-                    // });
-                  }
-
-                  return document;
-                } else {
-                  console.log("No such document!");
-
-                  return null; // No document found
-                }
-              } catch (error) {
-                console.error("Error getting document:", error);
-              }
             });
 
             return () => {
@@ -248,6 +182,7 @@ const Login = () => {
 
           return () => {
             allProfiles();
+            Navigate("/");
           };
         }
         // ...

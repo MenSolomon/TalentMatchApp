@@ -48,6 +48,7 @@ import {
 import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
 import { selectPlayersDatabase } from "../../../../statemanager/slices/DatabaseSlice";
 import moment from "moment/moment";
+import handleVideoGloballyClick from "../../../../utilities/VideoPausePlayFunction";
 // import {
 //   arrayUnion,
 //   doc,
@@ -453,6 +454,7 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                   }}
                 >
                   <video
+                    onClick={handleVideoGloballyClick}
                     className="sm:h-[23vh] md:w-[20vw] sm:w-[60vw] "
                     src={videoUrl}
                     controls

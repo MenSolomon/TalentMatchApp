@@ -31,7 +31,11 @@ const style = {
   p: 5,
 };
 
-export default function CreateShowInterestModal({ playerName, playerId }) {
+export default function CreateShowInterestModal({
+  playerName,
+  playerId,
+  currentAccountOwner,
+}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -62,7 +66,7 @@ export default function CreateShowInterestModal({ playerName, playerId }) {
     /// FOR SELF
     const playerNotificationRef = doc(
       db,
-      `users_db/${playerId}/Notifications`,
+      `users_db/${currentAccountOwner}/Notifications`,
       uuid
     );
 

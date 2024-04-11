@@ -424,6 +424,70 @@ const App = () => {
   // useEffect(() => {
   //   alert(userLoginObject.accountId + "  from App JSZ");
   // }, [usersDatabase]);
+  // ?? VIII
+  // useEffect(() => {
+  //   const handleVideoElementsChange = () => {
+  //     const videoElements = document.querySelectorAll("video");
+  //     const updatedVideoIds = Array.from(videoElements)
+  //       .map((video) => video.getAttribute("id"))
+  //       .filter(Boolean);
+  //     setVideoIds(updatedVideoIds);
+  //     console.log("reLo", updatedVideoIds);
+  //   };
+
+  //   // Initial setup
+  //   handleVideoElementsChange();
+
+  //   // Attach event listener to monitor changes in the DOM
+  //   document.addEventListener("DOMNodeInserted", handleVideoElementsChange);
+
+  //   // Clean up
+  //   return () => {
+  //     document.removeEventListener(
+  //       "DOMNodeInserted",
+  //       handleVideoElementsChange
+  //     );
+  //   };
+  // }, []); // Empty dependency array to run the effect only once after the component mounts
+
+  // // State to hold the video IDs
+  // const [videoIds, setVideoIds] = useState([]);
+  // ?? VIII
+
+  // Render logic using videoIds
+
+  //// E N D
+
+  // const [currentVideoId, setCurrentVideoId] = useState(null);
+
+  // // Function to handle click on video element
+  // const handleVideoClick = (event) => {
+  //   const clickedVideoId = event.target.id;
+  //   if (clickedVideoId !== currentVideoId) {
+  //     // Pause the currently playing video if its ID is different
+  //     const currentVideo = document.getElementById(currentVideoId);
+  //     if (currentVideo) {
+  //       currentVideo.pause();
+  //     }
+  //     // Update the current video ID to the clicked video's ID
+  //     setCurrentVideoId(clickedVideoId);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   // Attach event listener to all video elements
+  //   const videoElements = document.querySelectorAll('video');
+  //   videoElements.forEach(video => {
+  //     video.addEventListener('click', handleVideoClick);
+  //   });
+
+  //   // Clean up function to remove event listeners
+  //   return () => {
+  //     videoElements.forEach(video => {
+  //       video.removeEventListener('click', handleVideoClick);
+  //     });
+  //   };
+  // }, [currentVideoId]);
 
   return (
     <ThemeProvider theme={theme}>
