@@ -10,16 +10,18 @@ import { functions } from "../../Firebase/Firebase";
 import { productDetails } from "../../utils/ProductDetails";
 import { httpsCallable } from "firebase/functions";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   selectIsSubscriptionActive,
   selectNextBillingDate,
   selectUserDetailsObject,
 } from "../../statemanager/slices/LoginUserDataSlice";
 import { useQuery } from "@tanstack/react-query";
+import { setOpenCircularLoadBackdrop } from "../../statemanager/slices/OtherComponentStatesSlice";
 
 function SettingsBilling() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const userDetailsObject = useSelector(selectUserDetailsObject);
   const { subscriptionPackage, accountId } = userDetailsObject;
@@ -151,7 +153,8 @@ function SettingsBilling() {
                   variant={"contained"}
                   onClick={() => {
                     handleCustomerPortal();
-                    setIsLoading(true);
+                    // setIsLoading(true);
+                    dispatch(setOpenCircularLoadBackdrop(true));
                   }}
                   style={{
                     display: "flex",

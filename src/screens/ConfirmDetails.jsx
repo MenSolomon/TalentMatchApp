@@ -33,6 +33,7 @@ import {
   query,
   getDocs,
 } from "firebase/firestore";
+import { sendSignInLinkToEmail } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
 import { auth, db, storage } from "../Firebase/Firebase";
 import {
@@ -73,6 +74,8 @@ const ConfirmDetails = () => {
   //state to manage user id
   const [agreement, setAgreement] = useState(false);
   const [privacy, setPrivacy] = useState(false);
+  //
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   const {
     firstName,
@@ -164,7 +167,30 @@ const ConfirmDetails = () => {
       currentDate.year() - momentDate.year() - (hasBirthdayOccurred ? 0 : 1);
     return Math.round(ageDifference);
   }
+  const actionCodeSettings = {
+    // URL you want to redirect back to. The domain (www.example.com) for this
+    // URL must be in the authorized domains list in the Firebase Console.
+    url: "http://localhost:5173/create-account/confirm-details",
+    // This must be true.
+    handleCodeInApp: true,
+  };
 
+  const emailLink = async () => {
+    sendSignInLinkToEmail(auth, email, actionCodeSettings)
+      .then(() => {
+        console.log("sendSignInLinkToEmail");
+        // setIsEmailVerified(true);
+        handleStartFreeTrial();
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("errorCode", errorCode);
+        console.log("errorMessage", errorMessage);
+        // setIsEmailVerified(false);
+        triggerWarningAlertModal("Please use a valid email");
+      });
+  };
   const handleStartFreeTrial = async () => {
     // const email = location.state.email;
     // const password = location.state.password;
@@ -222,7 +248,7 @@ const ConfirmDetails = () => {
           }
         });
 
-        if (items.length > 0) {
+        if (0 > 1) {
           triggerWarningAlertModal("Account Exists");
         } else {
           if (roleSelected === "Player") {
@@ -1181,7 +1207,10 @@ const ConfirmDetails = () => {
           </ul>
 
           {/* div to handle Click of start free trial */}
-          <div onClick={handleStartFreeTrial}>
+          <div
+            onClick={() => {
+              emailLink();
+            }}>
             <BasicButton
               style={{ width: "90%", marginLeft: "5%" }}
               innerText="Start Trial"></BasicButton>

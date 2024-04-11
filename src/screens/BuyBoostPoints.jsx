@@ -12,18 +12,12 @@ import {
 } from "../statemanager/slices/OtherComponentStatesSlice";
 import ChoosePlanPageDrawer from "../components/Drawer/ChoosePlanPageDrawer";
 import {
-  FieldValue,
   addDoc,
-  arrayUnion,
   collection,
   doc,
-  getDoc,
   getDocs,
-  increment,
   onSnapshot,
   query,
-  setDoc,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { auth, db } from "../Firebase/Firebase";

@@ -35,7 +35,9 @@ import BasicMenu from "../components/Menu/BasicMenu";
 import BasicButton from "../components/Buttons/BasicButton";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  selectCircularLoadBackdropTriggerState,
   selectCurrentBrowserSize,
+  setOpenCircularLoadBackdrop,
   setWarningAlertModalCounter,
   setWarningAlertModalMessage,
 } from "../statemanager/slices/OtherComponentStatesSlice";
@@ -64,6 +66,8 @@ import { selectUserDetailsObject } from "../statemanager/slices/LoginUserDataSli
 
 const ChangeSubscriptionPackagePage = () => {
   const browserSize = useSelector(selectCurrentBrowserSize);
+  // state to display loading sign or button
+  const isButtonTriggered = useSelector(selectCircularLoadBackdropTriggerState);
   let browserWidth = parseInt(browserSize?.width, 10);
   // Settings for password input
   const [showPassword, setShowPassword] = useState(false);
@@ -81,8 +85,7 @@ const ChangeSubscriptionPackagePage = () => {
   const productIds = productDetails;
   // state to render loading effect whiles products is being set
   const [isProductsLoading, setIsProductsLoading] = useState(true);
-  // state to display loading sign or button
-  const [isButtonTriggered, setIsButtonTriggered] = useState(false);
+
   // state to hold the roleSelected
   const [role, setRole] = useState();
   // account id
@@ -504,7 +507,8 @@ const ChangeSubscriptionPackagePage = () => {
                         featuresHighlightArray={item.details}
                         onClick={async () => {
                           // display loading sign
-                          setIsButtonTriggered(true);
+                          dispatch(setOpenCircularLoadBackdrop(true));
+
                           // get current uid
                           const currentUser = await auth.currentUser;
                           // alert(accountId);
@@ -524,7 +528,7 @@ const ChangeSubscriptionPackagePage = () => {
                               "An active subscription already exists. \n Cancel the existing one first"
                             );
                             // disable loading sign
-                            setIsButtonTriggered(false);
+                            dispatch(setOpenCircularLoadBackdrop(false));
                           } else {
                             StripeCheckout(item.id, item.priceId);
                           }
@@ -553,7 +557,7 @@ const ChangeSubscriptionPackagePage = () => {
                         featuresHighlightArray={item.details}
                         onClick={async () => {
                           // display loading sign
-                          setIsButtonTriggered(true);
+                          dispatch(setOpenCircularLoadBackdrop(true));
                           // get current uid
                           const currentUser = await auth.currentUser;
                           // alert(accountId);
@@ -573,7 +577,7 @@ const ChangeSubscriptionPackagePage = () => {
                               "An active subscription already exists. \n Cancel the existing one first"
                             );
                             // disable loading sign
-                            setIsButtonTriggered(false);
+                            dispatch(setOpenCircularLoadBackdrop(false));
                           } else {
                             StripeCheckout(item.id, item.priceId);
                           }
@@ -603,7 +607,7 @@ const ChangeSubscriptionPackagePage = () => {
                     featuresHighlightArray={item.details}
                     onClick={async () => {
                       // display loading sign
-                      setIsButtonTriggered(true);
+                      dispatch(setOpenCircularLoadBackdrop(true));
                       // get current uid
                       const currentUser = await auth.currentUser;
                       // alert(accountId);
@@ -620,7 +624,7 @@ const ChangeSubscriptionPackagePage = () => {
                           "An active subscription already exists. \n Cancel the existing one first"
                         );
                         // disable loading sign
-                        setIsButtonTriggered(false);
+                        dispatch(setOpenCircularLoadBackdrop(false));
                       } else {
                         StripeCheckout(item.id, item.priceId);
                       }

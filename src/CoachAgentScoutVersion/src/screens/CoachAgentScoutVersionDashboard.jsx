@@ -1,4 +1,5 @@
 import { Avatar, Button, Chip, Stack, Switch, Typography } from "@mui/material";
+import { yellow, deepOrange } from "@mui/material/colors";
 import PlayerSkeletonImage from "../assets/images/PlayerSkeleton.png";
 import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../statemanager/slices/ThemeProviderSlice";
@@ -36,6 +37,7 @@ const CoachAgentScoutVersionDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
   const { boostPoints, subscriptionPackage } = userLoginDetailsObject;
+  const boostPointsTextColor = yellow[500];
   const subscriptionStatus = useSelector(selectIsSubscriptionActive);
 
   const navigate = useNavigate();
