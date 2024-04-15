@@ -19,9 +19,12 @@ export const UserDataSlice = createSlice({
       paymentDetails: {},
     },
     imageWithMrzFileStore: [],
+    imageWithMrzFileStoreForAccountVerification: [],
+
     blobImageWithMrz: "",
     imageWithoutFileStore: [],
     blobImageWithoutMrz: "",
+    blobImageWithMrzForAccountVerification: "",
     productPackage: "",
     selectedProductArray: [],
     selectedBasicProductArray: [],
@@ -34,11 +37,19 @@ export const UserDataSlice = createSlice({
     setImageWithMrzFileStore: (state, action) => {
       state.imageWithMrzFileStore = action.payload;
     },
+
+    setImageWithMrzFileStoreForAccountVerification: (state, action) => {
+      state.imageWithMrzFileStoreForAccountVerification = action.payload;
+    },
+
     setImageWithoutFileStore: (state, action) => {
       state.imageWithoutFileStore = action.payload;
     },
     setBlobImageWithMrz: (state, action) => {
       state.blobImageWithMrz = action.payload;
+    },
+    setBlobImageWithMrzForAccountVerification: (state, action) => {
+      state.blobImageWithMrzForAccountVerification = action.payload;
     },
     setBlobImageWithoutMrz: (state, action) => {
       state.blobImageWithoutMrz = action.payload;
@@ -58,10 +69,14 @@ export const UserDataSlice = createSlice({
 export const selectUserSignUpData = (state) => state.UserData.userSignUpData;
 export const selectImageWithMrzFileStore = (state) =>
   state.UserData.imageWithMrzFileStore;
+export const selectImageWithMrzFileStoreForAccountVerification = (state) =>
+  state.UserData.imageWithMrzFileStoreForAccountVerification;
 export const selectImageWithoutFileStore = (state) =>
   state.UserData.imageWithoutFileStore;
 export const selectBlobImageWithMrz = (state) =>
   state.UserData.blobImageWithMrz;
+export const selectBlobImageWithMrzForAccountVerification = (state) =>
+  state.UserData.blobImageWithMrzForAccountVerification;
 export const selectBlobImageWithoutMrz = (state) =>
   state.UserData.blobImageWithoutMrz;
 export const selectSelectedProductArray = (state) =>
@@ -78,6 +93,8 @@ export const {
   setBlobImageWithoutMrz,
   setProductPackage,
   setSelectedProductArray,
+  setImageWithMrzFileStoreForAccountVerification,
+  setBlobImageWithMrzForAccountVerification,
   setSelectedBasicProductArray,
 } = UserDataSlice.actions;
 export default UserDataSlice.reducer;

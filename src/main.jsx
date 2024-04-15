@@ -10,6 +10,7 @@ import BackEndDataCatalog from "./statemanager/BackEndDataCatalog.jsx";
 import MobileVideoDisplayCarousel from "./components/Carousel/MobileVideoDisplayCarousel.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { VideoProvider } from "./utilities/VideoProvider.jsx";
 
 let persistor = persistStore(store);
 const queryClient = new QueryClient();
@@ -20,7 +21,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <BackEndDataCatalog>
           <QueryClientProvider client={queryClient}>
             <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-            <App /> {/* <MobileVideoDisplayCarousel /> */}
+            <VideoProvider>
+              <App /> {/* <MobileVideoDisplayCarousel /> */}
+            </VideoProvider>
           </QueryClientProvider>
         </BackEndDataCatalog>
       </PersistGate>

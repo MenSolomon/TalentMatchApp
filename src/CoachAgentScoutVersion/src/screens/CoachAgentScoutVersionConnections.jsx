@@ -94,7 +94,7 @@ const CoachAgentScoutVersionConnetions = () => {
 
     await setDoc(userNotificationRef, {
       NotificationId: uuid,
-      requestAccepted: false,
+      requestAccepted: "Pending",
       dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
       senderAddress: userLoginDetailsObject.email,
       senderId: userLoginDetailsObject.accountId,
@@ -106,7 +106,7 @@ const CoachAgentScoutVersionConnetions = () => {
 
     await setDoc(scoutNotificationRef, {
       NotificationId: uuid,
-      requestAccepted: false,
+      requestAccepted: "Pending",
       dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
       senderAddress: userLoginDetailsObject.email,
       senderId: userLoginDetailsObject.accountId,
@@ -114,6 +114,20 @@ const CoachAgentScoutVersionConnetions = () => {
       message: `${userLoginDetailsObject.firstName} has shown interest in your profile. Accept to view message sent`,
       readStatus: false,
       targetAccountRole: targetedAccountRole,
+    });
+
+    const connectionInterestRef = doc(
+      db,
+      `users_db/${userLoginDetailsObject?.accountId}/NonPlayerConnectionInterests`,
+      uuid
+    );
+
+    //Notification sent
+
+    await setDoc(connectionInterestRef, {
+      interestedConnectionAccountId: targetedAccountID,
+      dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+      interestStatus: "Pending",
     });
 
     dispatch(
@@ -308,12 +322,12 @@ const CoachAgentScoutVersionConnetions = () => {
 
   return (
     <div
-      className="primaryTextColor md:gap-[1em] md:flex-row md:flex md:w-[100%] md:h-[100%]    sm:flex sm:w-[100%] sm:gap-[3.5em] sm:flex-col sm:h-[100%]"
+      className="primaryTextColor  md:flex-row md:flex md:w-[100%] md:h-[100%]    sm:flex sm:w-[100%]  sm:flex-col sm:h-[100%]"
       // style={{ display: "flex", width: "100%", height: "100%" }}
     >
       {/* MESSAGE OVERVIEW SECTION */}
       <div
-        className="md:flex md:flex-col md:basis-[60%]    sm:basis-[60%] sm:flex sm:flex-col"
+        className="md:flex md:flex-col md:basis-[60%] md:flex-shrink-0   sm:basis-[20%] sm:flex sm:flex-col sm:flex-shrink-0"
         style={
           {
             // flex: ".35",
@@ -321,9 +335,13 @@ const CoachAgentScoutVersionConnetions = () => {
             // flexDirection: "column",background
             // background: "peru",
           }
-        }>
+        }
+      >
         {/* // INBOX HEADER */}
-        <div className="md:basis-[20%]  sm:basis-[20%]">
+        <div
+          className="md:basis-[20%]  sm:basis-[20%]"
+          // style={{ background: "yellow" }}
+        >
           <h5 style={{ fontWeight: "bolder", margin: "0" }}>Connections</h5>
           <h6 className="">Filter</h6>
           {/* <span style={{ fontSize: ".8em" }}>
@@ -357,7 +375,8 @@ const CoachAgentScoutVersionConnetions = () => {
               onClick={() => {
                 setCountryName("");
                 setRole();
-              }}>
+              }}
+            >
               Reset
             </Button>
           </div>
@@ -366,7 +385,8 @@ const CoachAgentScoutVersionConnetions = () => {
         {/* //  CONNECTIONS */}
         <div
           className="md:basis-[70%] md:mt-[2vh] sm:flex-col sm:flex sm:flex-shrink-0 sm:basis-[70%] content-center"
-          style={{ overflowY: "scroll" }}>
+          style={{ overflowY: "scroll" }}
+        >
           {countryName === ""
             ? agentAndScoutsList
                 ?.filter((agent) => !connections.includes(agent.accountId))
@@ -374,10 +394,12 @@ const CoachAgentScoutVersionConnetions = () => {
                   return (
                     <div
                       className="sm:min-h-1vh md:min-h-0.5vh "
-                      key={person.accountId}>
+                      key={person.accountId}
+                    >
                       <ScoutsDisplayCard
-                        style={{ width: "25vw", height: "15vh" }}
+                        // style={{ width: "25vw", height: "15vh" }}
                         AgencyName={person.organization}
+                        AccountId={person?.accountId}
                         UserName={`${person.firstName} ${person.surname}`}
                         playerImageUrl={person.profileImage}
                         handleConnect={() => {
@@ -408,7 +430,8 @@ const CoachAgentScoutVersionConnetions = () => {
                   return (
                     <div
                       key={index}
-                      className="sm:min-h-1vh md:min-h-0.5vh md:w-[5vw]">
+                      className="sm:min-h-1vh md:min-h-0.5vh md:w-[5vw]"
+                    >
                       <ScoutsDisplayCard
                         style={{ width: "25vw", height: "15vh" }}
                         AgencyName={filtered.organization}
@@ -432,16 +455,17 @@ const CoachAgentScoutVersionConnetions = () => {
       {/* USER ADDED CONNECTIONS */}
       <div
         // cardBackground
-        className=" md:flex md:flex-col md:pl-[1.5vw] md:basis-[40%]  sm:basis-[40%]      sm:flex sm:flex-shrink-0 sm:flex-col sm:pl-[0vw]"
+        className=" md:flex md:flex-col md:pl-[1.5vw] md:basis-[40%] md:flex-shrink-0  sm:basis-[80%]      sm:flex sm:flex-shrink-0 sm:flex-col sm:pl-[0vw]"
         style={{
           // flex: ".65",
-          // background: "red",
+          // background: "green",
           display: "flex",
           flexDirection: "column",
           // paddingLeft: "1.5vw",
           borderRadius: "1vw",
           overflowY: "scroll",
-        }}>
+        }}
+      >
         {/* // Pagination and delete message area */}
         {/* style={{ flex: "1", display: "grid", placeContent: "center" }} */}
         Filter for player connections and agent/scout connections

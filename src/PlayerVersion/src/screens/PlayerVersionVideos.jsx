@@ -9,7 +9,13 @@ import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserD
 import { selectPlayerSelectedByClubOrScoutInPlayerManagement } from "../../../statemanager/slices/PlayersInAgencySlice";
 import VideoComponentRows from "../../../CoachAgentScoutVersion/src/components/Rows/VideoComponentRows";
 import { db } from "../../../Firebase/Firebase";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { selectCurrentBrowserSize } from "../../../statemanager/slices/OtherComponentStatesSlice";
 
 const PlayerVersionVideos = () => {
@@ -19,28 +25,57 @@ const PlayerVersionVideos = () => {
   const userDetailsObject = useSelector(selectUserDetailsObject);
 
   const [videos, setVideos] = useState([]);
-  const [circularLoader, setCircularLoader] = useState(true);
+  const [circularLoader, setCircularLoader] = useState(false);
 
   useEffect(() => {
-    const playerObjectRef = collection(
-      db,
-      `players_database/${userDetailsObject.accountId}/videos`
-    );
+    try {
+      setCircularLoader(true);
 
-    const q2 = query(playerObjectRef);
-    const allVideos = onSnapshot(q2, (querySnapshot) => {
-      const videosArray = [];
-      querySnapshot.forEach((doc) => {
-        videosArray.push(doc.data());
-      });
+      const fetchData = async () => {
+        const qPlayer = query(
+          collection(db, "players_database"),
+          where("Current_Account_Owner", "==", userDetailsObject?.accountId)
+        );
+        const querySnapshot = await getDocs(qPlayer);
+        const playerObjectRef = collection(
+          db,
+          `players_database/${querySnapshot?.docs[0]?.data()?.id}/videos`
+        );
 
+        const q2 = query(playerObjectRef);
+        const allVideos = onSnapshot(q2, (querySnapshot) => {
+          const videosArray = [];
+          querySnapshot.forEach((doc) => {
+            videosArray.push(doc.data());
+          });
+
+          console.log(videosArray, "vidae");
+          setCircularLoader(false);
+          setVideos(videosArray);
+        });
+      };
+      fetchData();
+    } catch (error) {
       setCircularLoader(false);
-      setVideos(videosArray);
-    });
-    return () => {
-      allVideos();
-    };
+      console.error("errorCA", error);
+      console.log("vidae");
+    }
   }, []);
+
+  // useEffect(() => {
+  //   try {
+
+  //     fetchData();
+  //   } catch (error) {
+  //     console.error(error);
+  //     setCircularLoader(false);
+  //   }
+
+  //   // const playerObjectRef = collection(
+  //   //   db,
+  //   //   `players_database/${userDetailsObject.accountId}/videos`
+  //   // );
+  // }, []);
 
   const VideosPerPage = 3;
 

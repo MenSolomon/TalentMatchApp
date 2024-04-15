@@ -7,7 +7,7 @@ import {
   OutlinedInput,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import {
   Facebook,
@@ -70,202 +70,388 @@ const Login = () => {
   const dispatch = useDispatch();
   const AllUsersDatabase = useSelector(selectUsersDatabase);
   // isLoading state
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState("");
   const resetErrorMessage = () => {
     setErrorMessage("");
   };
+
+  const [submitClicked, setSubmitClicked] = useState(false);
 
   const triggerWarningAlertModal = (message) => {
     dispatch(setWarningAlertModalMessage(message));
     dispatch(setWarningAlertModalCounter());
   };
 
-  const onSubmit = (formData) => {
-    // use google signinwithemailandpassword to get the current userid
-    signInWithEmailAndPassword(auth, formData.email, formData.password)
-      .then(async (userCredential) => {
-        setIsLoading(true);
-        // Signed in
-        const user = userCredential.user;
-        const accountId = user.uid;
-        // get userDetails
+  // const onSubmit = async (formData) => {
+  //   // use google signinwithemailandpassword to get the current userid
+  //   signInWithEmailAndPassword(auth, formData.email, formData.password)
+  //     .then(async (userCredential) => {
+  //       setIsLoading(true);
+  //       // Signed in
+  //       const user = userCredential.user;
+  //       const accountId = user.uid;
+  //       // get userDetails
+  //       const userInfoRef = doc(db, `users_db/${accountId}`);
+  //       // alert(accountId);
+
+  //       const userInfoSnap = await getDoc(userInfoRef);
+  //       // alert(userInfoSnap?.data()?.Nationality);
+  //       // Navigate("/");
+  //       if (user) {
+  //         dispatch(setLoginStatus(true));
+  //         dispatch(
+  //           setUserDetailsObject({
+  //             Nationality: userInfoSnap.data().Nationality,
+  //             email: userInfoSnap.data().email,
+  //             CountryCode: userInfoSnap.data().CountryCode,
+  //             stripeLink:
+  //               userInfoSnap?.data()?.stripeLink === undefined
+  //                 ? ""
+  //                 : userInfoSnap?.data()?.stripeLink,
+  //             DateOfBirth: userInfoSnap.data().DateOfBirth,
+  //             organization: userInfoSnap.data().organization,
+  //             phoneNumber: userInfoSnap.data().phoneNumber,
+  //             subscriptionPackage: userInfoSnap.data().subscriptionPackage,
+  //             surname: userInfoSnap.data().surname,
+  //             profileImage:
+  //               userInfoSnap.data().profileImage === undefined
+  //                 ? ""
+  //                 : userInfoSnap.data().profileImage,
+  //             // paymentDetails: {
+  //             //   phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
+  //             // },
+  //             accountId: userInfoSnap.data().accountId,
+  //             firstName: userInfoSnap.data().firstName,
+  //             role: userInfoSnap.data().role,
+  //             dateCreated: {
+  //               seconds: userInfoSnap.data().dateCreated.seconds,
+  //               nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
+  //             },
+  //             stripeId: userInfoSnap.data().stripeId,
+  //             subscriptionPrice: userInfoSnap.data().subscriptionPrice,
+  //             playersInPossession: userInfoSnap.data().playersInPossession,
+  //             Connections:
+  //               userInfoSnap.data()?.Connections === undefined
+  //                 ? []
+  //                 : userInfoSnap.data()?.Connections,
+  //             AgentandScoutConnections:
+  //               userInfoSnap.data()?.AgentandScoutConnections === undefined
+  //                 ? []
+  //                 : userInfoSnap.data()?.AgentandScoutConnections,
+  //           })
+  //         );
+
+  //         const savedProfileSubCollectionRef = collection(
+  //           db,
+  //           `users_db/${accountId}/SavedProfiles`
+  //         );
+
+  //         const q = query(savedProfileSubCollectionRef);
+  //         await onSnapshot(q, (querySnapshot) => {
+  //           const profileItems = [];
+  //           querySnapshot.forEach((doc) => {
+  //             profileItems.push(doc.data());
+  //           });
+
+  //           dispatch(setUserSavedProfiles(profileItems));
+
+  //           // return () => {
+  //           //   allNotifications();
+  //           // };
+  //         });
+
+  //         const notificationsSubCollectionRef = collection(
+  //           db,
+  //           `users_db/${accountId}/Notifications`
+  //         );
+  //         // user.uid
+  //         const qNot = query(notificationsSubCollectionRef);
+  //         await onSnapshot(qNot, async (querySnapshot) => {
+  //           const notificationItems = [];
+  //           querySnapshot.forEach((doc) => {
+  //             notificationItems.push(doc.data());
+  //           });
+
+  //           dispatch(setUserNotifications(notificationItems));
+  //           // const citiesRef = collection(db, "cities");
+
+  //           // const q = query(citiesRef, where("capital", "==", true));
+
+  //           // const docRef = doc(db, "players_database", accountId);
+
+  //           // ****** TURNED OFF THIS VIDEO QUERY BECAUSE THE PLAYERVERSION VIDEOS SCREEN  RETRIEVES THE VIDEO THERE
+
+  //           // setIsLoading(false);
+  //         });
+
+  //         Navigate("/");
+  //       }
+
+  //       // ...
+  //     })
+  //     .catch((error) => {
+  //       setIsLoading(false);
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       // console.error("Error code:", errorCode);
+  //       // console.error("Error message:", errorMessage);
+  //       switch (errorCode) {
+  //         case "auth/wrong-password":
+  //           triggerWarningAlertModal("The password you entered was wrong");
+  //           break;
+  //         case "auth/missing-password":
+  //           triggerWarningAlertModal("Please enter a password");
+  //           break;
+  //         case "auth/network=request-failed":
+  //           triggerWarningAlertModal("Please check your internet connectivity");
+  //           break;
+  //         case "auth/user-not-found":
+  //           triggerWarningAlertModal("Account doesn't exist");
+  //           break;
+  //         case "auth/user-disabled":
+  //           triggerWarningAlertModal("Account has been disabled");
+  //           break;
+  //         case "auth/invalid-email":
+  //           triggerWarningAlertModal("Please enter an email");
+  //         case "auth/invalid-login-credentials":
+  //           triggerWarningAlertModal(
+  //             "This account does not exist or your credentials are wrong"
+  //           );
+  //           break;
+  //         default:
+  //       }
+  //     });
+  // };
+
+  const onSubmit = async (formData) => {
+    try {
+      setIsLoading(true);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      const user = userCredential.user;
+      const accountId = user.uid;
+
+      if (user) {
+        localStorage.setItem("LoggedAccountId", accountId);
+
+        dispatch(setLoginStatus(true));
         const userInfoRef = doc(db, `users_db/${accountId}`);
-        // alert(accountId);
-
         const userInfoSnap = await getDoc(userInfoRef);
-        // alert(userInfoSnap?.data()?.Nationality);
 
-        if (user) {
-          dispatch(setLoginStatus(true));
-          dispatch(
-            setUserDetailsObject({
-              Nationality: userInfoSnap.data().Nationality,
-              email: userInfoSnap.data().email,
-              boostPoints: userInfoSnap.data().boostPoints,
-              CountryCode: userInfoSnap.data().CountryCode,
-              stripeLink:
-                userInfoSnap?.data()?.stripeLink === undefined
-                  ? ""
-                  : userInfoSnap?.data()?.stripeLink,
-              DateOfBirth: userInfoSnap.data().DateOfBirth,
-              organization: userInfoSnap.data().organization,
-              phoneNumber: userInfoSnap.data().phoneNumber,
-              subscriptionPackage: userInfoSnap.data().subscriptionPackage,
-              surname: userInfoSnap.data().surname,
-              profileImage:
-                userInfoSnap.data().profileImage === undefined
-                  ? ""
-                  : userInfoSnap.data().profileImage,
-              // paymentDetails: {
-              //   phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
-              // },
-              accountId: userInfoSnap.data().accountId,
-              firstName: userInfoSnap.data().firstName,
-              role: userInfoSnap.data().role,
-              dateCreated: {
-                seconds: userInfoSnap.data().dateCreated.seconds,
-                nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
-              },
-              stripeId: userInfoSnap.data().stripeId,
-              subscriptionPrice: userInfoSnap.data().subscriptionPrice,
-              playersInPossession: userInfoSnap.data().playersInPossession,
-              Connections:
-                userInfoSnap.data()?.Connections === undefined
-                  ? []
-                  : userInfoSnap.data()?.Connections,
-              AgentandScoutConnections:
-                userInfoSnap.data()?.AgentandScoutConnections === undefined
-                  ? []
-                  : userInfoSnap.data()?.AgentandScoutConnections,
-            })
+        dispatch(
+          setUserDetailsObject({
+            Nationality: userInfoSnap.data().Nationality,
+            email: userInfoSnap.data().email,
+            CountryCode: userInfoSnap.data().CountryCode,
+            stripeLink:
+              userInfoSnap?.data()?.stripeLink === undefined
+                ? ""
+                : userInfoSnap?.data()?.stripeLink,
+            DateOfBirth: userInfoSnap.data().DateOfBirth,
+            organization: userInfoSnap.data().organization,
+            phoneNumber: userInfoSnap.data().phoneNumber,
+            subscriptionPackage: userInfoSnap.data().subscriptionPackage,
+            surname: userInfoSnap.data().surname,
+            profileImage:
+              userInfoSnap.data().profileImage === undefined
+                ? ""
+                : userInfoSnap.data().profileImage,
+            // paymentDetails: {
+            //   phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
+            // },
+            accountId: accountId,
+            firstName: userInfoSnap.data().firstName,
+            role: userInfoSnap.data().role,
+            dateCreated: {
+              seconds: userInfoSnap.data().dateCreated.seconds,
+              nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
+            },
+            stripeId: userInfoSnap.data().stripeId,
+            subscriptionPrice: userInfoSnap.data().subscriptionPrice,
+            playersInPossession: userInfoSnap.data().playersInPossession,
+            Connections:
+              userInfoSnap.data()?.Connections === undefined
+                ? []
+                : userInfoSnap.data()?.Connections,
+            AgentandScoutConnections:
+              userInfoSnap.data()?.AgentandScoutConnections === undefined
+                ? []
+                : userInfoSnap.data()?.AgentandScoutConnections,
+          })
+        );
+        const savedProfileSubCollectionRef = collection(
+          db,
+          `users_db/${accountId}/SavedProfiles`
+        );
+        const notificationsSubCollectionRef = collection(
+          db,
+          `users_db/${accountId}/Notifications`
+        );
+
+        const [profileSnapshot, notificationsSnapshot] = await Promise.all([
+          getDocs(savedProfileSubCollectionRef),
+          getDocs(notificationsSubCollectionRef),
+        ]);
+
+        const profileItems = profileSnapshot.docs.map((doc) => doc.data());
+        const notificationItems = notificationsSnapshot.docs.map((doc) =>
+          doc.data()
+        );
+
+        dispatch(setUserSavedProfiles(profileItems));
+        dispatch(setUserNotifications(notificationItems));
+
+        Navigate("/"); // Navigate after all data is fetched and set
+      }
+    } catch (error) {
+      setIsLoading(false);
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // console.error("Error code:", errorCode);
+      // console.error("Error message:", errorMessage);
+      switch (errorCode) {
+        case "auth/wrong-password":
+          triggerWarningAlertModal("The password you entered was wrong");
+          break;
+        case "auth/missing-password":
+          triggerWarningAlertModal("Please enter a password");
+          break;
+        case "auth/network=request-failed":
+          triggerWarningAlertModal("Please check your internet connectivity");
+          break;
+        case "auth/user-not-found":
+          triggerWarningAlertModal("Account doesn't exist");
+          break;
+        case "auth/user-disabled":
+          triggerWarningAlertModal("Account has been disabled");
+          break;
+        case "auth/invalid-email":
+          triggerWarningAlertModal("Please enter an email");
+          break;
+        case "auth/invalid-login-credentials":
+          triggerWarningAlertModal(
+            "This account does not exist or your credentials are wrong"
           );
-
-          const savedProfileSubCollectionRef = collection(
-            db,
-            `users_db/${accountId}/SavedProfiles`
-          );
-
-          const q = query(savedProfileSubCollectionRef);
-          const allProfiles = onSnapshot(q, (querySnapshot) => {
-            const profileItems = [];
-            querySnapshot.forEach((doc) => {
-              profileItems.push(doc.data());
-            });
-
-            dispatch(setUserSavedProfiles(profileItems));
-
-            const notificationsSubCollectionRef = collection(
-              db,
-              `users_db/${accountId}/Notifications`
-            );
-
-            const q = query(notificationsSubCollectionRef);
-            const allNotifications = onSnapshot(q, async (querySnapshot) => {
-              const notificationItems = [];
-              querySnapshot.forEach((doc) => {
-                notificationItems.push(doc.data());
-              });
-
-              const docRef = doc(db, "players_database", accountId);
-              try {
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                  const playerData = docSnap.data();
-
-                  if (userInfoSnap?.data()?.role === "Player") {
-                    const firestoreTimestamp = playerData.dateCreated;
-                    const date = firestoreTimestamp.toDate();
-                    const options = {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      hour: "numeric",
-                      minute: "numeric",
-                      second: "numeric",
-                    };
-                    const dateTimeFormat = new Intl.DateTimeFormat(
-                      "en-US",
-                      options
-                    );
-                    const dateString = dateTimeFormat.format(date);
-                    playerData.dateCreated = dateString;
-
-                    const playerObjectRef = collection(
-                      db,
-                      `players_database/${accountId}/videos`
-                    );
-
-                    const q2 = query(playerObjectRef);
-                    onSnapshot(q2, (querySnapshot) => {
-                      const videosArray = [];
-                      querySnapshot.forEach((doc) => {
-                        videosArray.push(doc.data());
-                      });
-                      // alert("data collected");
-                      dispatch(
-                        setPlayerSelectedByClubOrScoutInPlayerManagement({
-                          ...playerData,
-                          videos: videosArray,
-                        })
-                      );
-                    });
-                  }
-                } else {
-                  console.log("No such document!");
-                }
-              } catch (error) {
-                console.error("Error getting document:", error);
-              }
-
-              dispatch(setUserNotifications(notificationItems));
-              Navigate("/");
-              setErrorMessage("");
-            });
-
-            return () => {
-              allNotifications();
-            };
-          });
-
-          return () => {
-            allProfiles();
-          };
-        }
-        // ...
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // console.error("Error code:", errorCode);
-        // console.error("Error message:", errorMessage);
-        switch (errorCode) {
-          case "auth/wrong-password":
-            triggerWarningAlertModal("The password you entered was wrong");
-            break;
-          case "auth/missing-password":
-            triggerWarningAlertModal("Please enter a password");
-            break;
-          case "auth/network=request-failed":
-            triggerWarningAlertModal("Please check your internet connectivity");
-            break;
-          case "auth/user-not-found":
-            triggerWarningAlertModal("Account doesn't exist");
-            break;
-          case "auth/user-disabled":
-            triggerWarningAlertModal("Account has been disabled");
-            break;
-          case "auth/invalid-email":
-            triggerWarningAlertModal("Please enter an email");
-          case "auth/invalid-login-credentials":
-            triggerWarningAlertModal(
-              "This account does not exist or your credentials are wrong"
-            );
-            break;
-          default:
-        }
-      });
+          break;
+        default:
+      }
+    }
   };
+
+  // const onSubmit = (formData) => {
+  //   let isSubmit = true
+  //   signInWithEmailAndPassword(auth, formData.email, formData.password)
+  //     .then(async (userCredential) => {
+  //       setIsLoading(true);
+  //       const user = userCredential.user;
+  //       const accountId = user.uid;
+
+  //       // Fetch user details
+  //       const userInfoRef = doc(db, `users_db/${accountId}`);
+  //       const userInfoSnap = await getDoc(userInfoRef);
+
+  //       if (user) {
+  //         dispatch(setLoginStatus(true));
+  //         dispatch(
+  //           setUserDetailsObject({
+  //             Nationality: userInfoSnap.data().Nationality,
+  //             email: userInfoSnap.data().email,
+  //             CountryCode: userInfoSnap.data().CountryCode,
+  //             stripeLink:
+  //               userInfoSnap?.data()?.stripeLink === undefined
+  //                 ? ""
+  //                 : userInfoSnap?.data()?.stripeLink,
+  //             DateOfBirth: userInfoSnap.data().DateOfBirth,
+  //             organization: userInfoSnap.data().organization,
+  //             phoneNumber: userInfoSnap.data().phoneNumber,
+  //             subscriptionPackage: userInfoSnap.data().subscriptionPackage,
+  //             surname: userInfoSnap.data().surname,
+  //             profileImage:
+  //               userInfoSnap.data().profileImage === undefined
+  //                 ? ""
+  //                 : userInfoSnap.data().profileImage,
+  //             // paymentDetails: {
+  //             //   phoneNumber: userInfoSnap.data().paymentDetails.phoneNumber,
+  //             // },
+  //             accountId: userInfoSnap.data().accountId,
+  //             firstName: userInfoSnap.data().firstName,
+  //             role: userInfoSnap.data().role,
+  //             dateCreated: {
+  //               seconds: userInfoSnap.data().dateCreated.seconds,
+  //               nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
+  //             },
+  //             stripeId: userInfoSnap.data().stripeId,
+  //             subscriptionPrice: userInfoSnap.data().subscriptionPrice,
+  //             playersInPossession: userInfoSnap.data().playersInPossession,
+  //             Connections:
+  //               userInfoSnap.data()?.Connections === undefined
+  //                 ? []
+  //                 : userInfoSnap.data()?.Connections,
+  //             AgentandScoutConnections:
+  //               userInfoSnap.data()?.AgentandScoutConnections === undefined
+  //                 ? []
+  //                 : userInfoSnap.data()?.AgentandScoutConnections,
+  //           })
+  //         );
+  //         // Subscribe to SavedProfiles collection
+  //         const savedProfileSubCollectionRef = collection(
+  //           db,
+  //           `users_db/${accountId}/SavedProfiles`
+  //         );
+  //         const profileListener = onSnapshot(
+  //           savedProfileSubCollectionRef,
+  //           (querySnapshot) => {
+  //             const profileItems = [];
+  //             querySnapshot.forEach((doc) => {
+  //               profileItems.push(doc.data());
+  //             });
+  //             dispatch(setUserSavedProfiles(profileItems));
+  //           }
+  //         );
+
+  //         // Subscribe to Notifications collection
+  //         const notificationsSubCollectionRef = collection(
+  //           db,
+  //           `users_db/${accountId}/Notifications`
+  //         );
+  //         const notificationsListener = onSnapshot(
+  //           notificationsSubCollectionRef,
+  //           (querySnapshot) => {
+  //             const notificationItems = [];
+  //             querySnapshot.forEach((doc) => {
+  //               notificationItems.push(doc.data());
+  //             });
+  //             dispatch(setUserNotifications(notificationItems));
+  //           }
+  //         );
+
+  //         // Wait for both listeners to complete before navigating to "/"
+  //         Promise.all([profileListener, notificationsListener])
+  //           .then(() => {
+  //             setIsLoading(false);
+
+  //             Navigate("/");
+  //           })
+  //           .catch((error) => {
+  //             setIsLoading(false);
+  //             console.error("Error:", error);
+  //           });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setIsLoading(false);
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       switch (
+  //         errorCode
+  //         // Handle different error codes
+  //       ) {
+  //       }
+  //     });
+  // };
 
   return (
     <div
@@ -287,7 +473,8 @@ const Login = () => {
         // paddingTop: "1.5vh",
 
         color: "white",
-      }}>
+      }}
+    >
       {/* NAVIGATION AREA */}
       <div
         className="md:flex md:basis-[10%]  sm:flex sm:basis-[10%]"
@@ -312,7 +499,8 @@ const Login = () => {
             display: "flex",
             gap: "6vw",
             paddingTop: "1vh",
-          }}>
+          }}
+        >
           {/* <h5>Home</h5>
           <h5>Join</h5> */}
         </div>
@@ -341,7 +529,8 @@ const Login = () => {
                   style={{ color: "#5585FE", cursor: "pointer" }}
                   onClick={() => {
                     Navigate("/create-account/freetrial");
-                  }}>
+                  }}
+                >
                   Choose a plan
                 </span>{" "}
               </h5>
@@ -379,7 +568,8 @@ const Login = () => {
                   sx={{ marginBottom: "3vh" }}
                   variant="outlined"
                   focused
-                  color="info">
+                  color="info"
+                >
                   <InputLabel htmlFor="outlined-adornment-password">
                     Password
                   </InputLabel>
@@ -394,7 +584,8 @@ const Login = () => {
                           aria-label="toggle password visibility"
                           onClick={handleClickShowPassword}
                           onMouseDown={handleMouseDownPassword}
-                          edge="end">
+                          edge="end"
+                        >
                           {showPassword ? (
                             <VisibilityOff style={iconColor} />
                           ) : (
@@ -427,7 +618,8 @@ const Login = () => {
                         color: "white",
                         borderRadius: "1vw",
                         fontWeight: "bold",
-                      }}>
+                      }}
+                    >
                       Login
                     </Button>
                   )}
@@ -445,7 +637,8 @@ const Login = () => {
               // display: "flex",
               // flexDirection: "column-reverse",
             }
-          }>
+          }
+        >
           {/* //ICON AREA */}
           <div style={{ flex: ".2" }}>
             {" "}

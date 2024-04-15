@@ -48,10 +48,7 @@ import {
 } from "../statemanager/slices/OtherComponentStatesSlice";
 import { setThemeProviderToLightMode } from "../statemanager/slices/ThemeProviderSlice";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import {
-  setCredentials,
-  setLoginStatus,
-} from "../statemanager/slices/LoginUserDataSlice";
+import { setLoginStatus } from "../statemanager/slices/LoginUserDataSlice";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 
 const ConfirmDetails = () => {
@@ -119,7 +116,7 @@ const ConfirmDetails = () => {
       .then(async (userCredential) => {
         const user = userCredential.user;
         // save credentials
-        dispatch(setCredentials(user.uid));
+        // dispatch(setCredentials(user.uid));
 
         // set login status to true
         dispatch(setLoginStatus(true));
@@ -339,7 +336,7 @@ const ConfirmDetails = () => {
                 .then(async (userCredential) => {
                   const user = userCredential.user;
                   // save credentials
-                  dispatch(setCredentials(user.uid));
+                  // dispatch(setCredentials(user.uid));
                   // set login status to true
                   dispatch(setLoginStatus(true));
                   let url = "";
@@ -367,6 +364,7 @@ const ConfirmDetails = () => {
                   await setDoc(doc(db, `players_database`, user.uid), {
                     id: user.uid,
                     Account_creator_id: user.uid,
+                    Current_Account_Owner: user.uid,
                     player_profile_image: "",
                     firstName: userData?.firstName,
                     surName: userData?.surname,
@@ -773,7 +771,7 @@ const ConfirmDetails = () => {
               .then(async (userCredential) => {
                 const user = userCredential.user;
                 // save credentials
-                dispatch(setCredentials(user.uid));
+                // dispatch(setCredentials(user.uid));
                 // alert(user.uid);
                 // set login status to true
                 dispatch(setLoginStatus(true));

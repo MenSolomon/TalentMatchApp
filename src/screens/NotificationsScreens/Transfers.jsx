@@ -233,6 +233,7 @@ const MenuItemRow = ({
         clubName: userLoginDetailsObject?.club,
         jerseyNumber: "",
         TransferStatus: "",
+        Current_Account_Owner: userLoginDetailsObject?.accountId,
       });
 
       const playerMatchObject = allPlayersDatabase.find((obj) => {
