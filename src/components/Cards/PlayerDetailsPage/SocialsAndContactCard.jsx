@@ -16,6 +16,7 @@ const SocialAndContactAreaCard = ({
   facebookImg,
   playerName,
   PlayerId,
+  currentAccountOwner,
 }) => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
   const { primaryTextColor } = themeProviderObject;
@@ -160,7 +161,11 @@ const SocialAndContactAreaCard = ({
         }}
         innerText={"Show interest"}
       /> */}
-      <CreateShowInterestModal playerId={PlayerId} playerName={playerName} />
+      <CreateShowInterestModal
+        playerId={PlayerId}
+        playerName={playerName}
+        currentAccountOwner={currentAccountOwner}
+      />
     </div>
   );
 };

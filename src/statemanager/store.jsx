@@ -18,24 +18,30 @@ import InternetActivitieReducer from "./slices/InternetActivitiesSlice";
 import NofiticationsReducer from "./slices/NofiticationsSlice";
 import MessagesReducer from "./slices/MessagesSlice";
 import VideosReducer from "./slices/VideosSlice";
+import InterestedPlayersReducer from "./slices/InterestedPlayersSlice";
+import InterestedConnectionReducer from "./slices/InterestedConnectionSlice";
 
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
   blacklist: [
-    // selectedPlayerToCompareArray make selected player in the playersInAgenySlice not persisted
-    // "PlayersInAgencySlice",
+    "CollapsePlayerCards",
+    "ThemeProviderSlice",
+    "PlayersInAgencySlice",
     "FormStepper",
-    "UserData",
-    // "UserLoginData",
-    // "SavedProfiles",
-    "OtherComponentStates",
-    "Videos",
-    // "Database",
-    // "ThemeProviderSlice",
     "TempDatabase",
+    // "UserLoginData",
+    "SavedProfiles",
+    "OtherComponentStates",
+    "Database",
     "clubsInTalentMeetDatabase",
+    "InternetActivities",
+    "Notifications",
+    "Messages",
+    "Videos",
+    "InterestedPlayers",
+    "InterestedConnections",
   ],
   // whitelist:
 };
@@ -101,6 +107,8 @@ const reducer = combineReducers({
   Notifications: NofiticationsReducer,
   Messages: MessagesReducer,
   Videos: VideosReducer,
+  InterestedPlayers: InterestedPlayersReducer,
+  InterestedConnections: InterestedConnectionReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

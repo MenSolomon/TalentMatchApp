@@ -16,6 +16,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { v4 } from "uuid";
 import { db } from "../../Firebase/Firebase";
 import moment from "moment";
+import { selectInterestedPlayers } from "../../statemanager/slices/InterestedPlayersSlice";
 
 const style = {
   position: "absolute",
@@ -41,6 +42,7 @@ export default function CreateShowInterestModal({
   const handleClose = () => setOpen(false);
 
   const [Message, setMessage] = React.useState("");
+  const [DisableButton, setDisableButton] = React.useState(false);
 
   const dispatch = useDispatch();
 
@@ -51,10 +53,16 @@ export default function CreateShowInterestModal({
 
   const userLoginAccount = useSelector(selectUserDetailsObject);
 
+  const interestedPlayersArray = useSelector(selectInterestedPlayers);
+  const [isPlayerInterestPending, setIsplayerInterestPending] = React.useState(
+    []
+  );
   // const establishedConnections =userLoginAccount?.Connections
 
   const submitInterest = async () => {
     const uuid = v4();
+
+    const interestsUuid = v4();
 
     // FOR PLAYER ACC HOLDER
     const userNotificationRef = doc(
@@ -94,6 +102,23 @@ export default function CreateShowInterestModal({
       readStatus: false,
     });
 
+    // UPDATE THE USER DOC TO PREVENT USER FROM SENDING MESSAGE AGAIN
+
+    const userPlayerInterestRef = doc(
+      db,
+      `users_db/${userLoginAccount.accountId}/PlayerInterests`,
+      uuid
+    );
+
+    //Notification sent
+
+    await setDoc(userPlayerInterestRef, {
+      interestedPlayerId: playerId,
+      Current_Account_Owner: currentAccountOwner,
+      dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+      interestStatus: "Pending",
+    });
+
     dispatch(
       setSnackbarMessage(
         `You have succesfully established a connection with ${playerName}`
@@ -102,24 +127,45 @@ export default function CreateShowInterestModal({
     dispatch(setSnackbarTriggerCounter());
   };
 
+  React.useEffect(() => {
+    const filteredPlayer =
+      interestedPlayersArray &&
+      interestedPlayersArray?.filter(
+        (data) =>
+          (data?.interestStatus === "Pending" &&
+            data?.interestedPlayerId === playerId) ||
+          (data?.interestStatus === "Accepted" &&
+            data?.interestedPlayerId === playerId)
+      );
+
+    setIsplayerInterestPending(filteredPlayer);
+  }, [interestedPlayersArray]);
+
   return (
     <div>
       {/* <Button onClick={handleOpen}>Open modal</Button> */}
       {/* ========================= */}
-      <Button
-        sx={{
-          textTransform: "none",
 
-          fontWeight: "900",
-          marginRight: "1vw",
-          color: "white",
-          background: "#5585FE",
-        }}
-        onClick={handleOpen}
-      >
-        {" "}
-        Show Interest{" "}
-      </Button>
+      {isPlayerInterestPending?.length > 0 ||
+      playerId === userLoginAccount?.accountId ? (
+        ""
+      ) : (
+        <Button
+          sx={{
+            textTransform: "none",
+
+            fontWeight: "900",
+            marginRight: "1vw",
+            color: "white",
+            background: "#5585FE",
+          }}
+          onClick={handleOpen}
+        >
+          {" "}
+          Show Interest{" "}
+        </Button>
+      )}
+
       {/* ========================= */}
       <Modal
         open={open}
@@ -153,7 +199,11 @@ export default function CreateShowInterestModal({
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 4 }}>
             <Button
-              onClick={submitInterest}
+              onClick={() => {
+                setDisableButton(true);
+                submitInterest();
+              }}
+              disabled={DisableButton}
               sx={{
                 textTransform: "none",
 

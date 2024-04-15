@@ -91,7 +91,7 @@ const CoachAgentScoutVersionConnetions = () => {
 
     await setDoc(userNotificationRef, {
       NotificationId: uuid,
-      requestAccepted: false,
+      requestAccepted: "Pending",
       dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
       senderAddress: userLoginDetailsObject.email,
       senderId: userLoginDetailsObject.accountId,
@@ -103,7 +103,7 @@ const CoachAgentScoutVersionConnetions = () => {
 
     await setDoc(scoutNotificationRef, {
       NotificationId: uuid,
-      requestAccepted: false,
+      requestAccepted: "Pending",
       dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
       senderAddress: userLoginDetailsObject.email,
       senderId: userLoginDetailsObject.accountId,
@@ -111,6 +111,20 @@ const CoachAgentScoutVersionConnetions = () => {
       message: `${userLoginDetailsObject.firstName} has shown interest in your profile. Accept to view message sent`,
       readStatus: false,
       targetAccountRole: targetedAccountRole,
+    });
+
+    const connectionInterestRef = doc(
+      db,
+      `users_db/${userLoginDetailsObject?.accountId}/NonPlayerConnectionInterests`,
+      uuid
+    );
+
+    //Notification sent
+
+    await setDoc(connectionInterestRef, {
+      interestedConnectionAccountId: targetedAccountID,
+      dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+      interestStatus: "Pending",
     });
 
     dispatch(
@@ -381,6 +395,7 @@ const CoachAgentScoutVersionConnetions = () => {
                       <ScoutsDisplayCard
                         // style={{ width: "25vw", height: "15vh" }}
                         AgencyName={person.organization}
+                        AccountId={person?.accountId}
                         UserName={`${person.firstName} ${person.surname}`}
                         playerImageUrl={person.profileImage}
                         handleConnect={() => {

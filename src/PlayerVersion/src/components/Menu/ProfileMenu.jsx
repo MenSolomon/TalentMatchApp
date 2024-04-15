@@ -37,7 +37,8 @@ export default function ProfileMenu({ style, name }) {
         aria-expanded={open ? "true" : undefined}
         endIcon={<KeyboardArrowDown />}
         sx={{ color: "black", width: "15vw", fontWeight: "800" }}
-        onClick={handleClick}>
+        onClick={handleClick}
+      >
         {name && name.substring(0, 16)}
       </Button>
       <Menu
@@ -48,7 +49,8 @@ export default function ProfileMenu({ style, name }) {
         onClose={handleClose}
         MenuListProps={{
           "aria-labelledby": "basic-button",
-        }}>
+        }}
+      >
         <MenuItem sx={{ color: "black" }} onClick={handleClose}>
           Profile
         </MenuItem>
@@ -65,11 +67,13 @@ export default function ProfileMenu({ style, name }) {
                 // Sign-out successful.
 
                 Navigate("/login");
+                localStorage.setItem("LoggedAccountId", "");
               })
               .catch((error) => {
                 console.log("error:", error);
               });
-          }}>
+          }}
+        >
           Logout
         </MenuItem>
       </Menu>

@@ -50,6 +50,7 @@ import {
   setIsSubscriptionActive,
   setNextBillingDate,
   setSubscriptionFeatures,
+  setUserDetailsObject,
 } from "./statemanager/slices/LoginUserDataSlice";
 import { useEffect, useState } from "react";
 import {
@@ -80,12 +81,15 @@ import { setPriceID } from "./statemanager/slices/SignupStepperSlice";
 import CoachAgentScoutVersionConnetions from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionConnections";
 import PlayerVersionConnections from "./PlayerVersion/src/screens/PlayerVersionConnections";
 import RequestExistingPlayerProfile from "./screens/RequestExistingPlayerProfile";
+import { setUserNotifications } from "./statemanager/slices/NofiticationsSlice";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
   const usersDatabase = useSelector(selectUsersDatabase);
 
   const { primaryTextColor } = themeProviderObject;
+
+  const userLoginDetailsObject = useSelector(selectUserDetailsObject);
 
   const theme = createTheme({
     palette: {
@@ -488,6 +492,25 @@ const App = () => {
   //     });
   //   };
   // }, [currentVideoId]);
+
+  // useEffect(() => {
+  //   if (loginUserObject?.accountId !== undefined) {
+  //     const unsub = onSnapshot(
+  //       doc(db, "users_db", loginUserObject?.accountId),
+  //       // { includeMetadataChanges: true },
+  //       (doc) => {
+  //         // console.log(doc.data());
+
+  //         if (doc.data() !== undefined) {
+  //           dispatch(setUserDetailsObject(doc.data()));
+  //         }
+  //       }
+  //     );
+  //     return () => {
+  //       unsub();
+  //     };
+  //   }
+  // }, []);
 
   return (
     <ThemeProvider theme={theme}>

@@ -232,6 +232,7 @@ const PlayerDetails = () => {
         >
           {" "}
           <SocialAndContactAreaCard
+            currentAccountOwner={selectedPlayerArray[0]?.Current_Account_Owner}
             facebookImg={facebook}
             instaImg={instagram}
             instagram={selectedPlayerArray[0]?.Social_media[0]?.Instagram}
