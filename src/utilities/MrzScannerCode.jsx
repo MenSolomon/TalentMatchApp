@@ -19,6 +19,9 @@ export default function InitWorker() {
       if (data.result.parsed?.valid) {
         let parsed = data.result.parsed.fields;
 
+        alert(
+          "Image scan successful, click on done and fill other credentials to continue"
+        );
         // dispatch(setMrzScanner(parsed));
         let html = ``;
         await Object.keys(parsed).map((field) => {
@@ -74,6 +77,7 @@ export default function InitWorker() {
       sessionStorage.setItem("lastName", "");
       sessionStorage.setItem("nationality", "");
       sessionStorage.setItem("birthDate", "");
+      alert("Scan error please try again in a few minutes");
 
       // Error: no roi found
       // TypeError: Cannot read properties of undefined (reading 'length')

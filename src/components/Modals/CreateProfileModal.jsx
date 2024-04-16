@@ -422,7 +422,6 @@ export default function CreateProfileModal({ ProfileType }) {
     ) {
       if (userSavedProfiles.length < 1) {
         alert("can add");
-        // Creating a profile for the first time, the name is set to Default
         // This is the rest of users in the database devoid of the current user logged in
 
         // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
@@ -486,7 +485,6 @@ export default function CreateProfileModal({ ProfileType }) {
         );
       } else {
         alert("can add 2");
-        // Creating a profile subsequent times, allow the user to choose a name
 
         const savedProfileSubCollectionRef = doc(
           db,
