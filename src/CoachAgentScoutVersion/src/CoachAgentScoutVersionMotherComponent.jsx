@@ -1,7 +1,7 @@
 import { NotificationAdd } from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
+import { Alert, IconButton, Tooltip, Button } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import avatarImage from "./assets/images/avatar.jpg";
 import logoImage from "./assets/images/AppLogoBlue.png";
@@ -11,6 +11,7 @@ import NavBarButton from "./components/NavBarButtons/NavBarButton";
 import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 import {
+  selectIsSubscriptionActive,
   selectSubscriptionFeatures,
   selectUserDetailsObject,
   setIsSubscriptionActive,
@@ -30,6 +31,8 @@ const CoachAgentScoutVersionMotherComponent = () => {
   const dispatch = useDispatch();
   const LoginUserDetails = useSelector(selectUserDetailsObject);
   const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
+  const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
+  const navigate = useNavigate();
   // state to hold maximum number of profiles
   const { maxPlayersInAgency } = subscriptionFeaturesObject;
   const [menuButtonsArray, setMenuButtonsArray] = useState([]);
@@ -282,6 +285,24 @@ const CoachAgentScoutVersionMotherComponent = () => {
         color: primaryTextColor,
         // zIndex: "-3",
       }}>
+      {/* NO SUBSCRIPTION ALERT */}
+      {isSubscriptionActive ? null : (
+        <Alert
+          severity="error"
+          variant="filled"
+          action={
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              onClick={() => navigate("/changeSubscription")}>
+              Get One
+            </Button>
+          }>
+          No or Inactive Subscrtiption
+        </Alert>
+      )}
+      {/*  NO SUBSCRIPTION ALERT END */}
       {/* //=====  NAVBAR ======= \\ */}
       <div
         className="md:flex md:basis-[11%]  sm:flex sm:basis-[8%]"

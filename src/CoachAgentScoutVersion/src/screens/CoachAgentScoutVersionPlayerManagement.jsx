@@ -472,7 +472,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
 
               {/* // Edit Profile button */}
               {subscriptionStatus == true && <EditPlayerProfileModal />}
-
+              {/* BOOST BUTTON */}
               {isBoosting ? (
                 <CircularProgress />
               ) : (

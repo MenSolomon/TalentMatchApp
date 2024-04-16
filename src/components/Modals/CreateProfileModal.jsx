@@ -407,36 +407,22 @@ export default function CreateProfileModal({ ProfileType }) {
       : "";
   }, [PlayerPositionAutoCompleteValue, currentProfileClicked]);
 
-  // FUNCTION TO TRIGGER STRIPE CHECKOUT
-
-  // useEffect(() => {
-  //   console.log(currentUser.uid);
-  // }, []);
-
   // FUNCTION FOR CREATING PROFILE
 
   // const { productID } = selectProductID;
   const handleCreateProfile = async () => {
-    // alert("handleCreateProfile");
-    // set isLoading to true
-
     const { accountId } = loginUserDetails;
 
-    const profileMax =
-      subscriptionFeaturesObject?.maxProfiles === undefined
-        ? 0
-        : subscriptionFeaturesObject?.maxProfiles;
-
-    alert(profileMax + " = " + userSavedProfiles.length);
     const uuid = uuidv4();
 
     // first check if the user has exceeded the max allowed profiles
     if (
       userSavedProfiles.length === 0 ||
-      userSavedProfiles.length < profileMax
+      userSavedProfiles.length < maxProfiles
     ) {
       if (userSavedProfiles.length < 1) {
         alert("can add");
+        // Creating a profile for the first time, the name is set to Default
         // This is the rest of users in the database devoid of the current user logged in
 
         // doing this because its not an online database and not a snapshot or realtime update so i have to update the logged in user object and also same user object in the database
@@ -500,6 +486,7 @@ export default function CreateProfileModal({ ProfileType }) {
         );
       } else {
         alert("can add 2");
+        // Creating a profile subsequent times, allow the user to choose a name
 
         const savedProfileSubCollectionRef = doc(
           db,
@@ -583,9 +570,7 @@ export default function CreateProfileModal({ ProfileType }) {
           );
         }
       }
-    } else if (
-      userSavedProfiles.length == subscriptionFeaturesObject?.maxProfiles
-    ) {
+    } else if (userSavedProfiles.length == maxProfiles) {
       triggerWarningAlertModal(
         "You have reached the maximum profiles allowed! Upgrade to add more"
       );
@@ -989,16 +974,20 @@ export default function CreateProfileModal({ ProfileType }) {
       ) : (
         <Card
           onClick={() => {
-            if (maxPlayersInAgency == 0) {
-              triggerWarningAlertModal(
-                "Please Upgrade Your Subscription To Add More Profiles"
-              );
-            } else if (maxPlayersInAgency > 0) {
-              handleOpen();
-              dispatch(setFilterModalType("Create"));
-              // reset the cureent profile to an empty string
-              dispatch(setCurrentProfile(""));
-            }
+            handleOpen();
+            dispatch(setFilterModalType("Create"));
+            // reset the cureent profile to an empty string
+            dispatch(setCurrentProfile(""));
+            // if (maxPlayersInAgency == 0) {
+            //   triggerWarningAlertModal(
+            //     "Please Upgrade Your Subscription To Add More Profiles"
+            //   );
+            // } else if (maxPlayersInAgency > 0) {
+            //   handleOpen();
+            //   dispatch(setFilterModalType("Create"));
+            //   // reset the cureent profile to an empty string
+            //   dispatch(setCurrentProfile(""));
+            // }
           }}
           sx={{
             width: 145,

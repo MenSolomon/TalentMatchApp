@@ -1,7 +1,7 @@
 import { NotificationAdd } from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
+import { Alert, IconButton, Tooltip, Button } from "@mui/material";
 import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import logoImage from "./assets/images/AppLogoBlue.png";
 import avatarImage from "./assets/images/avatar.jpg";
@@ -11,6 +11,7 @@ import NavBarButton from "./components/NavBarButtons/NavBarButton";
 import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 import {
+  selectIsSubscriptionActive,
   setLoginStatus,
   setUserDetailsObject,
 } from "../../statemanager/slices/LoginUserDataSlice";
@@ -24,7 +25,8 @@ import ProfileMenu from "../../components/Menu/ProfileMenu";
 
 const PlayerVersionMotherComponent = () => {
   const dispatch = useDispatch();
-
+  const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
+  const navigate = useNavigate();
   const menuButtonsArray = [
     { name: "Home", icon: "home", path: "/" },
     { name: "Dashboard", icon: "dashboard", path: "/studio/dashboard" },
@@ -230,8 +232,25 @@ const PlayerVersionMotherComponent = () => {
         // background: background,
         color: primaryTextColor,
         // zIndex: "-3",
-      }}
-    >
+      }}>
+      {/* NO SUBSCRIPTION ALERT */}
+      {isSubscriptionActive ? null : (
+        <Alert
+          severity="error"
+          variant="filled"
+          action={
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              onClick={() => navigate("/changeSubscription")}>
+              Get One
+            </Button>
+          }>
+          No or Inactive Subscrtiption
+        </Alert>
+      )}
+      {/*  NO SUBSCRIPTION ALERT END */}
       {/* //=====  NAVBAR ======= \\ */}
       <div className="md:flex md:basis-[11%]  sm:flex sm:basis-[8%]">
         {/* // Logo Area */}
@@ -242,8 +261,7 @@ const PlayerVersionMotherComponent = () => {
             paddingTop: "1%",
             display: "grid",
             placeContent: "center",
-          }}
-        >
+          }}>
           <div className="sm:block md:hidden">
             <SmallScreenPlayerMenuDrawer />{" "}
           </div>
@@ -261,8 +279,7 @@ const PlayerVersionMotherComponent = () => {
 
             position: "relative",
             // background: "red",
-          }}
-        >
+          }}>
           <Marquee
             speed={35}
             pauseOnClick={true}
@@ -272,8 +289,7 @@ const PlayerVersionMotherComponent = () => {
               width: "100%",
               position: "absolute",
               display: screenWidth < 1024 ? "none" : "flex",
-            }}
-          >
+            }}>
             {/* I can be a React component, multiple React components, or just some
             text. */}
             {clubsInDatabase.map((data, index) => {
@@ -300,8 +316,7 @@ const PlayerVersionMotherComponent = () => {
             display: "flex",
             // background: "red",
             // paddingLeft: "5vw",
-          }}
-        >
+          }}>
           <LightAndDarkModeSwitch />
 
           <div
@@ -309,8 +324,7 @@ const PlayerVersionMotherComponent = () => {
               marginTop: "1.5vh",
               marginLeft: "-1vw",
               marginRight: "1vw",
-            }}
-          >
+            }}>
             <NotificationsMenu />
           </div>
           <ProfileMenu
@@ -362,8 +376,7 @@ const PlayerVersionMotherComponent = () => {
                           dispatch(setLoginStatus(false));
                           dispatch(setUserDetailsObject({}));
                           dispatch(setUserSavedProfiles([]));
-                        }}
-                      >
+                        }}>
                         <NavBarButton
                           ButtonName={name}
                           ButtonImage={icon}
@@ -396,8 +409,7 @@ const PlayerVersionMotherComponent = () => {
           style={{
             // flex: ".82",
             padding: "2vh 1.5vw",
-          }}
-        >
+          }}>
           <Outlet />
         </div>
       </div>

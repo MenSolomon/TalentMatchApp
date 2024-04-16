@@ -33,6 +33,7 @@ import { formatDistanceToNow } from "date-fns";
 
 const PlayerVersionDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { primaryTextColor } = ThemeProvider;
 
@@ -307,7 +308,7 @@ const PlayerVersionDashboard = () => {
                 Want to see metrics on your recent video? Upload and publish a
                 video to get started.{" "}
               </span>
-              <UploadVideoModal />
+              {subscriptionStatus && <UploadVideoModal />}
             </div>
           </div>
         </div>

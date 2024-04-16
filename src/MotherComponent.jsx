@@ -1,5 +1,5 @@
 import { Check, NotificationAdd, Notifications } from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
+import { Alert, Button, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
@@ -17,6 +17,7 @@ import CreateProfileModal from "./components/Modals/CreateProfileModal";
 import UploadPlayer from "./components/Tooltips/UploadPlayer";
 import WelcomeMessageModal from "./components/Modals/WelcomeMessageModal";
 import {
+  selectIsSubscriptionActive,
   selectUserDetailsObject,
   setIsSubscriptionActive,
   setLoginStatus,
@@ -56,6 +57,7 @@ import AlertSnackBar from "./components/Snackbars/AlertSnackBar";
 const MotherComponent = () => {
   const userLoginObject = useSelector(selectUserDetailsObject);
   const usersSavedProfile = useSelector(selectUserSavedProfiles);
+  const navigate = useNavigate();
   const Navigate = useNavigate();
   // const { savedProfile } = LoginUserDetails;
 
@@ -85,6 +87,8 @@ const MotherComponent = () => {
   const screenSize = useSelector(selectCurrentScreenSize);
 
   let screenWidth = parseInt(screenSize?.width, 10);
+
+  const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
 
   // const [themePallette, setThemePallette] = useState({us});
 
@@ -613,6 +617,24 @@ const MotherComponent = () => {
         color: primaryTextColor,
         // zIndex: "-3",
       }}>
+      {/* NO SUBSCRIPTION ALERT */}
+      {isSubscriptionActive ? null : (
+        <Alert
+          severity="error"
+          variant="filled"
+          action={
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              onClick={() => navigate("/changeSubscription")}>
+              Get One
+            </Button>
+          }>
+          No or Inactive Subscrtiption
+        </Alert>
+      )}
+      {/*  NO SUBSCRIPTION ALERT END */}
       {/* //=====  NAVBAR ======= \\ */}
       <div
         className="md:flex md:basis-[11%]  sm:flex sm:basis-[8%]"
