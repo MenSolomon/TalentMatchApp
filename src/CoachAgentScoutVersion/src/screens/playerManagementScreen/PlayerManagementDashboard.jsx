@@ -8,6 +8,10 @@ import { selectPlayerSelectedByClubOrScoutInPlayerManagement } from "../../../..
 
 const PlayerManagementDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
+  const currentPlayerInfoObject = useSelector(
+    selectPlayerSelectedByClubOrScoutInPlayerManagement
+  );
+  const { videos } = currentPlayerInfoObject;
 
   const { primaryTextColor } = ThemeProvider;
 
@@ -51,15 +55,13 @@ const PlayerManagementDashboard = () => {
         // height: "100%",
         // width: "100%",
         fontSize: ".8em",
-      }}
-    >
+      }}>
       {/* // Heading Area */}
 
       {/* // Cards  (upload video card , analytics summary card and other information card) */}
       <div
         className="md:flex md:flex-row md:gap-[1.5vw]   sm:flex sm:flex-col sm:gap-[4.5vw]"
-        style={{ flex: ".5" }}
-      >
+        style={{ flex: ".5" }}>
         <div style={{ flex: ".33" }}>
           {/* // DRAG AND DROP VIDEO CARD*/}
           <div
@@ -71,8 +73,7 @@ const PlayerManagementDashboard = () => {
               // display: "grid",
               // placeItems: "center",
               // position: "relative",
-            }}
-          >
+            }}>
             {/* // DASHED BORDER DIV */}
             <div
               className="cardBackground md:w-[88%] md:h-[90%] md:grid md:place-items-center md:absolute       sm:w-[100%] sm:h-[40vh] sm:grid sm:place-items-center sm:relative"
@@ -85,14 +86,14 @@ const PlayerManagementDashboard = () => {
                 // display: "grid",
                 // placeItems: "center",
                 // background: "red",
-              }}
-            >
+              }}>
               <img src={VideoImage} style={{ width: "150px", color: "red" }} />
 
               <span style={{ textAlign: "center" }}>
                 Want to see metrics on your recent video? Upload and publish a
                 video to get started.{" "}
               </span>
+
               <UploadVideoModal />
             </div>
           </div>
@@ -113,15 +114,13 @@ const PlayerManagementDashboard = () => {
               // paddingTop: "3vh",
               // paddingBottom: "2vh",
               // background: "green",
-            }}
-          >
+            }}>
             {/* // PROFILE ANALYTICS TOTAL VIEWS */}
             <div
               style={{
                 flex: ".3",
                 borderBottom: `1px solid ${primaryTextColor}`,
-              }}
-            >
+              }}>
               <h5>Profile Analytics</h5>
 
               <h6>Total profile views</h6>
@@ -136,8 +135,7 @@ const PlayerManagementDashboard = () => {
                 flex: ".35",
                 paddingTop: "2vh",
                 borderBottom: `1px solid ${primaryTextColor}`,
-              }}
-            >
+              }}>
               <h6>Summary</h6>
               <h6 className="secondaryTextColor">Last 28 days</h6>
               <h6>Most viewed video</h6>
@@ -166,8 +164,7 @@ const PlayerManagementDashboard = () => {
             display: "flex",
             flexDirection: "column",
             gap: "2.4vh",
-          }}
-        >
+          }}>
           <div
             className="cardBackground"
             style={{
@@ -180,8 +177,7 @@ const PlayerManagementDashboard = () => {
               position: "relative",
               display: "flex",
               flexDirection: "column",
-            }}
-          >
+            }}>
             <div style={{ flex: ".2" }}>
               <h5>Recent messages</h5>
             </div>
@@ -192,8 +188,7 @@ const PlayerManagementDashboard = () => {
                 overflowY: "scroll",
                 flex: "1",
                 maxHeight: "30vh",
-              }}
-            >
+              }}>
               {dummyRecentMessages.map((data, index) => {
                 const { message, userAvatar, date, userName } = data;
 
@@ -232,8 +227,7 @@ const RecentMessageCard = ({ message, userAvatar, date, userName }) => {
         display: "flex",
         padding: ".3vw",
         cursor: "pointer",
-      }}
-    >
+      }}>
       <div style={{ flex: ".22" }}>
         <Avatar src={userAvatar} sx={{ width: 50, height: 50 }} />
       </div>

@@ -45,7 +45,6 @@ import ErrorPageNotFound from "./screens/ErrorPageNotFound";
 import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 import {
-  selectIsSubscriptionActive,
   selectUserDetailsObject,
   setIsSubscriptionActive,
   setNextBillingDate,
@@ -246,7 +245,6 @@ const App = () => {
 
   const { pathname, search, hash } = location;
   const userLoginObject = useSelector(selectUserDetailsObject);
-  const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
   const circularLoadBackdropMessage = useSelector(
     selectCircularLoadBackdropMessage
   );
@@ -537,24 +535,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      {isSubscriptionActive ? null : (
-        <Alert
-          severity="error"
-          variant="filled"
-          action={
-            <Button
-              variant="contained"
-              color="success"
-              size="small"
-              onClick={() => navigate("/changeSubscription")}
-            >
-              Get One
-            </Button>
-          }
-        >
-          No or Inactive Subscrtiption
-        </Alert>
-      )}
+
       <CssBaseline />
       <Routes>
         {/* PROTECTED ROUTES  */}
