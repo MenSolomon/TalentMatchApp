@@ -17,6 +17,8 @@ import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "../../Firebase/Firebase";
 import { selectPlayersDatabase } from "../../statemanager/slices/DatabaseSlice";
 import MobileVideoDisplayCarousel from "./MobileVideoDisplayCarousel";
+import BasicButton from "../Buttons/BasicButton";
+import handleVideoGloballyClick from "../../utilities/VideoPausePlayFunction";
 
 const MatchedPlayersCarousel = () => {
   const responsive = {
@@ -49,6 +51,12 @@ const MatchedPlayersCarousel = () => {
   const [randomizedVideos, setRandomizedVideos] = useState([]);
 
   const AllPlayers = useSelector(selectPlayersDatabase);
+
+  const [videoLength, setVideoLength] = useState(7);
+
+  const handleArrayAdd = () => {
+    setVideoLength(videoLength + 7);
+  };
 
   // Fisher-Yates shuffle function
   function shuffleArray(array) {
@@ -152,10 +160,24 @@ const MatchedPlayersCarousel = () => {
 
   //
 
+  const handleClick = (event) => {
+    // alert("Joey");
+    if (
+      event.target.classList.contains("react-multiple-carousel__arrow--right")
+    ) {
+      handleArrayAdd();
+    }
+  };
   // Set up a ref to the Carousel component
 
   return (
-    <>
+    <div onClick={handleClick}>
+      {/* <BasicButton
+        onClick={() => {
+          handleArrayAdd();
+        }}
+        innerText={"Click"}
+      /> */}
       {randomizedVideos.length === 0 ? (
         <div
           style={{
@@ -184,7 +206,7 @@ const MatchedPlayersCarousel = () => {
             swipeable={screenWidth >= 1024 ? true : true}
             draggable={screenWidth >= 1024 ? true : true}
           >
-            {randomizedVideos.map((data, index) => {
+            {randomizedVideos.slice(0, videoLength).map((data, index) => {
               const { url, playerProfileImage, playerId, id } = data;
 
               return (
@@ -214,7 +236,7 @@ const MatchedPlayersCarousel = () => {
           </Carousel>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
@@ -282,6 +304,7 @@ const VideoCard = ({ publisherImg, video, vidIndex, playerId }) => {
           </div>
           {/* <div onClick={() => handleVideoClick(index)}> */}
           <video
+            onClick={handleVideoGloballyClick}
             id={`carouselVideo-${vidIndex}`}
             width="160vw"
             style={{ height: "33vh" }}

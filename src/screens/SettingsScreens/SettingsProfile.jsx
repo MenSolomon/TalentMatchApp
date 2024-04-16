@@ -190,7 +190,8 @@ function SettingsProfile() {
           // flexDirection: "column",
           // overflowY: "scroll",
         }
-      }>
+      }
+    >
       {/* Header Column */}
       <div style={{ flex: "0.01" }}>
         <h5>My Profile Settings</h5>
@@ -204,10 +205,12 @@ function SettingsProfile() {
       {/* Sub Header Column */}
       <div
         className="md:flex md:flex-row  sm:flex sm:flex-col"
-        style={{ flex: "0.89", overflowY: "scroll" }}>
+        style={{ flex: "0.89", overflowY: "scroll" }}
+      >
         <div
           className="md:flex md:flex-col  sm:flex sm:flex-col"
-          style={{ flex: "0.44" }}>
+          style={{ flex: "0.44" }}
+        >
           <div
             className="md:flex md:flex-col  sm:flex sm:flex-col"
             style={{
@@ -215,7 +218,8 @@ function SettingsProfile() {
               // display: "flex",
               // flexDirection: "column",
               gap: "1em",
-            }}>
+            }}
+          >
             <div
               className="md:flex md:justify-center md:items-center md:P-[0px 20px]  sm:P-[0px 10px] sm:flex sm:justify-start sm:items-center"
               style={{
@@ -226,7 +230,8 @@ function SettingsProfile() {
                 flex: "0.6",
                 // justifyContent: "center",
                 // background: "Peru",
-              }}>
+              }}
+            >
               <Avatar
                 src={imageUrl}
                 style={{
@@ -241,7 +246,8 @@ function SettingsProfile() {
                   {/* <b>UserName</b> <br />{" "} */}
                   <Button
                     onClick={handleClick}
-                    style={{ fontWeight: "lighter" }}>
+                    style={{ fontWeight: "lighter" }}
+                  >
                     Change profile photo
                   </Button>
                   <input
@@ -267,7 +273,8 @@ function SettingsProfile() {
                 // background: "yellow",
                 // alignItems: "center",
                 // justifyContent: "center",
-              }}>
+              }}
+            >
               <div style={{ display: "flex", flexDirection: "column-reverse" }}>
                 <TextField
                   size="small"
@@ -290,7 +297,8 @@ function SettingsProfile() {
                 // background: "yellow",
                 // alignItems: "center",
                 // justifyContent: "center",
-              }}>
+              }}
+            >
               <div style={{ display: "flex", flexDirection: "column-reverse" }}>
                 <TextField
                   size="small"
@@ -312,7 +320,8 @@ function SettingsProfile() {
         {/* divider */}
         <div
           className="md:flex md:flex-col   sm:flex sm:flex-col"
-          style={{ flex: "0.05" }}>
+          style={{ flex: "0.05" }}
+        >
           <Divider
             className="sm:hidden md:block"
             sx={{
@@ -326,7 +335,8 @@ function SettingsProfile() {
         {/* End of divider */}
         <div
           className="md:flex md:flex-col   sm:flex sm:flex-col"
-          style={{ flex: "0.3" }}>
+          style={{ flex: "0.3" }}
+        >
           {/* select saved profile with filter */}
           <div style={{ flex: "0.6" }}>
             <small> change home carousel filter here* (optional)</small>
@@ -348,7 +358,8 @@ function SettingsProfile() {
               <Button
                 size="small"
                 className="md:w-[20vw] sm:w-[70%]"
-                style={{ float: "left" }}>
+                style={{ float: "left" }}
+              >
                 Delete Account
               </Button>
             </div>

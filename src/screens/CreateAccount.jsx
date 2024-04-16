@@ -403,13 +403,17 @@ const CreateAccount = () => {
 
   return (
     <div
-      style={{
-        width: "100%",
-        height: "100%",
-        // background: "red",
-        display: "flex",
-        flexDirection: "column",
-      }}>
+      className="md:h-[100%] md:w-[100%] md:flex md:flex-col   sm:h-[100vh] sm:w-[100%] sm:flex sm:flex-col"
+      style={
+        {
+          // width: "100%",
+          // height: "100%",
+          // background: "red",
+          // display: "flex",
+          // flexDirection: "column",
+        }
+      }
+    >
       {/* CREATE NEW ACCOUNT */}
       <div
         className="accountHeader"
@@ -418,7 +422,8 @@ const CreateAccount = () => {
           // background: "red",
           display: "flex",
           flexDirection: "column",
-        }}>
+        }}
+      >
         <div
           style={{
             flex: "0.5",
@@ -427,7 +432,8 @@ const CreateAccount = () => {
             justifyContent: "center",
             gap: "10px",
             alignItems: "center",
-          }}>
+          }}
+        >
           <img src={logoImage} style={{ width: "100px" }} />
           <h2>Create new account</h2>
         </div>
@@ -435,7 +441,18 @@ const CreateAccount = () => {
           <small style={{ fontWeight: "bold" }}>
             Please begin by providing your personal information in the User
             Credentials <br /> form below. These details should correspond to
-            the account administrator.
+            the account administrator. <br />
+            <span
+              onClick={() => {
+                navigate("/player profile verification");
+              }}
+              style={{ color: "#5585FE", cursor: "pointer" }}
+            >
+              {" "}
+              {roleSelected === "Player"
+                ? "Click here if your player profile has already been created by a club or agent"
+                : ""}{" "}
+            </span>
           </small>
         </div>
       </div>
@@ -443,7 +460,7 @@ const CreateAccount = () => {
       {/* FORM AREA */}
 
       <div
-        className="md:pt-[7vh]     sm:pt-[55vh] "
+        className="md:pt-[7vh] md:flex md:flex-row     sm:pt-[60vh] sm:flex sm:flex-col "
         style={{
           flex: "0.7",
           // display: "grid",
@@ -457,12 +474,14 @@ const CreateAccount = () => {
           paddingRight: "10%",
 
           // paddingTop: "25vh", sm
-        }}>
+        }}
+      >
         <div style={{ flex: ".7" }}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div
               className="md:flex md:flex-row      sm:flex sm:flex-col"
-              style={{ gap: "2vw", marginBottom: "1.5vh" }}>
+              style={{ gap: "2vw", marginBottom: "1.5vh" }}
+            >
               {/* setfirstName
 setSurname */}
               <div>
@@ -529,7 +548,8 @@ setSurname */}
             {/* EMAIL AND PHONE NUMBER */}
             <div
               className="md:flex md:flex-row      sm:flex sm:flex-col"
-              style={{ gap: "2vw", marginBottom: "1.5vh" }}>
+              style={{ gap: "2vw", marginBottom: "1.5vh" }}
+            >
               <div>
                 <TextField
                   className="md:w-[15vw] sm:w-[80vw]"
@@ -595,7 +615,8 @@ setSurname */}
             {/*ORGANIZATION/CLUB NAME AND PASSWORDS*/}
             <div
               className="md:flex md:flex-row      sm:flex sm:flex-col"
-              style={{ gap: "2vw", marginBottom: "1vh" }}>
+              style={{ gap: "2vw", marginBottom: "1vh" }}
+            >
               {roleSelected === "Club" ? (
                 <ClubAutoComplete
                   ListArray={clubsInDatabase}
@@ -688,7 +709,8 @@ setSurname */}
                   // alignItems: "center",
                   // justifyContent: "center",
                   paddingRight: "13%",
-                }}>
+                }}
+              >
                 <div>
                   <BasicSelect
                     inputStyle={{
@@ -749,7 +771,8 @@ setSurname */}
                 marginTop: "1vh",
 
                 // color: buttonColor,
-              }}>
+              }}
+            >
               Create Account
             </Button>
             <div className="md:hidden sm:h-[3vh] "></div>
@@ -767,14 +790,16 @@ setSurname */}
                 border: "1px dashed black",
                 borderRadius: "1vw",
                 padding: "1vw",
-              }}>
+              }}
+            >
               {/* Selected files in column*/}
               <div
                 style={{
                   // background: "peru",
                   display: "flex",
                   flexDirection: "column",
-                }}>
+                }}
+              >
                 {/* column Top style  */}
                 <div style={{ flex: "0.2" }}></div>
                 {/* End of column Top style  */}
@@ -787,7 +812,8 @@ setSurname */}
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                  }}>
+                  }}
+                >
                   <Person sx={{ fontSize: "5em" }} />
                 </div>
                 {/* End of CloudCircleOutlined  */}
@@ -802,7 +828,8 @@ setSurname */}
                       textAlign: "center",
                       // gap: "5px",
                       // background: "green",
-                    }}>
+                    }}
+                  >
                     <div>
                       <h5>Drag and drop image of your ID card</h5>
                       <small>

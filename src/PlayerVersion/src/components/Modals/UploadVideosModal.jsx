@@ -50,6 +50,7 @@ import {
   selectUserDetailsObject,
 } from "../../../../statemanager/slices/LoginUserDataSlice";
 import { selectPlayersDatabase } from "../../../../statemanager/slices/DatabaseSlice";
+import handleVideoGloballyClick from "../../../../utilities/VideoPausePlayFunction";
 // import {
 //   arrayUnion,
 //   doc,
@@ -211,12 +212,27 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
 
         const VideoUuid = uuidv4();
 
-        const playerObjectRef = doc(
+        const userNotificationRef = doc(
           db,
-          `players_database/${id}/videos`,
-          VideoUuid
+          `users_db/${userDetailsObject.accountId}/Notifications`,
+          uuid
         );
-        await setDoc(playerObjectRef, {
+        // Notification for user
+
+        await setDoc(userNotificationRef, {
+          NotificationId: uuid,
+          dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+          senderAddress: "talentmeet@gmail.com",
+          senderId: "Admin",
+          type: "Video Review",
+          message: `Your video will be reviewed to be published in a few hours for publication please community guidelines to understand our video publishing policy`,
+          readStatus: false,
+        });
+
+        // Sending Admin video request
+        const AdminRef = doc(db, `Video_Requests`, VideoUuid);
+
+        await setDoc(AdminRef, {
           id: VideoUuid,
           filename: selectedFile?.name,
           dateUploaded: moment().format("MMMM D, YYYY HH:mm:ss"),
@@ -224,17 +240,19 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
           description,
           category,
           views: 0,
+          PlayerId: id,
           // suggestion: thought of making the uploaded by an accountId for specifity instead of names
-          uploadedById: id,
+          uploadedById: userDetailsObject.accountId,
           uploadedBy:
             role === "Club"
               ? userDetailsObject.club
               : `${userDetailsObject.accountId}`,
+          requestStatus: "Pending",
         });
 
         // Creating a object in the field of an object
         // await setDoc(
-        //   playerObjectRef,
+        //   AdminRef,
         //   {
         //     videos: {
         //       [VideoUuid]: {
@@ -262,15 +280,20 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
         handleClose();
         // turnMotherModalAfterSubmitted(false);
 
-        role === "Player"
-          ? dispatch(
-              setSnackbarMessage(`"Video uploaded to your gallery successfuly"`)
-            )
-          : dispatch(
-              setSnackbarMessage(
-                `"Video uploaded to ${firstName} ${surName}'s gallery successfuly"`
-              )
-            );
+        // role === "Player"
+        //   ? dispatch(
+        //       setSnackbarMessage(`"Video uploaded to your gallery successfuly"`)
+        //     )
+        //   : dispatch(
+        //       setSnackbarMessage(
+        //         `"Video uploaded to ${firstName} ${surName}'s gallery successfuly"`
+        //       )
+        //     );
+        dispatch(
+          setSnackbarMessage(
+            `Your video will be reviewed to be published in a few hours for publication please community guidelines to understand our video publishing policy`
+          )
+        );
         dispatch(setSnackbarTriggerCounter());
       } catch (error) {
         console.error(error);
@@ -297,13 +320,15 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
           backdrop: {
             timeout: 500,
           },
-        }}>
+        }}
+      >
         <Fade in={open}>
           <div
             className="cardBackground primaryTextColor md:w-[65%] md:h-[94%] md:absolute md:top-[50%] md:left-[50%] md:flex md:flex-col 
              sm:w-[100%] sm:h-[100%] sm:absolute sm:top-[50%] sm:left-[50%] sm:flex sm:flex-col 
              "
-            style={styles}>
+            style={styles}
+          >
             <div style={{ flex: "0.1", display: "flex" }}>
               <div
                 style={{
@@ -311,7 +336,8 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                   // background: "yellow",
                   display: "flex",
                   alignItems: "center",
-                }}>
+                }}
+              >
                 <h3>Upload video </h3>
               </div>
               <div
@@ -321,7 +347,8 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                }}>
+                }}
+              >
                 {/* <div>saving..</div>
                 <Feedback /> */}
                 <Button onClick={handleClose}>back</Button>
@@ -335,7 +362,8 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                 // background: "peru",
                 display: "flex",
                 // flexDirection: "column",
-              }}>
+              }}
+            >
               {/* Details */}
               <div
                 style={{
@@ -343,14 +371,16 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                   // background: "red",
                   display: "flex",
                   flexDirection: "column",
-                }}>
+                }}
+              >
                 <div
                   style={{
                     flex: "0.2",
                     // background: "green",
                     display: "flex",
                     alignItems: "center",
-                  }}>
+                  }}
+                >
                   <h3>Details</h3>
                 </div>
                 <div
@@ -359,13 +389,15 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                     // background: "yellow",
                     display: "flex",
                     flexDirection: "column",
-                  }}>
+                  }}
+                >
                   <div
                     style={{
                       display: "flex",
                       flexDirection: "column",
                       gap: 20,
-                    }}>
+                    }}
+                  >
                     <BasicSelect
                       label={"Category"}
                       MenuItemArray={CategorySelectArray}
@@ -389,7 +421,8 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                         <span
                           style={{
                             color: description.length === 150 ? "red" : "",
-                          }}>
+                          }}
+                        >
                           Description {description.length}/150
                         </span>
                       }
@@ -413,14 +446,17 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                   display: "flex",
                   flexDirection: "column",
                   padding: "10px",
-                }}>
+                }}
+              >
                 {/* Display Video here */}
                 <div
                   style={{
                     flex: "0.5",
                     // background: "black",
-                  }}>
+                  }}
+                >
                   <video
+                    onClick={handleVideoGloballyClick}
                     className="sm:h-[23vh] md:w-[20vw] sm:w-[60vw] "
                     src={videoUrl}
                     controls
@@ -434,7 +470,8 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                     display: "flex",
                     flexDirection: "column",
                     paddingTop: "2vh",
-                  }}>
+                  }}
+                >
                   <h6 style={{ textDecoration: "underline" }}>File name </h6>{" "}
                   <h6>{selectedFile?.name}</h6>
                 </div>
@@ -450,7 +487,8 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                 // background: "green",
                 display: "flex",
                 // alignItems: "center",
-              }}>
+              }}
+            >
               <div
                 style={{
                   flex: "0.8",
@@ -458,7 +496,8 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                   alignItems: "center",
                   display: "flex",
                   // justifyContent: "center",
-                }}>
+                }}
+              >
                 {/* <h5>Checks complete. No issues found.</h5> */}
               </div>
               <div
@@ -467,11 +506,13 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                   alignItems: "center",
                   display: "flex",
                   justifyContent: "center",
-                }}>
+                }}
+              >
                 <Button
                   onClick={uploadVideoToDatabaseFunction}
                   variant="contained"
-                  style={{ marginBottom: "2vh" }}>
+                  style={{ marginBottom: "2vh" }}
+                >
                   Upload
                 </Button>
               </div>
@@ -554,7 +595,8 @@ export default function UploadVideoModal() {
           } else {
             triggerWarningAlertModal("You do not have an active subscription");
           }
-        }}>
+        }}
+      >
         Upload Videos
       </Button>
       <Modal
@@ -568,13 +610,15 @@ export default function UploadVideoModal() {
           backdrop: {
             timeout: 500,
           },
-        }}>
+        }}
+      >
         <Fade in={open}>
           <div
             className="cardBackground primaryTextColor md:w-[65%] md:h-[94%] md:absolute md:top-[50%] md:left-[50%] md:flex md:flex-col
             sm:w-[100%] sm:h-[100%] sm:absolute sm:top-[50%] sm:left-[50%] sm:flex sm:flex-col
             "
-            style={style}>
+            style={style}
+          >
             {/* Upload Videos */}
             <div style={{ flex: "0.1", display: "flex" }}>
               <div
@@ -583,7 +627,8 @@ export default function UploadVideoModal() {
                   // background: "red",
                   alignItems: "center",
                   display: "flex",
-                }}>
+                }}
+              >
                 <h2>Upload Videos</h2>
               </div>
               <div
@@ -593,7 +638,8 @@ export default function UploadVideoModal() {
                   alignItems: "center",
                   display: "flex",
                   gap: "10%",
-                }}>
+                }}
+              >
                 {/* <Feedback /> */}
                 <IconButton onClick={handleClose}>
                   <Close />{" "}
@@ -610,14 +656,16 @@ export default function UploadVideoModal() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center ",
-              }}>
+              }}
+            >
               {/* Selected files in column*/}
               <div
                 style={{
                   // background: "peru",
                   display: "flex",
                   flexDirection: "column",
-                }}>
+                }}
+              >
                 {/* column Top style  */}
                 <div style={{ flex: "0.2" }}></div>
                 {/* End of column Top style  */}
@@ -630,7 +678,8 @@ export default function UploadVideoModal() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                  }}>
+                  }}
+                >
                   <CloudCircleOutlined sx={{ fontSize: "10em" }} />
                 </div>
                 {/* End of CloudCircleOutlined  */}
@@ -644,7 +693,8 @@ export default function UploadVideoModal() {
                       alignItems: "center",
                       // gap: "5px",
                       // background: "green",
-                    }}>
+                    }}
+                  >
                     <div>
                       <h5>Drag and drop video files to Upload</h5>
                       <small>Your video should not be larger than 15mb</small>

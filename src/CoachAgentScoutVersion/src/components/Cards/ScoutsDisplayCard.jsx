@@ -1,26 +1,66 @@
 import { Avatar, Card, Chip, Stack } from "@mui/material";
+import { selectInterestedConnections } from "../../../../statemanager/slices/InterestedConnectionSlice";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
+import { selectUserNotifications } from "../../../../statemanager/slices/NofiticationsSlice";
 
 const ScoutsDisplayCard = ({
   backgroundUrl,
   playerImageUrl,
   UserName,
   AgencyName,
-  style,
+  // style,
   handleConnect,
   handleDelete,
   deleteBtnVisible,
+  AccountId,
 }) => {
+  const [DisableButton, setDisableButton] = useState(false);
+
+  const userLoginAccount = useSelector(selectUserDetailsObject);
+
+  const InterestedConnectionsArray = useSelector(selectInterestedConnections);
+  const NotificationArray = useSelector(selectUserNotifications);
+  const [isConnectionInterestPending, setisConnectionInterestPending] =
+    useState([]);
+  useEffect(() => {
+    const filteredPlayer =
+      InterestedConnectionsArray &&
+      InterestedConnectionsArray?.filter(
+        (data) =>
+          (data?.interestStatus === "Pending" &&
+            data?.interestedConnectionAccountId === AccountId) ||
+          (data?.interestStatus === "Accepted" &&
+            data?.interestedConnectionAccountId === AccountId)
+      );
+
+    const filteredNotificationToShowUserHasSentRequest =
+      NotificationArray.filter(
+        (data) =>
+          data?.senderId === AccountId &&
+          (data?.requestAccepted === "Pending" ||
+            data?.requestAccepted === "Accepted") &&
+          data?.type === "Connection request"
+      );
+
+    setisConnectionInterestPending([
+      ...filteredPlayer,
+      ...filteredNotificationToShowUserHasSentRequest,
+    ]);
+  }, [InterestedConnectionsArray, NotificationArray]);
+
   return (
     <Card
-      className="playerCard primaryTextColor md:flex md:flex-col md:w-[30vw] md:h-[23vh]  sm:flex sm:flex-col sm:w-[100%] sm:h-[23vh]"
+      className="playerCard primaryTextColor md:mb-[3vh] md:flex md:flex-col md:w-[25vw] md:h-[18vh]  sm:flex sm:flex-col sm:w-[100%] sm:h-[18vh] sm:mb-[3vh]"
       style={{
-        ...style,
+        // ...style,
         // display: "flex",
         // flexDirection: "column",
         // width: "20vw",
         // height: "23vh",
         borderRadius: "1vw",
-        marginBottom: "3vh",
+        // marginBottom: "3vh",
       }}
     >
       {/* <div
@@ -32,15 +72,14 @@ const ScoutsDisplayCard = ({
           //   paddingRight: ".5w",
         }}></div> */}
       <div
-        className="md:flex sm:flex"
+        className="md:flex md:basis-[100%] md:justify-center md:items-center md:gap-[.3vw]     sm:flex sm:basis-[100%] sm:justify-center sm:items-center sm:gap-[.3vw]"
         style={{
-          flex: "1",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          // flex: "1",
+          // justifyContent: "center",
+          // alignItems: "center",
           paddingLeft: ".5vw",
           paddingRight: ".5vw",
-          gap: ".3vw",
+          // gap: ".3vw",
         }}
       >
         {/* AVATAR */}
@@ -56,22 +95,31 @@ const ScoutsDisplayCard = ({
         </div>
         {/* SIGN UP CHIP */}
         <div style={{ flex: ".3" }}>
-          <Stack direction="row" spacing={1}>
-            <Chip
-              sx={{ cursor: "pointer" }}
-              label="Connect"
-              color="primary"
-              onClick={handleConnect}
-            />
-            {deleteBtnVisible && (
+          {isConnectionInterestPending?.length > 0 ||
+          AccountId === userLoginAccount?.accountId ? (
+            ""
+          ) : (
+            <Stack direction="row" spacing={1}>
               <Chip
                 sx={{ cursor: "pointer" }}
-                color="error"
-                label="Delete"
-                onClick={handleDelete}
+                label="Connect"
+                color="primary"
+                onClick={() => {
+                  setDisableButton(true);
+                  handleConnect();
+                }}
+                disabled={DisableButton}
               />
-            )}
-          </Stack>
+              {deleteBtnVisible && (
+                <Chip
+                  sx={{ cursor: "pointer" }}
+                  color="error"
+                  label="Delete"
+                  onClick={handleDelete}
+                />
+              )}
+            </Stack>
+          )}
         </div>
       </div>
     </Card>

@@ -17,6 +17,7 @@ import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserData
 import { collection, getDocs, query } from "firebase/firestore";
 import { useQuery } from "@tanstack/react-query";
 import { db } from "../../Firebase/Firebase";
+import handleVideoGloballyClick from "../../utilities/VideoPausePlayFunction";
 
 const NewsCarousel = ({ NewsArray }) => {
   // const MatchedPlayersArray = useSelector(selectPlayersInAgencyArray);
@@ -526,6 +527,7 @@ const NewsCarousel = ({ NewsArray }) => {
                           </div>
                         ) : (
                           <video
+                            onClick={handleVideoGloballyClick}
                             className="sm:h-[19vh] md:h-[90%]"
                             id={`video-${index}`}
                             src={videos[0].url}
@@ -679,6 +681,7 @@ const NewsCarousel = ({ NewsArray }) => {
                           </div>
                         ) : (
                           <video
+                            onClick={handleVideoGloballyClick}
                             id={`video-${index}`}
                             src={videos && videos[0]?.url}
                             width="100%"
