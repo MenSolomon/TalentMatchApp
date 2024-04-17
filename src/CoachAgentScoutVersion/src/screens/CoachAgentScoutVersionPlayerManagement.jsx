@@ -7,6 +7,7 @@ import {
   CircularProgress,
   IconButton,
   Snackbar,
+  TextField,
   Tooltip,
 } from "@mui/material";
 import PlayerManagementTabs from "../components/Tabs/PlayerManagementTabs";
@@ -57,13 +58,17 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   const navigate = useNavigate();
   const userLoginObject = useSelector(selectUserDetailsObject);
   const subscriptionStatus = useSelector(selectIsSubscriptionActive);
+  const { boostPoints: ownerBoostPoints } = userLoginObject;
 
   const browserSize = useSelector(selectCurrentBrowserSize);
   let browserWidth = parseInt(browserSize?.width, 10);
   const currentPlayerInfoObject = useSelector(
     selectPlayerSelectedByClubOrScoutInPlayerManagement
   );
+
   const [isBoosting, setIsBoosting] = useState(false);
+  const [enteredBoostPoints, setEnteredBoostPoints] = useState(0);
+
   const [filteredPlayerArray, setFilteredPlayerArray] = useState([]);
   const [openSnackBar, setOpenSnackBar] = useState(false);
   const [alertMessage, setAlertMessage] = useState();
@@ -287,6 +292,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   //     // Handle errors appropriately, e.g., notifying user or logging the error
   //   }
   // };
+  useEffect(() => {}, [enteredBoostPoints]);
+
   return (
     <div
       className="md:w-[100%] md:h-[100%] md:flex md:flex-col md:gap-[0px]   sm:gap-[50px]   sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
@@ -477,44 +484,72 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                 <CircularProgress />
               ) : (
                 subscriptionStatus == true && (
-                  <BasicButtonWithEndIcon
-                    innerText={"Boost"}
-                    endIcon={"bolt"}
-                    style={{
-                      width: browserWidth >= 1024 ? "9vw" : "40vw",
-                      height: "6vh",
-                      marginBottom: "1.5vh",
-                    }}
-                    onClick={async () => {
-                      setIsBoosting(true);
-
-                      try {
-                        const functions = getFunctions();
-                        const incrementBoostFn = httpsCallable(
-                          functions,
-                          "incrementBoost"
-                        );
-                        const result = await incrementBoostFn({
-                          id: currentPlayerInfoObject.id,
-                        });
-                        if (result) {
-                          console.log("result", result);
-                          setAlertMessage(`${result.data.message}`);
-                          setIsBoosting(false);
-                          setOpenSnackBar(true);
-                          // refetch the boostpoints
-                          refetchPlayerBoostPoints();
-                        } else if (result == undefined || result == null) {
-                          setIsBoosting(false);
-                        }
-                      } catch (error) {
-                        console.log("cloudFn Error", error);
+                  <>
+                    <TextField
+                      id="outlined-number"
+                      label="Enter Boost Points"
+                      type="number"
+                      onChange={(e) => {
+                        setEnteredBoostPoints(parseInt(e.target.value));
+                      }}
+                      sx={{
+                        width: browserWidth >= 1024 ? "9vw" : "40vw",
+                        marginY: "2vh",
+                      }}
+                    />
+                    <BasicButtonWithEndIcon
+                      disabled={
+                        enteredBoostPoints > 0
+                          ? false
+                          : enteredBoostPoints == "" || enteredBoostPoints == 0
+                          ? true
+                          : true
                       }
-                      // triggerWarningAlertModal(`${result.data.message}`)
-
-                      // console.log(result)
-                    }}
-                  />
+                      innerText={"Boost"}
+                      endIcon={"bolt"}
+                      style={{
+                        width: browserWidth >= 1024 ? "9vw" : "40vw",
+                        height: "6vh",
+                        marginBottom: "1.5vh",
+                      }}
+                      onClick={async () => {
+                        if (
+                          enteredBoostPoints > ownerBoostPoints ||
+                          enteredBoostPoints == 0 ||
+                          enteredBoostPoints == ""
+                        ) {
+                          setAlertMessage("Not enough boost points");
+                          setOpenSnackBar(true);
+                        } else {
+                          setIsBoosting(true);
+                          try {
+                            const functions = getFunctions();
+                            const incrementBoostFn = httpsCallable(
+                              functions,
+                              "incrementBoost"
+                            );
+                            const result = await incrementBoostFn({
+                              id: currentPlayerInfoObject.id,
+                              points: enteredBoostPoints,
+                            });
+                            if (result) {
+                              console.log("result", result);
+                              setAlertMessage(`${result.data.message}`);
+                              setIsBoosting(false);
+                              setOpenSnackBar(true);
+                              // refetch the boostpoints
+                              refetchPlayerBoostPoints();
+                              setEnteredBoostPoints(0);
+                            } else if (result == undefined || result == null) {
+                              setIsBoosting(false);
+                            }
+                          } catch (error) {
+                            console.log("cloudFn Error", error);
+                          }
+                        }
+                      }}
+                    />
+                  </>
                 )
               )}
               {userLoginObject?.role === "Club" ? <TransferPlayerModal /> : ""}
