@@ -9,6 +9,7 @@ import {
   Snackbar,
   TextField,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import PlayerManagementTabs from "../components/Tabs/PlayerManagementTabs";
 import { useEffect, useState } from "react";
@@ -419,9 +420,11 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             {/* Postion Area */}
             <div style={{ flex: ".08", display: "flex" }}>
               <h6 style={{ width: "100%", fontWeight: "bolder" }}>
-                Boost Points :
+                Boost Points :{" "}
                 <Chip
-                  label={playerBoostPoints}
+                  label={
+                    <Typography variant="h6">{playerBoostPoints}</Typography>
+                  }
                   sx={{ backgroundColor: "#F7B900" }}
                 />
               </h6>
@@ -578,6 +581,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         autoHideDuration={3000}
         onClose={handleCloseSnackBar}>
         <Alert
+          variant="filled"
           icon={
             alertMessage == "Boost completed" ? (
               <CheckCircleOutline fontSize="inherit" />

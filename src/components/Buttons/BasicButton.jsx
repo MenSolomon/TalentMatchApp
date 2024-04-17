@@ -6,7 +6,7 @@ const BasicButton = ({
   style,
   innerText,
   type,
-  endIcon,
+  disabled,
   onClick,
   className,
 }) => {
@@ -15,6 +15,7 @@ const BasicButton = ({
 
   return (
     <Button
+      disabled={disabled}
       className={className}
       onClick={onClick}
       type={type}
@@ -27,8 +28,7 @@ const BasicButton = ({
         fontWeight: "bold",
 
         // color: buttonColor,
-      }}
-    >
+      }}>
       {innerText}
     </Button>
   );
