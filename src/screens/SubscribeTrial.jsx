@@ -98,12 +98,12 @@ const SubscribeTrial = () => {
         const querySnapshot = await getDocs(q);
 
         // get all the products
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach(async (doc) => {
           // save them to allProducts array
           allProducts.push({ id: doc.id, data: doc.data() });
           // get and store basic
           if (doc.data().name == "Basic") {
-            basicProduct.push({ id: doc.id, data: doc.data() });
+            await basicProduct.push({ id: doc.id, data: doc.data() });
           }
         });
 
@@ -189,7 +189,7 @@ const SubscribeTrial = () => {
     // });
   }, []); // Empty dependency array to trigger only on mount
 
-  //
+  //dispatch products
   useEffect(() => {
     dispatch(setSelectedProductArray(products));
     dispatch(setSelectedBasicProductArray(basic));

@@ -1,33 +1,37 @@
-import { Button, Card, CircularProgress, Divider, Paper } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import FilteredPlayersTable from "../../components/Tables/FilterPlayersTable";
-import { auth, db, functions } from "../../Firebase/Firebase";
 import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-  getDoc,
-  doc,
-  getDocs,
-} from "firebase/firestore";
+  Button,
+  CircularProgress,
+  Divider,
+  Paper,
+  Typography,
+} from "@mui/material";
+import React, { useState } from "react";
+import { functions } from "../../Firebase/Firebase";
 import { productDetails } from "../../utils/ProductDetails";
 import { httpsCallable } from "firebase/functions";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   selectIsSubscriptionActive,
   selectNextBillingDate,
   selectUserDetailsObject,
 } from "../../statemanager/slices/LoginUserDataSlice";
 import { useQuery } from "@tanstack/react-query";
+import {
+  selectCircularLoadBackdropMessage,
+  setCircularLoadBackdropMessage,
+  setOpenCircularLoadBackdrop,
+} from "../../statemanager/slices/OtherComponentStatesSlice";
 
 function SettingsBilling() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const userDetailsObject = useSelector(selectUserDetailsObject);
   const { subscriptionPackage, accountId } = userDetailsObject;
-
+  const circularLoadBackdropMessage = useSelector(
+    selectCircularLoadBackdropMessage
+  );
   // state to display circular progress animation
   const [isLoading, setIsLoading] = useState(false);
   // state to set subscription status
@@ -39,52 +43,6 @@ function SettingsBilling() {
   // We take the names from a dublicate array in the src directory to prevent unecessary reads from firestore
   const productids = productDetails;
   const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
-
-  useEffect(() => {
-    const activeQueryFn = () => {
-      const activeProductsQuery = query(
-        collection(db, "products"),
-        where("active", "==", true)
-      );
-
-      onSnapshot(activeProductsQuery, (snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          const { doc } = change;
-          console.log(
-            `Product ${doc.id} ${
-              change.type === "added" ? "added" : "changed"
-            }:`,
-            doc.data()
-          );
-
-          // Fetch and log prices only for added or modified products
-          if (change.type === "added" || change.type === "modified") {
-            onSnapshot(doc.ref.collection("prices"), (priceSnapshot) => {
-              priceSnapshot.docChanges().forEach((priceChange) => {
-                const { doc } = priceChange;
-                console.log(
-                  `Price ${
-                    priceChange.type === "added" ? "added" : "changed"
-                  } for product ${doc.ref.parent.id}:`,
-                  doc.data()
-                );
-              });
-            });
-          }
-        });
-      });
-    };
-    // get status of subscription
-    const getSubscriptionStatus = async () => {
-      if (isSubscriptionActive === false) {
-        setSubscriptionStatus("Inactive");
-      } else if (isSubscriptionActive === true) {
-        setSubscriptionStatus("Active");
-      }
-    };
-    // activeQueryFn();
-    getSubscriptionStatus();
-  }, []);
 
   const handleCustomerPortal = async () => {
     const createPortalLink = httpsCallable(
@@ -157,7 +115,7 @@ function SettingsBilling() {
               <div style={{ flex: ".3" }}>
                 <div style={{ padding: "5px 0px" }}>
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     onClick={() => navigate("/changeSubscription")}>
                     Change Package
                   </Button>
@@ -190,20 +148,31 @@ function SettingsBilling() {
           <div style={{ flex: ".3" }}>
             <div style={{ padding: "10px 0px" }}>
               {isLoading ? (
-                <CircularProgress />
+                <>
+                  <CircularProgress />
+                  <Typography>
+                    Please wait.. Redirecting you to Stripe
+                  </Typography>
+                </>
               ) : (
                 <Button
+                  variant={"contained"}
                   onClick={() => {
                     handleCustomerPortal();
-                    setIsLoading(true);
+                    // setIsLoading(true);
+                    dispatch(setOpenCircularLoadBackdrop(true));
+                    // dispatch(
+                    //   setCircularLoadBackdropMessage(
+                    //     "Connecting To Stripe Portal"
+                    //   )
+                    // );
                   }}
                   style={{
                     display: "flex",
                     justifyContent: "start",
                     // padding: "10px",
                   }}
-                  size="small"
-                  variant="outlined">
+                  size="small">
                   Manage Subscription
                 </Button>
               )}

@@ -1,7 +1,7 @@
 import { NotificationAdd } from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
-import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Alert, IconButton, Tooltip, Button } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import avatarImage from "./assets/images/avatar.jpg";
 import logoImage from "./assets/images/AppLogoBlue.png";
@@ -11,6 +11,8 @@ import NavBarButton from "./components/NavBarButtons/NavBarButton";
 import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 import {
+  selectIsSubscriptionActive,
+  selectSubscriptionFeatures,
   selectUserDetailsObject,
   setIsSubscriptionActive,
   setLoginStatus,
@@ -28,23 +30,69 @@ import ProfileMenu from "../../components/Menu/ProfileMenu";
 const CoachAgentScoutVersionMotherComponent = () => {
   const dispatch = useDispatch();
   const LoginUserDetails = useSelector(selectUserDetailsObject);
+  const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
+  const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
+  const navigate = useNavigate();
+  // state to hold maximum number of profiles
+  const { maxPlayersInAgency } = subscriptionFeaturesObject;
+  const [menuButtonsArray, setMenuButtonsArray] = useState([]);
 
-  const menuButtonsArray = [
-    { name: "Home", icon: "home", path: "/" },
+  const memoizedMenuButtons = useMemo(() => {
+    if (maxPlayersInAgency === 0) {
+      return [
+        { name: "Home", icon: "home", path: "/" },
+        {
+          name: "Dashboard",
+          icon: "dashboard",
+          path: "/multiStudio/dashboard",
+        },
+        {
+          name: "Connections",
+          icon: "monitoring",
+          path: "/multiStudio/connections",
+        },
+        {
+          name: "Messages",
+          icon: "move_to_inbox",
+          path: "/multiStudio/messages",
+        },
+        {
+          name: "Analytics",
+          icon: "monitoring",
+          path: "/multiStudio/analytics",
+        },
+      ];
+    } else {
+      return [
+        { name: "Home", icon: "home", path: "/" },
+        {
+          name: "Dashboard",
+          icon: "dashboard",
+          path: "/multiStudio/dashboard",
+        },
+        { name: "Players", icon: "people-group", path: "/multiStudio/players" },
+        {
+          name: "Connections",
+          icon: "monitoring",
+          path: "/multiStudio/connections",
+        },
+        {
+          name: "Messages",
+          icon: "move_to_inbox",
+          path: "/multiStudio/messages",
+        },
+        {
+          name: "Analytics",
+          icon: "monitoring",
+          path: "/multiStudio/analytics",
+        },
+      ];
+    }
+  }, [maxPlayersInAgency]);
 
-    { name: "Dashboard", icon: "dashboard", path: "/multiStudio/dashboard" },
-    // The none values are for the savedFilters which is an accordion and not a button.. skipped over it in the map
-    { name: "Players", icon: "people-group", path: "/multiStudio/players" },
-    // { name: "Statistics", icon: "bar_chart_4_bars", path: "/Statistics" },
-    // { name: "Favourites", icon: "favorite", path: "/favorites" },
-    {
-      name: "Connections",
-      icon: "monitoring",
-      path: "/multiStudio/connections",
-    },
-    { name: "Messages", icon: "move_to_inbox", path: "/multiStudio/messages" },
-    { name: "Analytics", icon: "monitoring", path: "/multiStudio/analytics" },
-  ];
+  useEffect(() => {
+    setMenuButtonsArray(memoizedMenuButtons);
+  }, [memoizedMenuButtons]);
 
   const menuButtonsArrayTWO2 = [
     // { name: "Add Agency", icon: "follow_the_signs", path: "none" },
@@ -237,6 +285,24 @@ const CoachAgentScoutVersionMotherComponent = () => {
         color: primaryTextColor,
         // zIndex: "-3",
       }}>
+      {/* NO SUBSCRIPTION ALERT */}
+      {isSubscriptionActive ? null : (
+        <Alert
+          severity="error"
+          variant="filled"
+          action={
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              onClick={() => navigate("/changeSubscription")}>
+              Get One
+            </Button>
+          }>
+          No or Inactive Subscrtiption
+        </Alert>
+      )}
+      {/*  NO SUBSCRIPTION ALERT END */}
       {/* //=====  NAVBAR ======= \\ */}
       <div
         className="md:flex md:basis-[11%]  sm:flex sm:basis-[8%]"
@@ -331,7 +397,7 @@ const CoachAgentScoutVersionMotherComponent = () => {
           <div style={{ flex: ".65", overflowY: "scroll", maxHeight: "45vh" }}>
             <ul style={{ listStyleType: "none", marginLeft: "2vw" }}>
               {menuButtonsArray &&
-                menuButtonsArray.map((data, index) => {
+                menuButtonsArray?.map((data, index) => {
                   const { name, icon, path } = data;
 
                   {

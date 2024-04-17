@@ -22,6 +22,7 @@ import moment from "moment";
 
 import Modal from "@mui/material/Modal";
 import { Close } from "@mui/icons-material";
+import handleVideoGloballyClick from "../../utilities/VideoPausePlayFunction";
 
 // import welcomMessageImage from "../../assets/images/animatedFootbal.svg";
 
@@ -470,6 +471,7 @@ const VideoCard = ({
           <Close sx={{ color: "white" }} />{" "}
         </IconButton>
         <video
+          onClick={handleVideoGloballyClick}
           id={`carouselVideo-${vidIndex}`}
           width="160vw"
           style={{ width: "100vw", height: "100vh" }}

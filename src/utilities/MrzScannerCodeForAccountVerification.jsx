@@ -1,4 +1,4 @@
-export default function InitWorker() {
+export default function InitWorkerForAccountVerification() {
   var blob = new Blob(
     [window.mrz_worker.toString().replace(/^function .+\{?|\}$/g, "")],
     { type: "text/javascript" }
@@ -36,10 +36,22 @@ export default function InitWorker() {
         // localStorage.setItem("nationality", parsed.nationality);
         // localStorage.setItem("birthDate", parsed.birthDate);
 
-        sessionStorage.setItem("firstName", formatString(parsed.firstName));
-        sessionStorage.setItem("lastName", formatString(parsed.lastName));
-        sessionStorage.setItem("nationality", parsed.nationality);
-        sessionStorage.setItem("birthDate", parsed.birthDate);
+        sessionStorage.setItem(
+          "firstNameForAccountVerification",
+          formatString(parsed.firstName)
+        );
+        sessionStorage.setItem(
+          "lastNameForAccountVerification",
+          formatString(parsed.lastName)
+        );
+        sessionStorage.setItem(
+          "nationalityForAccountVerification",
+          parsed.nationality
+        );
+        sessionStorage.setItem(
+          "birthDateForAccountVerification",
+          parsed.birthDate
+        );
 
         // data = parsed;
         // await Object.keys(parsed).map((field) => {
@@ -52,10 +64,10 @@ export default function InitWorker() {
         data.result.parsed?.valid === undefined ||
         data.result.parsed?.valid === false
       ) {
-        sessionStorage.setItem("firstName", "");
-        sessionStorage.setItem("lastName", "");
-        sessionStorage.setItem("nationality", "");
-        sessionStorage.setItem("birthDate", "");
+        sessionStorage.setItem("firstNameForAccountVerification", "");
+        sessionStorage.setItem("lastNameForAccountVerification", "");
+        sessionStorage.setItem("nationalityForAccountVerification", "");
+        sessionStorage.setItem("birthDateForAccountVerification", "");
         alert("Invalid image");
       }
     } else if (data.type == "progress") {
@@ -73,10 +85,10 @@ export default function InitWorker() {
     } else if (data.type == "error") {
       console.log(data.error);
 
-      sessionStorage.setItem("firstName", "");
-      sessionStorage.setItem("lastName", "");
-      sessionStorage.setItem("nationality", "");
-      sessionStorage.setItem("birthDate", "");
+      sessionStorage.setItem("firstNameForAccountVerification", "");
+      sessionStorage.setItem("lastNameForAccountVerification", "");
+      sessionStorage.setItem("nationalityForAccountVerification", "");
+      sessionStorage.setItem("birthDateForAccountVerification", "");
       alert("Scan error please try again in a few minutes");
 
       // Error: no roi found

@@ -11,6 +11,7 @@
     "responsive-css": "tailwindcss build src/Tailwind.css -o TailwindResponsiveStyle/style.css"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.3.3",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/material-icons": "^5.0.7",
@@ -39,7 +40,7 @@
     "dayjs": "^1.11.10",
     "express": "^4.18.2",
     "firebase": "^10.5.2",
-    "firebase-functions": "^4.7.0",
+    "firebase-functions": "^4.9.0",
     "flowbite": "^1.8.1",
     "flowbite-react": "^0.6.1",
     "js-base64": "^3.7.7",
@@ -56,7 +57,7 @@
     "react-hook-form": "^7.47.0",
     "react-international-phone": "^4.0.0",
     "react-loadable": "^5.5.0",
-    "react-multi-carousel": "^2.8.4",
+    "react-multi-carousel": "^2.8.5",
     "react-persist": "^1.0.2",
     "react-player": "^2.13.0",
     "react-redux": "^8.1.1",

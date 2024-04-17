@@ -15,6 +15,7 @@ import {
 } from "../../../../statemanager/slices/OtherComponentStatesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
+import handleVideoGloballyClick from "../../../../utilities/VideoPausePlayFunction";
 
 const style = {
   position: "absolute",
@@ -159,6 +160,7 @@ export default function DeleteVideoModal({
                 {/* // video */}
                 <div style={{ flex: ".3" }}>
                   <video
+                    onClick={handleVideoGloballyClick}
                     className="sm:w-[80vw]  md:w-[30vw] "
                     style={{ height: "18vh" }}
                     src={url}

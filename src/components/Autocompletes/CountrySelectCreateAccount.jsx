@@ -336,7 +336,7 @@ export default function CountrySelectCreateAccount({
 //   { code: "ZW", label: "Zimbabwe", phone: "263" },
 // ];
 // with MRZ CODE
-const countries = [
+export const countries = [
   { code: "AF", label: "Afghanistan", phone: "93", mrzCode: "AFG" },
   { code: "AL", label: "Albania", phone: "355", mrzCode: "ALB" },
   { code: "DZ", label: "Algeria", phone: "213", mrzCode: "DZA" },

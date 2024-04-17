@@ -153,6 +153,7 @@ const PlayerVersionConnections = () => {
         const queryConnections = query(
           connectionsRef,
           where("role", "in", ["Agent", "Scout"])
+          // where("isBasic", "==", false)
         );
 
         // Get the documents from Firestore

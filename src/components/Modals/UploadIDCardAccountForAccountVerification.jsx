@@ -8,14 +8,17 @@ import {
 import { Button, Modal, Backdrop, Fade, CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import idImage from "../../assets/images/MrZImageSample.jpeg";
-import InitWorker from "../../utilities/MrzScannerCode";
 import {
   selectBlobImageWithMrz,
   selectImageWithMrzFileStore,
+  selectImageWithMrzFileStoreForAccountVerification,
   setBlobImageWithMrz,
+  setBlobImageWithMrzForAccountVerification,
   setImageWithMrzFileStore,
+  setImageWithMrzFileStoreForAccountVerification,
 } from "../../statemanager/slices/UserDataSlice";
 import { Base64 } from "js-base64";
+import InitWorkerForAccountVerification from "../../utilities/MrzScannerCodeForAccountVerification";
 
 const style = {
   position: "absolute",
@@ -34,7 +37,10 @@ const style = {
   paddingTop: "3vh",
 };
 
-export default function UploadIDCardAccount() {
+export default function UploadIDCardAccountForAccountVerification({
+  idCardImageWithMrz,
+  idCardImageWithoutMrz,
+}) {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -48,7 +54,11 @@ export default function UploadIDCardAccount() {
 
   const [fileName, setFileName] = useState([]);
   const [file, setFile] = useState([]);
+  const [fileIdMRz, setFileIdMrz] = useState([]);
+
   const fileInputRef = useRef(null);
+  const idBackfileInputRef = useRef(null);
+
   const handleClick = () => {
     fileInputRef.current.click();
   };
@@ -56,7 +66,9 @@ export default function UploadIDCardAccount() {
   const [videoObject, setVideoObject] = useState({});
   const [vidUrl, setVidUrl] = useState("");
 
-  const mrzImageBase64 = useSelector(selectImageWithMrzFileStore);
+  const mrzImageBase64 = useSelector(
+    selectImageWithMrzFileStoreForAccountVerification
+  );
 
   // Assuming you've included the js-base64 library in your project
 
@@ -67,60 +79,175 @@ export default function UploadIDCardAccount() {
 
   console.log(mrzImageBase64);
 
-  function handleBase64Data(base64Data) {
-    // Use the base64Data here (e.g., dispatch to Redux)
-    dispatch(setImageWithMrzFileStore(base64Data));
-  }
-  const handleFileSelect = (event) => {
-    const selectedFiles = event.target.files;
+  // function handleBase64Data(base64Data) {
+  //   // Use the base64Data here (e.g., dispatch to Redux)
+  //   dispatch(setImageWithMrzFileStoreForAccountVerification(base64Data));
+  // }
 
-    if (selectedFiles.length > 0) {
-      let worker = InitWorker();
+  // const handleFileSelect = (event) => {
+  //   const selectedFiles = event.target.files;
+  // {******}
+  //   if (selectedFiles.length > 0) {
+  //     let worker = InitWorkerForAccountVerification();
 
-      var reader = new FileReader();
-      reader.onload = function (event) {
-        worker.postMessage({
-          cmd: "process",
-          image: event.target.result,
+  //     var reader = new FileReader();
+  //     reader.onload = function (event) {
+  //       worker.postMessage({
+  //         cmd: "process",
+  //         image: event.target.result,
+  //       });
+
+  //       const base64Data = btoa(event.target.result);
+  //       handleBase64Data(base64Data);
+  //     };
+  //     if (event.target.files.length) {
+  //       reader.readAsDataURL(event.target.files[0]);
+  //     }
+
+  //     // Assuming you want to handle each selected file
+  //     const file = selectedFiles[0]; // Take the first file
+
+  //     const imageBlob = URL.createObjectURL(file);
+
+  //     if (file.type.startsWith("image/")) {
+  //       const maxSizeInBytes = 10 * 1024 * 1024; // 10 MB
+
+  //       if (file.size <= maxSizeInBytes) {
+  //         console.log("File accepted:", file);
+  //         setVideoObject(file); // Store the file itself
+  //         setVidUrl(imageBlob);
+
+  //         setFileIdMrz(event.target.files);
+
+  //         // ... (your other logic)
+  //         // sessionStorage.setItem("imageData", base64Data);
+
+  //         dispatch(setBlobImageWithMrzForAccountVerification(imageBlob));
+
+  //         // dispatch(setVideoBelow15mbSelected(true));
+
+  //         // Reset the value of the file input element
+  //         event.target.value = [];
+  //       } else {
+  //         triggerWarningAlertModal("File size exceeds the limit (1 MB).");
+  //       }
+  //     } else {
+  //       triggerWarningAlertModal("Please select an image file.");
+  //     }
+  //   }
+  // };
+
+  // Back of Id image Config\
+  const [fileNameIdBack, setFileNameIdBack] = useState([]);
+  const [fileIdBack, setFileIdBack] = useState([]);
+
+  const handleDragOverIdBack = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDropIdBack = (e) => {
+    e.preventDefault();
+
+    const files = e.dataTransfer.files;
+    setFileIdBack([...files], "files");
+    const fileNames = [];
+
+    if (file.length > 10) {
+      // setMaximumPicturesAlert(true);
+    } else {
+      for (let i = 0; i < files.length; i++) {
+        // Getting a new id for each file
+        // const fileId = v4();
+        fileNames.push({
+          name: files[i].name,
+          size: files[i].size,
+          // fileId: fileId,
+          lastModified: files[i].lastModified,
+          description: "",
+          url: URL.createObjectURL(files[i]),
         });
-
-        const base64Data = btoa(event.target.result);
-        handleBase64Data(base64Data);
-      };
-      if (event.target.files.length) {
-        reader.readAsDataURL(event.target.files[0]);
       }
 
-      // Assuming you want to handle each selected file
-      const file = selectedFiles[0]; // Take the first file
-
-      const imageBlob = URL.createObjectURL(file);
-
-      if (file.type.startsWith("image/")) {
-        const maxSizeInBytes = 10 * 1024 * 1024; // 15 MB
-
-        if (file.size <= maxSizeInBytes) {
-          console.log("File accepted:", file);
-          setVideoObject(file); // Store the file itself
-          setVidUrl(imageBlob);
-
-          // ... (your other logic)
-          // sessionStorage.setItem("imageData", base64Data);
-
-          dispatch(setBlobImageWithMrz(imageBlob));
-
-          // dispatch(setVideoBelow15mbSelected(true));
-
-          // Reset the value of the file input element
-          event.target.value = [];
-        } else {
-          triggerWarningAlertModal("File size exceeds the limit (1 MB).");
-        }
-      } else {
-        triggerWarningAlertModal("Please select an image file.");
-      }
+      // setFile([...file, ...files], "files");
+      setFileNameIdBack([...fileNameIdBack, ...fileNames], "names");
+      console.log(fileNameIdBack, "Names", fileIdBack);
     }
   };
+
+  const handleFileSelect = async (event) => {
+    const files = event.target.files;
+    const fileNames = [];
+    console.log(files[0].name);
+
+    let worker = InitWorkerForAccountVerification();
+    var reader = new FileReader();
+    reader.onload = function (event) {
+      worker.postMessage({
+        cmd: "process",
+        image: event.target.result,
+      });
+
+      // const base64Data = btoa(event.target.result);
+      // handleBase64Data(base64Data);
+    };
+    if (event.target.files.length) {
+      reader.readAsDataURL(event.target.files[0]);
+    }
+
+    setFileIdMrz([...files]);
+
+    console.log(files, "filesMRZ", [...files]);
+
+    for (let i = 0; i < files.length; i++) {
+      // const fileId = v4();
+      fileNames.push({
+        name: files[i].name,
+        size: files[i].size,
+        // fileId: fileId,
+        lastModified: files[i]["lastModified"],
+        description: "",
+        url: URL.createObjectURL(files[i]),
+      });
+    }
+
+    // setFile([...file, ...files], "files");
+    setFileName([...fileNames], "names");
+    console.log(fileNames, "FrontNames", fileIdBack);
+  };
+
+  const handleFileSelectIdBack = async (event) => {
+    const files = event.target.files;
+    const fileNames = [];
+    console.log(files[0].name);
+    await setFileIdBack([...files], "files");
+
+    console.log(files, "SElECTEDF", fileIdBack);
+
+    for (let i = 0; i < files.length; i++) {
+      // const fileId = v4();
+      fileNames.push({
+        name: files[i].name,
+        size: files[i].size,
+        // fileId: fileId,
+        lastModified: files[i]["lastModified"],
+        description: "",
+        url: URL.createObjectURL(files[i]),
+      });
+    }
+
+    // setFile([...file, ...files], "files");
+    setFileNameIdBack([...fileNames], "names");
+    console.log(fileNameIdBack, "Names", fileIdBack);
+  };
+
+  // Passing the image file to the mother component (RequestExistingPlayerProfile)
+  useEffect(() => {
+    idCardImageWithoutMrz(fileIdBack);
+  }, [fileIdBack]);
+  // Passing the image file with mrz to the mother component (RequestExistingPlayerProfile)
+  useEffect(() => {
+    idCardImageWithMrz(fileIdMRz);
+  }, [fileIdMRz]);
 
   //   const retrievedFirstName = sessionStorage.getItem("firstName");
   //   localStorage.setItem("lastName", parsed.lastName);
@@ -188,7 +315,7 @@ export default function UploadIDCardAccount() {
       >
         <Fade in={open}>
           <div
-            className="cardBackground primaryTextColor md:w-[65%] md:h-[94%] md:absolute md:top-[50%] md:left-[50%] md:flex md:flex-col
+            className="cardBackground primaryTextColor md:w-[75%] md:h-[94%] md:absolute md:top-[50%] md:left-[50%] md:flex md:flex-col
               sm:w-[100%] sm:h-[100%] sm:absolute sm:top-[50%] sm:left-[50%] sm:flex sm:flex-col
               "
             style={style}
@@ -204,7 +331,7 @@ export default function UploadIDCardAccount() {
             >
               <div
                 style={{
-                  flex: "1",
+                  flex: ".5",
 
                   display: "flex",
                   alignItems: "center",
@@ -219,7 +346,9 @@ export default function UploadIDCardAccount() {
                     height: "25vh",
                     border: "1px dashed black",
                     backgroundImage:
-                      vidUrl === "" ? `url(${idImage})` : `url(${vidUrl})`,
+                      fileName.length === 0
+                        ? `url(${idImage})`
+                        : `url(${fileName[0].url})`,
                     backgroundSize: "cover",
                   }}
                 ></div>
@@ -229,20 +358,6 @@ export default function UploadIDCardAccount() {
                   ref={fileInputRef}
                   style={{ display: "none" }}
                   onChange={handleFileSelect}
-                  // onChange={(e) => {
-                  //   let worker = InitWorker();
-
-                  //   var reader = new FileReader();
-                  //   reader.onload = function (e) {
-                  //     worker.postMessage({
-                  //       cmd: "process",
-                  //       image: e.target.result,
-                  //     });
-                  //   };
-                  //   if (e.target.files.length) {
-                  //     reader.readAsDataURL(e.target.files[0]);
-                  //   }
-                  // }}
                   accept="image/*" // Limit to video files
                   //   multiple
                 />
@@ -268,7 +383,7 @@ export default function UploadIDCardAccount() {
               </div>
 
               {/* // Right Image */}
-              {/* <div
+              <div
                 style={{
                   flex: ".5",
 
@@ -285,16 +400,32 @@ export default function UploadIDCardAccount() {
                     width: "22vw",
                     height: "25vh",
                     border: "1px dashed black",
+                    backgroundImage:
+                      fileNameIdBack.length === 0
+                        ? `url(${idImage})`
+                        : `url(${fileNameIdBack[0].url})`,
+                    backgroundSize: "cover",
                   }}
+                  onDragOver={handleDragOverIdBack}
+                  onDrop={handleDropIdBack}
                 ></div>
+                <input
+                  type="file"
+                  accept=".jpg, .jpeg, .png"
+                  // multiple
+                  ref={idBackfileInputRef}
+                  onChange={handleFileSelectIdBack}
+                  style={{ display: "none" }}
+                />
                 <Button
-                  onClick={handleOpen}
+                  // onClick={handleOpen}
+                  onClick={() => idBackfileInputRef.current.click()}
                   // onClick={handleClick}
                   variant="contained"
                 >
                   Upload
                 </Button>
-              </div> */}
+              </div>
             </div>
 
             <Button

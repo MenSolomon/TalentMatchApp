@@ -84,6 +84,7 @@ export default function CreateProfileModal({ ProfileType }) {
   const [open, setOpen] = useState(false);
 
   const StripeCheckout = async (priceID) => {
+    console.log(priceID);
     const currentUser = auth.currentUser;
     const usersDbRef = collection(db, "users_db");
     const currentUserDocRef = doc(usersDbRef, currentUser.uid);
@@ -117,17 +118,10 @@ export default function CreateProfileModal({ ProfileType }) {
   };
 
   const handleOpen = async () => {
-    // console.log(
-    //   "userSavedProfiles.length:",
-    //   userSavedProfiles.length,
-    //   "maxProfiles:",
-    //   subscriptionFeaturesObject?.maxProfiles
-    // );
-
     const { accountId } = loginUserDetails;
     const productIDRef = doc(db, `users_db/${accountId}`);
     const productIdSnap = await getDoc(productIDRef);
-    const priceID = await productIdSnap.data().subscriptionPrice;
+    const priceID = await productIdSnap.data()?.subscriptionPrice;
     if (isSubscriptionActive == false) {
       StripeCheckout(priceID);
     } else {
@@ -245,7 +239,7 @@ export default function CreateProfileModal({ ProfileType }) {
   const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
 
   // state to hold maximum number of profiles
-  const { maxPlayersInAgency } = subscriptionFeaturesObject;
+  const { maxPlayersInAgency, maxProfiles } = subscriptionFeaturesObject;
   const { email } = loginUserDetails;
   const allUsers = useSelector(selectTempUsersDatabase);
 
@@ -413,33 +407,18 @@ export default function CreateProfileModal({ ProfileType }) {
       : "";
   }, [PlayerPositionAutoCompleteValue, currentProfileClicked]);
 
-  // FUNCTION TO TRIGGER STRIPE CHECKOUT
-
-  // useEffect(() => {
-  //   console.log(currentUser.uid);
-  // }, []);
-
   // FUNCTION FOR CREATING PROFILE
 
   // const { productID } = selectProductID;
   const handleCreateProfile = async () => {
-    // alert("handleCreateProfile");
-    // set isLoading to true
-
     const { accountId } = loginUserDetails;
 
-    const profileMax =
-      subscriptionFeaturesObject?.maxProfiles === undefined
-        ? 0
-        : subscriptionFeaturesObject?.maxProfiles;
-
-    alert(profileMax + " = " + userSavedProfiles.length);
     const uuid = uuidv4();
 
     // first check if the user has exceeded the max allowed profiles
     if (
       userSavedProfiles.length === 0 ||
-      userSavedProfiles.length < profileMax
+      userSavedProfiles.length < maxProfiles
     ) {
       if (userSavedProfiles.length < 1) {
         alert("can add");
@@ -589,9 +568,7 @@ export default function CreateProfileModal({ ProfileType }) {
           );
         }
       }
-    } else if (
-      userSavedProfiles.length == subscriptionFeaturesObject?.maxProfiles
-    ) {
+    } else if (userSavedProfiles.length == maxProfiles) {
       triggerWarningAlertModal(
         "You have reached the maximum profiles allowed! Upgrade to add more"
       );
@@ -995,16 +972,20 @@ export default function CreateProfileModal({ ProfileType }) {
       ) : (
         <Card
           onClick={() => {
-            if (maxPlayersInAgency == 0) {
-              triggerWarningAlertModal(
-                "Please Upgrade Your Subscription To Add More Profiles"
-              );
-            } else if (maxPlayersInAgency > 0) {
-              handleOpen();
-              dispatch(setFilterModalType("Create"));
-              // reset the cureent profile to an empty string
-              dispatch(setCurrentProfile(""));
-            }
+            handleOpen();
+            dispatch(setFilterModalType("Create"));
+            // reset the cureent profile to an empty string
+            dispatch(setCurrentProfile(""));
+            // if (maxPlayersInAgency == 0) {
+            //   triggerWarningAlertModal(
+            //     "Please Upgrade Your Subscription To Add More Profiles"
+            //   );
+            // } else if (maxPlayersInAgency > 0) {
+            //   handleOpen();
+            //   dispatch(setFilterModalType("Create"));
+            //   // reset the cureent profile to an empty string
+            //   dispatch(setCurrentProfile(""));
+            // }
           }}
           sx={{
             width: 145,

@@ -35,7 +35,9 @@ import BasicMenu from "../components/Menu/BasicMenu";
 import BasicButton from "../components/Buttons/BasicButton";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  selectCircularLoadBackdropTriggerState,
   selectCurrentBrowserSize,
+  setOpenCircularLoadBackdrop,
   setWarningAlertModalCounter,
   setWarningAlertModalMessage,
 } from "../statemanager/slices/OtherComponentStatesSlice";
@@ -64,6 +66,8 @@ import { selectUserDetailsObject } from "../statemanager/slices/LoginUserDataSli
 
 const ChangeSubscriptionPackagePage = () => {
   const browserSize = useSelector(selectCurrentBrowserSize);
+  // state to display loading sign or button
+  // const isButtonTriggered = useSelector(selectCircularLoadBackdropTriggerState);
   let browserWidth = parseInt(browserSize?.width, 10);
   // Settings for password input
   const [showPassword, setShowPassword] = useState(false);
@@ -75,12 +79,13 @@ const ChangeSubscriptionPackagePage = () => {
   // state to store all products
   const [monthlyPackage, setMonthlyPackage] = useState([]);
   const [yearlyPackage, setYearlyPackage] = useState([]);
+  const [basic, setBasic] = useState([]);
+
   // product details array
   const productIds = productDetails;
   // state to render loading effect whiles products is being set
   const [isProductsLoading, setIsProductsLoading] = useState(true);
-  // state to display loading sign or button
-  const [isButtonTriggered, setIsButtonTriggered] = useState(false);
+
   // state to hold the roleSelected
   const [role, setRole] = useState();
   // account id
@@ -101,22 +106,39 @@ const ChangeSubscriptionPackagePage = () => {
       // get user's role
       const roleSelected = await roleSnap.data().role;
       await setRole(roleSelected);
+      console.log(roleSelected);
       try {
         const q = query(
           collection(db, "products"),
           where("active", "==", true)
         );
         const allProducts = [];
-
+        const basicProduct = [];
+        const productRoles = [];
         const querySnapshot = await getDocs(q);
 
         // get all the products
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach(async (doc) => {
           // save them to allProducts array
           allProducts.push({ id: doc.id, data: doc.data() });
+          // get all the procut names and save into the product roles array
+          productRoles.push({ id: doc.id, name: doc.data().name });
+
+          // get and store basic
+          if (doc.data().name == "Basic") {
+            await basicProduct.push({ id: doc.id, data: doc.data() });
+          }
         });
+
+        // get the products that correspond to the role
+        const selectedIds = [];
+
+        productRoles
+          .filter(({ name }) => name.includes(roleSelected))
+          .forEach(({ id }) => selectedIds.push(id));
+
         // check the user's role with the roles in productsDetails file and get the products for that role
-        const selectedIds = productIds
+        selectedIds
           .filter((prodId) => prodId.role === roleSelected)
           .map((prodId) => prodId.id);
         // check the allProducts array and get the contents of the product/prices collection
@@ -170,6 +192,32 @@ const ChangeSubscriptionPackagePage = () => {
               // });
             });
           }
+        });
+
+        // set basic state
+        await basicProduct?.map(async (prods) => {
+          const priceSnap = await getDocs(
+            collection(db, `products/prod_Ps1JzpXiJ69kzn/prices`)
+          );
+
+          priceSnap.forEach((priceDoc) => {
+            // setFetchCounter((prevFetchCounter) => prevFetchCounter + 1);
+            setBasic((prevProducts) => [
+              ...prevProducts,
+              {
+                name: prods.data.name,
+                details: prods.data.details,
+                image: prods.data.images,
+                price: priceDoc.data().unit_amount,
+                interval: priceDoc.data().interval,
+                id: prods.id,
+                priceId: priceDoc.id,
+              },
+            ]);
+
+            // disable loading
+            setIsProductsLoading(false);
+          });
         });
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -455,11 +503,9 @@ const ChangeSubscriptionPackagePage = () => {
                         title={item.name}
                         description={item.description}
                         price={item.price / 100}
-                        isButtonTriggered={isButtonTriggered}
+                        // isButtonTriggered={isButtonTriggered}
                         featuresHighlightArray={item.details}
                         onClick={async () => {
-                          // display loading sign
-                          setIsButtonTriggered(true);
                           // get current uid
                           const currentUser = await auth.currentUser;
                           // alert(accountId);
@@ -475,12 +521,14 @@ const ChangeSubscriptionPackagePage = () => {
                           const docSnap = await getDocs(q);
 
                           if (docSnap.size !== 0) {
+                            // disable loading sign
+                            // dispatch(setOpenCircularLoadBackdrop(false));
                             triggerWarningAlertModal(
                               "An active subscription already exists. \n Cancel the existing one first"
                             );
-                            // disable loading sign
-                            setIsButtonTriggered(false);
                           } else {
+                            // display loading sign
+                            dispatch(setOpenCircularLoadBackdrop(true));
                             StripeCheckout(item.id, item.priceId);
                           }
                         }}
@@ -504,11 +552,9 @@ const ChangeSubscriptionPackagePage = () => {
                         title={item.name}
                         description={item.description}
                         price={item.price / 100}
-                        isButtonTriggered={isButtonTriggered}
+                        // isButtonTriggered={isButtonTriggered}
                         featuresHighlightArray={item.details}
                         onClick={async () => {
-                          // display loading sign
-                          setIsButtonTriggered(true);
                           // get current uid
                           const currentUser = await auth.currentUser;
                           // alert(accountId);
@@ -524,12 +570,14 @@ const ChangeSubscriptionPackagePage = () => {
                           const docSnap = await getDocs(q);
 
                           if (docSnap.size !== 0) {
+                            // disable loading sign
+                            // dispatch(setOpenCircularLoadBackdrop(false));
                             triggerWarningAlertModal(
                               "An active subscription already exists. \n Cancel the existing one first"
                             );
-                            // disable loading sign
-                            setIsButtonTriggered(false);
                           } else {
+                            // display loading sign
+                            dispatch(setOpenCircularLoadBackdrop(true));
                             StripeCheckout(item.id, item.priceId);
                           }
                         }}
@@ -547,6 +595,41 @@ const ChangeSubscriptionPackagePage = () => {
                         // }}
                       />
                     ))}
+                {/* Basic */}
+                {/* {basic?.map((item) => (
+                  <SubscriptionCard
+                    key={item.id}
+                    title={item.name}
+                    description={item.description}
+                    price={item.price / 100}
+                    // isButtonTriggered={isButtonTriggered}
+                    featuresHighlightArray={item.details}
+                    onClick={async () => {
+                      // get current uid
+                      const currentUser = await auth.currentUser;
+                      // alert(accountId);
+                      // Check if an active subscription exists
+                      const userRef = collection(
+                        db,
+                        `users_db/${accountId}/subscriptions`
+                      );
+                      const q = query(userRef, where("status", "==", "active"));
+                      const docSnap = await getDocs(q);
+
+                      if (docSnap.size !== 0) {
+                        triggerWarningAlertModal(
+                          "An active subscription already exists. \n Cancel the existing one or wait till the end of billing period"
+                        );
+                        // disable loading sign
+                        // dispatch(setOpenCircularLoadBackdrop(false));
+                      } else {
+                        // display loading sign
+                        dispatch(setOpenCircularLoadBackdrop(true));
+                        StripeCheckout(item.id, item.priceId);
+                      }
+                    }}
+                  />
+                ))} */}
               </div>
             </div>
           )}
@@ -576,7 +659,6 @@ export const SubscriptionCard = ({
   price,
   featuresHighlightArray,
   onClick,
-  isButtonTriggered,
 }) => {
   return (
     <Card
@@ -623,21 +705,15 @@ export const SubscriptionCard = ({
         {/* // Get Started button and outlined features  */}
 
         <div style={{ flex: ".6" }}>
-          {isButtonTriggered ? (
-            <div style={{ textAlign: "center" }}>
-              <CircularProgress />
-            </div>
-          ) : (
-            <BasicButton
-              onClick={onClick}
-              style={{
-                width: "100%",
-                // marginTop: "2vh",
-                marginBottom: "2vh",
-              }}
-              innerText="Get Started"
-            />
-          )}
+          <BasicButton
+            onClick={onClick}
+            style={{
+              width: "100%",
+              // marginTop: "2vh",
+              marginBottom: "2vh",
+            }}
+            innerText="Get Started"
+          />
           {/* ///features ROw */}
 
           {featuresHighlightArray &&

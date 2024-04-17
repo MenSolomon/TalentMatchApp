@@ -33,6 +33,7 @@ import {
   query,
   getDocs,
 } from "firebase/firestore";
+import { sendSignInLinkToEmail } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
 import { auth, db, storage } from "../Firebase/Firebase";
 import {
@@ -47,10 +48,7 @@ import {
 } from "../statemanager/slices/OtherComponentStatesSlice";
 import { setThemeProviderToLightMode } from "../statemanager/slices/ThemeProviderSlice";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import {
-  setCredentials,
-  setLoginStatus,
-} from "../statemanager/slices/LoginUserDataSlice";
+import { setLoginStatus } from "../statemanager/slices/LoginUserDataSlice";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 
 const ConfirmDetails = () => {
@@ -73,6 +71,8 @@ const ConfirmDetails = () => {
   //state to manage user id
   const [agreement, setAgreement] = useState(false);
   const [privacy, setPrivacy] = useState(false);
+  //
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   const {
     firstName,
@@ -116,7 +116,7 @@ const ConfirmDetails = () => {
       .then(async (userCredential) => {
         const user = userCredential.user;
         // save credentials
-        dispatch(setCredentials(user.uid));
+        // dispatch(setCredentials(user.uid));
 
         // set login status to true
         dispatch(setLoginStatus(true));
@@ -164,7 +164,30 @@ const ConfirmDetails = () => {
       currentDate.year() - momentDate.year() - (hasBirthdayOccurred ? 0 : 1);
     return Math.round(ageDifference);
   }
+  const actionCodeSettings = {
+    // URL you want to redirect back to. The domain (www.example.com) for this
+    // URL must be in the authorized domains list in the Firebase Console.
+    url: "http://localhost:5173/create-account/confirm-details",
+    // This must be true.
+    handleCodeInApp: true,
+  };
 
+  const emailLink = async () => {
+    sendSignInLinkToEmail(auth, email, actionCodeSettings)
+      .then(() => {
+        console.log("sendSignInLinkToEmail");
+        // setIsEmailVerified(true);
+        handleStartFreeTrial();
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("errorCode", errorCode);
+        console.log("errorMessage", errorMessage);
+        // setIsEmailVerified(false);
+        triggerWarningAlertModal("Please use a valid email");
+      });
+  };
   const handleStartFreeTrial = async () => {
     // const email = location.state.email;
     // const password = location.state.password;
@@ -222,7 +245,7 @@ const ConfirmDetails = () => {
           }
         });
 
-        if (items.length > 0) {
+        if (0 > 1) {
           triggerWarningAlertModal("Account Exists");
         } else {
           if (roleSelected === "Player") {
@@ -313,7 +336,7 @@ const ConfirmDetails = () => {
                 .then(async (userCredential) => {
                   const user = userCredential.user;
                   // save credentials
-                  dispatch(setCredentials(user.uid));
+                  // dispatch(setCredentials(user.uid));
                   // set login status to true
                   dispatch(setLoginStatus(true));
                   let url = "";
@@ -341,6 +364,7 @@ const ConfirmDetails = () => {
                   await setDoc(doc(db, `players_database`, user.uid), {
                     id: user.uid,
                     Account_creator_id: user.uid,
+                    Current_Account_Owner: user.uid,
                     player_profile_image: "",
                     firstName: userData?.firstName,
                     surName: userData?.surname,
@@ -349,6 +373,7 @@ const ConfirmDetails = () => {
                     dateCreated: serverTimestamp(),
                     Age: currentAge,
                     boostPoints: 0,
+                    isBasic: true,
                     position: userData?.PlayerPosition,
                     date_of_birth: userData?.DateOfBirth,
                     jerseyNumber: "",
@@ -691,6 +716,7 @@ const ConfirmDetails = () => {
                     dateCreated: serverTimestamp(),
                     accountId: user.uid,
                     boostPoints: 0,
+                    isBasic: true,
                     isVisible: true,
                     userIDWithMRZImage: url,
                   });
@@ -745,7 +771,7 @@ const ConfirmDetails = () => {
               .then(async (userCredential) => {
                 const user = userCredential.user;
                 // save credentials
-                dispatch(setCredentials(user.uid));
+                // dispatch(setCredentials(user.uid));
                 // alert(user.uid);
                 // set login status to true
                 dispatch(setLoginStatus(true));
@@ -779,6 +805,7 @@ const ConfirmDetails = () => {
                   dateCreated: serverTimestamp(),
                   accountId: user.uid,
                   boostPoints: 0,
+                  isBasic: true,
                   isVisible: true,
                   playersInPossession: [],
                   userIDWithMRZImage: url,
@@ -1181,7 +1208,10 @@ const ConfirmDetails = () => {
           </ul>
 
           {/* div to handle Click of start free trial */}
-          <div onClick={handleStartFreeTrial}>
+          <div
+            onClick={() => {
+              emailLink();
+            }}>
             <BasicButton
               style={{ width: "90%", marginLeft: "5%" }}
               innerText="Start Trial"></BasicButton>

@@ -7,6 +7,7 @@ import {
   CircularProgress,
   IconButton,
   Snackbar,
+  TextField,
   Tooltip,
 } from "@mui/material";
 import PlayerManagementTabs from "../components/Tabs/PlayerManagementTabs";
@@ -20,7 +21,10 @@ import {
   Instagram,
   Twitter,
 } from "@mui/icons-material";
-import { selectUserDetailsObject } from "../../../statemanager/slices/LoginUserDataSlice";
+import {
+  selectIsSubscriptionActive,
+  selectUserDetailsObject,
+} from "../../../statemanager/slices/LoginUserDataSlice";
 import EditPlayerProfileModal from "../components/Modals/EditPlayerModal";
 import TransferPlayerModal from "../components/Modals/TransferPlayerModal";
 import {
@@ -53,12 +57,18 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userLoginObject = useSelector(selectUserDetailsObject);
+  const subscriptionStatus = useSelector(selectIsSubscriptionActive);
+  const { boostPoints: ownerBoostPoints } = userLoginObject;
+
   const browserSize = useSelector(selectCurrentBrowserSize);
   let browserWidth = parseInt(browserSize?.width, 10);
   const currentPlayerInfoObject = useSelector(
     selectPlayerSelectedByClubOrScoutInPlayerManagement
   );
+
   const [isBoosting, setIsBoosting] = useState(false);
+  const [enteredBoostPoints, setEnteredBoostPoints] = useState(0);
+
   const [filteredPlayerArray, setFilteredPlayerArray] = useState([]);
   const [openSnackBar, setOpenSnackBar] = useState(false);
   const [alertMessage, setAlertMessage] = useState();
@@ -70,7 +80,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
     surName: "",
     player_profile_image: "",
     Age: "",
-    boostPoints: "",
+    boostPoints: 0,
     id: "",
     position: "",
     jerseyNumber: "",
@@ -199,7 +209,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         surName: "",
         player_profile_image: "",
         Age: "",
-        boostPoints: "",
+        boostPoints: 0,
         id: "",
         position: "",
         jerseyNumber: "",
@@ -282,6 +292,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
   //     // Handle errors appropriately, e.g., notifying user or logging the error
   //   }
   // };
+  useEffect(() => {}, [enteredBoostPoints]);
+
   return (
     <div
       className="md:w-[100%] md:h-[100%] md:flex md:flex-col md:gap-[0px]   sm:gap-[50px]   sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
@@ -293,8 +305,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
           // width: "100%",
           // background: "red",
         }
-      }
-    >
+      }>
       {/* // Player Name , Image an jerseyNumber */}
       <div style={{ flex: ".25", display: "flex" }}>
         {/* Player Image */}
@@ -305,8 +316,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             // background: "red",
             paddingTop: "1.5vh",
             // position: "relative",
-          }}
-        >
+          }}>
           {/* // Image Canvas */}
 
           <Card
@@ -321,8 +331,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               backgroundImage: `url('${player_profile_image}')`,
               backgroundSize: "cover",
               backgroundPosition: "center",
-            }}
-          ></Card>
+            }}></Card>
 
           {/* Club Logo Canvas */}
           <div className="PlayerManagementNationalityTooltip">
@@ -346,8 +355,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         {/* Player Name */}
         <div
           className="md:pl-[1vw] sm:pl-[-100%]"
-          style={{ flex: ".6", paddingLeft: "1vw" }}
-        >
+          style={{ flex: ".6", paddingLeft: "1vw" }}>
           <h2 style={{ margin: "0" }}> {firstName} </h2>
 
           <h1 style={{ margin: "0" }}>{surName} </h1>
@@ -372,8 +380,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             paddingTop: "6vh",
             // background: "green",
             padding: ".8vw",
-          }}
-        >
+          }}>
           <Card
             className="cardBackground primaryTextColor md:w-[100%] md:h-[100%] md:flex md:flex-col md:p-[1.4vw]   sm:p-[2vw] sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
             style={{
@@ -385,8 +392,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               borderRadius: "1vw",
               // padding: "1.4vw",
               paddingTop: "8vh",
-            }}
-          >
+            }}>
             {/* // Player position , age , height */}
             <div style={{ flex: ".08", display: "flex" }}>
               {/* // CLUB name  Area */}
@@ -430,8 +436,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                   Social_media[0].Instagram === "https://www.instagram.com//"
                     ? ""
                     : Social_media[0].Instagram
-                }
-              >
+                }>
                 {" "}
                 <IconButton
                   onClick={() => {
@@ -439,8 +444,7 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                     Social_media[0].Instagram === "https://www.instagram.com//"
                       ? ""
                       : openLinkInNewPage(Social_media[0].Instagram);
-                  }}
-                >
+                  }}>
                   <Instagram style={{ color: "#5585FE" }} />
                 </IconButton>
               </Tooltip>
@@ -450,16 +454,14 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                   Social_media[0].Facebook === "https://web.facebook.com/"
                     ? ""
                     : openLinkInNewPage(Social_media[0].Facebook);
-                }}
-              >
+                }}>
                 <Tooltip
                   title={
                     Social_media.length == 0 ||
                     Social_media[0].Facebook === "https://web.facebook.com/"
                       ? ""
                       : Social_media[0].Facebook
-                  }
-                >
+                  }>
                   <Facebook style={{ color: "#5585FE" }} />
                 </Tooltip>
               </IconButton>
@@ -472,54 +474,83 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                 // display: "flex",
                 fontWeight: "bolder",
                 paddingTop: "1.5vh",
-              }}
-            >
+              }}>
               {/* <h5>Honors & Awards</h5> */}
 
               {/* // Edit Profile button */}
-              {/*  */}
-              <EditPlayerProfileModal />
+              {subscriptionStatus == true && <EditPlayerProfileModal />}
+              {/* BOOST BUTTON */}
               {isBoosting ? (
                 <CircularProgress />
               ) : (
-                <BasicButtonWithEndIcon
-                  innerText={"Boost"}
-                  endIcon={"bolt"}
-                  style={{
-                    width: browserWidth >= 1024 ? "9vw" : "40vw",
-                    height: "6vh",
-                    marginBottom: "1.5vh",
-                  }}
-                  onClick={async () => {
-                    setIsBoosting(true);
-
-                    try {
-                      const functions = getFunctions();
-                      const incrementBoostFn = httpsCallable(
-                        functions,
-                        "incrementBoost"
-                      );
-                      const result = await incrementBoostFn({
-                        id: currentPlayerInfoObject.id,
-                      });
-                      if (result) {
-                        console.log("result", result);
-                        setAlertMessage(`${result.data.message}`);
-                        setIsBoosting(false);
-                        setOpenSnackBar(true);
-                        // refetch the boostpoints
-                        refetchPlayerBoostPoints();
-                      } else if (result == undefined || result == null) {
-                        setIsBoosting(false);
+                subscriptionStatus == true && (
+                  <>
+                    <TextField
+                      id="outlined-number"
+                      label="Enter Boost Points"
+                      type="number"
+                      onChange={(e) => {
+                        setEnteredBoostPoints(parseInt(e.target.value));
+                      }}
+                      sx={{
+                        width: browserWidth >= 1024 ? "9vw" : "40vw",
+                        marginY: "2vh",
+                      }}
+                    />
+                    <BasicButtonWithEndIcon
+                      disabled={
+                        enteredBoostPoints > 0
+                          ? false
+                          : enteredBoostPoints == "" || enteredBoostPoints == 0
+                          ? true
+                          : true
                       }
-                    } catch (error) {
-                      console.log("cloudFn Error", error);
-                    }
-                    // triggerWarningAlertModal(`${result.data.message}`)
-
-                    // console.log(result)
-                  }}
-                />
+                      innerText={"Boost"}
+                      endIcon={"bolt"}
+                      style={{
+                        width: browserWidth >= 1024 ? "9vw" : "40vw",
+                        height: "6vh",
+                        marginBottom: "1.5vh",
+                      }}
+                      onClick={async () => {
+                        if (
+                          enteredBoostPoints > ownerBoostPoints ||
+                          enteredBoostPoints == 0 ||
+                          enteredBoostPoints == ""
+                        ) {
+                          setAlertMessage("Not enough boost points");
+                          setOpenSnackBar(true);
+                        } else {
+                          setIsBoosting(true);
+                          try {
+                            const functions = getFunctions();
+                            const incrementBoostFn = httpsCallable(
+                              functions,
+                              "incrementBoost"
+                            );
+                            const result = await incrementBoostFn({
+                              id: currentPlayerInfoObject.id,
+                              points: enteredBoostPoints,
+                            });
+                            if (result) {
+                              console.log("result", result);
+                              setAlertMessage(`${result.data.message}`);
+                              setIsBoosting(false);
+                              setOpenSnackBar(true);
+                              // refetch the boostpoints
+                              refetchPlayerBoostPoints();
+                              setEnteredBoostPoints(0);
+                            } else if (result == undefined || result == null) {
+                              setIsBoosting(false);
+                            }
+                          } catch (error) {
+                            console.log("cloudFn Error", error);
+                          }
+                        }
+                      }}
+                    />
+                  </>
+                )
               )}
               {userLoginObject?.role === "Club" ? <TransferPlayerModal /> : ""}
 

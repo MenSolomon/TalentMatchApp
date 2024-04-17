@@ -5,6 +5,7 @@ import { DeleteForever, Edit } from "@mui/icons-material";
 import { useState } from "react";
 import DeleteVideoModal from "../Modals/DeleteVideoModal";
 import EditVideoModal from "../Modals/EditVideoModal";
+import handleVideoGloballyClick from "../../../../utilities/VideoPausePlayFunction";
 
 const VideoComponentRows = ({
   url,
@@ -58,6 +59,7 @@ const VideoComponentRows = ({
         }}
       >
         <video
+          onClick={handleVideoGloballyClick}
           style={{
             width: "80%",
             height: "95%",

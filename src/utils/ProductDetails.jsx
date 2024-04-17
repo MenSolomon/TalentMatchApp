@@ -57,6 +57,13 @@ export const productDetails = [
     details: [],
   },
   {
+    id: "prod_PsoKSsFkDq1dcy",
+    name: "Agent Starter",
+    role: "Agent",
+    details: [],
+  },
+
+  {
     id: "prod_Ps1JzpXiJ69kzn",
     name: "Basic",
     role: "Basic",
@@ -98,3 +105,114 @@ export default function ProductDetails() {
     </div>
   );
 }
+
+
+// exports.processBoostPointsPayment = functions.firestore
+//     .document("users_db/{userId}/payments/{paymentId}")
+//     .onWrite(async (change, context) => {
+//       const paymentData = change.after.data();
+
+//       // Filter payments based on specified conditions
+//       if (
+//         !paymentData ||
+//         !Array.isArray(paymentData.items) ||
+//       paymentData.status !== "succeeded" ||
+//       !paymentData.items.some((item) => item.price.type === "one_time")
+//       ) {
+//         return null;
+//       }
+
+//       const items = paymentData.items.sort((a, b) => b.created - a.created);
+//       const latestItem = items[0];
+
+//       // Check timestamp within one minute
+//       const minuteAgo = Date.now() - 60 * 1000;
+//       if (latestItem.created < minuteAgo) {
+//         return null;
+//       }
+
+//       // Extract boost points from description
+//       const boostPoints = parseInt(latestItem.description.match(/\d+/)[0]);
+
+//       // Update user's boost points
+//       const userId = context.params.userId; // Get user ID from path parameter
+//       const userDoc = admin.firestore().collection("users_db").doc(userId);
+//       await userDoc.update({
+//         boostPoints: admin.firestore.FieldValue.increment(boostPoints),
+//       });
+//     });
+
+
+                      // try {
+                      //   const q = query(
+                      //     collection(db, `users_db/${accountId}/payments`)
+                      //   );
+                      //   const querySnapshot = await getDocs(q);
+
+                      //   const filteredItems = [];
+
+                      //   // Filter documents by status and price type
+                      //   for (const doc of querySnapshot.docs) {
+                      //     const payment = doc.data();
+                      //     if (
+                      //       payment.items &&
+                      //       payment.items.length > 0 &&
+                      //       payment.items[0].price
+                      //     ) {
+                      //       const type = payment.items[0].price.type;
+                      //       if (
+                      //         payment.status === "succeeded" &&
+                      //         type === "one_time"
+                      //       ) {
+                      //         filteredItems.push(payment.items);
+                      //       }
+                      //       // Use type value as needed
+                      //     }
+                      //   }
+                      //   console.log("filteredItems", filteredItems);
+
+                      //   const filtered = [];
+
+                      //   for (const itemsArray of filteredItems) {
+                      //     // Assuming itemsArray is an array containing objects like the one you provided
+                      //     for (const item of itemsArray) {
+                      //       filtered.push(item);
+                      //     }
+                      //   }
+
+                      //   console.log("filtered", filtered);
+
+                      //   // Find item with latest created timestamp
+                      //   const latestItem = filtered.reduce((prev, current) => {
+                      //     // Check if prev is null or if current has a higher created timestamp
+                      //     if (
+                      //       !prev ||
+                      //       current.price.created > prev.price.created
+                      //     ) {
+                      //       return current;
+                      //     } else {
+                      //       return prev;
+                      //     }
+                      //   }, null);
+
+                      //   console.log("latestItem", latestItem);
+
+                      //   // Check if the latest item's purchase time exists in the boostPurchaseTime collection
+                      //   const boostPurchaseTimeRef = collection(
+                      //     db,
+                      //     `users_db/${accountId}/boostPurchaseTime`
+                      //   );
+                      //   const boostPurchaseTimeQuery = query(
+                      //     boostPurchaseTimeRef,
+                      //     where("created", "==", latestItem.price.created)
+                      //   );
+                      //   const boostPurchaseTimeSnapshot = await getDocs(
+                      //     boostPurchaseTimeQuery
+                      //   );
+
+                      //   if (!isEmpty(boostPurchaseTimeSnapshot.docs)) {
+                      //     status = null;
+                      //   }
+                      // } catch (error) {
+                      //   console.log(error);
+                      // }

@@ -45,14 +45,15 @@ import ErrorPageNotFound from "./screens/ErrorPageNotFound";
 import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "./statemanager/slices/ThemeProviderSlice";
 import {
-  selectIsSubscriptionActive,
   selectUserDetailsObject,
   setIsSubscriptionActive,
   setNextBillingDate,
   setSubscriptionFeatures,
+  setUserDetailsObject,
 } from "./statemanager/slices/LoginUserDataSlice";
 import { useEffect, useState } from "react";
 import {
+  selectCircularLoadBackdropMessage,
   setCurrentBrowserSize,
   setCurrentScreenSize,
 } from "./statemanager/slices/OtherComponentStatesSlice";
@@ -80,12 +81,17 @@ import { setPriceID } from "./statemanager/slices/SignupStepperSlice";
 import CoachAgentScoutVersionConnetions from "./CoachAgentScoutVersion/src/screens/CoachAgentScoutVersionConnections";
 import PlayerVersionConnections from "./PlayerVersion/src/screens/PlayerVersionConnections";
 import ProductDetails from "./utils/ProductDetails";
+import BuyBoostPoints from "./screens/BuyBoostPoints";
+import RequestExistingPlayerProfile from "./screens/RequestExistingPlayerProfile";
+import { setUserNotifications } from "./statemanager/slices/NofiticationsSlice";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
   const usersDatabase = useSelector(selectUsersDatabase);
 
   const { primaryTextColor } = themeProviderObject;
+
+  const userLoginDetailsObject = useSelector(selectUserDetailsObject);
 
   const theme = createTheme({
     palette: {
@@ -239,8 +245,9 @@ const App = () => {
 
   const { pathname, search, hash } = location;
   const userLoginObject = useSelector(selectUserDetailsObject);
-  const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
-
+  const circularLoadBackdropMessage = useSelector(
+    selectCircularLoadBackdropMessage
+  );
   // this use effect is to redirect studio for the desired role on user change
   useEffect(() => {
     if (
@@ -442,25 +449,93 @@ const App = () => {
   // useEffect(() => {
   //   alert(userLoginObject.accountId + "  from App JSZ");
   // }, [usersDatabase]);
+  // ?? VIII
+  // useEffect(() => {
+  //   const handleVideoElementsChange = () => {
+  //     const videoElements = document.querySelectorAll("video");
+  //     const updatedVideoIds = Array.from(videoElements)
+  //       .map((video) => video.getAttribute("id"))
+  //       .filter(Boolean);
+  //     setVideoIds(updatedVideoIds);
+  //     console.log("reLo", updatedVideoIds);
+  //   };
+
+  //   // Initial setup
+  //   handleVideoElementsChange();
+
+  //   // Attach event listener to monitor changes in the DOM
+  //   document.addEventListener("DOMNodeInserted", handleVideoElementsChange);
+
+  //   // Clean up
+  //   return () => {
+  //     document.removeEventListener(
+  //       "DOMNodeInserted",
+  //       handleVideoElementsChange
+  //     );
+  //   };
+  // }, []); // Empty dependency array to run the effect only once after the component mounts
+
+  // // State to hold the video IDs
+  // const [videoIds, setVideoIds] = useState([]);
+  // ?? VIII
+
+  // Render logic using videoIds
+
+  //// E N D
+
+  // const [currentVideoId, setCurrentVideoId] = useState(null);
+
+  // // Function to handle click on video element
+  // const handleVideoClick = (event) => {
+  //   const clickedVideoId = event.target.id;
+  //   if (clickedVideoId !== currentVideoId) {
+  //     // Pause the currently playing video if its ID is different
+  //     const currentVideo = document.getElementById(currentVideoId);
+  //     if (currentVideo) {
+  //       currentVideo.pause();
+  //     }
+  //     // Update the current video ID to the clicked video's ID
+  //     setCurrentVideoId(clickedVideoId);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   // Attach event listener to all video elements
+  //   const videoElements = document.querySelectorAll('video');
+  //   videoElements.forEach(video => {
+  //     video.addEventListener('click', handleVideoClick);
+  //   });
+
+  //   // Clean up function to remove event listeners
+  //   return () => {
+  //     videoElements.forEach(video => {
+  //       video.removeEventListener('click', handleVideoClick);
+  //     });
+  //   };
+  // }, [currentVideoId]);
+
+  // useEffect(() => {
+  //   if (loginUserObject?.accountId !== undefined) {
+  //     const unsub = onSnapshot(
+  //       doc(db, "users_db", loginUserObject?.accountId),
+  //       // { includeMetadataChanges: true },
+  //       (doc) => {
+  //         // console.log(doc.data());
+
+  //         if (doc.data() !== undefined) {
+  //           dispatch(setUserDetailsObject(doc.data()));
+  //         }
+  //       }
+  //     );
+  //     return () => {
+  //       unsub();
+  //     };
+  //   }
+  // }, []);
 
   return (
     <ThemeProvider theme={theme}>
-      {isSubscriptionActive ? null : (
-        <Alert
-          severity="error"
-          variant="filled"
-          action={
-            <Button
-              variant="contained"
-              color="success"
-              size="small"
-              onClick={() => navigate("/changeSubscription")}>
-              Get One
-            </Button>
-          }>
-          No or Inactive Subscrtiption
-        </Alert>
-      )}
+
       <CssBaseline />
       <Routes>
         {/* PROTECTED ROUTES  */}
@@ -524,7 +599,8 @@ const App = () => {
           {/* COACH AGENT AND SCOUT VERSION */}
           <Route
             path="/multiStudio"
-            element={<CoachAgentScoutVersionMotherComponent />}>
+            element={<CoachAgentScoutVersionMotherComponent />}
+          >
             <Route path="/multiStudio/favorite" element={<Error404 />} />
             <Route path="/multiStudio/help" element={<Error404 />} />
             <Route path="/multiStudio/settings" element={<Settings />} />
@@ -568,6 +644,7 @@ const App = () => {
             path="/changeSubscription"
             element={<ChangeSubscriptionPackagePage />}
           />
+          <Route path="/buyBoostPoints" element={<BuyBoostPoints />} />
         </Route>
 
         {/* END OF PROTECTED ROUTES */}
@@ -597,12 +674,17 @@ const App = () => {
           <Route path="/create-account/user-form" element={<CreateAccount />} />
         </Route>
 
+        <Route
+          path="/player profile verification"
+          element={<RequestExistingPlayerProfile />}
+        />
+
         <Route path="*" element={<ErrorPageNotFound />} />
       </Routes>
       {/* //// Alert Modal to display error messages */}
       <WarningAlertModal />
 
-      <BasicBackdrop />
+      <BasicBackdrop message={circularLoadBackdropMessage} />
       <ContactSupportModal />
     </ThemeProvider>
   );

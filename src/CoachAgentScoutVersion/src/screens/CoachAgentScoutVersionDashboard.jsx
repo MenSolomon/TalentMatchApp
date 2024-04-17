@@ -1,10 +1,12 @@
-import { Avatar, Button, Chip, IconButton, Switch } from "@mui/material";
+import { Avatar, Button, Chip, Stack, Switch, Typography } from "@mui/material";
+import { yellow, deepOrange } from "@mui/material/colors";
 import PlayerSkeletonImage from "../assets/images/PlayerSkeleton.png";
 import { useDispatch, useSelector } from "react-redux";
 import { selectThemeProviderObject } from "../statemanager/slices/ThemeProviderSlice";
 import UploadPlayerToAgencyModal from "../components/Modals/UploadPlayerToAgencyModal";
 import NewsCard from "../../../components/Cards/NewsCard/NewsCard";
 import {
+  selectIsSubscriptionActive,
   selectSubscriptionFeatures,
   selectUserDetailsObject,
 } from "../../../statemanager/slices/LoginUserDataSlice";
@@ -34,6 +36,11 @@ import { formatDistanceToNow } from "date-fns";
 const CoachAgentScoutVersionDashboard = () => {
   const ThemeProvider = useSelector(selectThemeProviderObject);
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
+  const { boostPoints, subscriptionPackage } = userLoginDetailsObject;
+  const boostPointsTextColor = yellow[500];
+  const subscriptionStatus = useSelector(selectIsSubscriptionActive);
+
+  const navigate = useNavigate();
 
   const [latestMessages, setLatestMessages] = useState([]);
 
@@ -284,7 +291,7 @@ const CoachAgentScoutVersionDashboard = () => {
     });
 
   // Filter out undefined or null values from the array
-  console.log(playersInPossessionDetails, "debut");
+  // console.log(playersInPossessionDetails, "debut");
   const validPlayers =
     playersInPossessionDetails === undefined
       ? []
@@ -313,7 +320,33 @@ const CoachAgentScoutVersionDashboard = () => {
       {/* // Heading Area   style={{ flex: ".1" }}*/}
       <div className="md:basis-[10%] sm:basis-[10%] grid md:grid-cols-2 sm:grid-cols-2">
         <h3 style={{ margin: 0, float: "left" }} className="primaryTextColor">
-          Profile dashboard
+          Profile Dashboard
+          <Stack direction="row" spacing={1}>
+            <Chip
+              label={
+                <Typography>
+                  Boost Points: {boostPoints == undefined ? 0 : boostPoints}
+                </Typography>
+              }
+              color="primary"
+              variant="contained"
+            />
+            <Chip
+              label="Buy Points"
+              color="success"
+              variant="contained"
+              onClick={() => {
+                if (
+                  subscriptionPackage == "prod_Ps1JzpXiJ69kzn" ||
+                  subscriptionStatus == false
+                ) {
+                  triggerWarningAlertModal("You need a paid subscription");
+                } else if (subscriptionStatus == true) {
+                  navigate("/buyBoostPoints");
+                }
+              }}
+            />
+          </Stack>
         </h3>
         <div className="flex justify-self-end">
           <Switch

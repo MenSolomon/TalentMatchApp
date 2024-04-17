@@ -126,7 +126,8 @@ const PickedPlayerCard = ({
         >
           {" "}
           <BasicButtonWithEndIcon
-            style={{ width: "6.5vw", height: "4vh" }}
+            className="md:w-[6.5vw] sm:w-[90%]"
+            style={{ height: "4vh" }}
             innerText="Watch"
             endIcon="play_circle"
           />
