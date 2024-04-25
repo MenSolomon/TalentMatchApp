@@ -96,7 +96,6 @@ const SubscribeTrial = () => {
 
       try {
         const querySnapshot = await getDocs(q);
-
         // get all the products
         querySnapshot.forEach(async (doc) => {
           // save them to allProducts array
@@ -106,7 +105,7 @@ const SubscribeTrial = () => {
             await basicProduct.push({ id: doc.id, data: doc.data() });
           }
         });
-
+        console.log(allProducts);
         // set basic state
         await basicProduct.map(async (prods) => {
           const priceSnap = await getDocs(
@@ -134,8 +133,8 @@ const SubscribeTrial = () => {
         });
 
         // set appropriate product
-        const selectedIds = productIds
-          .filter((prodId) => prodId.role === roleSelected)
+        const selectedIds = allProducts
+          .filter((prodId) => prodId?.data.name.includes("Agent"))
           .map((prodId) => prodId.id);
 
         await allProducts.map(async (prods) => {
