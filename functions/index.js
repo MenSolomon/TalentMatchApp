@@ -52,7 +52,7 @@ exports.incrementBoost = onCall(async (request) => {
 
 // function to apply boostPoints purchased
 exports.buyBoostPoints = onCall(async (request) => {
-  console.log("buyBoostPoints started");
+  // console.log("buyBoostPoints started");
   // Check user authentication
   if (!request.auth) {
     throw new https.HttpsError("unauthenticated", "The function must be called while authenticated");

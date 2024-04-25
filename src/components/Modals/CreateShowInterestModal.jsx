@@ -5,7 +5,10 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserDataSlice";
+import {
+  selectIsSubscriptionActive,
+  selectUserDetailsObject,
+} from "../../statemanager/slices/LoginUserDataSlice";
 import {
   setSnackbarMessage,
   setSnackbarTriggerCounter,
@@ -37,6 +40,8 @@ export default function CreateShowInterestModal({
   playerId,
   currentAccountOwner,
 }) {
+  const subscriptionStatus = useSelector(selectIsSubscriptionActive);
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -151,16 +156,15 @@ export default function CreateShowInterestModal({
         ""
       ) : (
         <Button
+          disabled={!subscriptionStatus}
           sx={{
             textTransform: "none",
-
             fontWeight: "900",
             marginRight: "1vw",
             color: "white",
             background: "#5585FE",
           }}
-          onClick={handleOpen}
-        >
+          onClick={handleOpen}>
           {" "}
           Show Interest{" "}
         </Button>
@@ -171,15 +175,13 @@ export default function CreateShowInterestModal({
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+        aria-describedby="modal-modal-description">
         <Box sx={style} className="primaryTextColor cardBackground">
           <Typography
             id="modal-modal-title"
             variant="h6"
             component="h2"
-            sx={{ fontWeight: "bold" }}
-          >
+            sx={{ fontWeight: "bold" }}>
             Player Name: {playerName}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 4 }}>
@@ -211,8 +213,7 @@ export default function CreateShowInterestModal({
                 // marginLeft: "35vw",
                 color: "white",
                 background: "#5585FE",
-              }}
-            >
+              }}>
               Send request
             </Button>
           </Typography>
