@@ -33,10 +33,10 @@ exports.incrementBoost = onCall(async (request) => {
       if (currentUserBoostPoints > 0) {
         // Update player and user boost points within the transaction
         transaction.update(playerDocRef, {
-          boostPoints: admin.firestore.FieldValue.increment(10),
+          boostPoints: admin.firestore.FieldValue.increment(request.data.points),
         });
         transaction.update(userDocRef, {
-          boostPoints: admin.firestore.FieldValue.increment(-10),
+          boostPoints: admin.firestore.FieldValue.increment(-request.data.points),
         });
         return {message: "Boost completed"};
       } else if (currentUserBoostPoints == 0) {
@@ -52,7 +52,7 @@ exports.incrementBoost = onCall(async (request) => {
 
 // function to apply boostPoints purchased
 exports.buyBoostPoints = onCall(async (request) => {
-  console.log("buyBoostPoints started");
+  // console.log("buyBoostPoints started");
   // Check user authentication
   if (!request.auth) {
     throw new https.HttpsError("unauthenticated", "The function must be called while authenticated");

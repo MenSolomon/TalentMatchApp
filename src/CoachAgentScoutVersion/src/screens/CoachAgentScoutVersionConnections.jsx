@@ -21,6 +21,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectIsSubscriptionActive,
+  selectSubscriptionFeatures,
   selectUserDetailsObject,
 } from "../../../statemanager/slices/LoginUserDataSlice";
 import { v4 } from "uuid";
@@ -49,6 +50,8 @@ import {
   setWarningAlertModalMessage,
 } from "../../../statemanager/slices/OtherComponentStatesSlice";
 import MessageContactCardForConnectionsScreen from "../components/Cards/MessageContactCardForConnectionsScreen";
+import { selectInterestedConnections } from "../../../statemanager/slices/InterestedConnectionSlice";
+import { selectInterestedPlayers } from "../../../statemanager/slices/InterestedPlayersSlice";
 
 const CoachAgentScoutVersionConnetions = () => {
   const dispatch = useDispatch();
@@ -61,6 +64,19 @@ const CoachAgentScoutVersionConnetions = () => {
   const { accountId } = userLoginDetailsObject;
   const subscriptionStatus = useSelector(selectIsSubscriptionActive);
   const connection = userLoginDetailsObject?.AgentandScoutConnections;
+  // interestedConnections
+  const interestedNonPlayerConnectionsArray = useSelector(
+    selectInterestedConnections
+  );
+  const interestedPlayerConnectionsArray = useSelector(selectInterestedPlayers);
+  //  state to store all pending and approved connections
+  const [
+    pendingOrApprovedConnectionRequests,
+    setPendingOrApprovedConnectionRequests,
+  ] = useState([]);
+  // subscription features
+  const subscriptionFeaturesObject = useSelector(selectSubscriptionFeatures);
+  const { maxConnections } = subscriptionFeaturesObject;
 
   const triggerWarningAlertModal = (message) => {
     dispatch(setWarningAlertModalMessage(message));
@@ -75,99 +91,106 @@ const CoachAgentScoutVersionConnetions = () => {
     const uuid = v4();
 
     // alert(targetedAccountID);
-
-    // FOR PLAYER ACC HOLDER
-    const userNotificationRef = doc(
-      db,
-      `users_db/${userLoginDetailsObject.accountId}/Notifications`,
-      uuid
+    console.log(
+      "interestedNonPlayerConnectionsArray",
+      interestedNonPlayerConnectionsArray,
+      "pendingOrApprovedConnectionRequests",
+      pendingOrApprovedConnectionRequests
     );
-
-    /// FOR SELF
-    const scoutNotificationRef = doc(
-      db,
-      `users_db/${targetedAccountID}/Notifications`,
-      uuid
-    );
-
-    //Notification sent
-
-    await setDoc(userNotificationRef, {
-      NotificationId: uuid,
-      requestAccepted: "Pending",
-      dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-      senderAddress: userLoginDetailsObject.email,
-      senderId: userLoginDetailsObject.accountId,
-      type: "Connection request",
-      message: `Your interest with ${targetedAccountName} has been established`,
-      readStatus: false,
-      targetAccountRole: targetedAccountRole,
-    });
-
-    await setDoc(scoutNotificationRef, {
-      NotificationId: uuid,
-      requestAccepted: "Pending",
-      dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-      senderAddress: userLoginDetailsObject.email,
-      senderId: userLoginDetailsObject.accountId,
-      type: "Connection request",
-      message: `${userLoginDetailsObject.firstName} has shown interest in your profile. Accept to view message sent`,
-      readStatus: false,
-      targetAccountRole: targetedAccountRole,
-    });
-
-    const connectionInterestRef = doc(
-      db,
-      `users_db/${userLoginDetailsObject?.accountId}/NonPlayerConnectionInterests`,
-      uuid
-    );
-
-    //Notification sent
-
-    await setDoc(connectionInterestRef, {
-      interestedConnectionAccountId: targetedAccountID,
-      dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
-      interestStatus: "Pending",
-    });
-
-    dispatch(
-      setSnackbarMessage(
-        `You have succesfully requested a connection with ${targetedAccountName}`
-      )
-    );
-    dispatch(setSnackbarTriggerCounter());
-  };
-
-  // function to add scounts and agents to connections
-  const handleConnection = async (filtered) => {
-    // 2. Check if filtered.accountId exists in any connection
-    const hasExistingConnection = agentAndScoutsInConnectionsList.some(
-      (person) => person.accountId === filtered.accountId
-    );
-
-    if (hasExistingConnection) {
-      console.log("You already have this person in your connections");
+    // check if maxConnections has been reached
+    if (pendingOrApprovedConnectionRequests.length >= maxConnections) {
       triggerWarningAlertModal(
-        "You already have this person in your connections"
+        `You have exceeded your connections limit of ${maxConnections}. Please wait for a response or withdraw a request.`
       );
-      return; // Exit if connection already exists
-    }
-
-    // 3. Add connection to Firestore (if filtered.accountId is not found)
-    try {
-      const connectionsRef = collection(
+    } else {
+      // FOR PLAYER ACC HOLDER
+      const userNotificationRef = doc(
         db,
-        `users_db/${accountId}/connections`
+        `users_db/${userLoginDetailsObject.accountId}/Notifications`,
+        uuid
       );
-      await addDoc(connectionsRef, {
-        ...filtered, // Spread filtered object for individual fields
+
+      /// FOR SELF
+      const scoutNotificationRef = doc(
+        db,
+        `users_db/${targetedAccountID}/Notifications`,
+        uuid
+      );
+
+      //Notification sent
+      await setDoc(userNotificationRef, {
+        NotificationId: uuid,
+        requestAccepted: "Pending",
+        dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+        senderAddress: userLoginDetailsObject.email,
+        senderId: userLoginDetailsObject.accountId,
+        type: "Connection request",
+        message: `Your interest with ${targetedAccountName} has been established`,
+        readStatus: false,
+        targetAccountRole: targetedAccountRole,
       });
-      fetchAgentAndScoutsInConnectionsList();
-    } catch (error) {
-      console.error("Error adding connection:", error);
-      // Handle specific errors as needed (e.g., display error message)
+
+      await setDoc(scoutNotificationRef, {
+        NotificationId: uuid,
+        requestAccepted: "Pending",
+        dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+        senderAddress: userLoginDetailsObject.email,
+        senderId: userLoginDetailsObject.accountId,
+        type: "Connection request",
+        message: `${userLoginDetailsObject.firstName} has shown interest in your profile. Accept to view message sent`,
+        readStatus: false,
+        targetAccountRole: targetedAccountRole,
+      });
+
+      const connectionInterestRef = doc(
+        db,
+        `users_db/${userLoginDetailsObject?.accountId}/NonPlayerConnectionInterests`,
+        uuid
+      );
+
+      //Notification sent
+
+      await setDoc(connectionInterestRef, {
+        interestedConnectionAccountId: targetedAccountID,
+        dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+        interestStatus: "Pending",
+      });
+
+      dispatch(
+        setSnackbarMessage(
+          `You have succesfully requested a connection with ${targetedAccountName}`
+        )
+      );
+      dispatch(setSnackbarTriggerCounter());
     }
   };
+
+  // UseEffect to set the pendingOrAcceptedConnections State
+  useEffect(() => {
+    // 1. Filter Pending and Accepted NonPlayer Connections
+    const filteredNonPlayerConnections =
+      interestedNonPlayerConnectionsArray?.filter(
+        (connection) =>
+          connection.interestStatus === "Pending" ||
+          connection.interestStatus === "Accepted"
+      );
+
+    // 2. Filter Pending and Accepted Player Connections
+    const filteredPlayerConnections = interestedPlayerConnectionsArray?.filter(
+      (connection) =>
+        connection.interestStatus === "Pending" ||
+        connection.interestStatus === "Accepted"
+    );
+
+    // Combine both filtered arrays
+    const combinedFilteredConnections = [
+      ...(filteredNonPlayerConnections || []),
+      ...(filteredPlayerConnections || []),
+    ];
+
+    // Update state once with the combined array
+    setPendingOrApprovedConnectionRequests(combinedFilteredConnections);
+  }, [interestedNonPlayerConnectionsArray, interestedPlayerConnectionsArray]);
 
   // useQuery to get all agents and scouts
   const { data: agentAndScoutsList, error: getVisibleAgentsError } = useQuery({
@@ -335,8 +358,7 @@ const CoachAgentScoutVersionConnetions = () => {
             // flexDirection: "column",background
             // background: "peru",
           }
-        }
-      >
+        }>
         {/* // INBOX HEADER */}
         <div
           className="md:basis-[20%]  sm:basis-[20%]"
@@ -375,8 +397,7 @@ const CoachAgentScoutVersionConnetions = () => {
               onClick={() => {
                 setCountryName("");
                 setRole();
-              }}
-            >
+              }}>
               Reset
             </Button>
           </div>
@@ -385,8 +406,7 @@ const CoachAgentScoutVersionConnetions = () => {
         {/* //  CONNECTIONS */}
         <div
           className="md:basis-[70%] md:mt-[2vh] sm:flex-col sm:flex sm:flex-shrink-0 sm:basis-[70%] content-center"
-          style={{ overflowY: "scroll" }}
-        >
+          style={{ overflowY: "scroll" }}>
           {countryName === ""
             ? agentAndScoutsList
                 ?.filter((agent) => !connections.includes(agent.accountId))
@@ -394,8 +414,7 @@ const CoachAgentScoutVersionConnetions = () => {
                   return (
                     <div
                       className="sm:min-h-1vh md:min-h-0.5vh "
-                      key={person.accountId}
-                    >
+                      key={person.accountId}>
                       <ScoutsDisplayCard
                         // style={{ width: "25vw", height: "15vh" }}
                         AgencyName={person.organization}
@@ -414,7 +433,6 @@ const CoachAgentScoutVersionConnetions = () => {
                               "You need an active subscription"
                             );
                           }
-                          // handleConnection(person);
                         }}
                       />
                     </div>
@@ -430,15 +448,18 @@ const CoachAgentScoutVersionConnetions = () => {
                   return (
                     <div
                       key={index}
-                      className="sm:min-h-1vh md:min-h-0.5vh md:w-[5vw]"
-                    >
+                      className="sm:min-h-1vh md:min-h-0.5vh md:w-[5vw]">
                       <ScoutsDisplayCard
                         style={{ width: "25vw", height: "15vh" }}
                         AgencyName={filtered.organization}
                         UserName={`${filtered.firstName} ${filtered.surname}`}
                         handleConnect={() => {
                           if (subscriptionStatus == true) {
-                            handleConnection(filtered);
+                            submitConnectionRequest(
+                              person.accountId,
+                              `${person.firstName} ${person.surname}`,
+                              person.role
+                            );
                           } else {
                             triggerWarningAlertModal(
                               "You need an active subscription"
@@ -464,8 +485,7 @@ const CoachAgentScoutVersionConnetions = () => {
           // paddingLeft: "1.5vw",
           borderRadius: "1vw",
           overflowY: "scroll",
-        }}
-      >
+        }}>
         {/* // Pagination and delete message area */}
         {/* style={{ flex: "1", display: "grid", placeContent: "center" }} */}
         Filter for player connections and agent/scout connections
