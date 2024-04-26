@@ -134,9 +134,14 @@ const SubscribeTrial = () => {
         });
 
         // set appropriate product
-        const selectedIds = productIds
-          .filter((prodId) => prodId.role === roleSelected)
+        // set appropriate product
+        const selectedIds = allProducts
+          .filter((prodId) => prodId?.data.name.includes(roleSelected))
           .map((prodId) => prodId.id);
+
+        // const selectedIds = productIds
+        //   .filter((prodId) => prodId.role === roleSelected)
+        //   .map((prodId) => prodId.id);
 
         await allProducts.map(async (prods) => {
           if (selectedIds.includes(prods.id)) {
@@ -360,7 +365,7 @@ const SubscribeTrial = () => {
                   setPackageValuePrice(selectedProduct.priceId);
                   dispatch(setProductPackage(selectedProduct.id));
 
-                  console.log("priceId", priceId, "id:", id);
+                  // console.log("priceId", priceId, "id:", id);
                   // save price id
                   dispatch(setPriceID(priceId));
                   // save product id
