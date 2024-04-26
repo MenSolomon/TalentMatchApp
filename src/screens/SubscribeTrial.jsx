@@ -96,6 +96,7 @@ const SubscribeTrial = () => {
 
       try {
         const querySnapshot = await getDocs(q);
+
         // get all the products
         querySnapshot.forEach(async (doc) => {
           // save them to allProducts array
@@ -105,7 +106,7 @@ const SubscribeTrial = () => {
             await basicProduct.push({ id: doc.id, data: doc.data() });
           }
         });
-        console.log(allProducts);
+
         // set basic state
         await basicProduct.map(async (prods) => {
           const priceSnap = await getDocs(
@@ -133,9 +134,14 @@ const SubscribeTrial = () => {
         });
 
         // set appropriate product
+        // set appropriate product
         const selectedIds = allProducts
-          .filter((prodId) => prodId?.data.name.includes("Agent"))
+          .filter((prodId) => prodId?.data.name.includes(roleSelected))
           .map((prodId) => prodId.id);
+
+        // const selectedIds = productIds
+        //   .filter((prodId) => prodId.role === roleSelected)
+        //   .map((prodId) => prodId.id);
 
         await allProducts.map(async (prods) => {
           if (selectedIds.includes(prods.id)) {
@@ -359,7 +365,7 @@ const SubscribeTrial = () => {
                   setPackageValuePrice(selectedProduct.priceId);
                   dispatch(setProductPackage(selectedProduct.id));
 
-                  console.log("priceId", priceId, "id:", id);
+                  // console.log("priceId", priceId, "id:", id);
                   // save price id
                   dispatch(setPriceID(priceId));
                   // save product id
