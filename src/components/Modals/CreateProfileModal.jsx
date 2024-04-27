@@ -118,15 +118,16 @@ export default function CreateProfileModal({ ProfileType }) {
   };
 
   const handleOpen = async () => {
-    const { accountId } = loginUserDetails;
-    const productIDRef = doc(db, `users_db/${accountId}`);
-    const productIdSnap = await getDoc(productIDRef);
-    const priceID = await productIdSnap.data()?.subscriptionPrice;
-    if (isSubscriptionActive == false) {
-      StripeCheckout(priceID);
-    } else {
-      setOpen(true);
-    }
+    setOpen(true);
+    // const { accountId } = loginUserDetails;
+    // const productIDRef = doc(db, `users_db/${accountId}`);
+    // const productIdSnap = await getDoc(productIDRef);
+    // const priceID = await productIdSnap.data()?.subscriptionPrice;
+    // if (isSubscriptionActive == false) {
+    //   StripeCheckout(priceID);
+    // } else {
+    //   setOpen(true);
+    // }
   };
   const handleClose = () => {
     setOpen(false);
