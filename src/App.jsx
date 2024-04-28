@@ -84,6 +84,7 @@ import ProductDetails from "./utils/ProductDetails";
 import BuyBoostPoints from "./screens/BuyBoostPoints";
 import RequestExistingPlayerProfile from "./screens/RequestExistingPlayerProfile";
 import { setUserNotifications } from "./statemanager/slices/NofiticationsSlice";
+import ForgotPassword from "./screens/Authentication/ForgotPassword";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -535,7 +536,6 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-
       <CssBaseline />
       <Routes>
         {/* PROTECTED ROUTES  */}
@@ -599,8 +599,7 @@ const App = () => {
           {/* COACH AGENT AND SCOUT VERSION */}
           <Route
             path="/multiStudio"
-            element={<CoachAgentScoutVersionMotherComponent />}
-          >
+            element={<CoachAgentScoutVersionMotherComponent />}>
             <Route path="/multiStudio/favorite" element={<Error404 />} />
             <Route path="/multiStudio/help" element={<Error404 />} />
             <Route path="/multiStudio/settings" element={<Settings />} />
@@ -651,6 +650,7 @@ const App = () => {
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/productUpload" element={<ProductDetails />} />
 
         <Route path="/membership-plans" element={<MembershipPlanPage />} />

@@ -14,13 +14,11 @@ function SettingsSecurity() {
           // flexDirection: "column",
           // overflowY: "scroll",
         }
-      }
-    >
+      }>
       {/* Header Column */}
       <div
         className="md:flex md:flex-row  sm:flex sm:flex-row"
-        style={{ flex: "0.01" }}
-      >
+        style={{ flex: "0.01" }}>
         <h5>Password & Security Settings</h5>
       </div>
 
@@ -32,13 +30,11 @@ function SettingsSecurity() {
       {/* Sub Header Column */}
       <div
         // className="md:flex md:flex-row md:gap-[0em] sm:flex sm:flex-col sm:gap-[1em]"
-        style={{ flex: "0.89", display: "flex", flexDirection: "column" }}
-      >
+        style={{ flex: "0.89", display: "flex", flexDirection: "column" }}>
         <h5>Set up security and login account</h5> <br />
         <div
           className="sm:flex sm:flex-col md:flex md:flex-row"
-          style={{ flex: ".9" }}
-        >
+          style={{ flex: ".9" }}>
           {/* // LEFT FORM */}
 
           <div style={{ flex: ".3", display: "flex", flexDirection: "column" }}>
