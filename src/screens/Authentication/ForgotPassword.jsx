@@ -29,7 +29,7 @@ const ForgotPassword = () => {
 
   const onSubmit = async (formdata) => {
     try {
-      //   await sendPasswordResetEmail(auth, formdata.email);
+      await sendPasswordResetEmail(auth, formdata.email);
       setEmailMessage(true);
       setIsLoading(true);
       setTimeout(() => {
