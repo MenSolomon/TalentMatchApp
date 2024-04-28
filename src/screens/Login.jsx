@@ -21,7 +21,7 @@ import Avatar from "@mui/material/Avatar";
 import imageBackground from "../assets/images/FootballLogo.jpg";
 import facebookLogo from "../assets/images/facebookImage.svg";
 import GoogleLogo from "../assets/images/google.svg";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import WorldMaps from "../components/WorldMap";
 import logoImage from "../assets/images/AppLogoBlue.png";
 import { useDispatch, useSelector } from "react-redux";
@@ -473,8 +473,7 @@ const Login = () => {
         // paddingTop: "1.5vh",
 
         color: "white",
-      }}
-    >
+      }}>
       {/* NAVIGATION AREA */}
       <div
         className="md:flex md:basis-[10%]  sm:flex sm:basis-[10%]"
@@ -499,8 +498,7 @@ const Login = () => {
             display: "flex",
             gap: "6vw",
             paddingTop: "1vh",
-          }}
-        >
+          }}>
           {/* <h5>Home</h5>
           <h5>Join</h5> */}
         </div>
@@ -529,8 +527,7 @@ const Login = () => {
                   style={{ color: "#5585FE", cursor: "pointer" }}
                   onClick={() => {
                     Navigate("/create-account/freetrial");
-                  }}
-                >
+                  }}>
                   Choose a plan
                 </span>{" "}
               </h5>
@@ -568,8 +565,7 @@ const Login = () => {
                   sx={{ marginBottom: "3vh" }}
                   variant="outlined"
                   focused
-                  color="info"
-                >
+                  color="info">
                   <InputLabel htmlFor="outlined-adornment-password">
                     Password
                   </InputLabel>
@@ -584,8 +580,7 @@ const Login = () => {
                           aria-label="toggle password visibility"
                           onClick={handleClickShowPassword}
                           onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
+                          edge="end">
                           {showPassword ? (
                             <VisibilityOff style={iconColor} />
                           ) : (
@@ -602,7 +597,9 @@ const Login = () => {
 
                 {/* Login ACCOUNT */}
 
-                <div> </div>
+                <div>
+                  <Link to={"/forgotpassword"}>ForgotPassword</Link>{" "}
+                </div>
 
                 <div>
                   {isLoading ? (
@@ -618,8 +615,7 @@ const Login = () => {
                         color: "white",
                         borderRadius: "1vw",
                         fontWeight: "bold",
-                      }}
-                    >
+                      }}>
                       Login
                     </Button>
                   )}
@@ -637,8 +633,7 @@ const Login = () => {
               // display: "flex",
               // flexDirection: "column-reverse",
             }
-          }
-        >
+          }>
           {/* //ICON AREA */}
           <div style={{ flex: ".2" }}>
             {" "}
