@@ -6,9 +6,9 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { functions } from "../../Firebase/Firebase";
+import { app, functions } from "../../Firebase/Firebase";
 import { productDetails } from "../../utils/ProductDetails";
-import { httpsCallable } from "firebase/functions";
+import { getFunctions, httpsCallable } from "firebase/functions";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -45,6 +45,7 @@ function SettingsBilling() {
   const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
 
   const handleCustomerPortal = async () => {
+    const functions = getFunctions(app, "europe-west2");
     const createPortalLink = httpsCallable(
       functions,
       "ext-firestore-stripe-payments-createPortalLink"

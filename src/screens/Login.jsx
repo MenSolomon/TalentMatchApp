@@ -6,6 +6,7 @@ import {
   InputLabel,
   OutlinedInput,
   TextField,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import FormControl from "@mui/material/FormControl";
@@ -58,6 +59,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
 
+  // forgot password hover state
+  const [fpHover, setFpHover] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
@@ -597,8 +600,15 @@ const Login = () => {
 
                 {/* Login ACCOUNT */}
 
-                <div>
-                  <Link to={"/forgotpassword"}>ForgotPassword</Link>{" "}
+                <div
+                  className="mb-3"
+                  onMouseEnter={() => setFpHover(true)}
+                  onMouseLeave={() => setFpHover(false)}>
+                  <Link to={"/forgotpassword"}>
+                    <Typography color={fpHover ? null : "white"} variant="h6">
+                      Forgot Password
+                    </Typography>
+                  </Link>
                 </div>
 
                 <div>
