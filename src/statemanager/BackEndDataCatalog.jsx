@@ -10,8 +10,14 @@ import {
   onSnapshot,
   orderBy,
   query,
+  where,
 } from "firebase/firestore";
-import { setPlayersDatabase, setUsersDatabase } from "./slices/DatabaseSlice";
+import {
+  selectPlayersDatabase,
+  setApiPlayersDatabase,
+  setPlayersDatabase,
+  setUsersDatabase,
+} from "./slices/DatabaseSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTempUsersDatabase } from "./slices/TempDatabaseSlice";
 import {
@@ -34,6 +40,8 @@ import { useParams } from "react-router-dom";
 import { setuserMessages } from "./slices/MessagesSlice";
 import { setAllPlayersVideos } from "./slices/VideosSlice";
 import SplashScreen from "../screens/SplashScreen";
+import { setInterestedPlayers } from "./slices/InterestedPlayersSlice";
+import { setInterestedConnections } from "./slices/InterestedConnectionSlice";
 
 const BackEndDataCatalog = ({ children }) => {
   // const id = useSelector(selectLogInUserID).id;
@@ -48,6 +56,8 @@ const BackEndDataCatalog = ({ children }) => {
   const currentCreatedSearchProfileName = useSelector(selectCurrentProfile);
   const onlineStatus = useSelector(selectInternetConnectionStatus);
   const loginStatus = useSelector(selectLoginStatus);
+
+  const allPlayersDatabaseFromSlice = useSelector(selectPlayersDatabase);
 
   const [isLoading, setIsLoading] = useState(true);
   const [progressPercentage, setProgressPercentage] = useState(0);
@@ -176,41 +186,82 @@ const BackEndDataCatalog = ({ children }) => {
         items.push(doc.data());
       });
 
-      console.log(loginUserObject?.accountId, items, "SavedPFS");
       dispatch(setUserSavedProfiles(items));
     });
     return () => {
       alldata();
     };
-  }, []);
+  }, [loginUserObject]);
 
-  // Notifications
-  useEffect(() => {
-    // const savedProfileSubCollectionRef = doc(
-    //   db,
-    //   `users_db/${loginUserObject?.accountId}/SavedProfiles`,
-    //   loginUserObject?.accountId
-    // );
+  // // Notifications
+  // useEffect(() => {
+  //   // const savedProfileSubCollectionRef = doc(
+  //   //   db,
+  //   //   `users_db/${loginUserObject?.accountId}/SavedProfiles`,
+  //   //   loginUserObject?.accountId
+  //   // );
 
-    const notificationsSubCollectionRef = collection(
-      db,
-      `users_db/${loginUserObject?.accountId}/Notifications`
-    );
+  //   const notificationsSubCollectionRef = collection(
+  //     db,
+  //     `users_db/${loginUserObject?.accountId}/Notifications`
+  //   );
 
-    const q = query(notificationsSubCollectionRef);
-    const alldata = onSnapshot(q, (querySnapshot) => {
-      const items = [];
-      querySnapshot.forEach((doc) => {
-        items.push(doc.data());
-      });
+  //   const q = query(notificationsSubCollectionRef);
+  //   const alldata = onSnapshot(q, (querySnapshot) => {
+  //     const items = [];
+  //     querySnapshot.forEach((doc) => {
+  //       items.push(doc.data());
+  //     });
 
-      console.log(loginUserObject?.accountId, items, "SavedPFS");
-      dispatch(setUserNotifications(items));
-    });
-    return () => {
-      alldata();
-    };
-  }, []);
+  //     console.log(loginUserObject?.accountId, items, "SavedPFS");
+  //     dispatch(setUserNotifications(items));
+  //   });
+  //   return () => {
+  //     alldata();
+  //   };
+  // }, [loginUserObject]);
+
+  // // Subscribe to SavedProfiles collection
+  // const savedProfileSubCollectionRef = collection(
+  //   db,
+  //   `users_db/${accountId}/SavedProfiles`
+  // );
+  // const profileListener = onSnapshot(
+  //   savedProfileSubCollectionRef,
+  //   (querySnapshot) => {
+  //     const profileItems = [];
+  //     querySnapshot.forEach((doc) => {
+  //       profileItems.push(doc.data());
+  //     });
+  //     dispatch(setUserSavedProfiles(profileItems));
+  //   }
+  // );
+
+  // // Subscribe to Notifications collection
+  // const notificationsSubCollectionRef = collection(
+  //   db,
+  //   `users_db/${accountId}/Notifications`
+  // );
+  // const notificationsListener = onSnapshot(
+  //   notificationsSubCollectionRef,
+  //   (querySnapshot) => {
+  //     const notificationItems = [];
+  //     querySnapshot.forEach((doc) => {
+  //       notificationItems.push(doc.data());
+  //     });
+  //     dispatch(setUserNotifications(notificationItems));
+  //   }
+  // );
+
+  // // Wait for both listeners to complete before navigating to "/"
+  // Promise.all([profileListener, notificationsListener])
+  //   .then(() => {
+  //     setIsLoading(false);
+  //   })
+  //   .catch((error) => {
+  //     setIsLoading(false);
+  //     console.error("Error:", error);
+  //   });
 
   // GHANA PREMIER LEAGUE ID: 5610 V3 570
   // NIGERIA PREMIER LEAGUE ID: 5801 V3 399
@@ -622,25 +673,25 @@ const BackEndDataCatalog = ({ children }) => {
     //   unsubscribe();
     // };
   }, [dispatch, db, loginUserObject, onlineStatus]); // Make sure to include 'db' in the dependency array if it's used inside the useEffect
+  //CAUSING THE BUG OF CHANGING LOGIN CREDENTIALS BUT IT UPDATES THE USER LOGINN SLICE WITH NEW AND UPDATED DATA (CONNECTIONS,PROFILE IMAGE ETC)
+  // useEffect(() => {
+  //   if (loginUserObject?.accountId !== undefined) {
+  //     const unsub = onSnapshot(
+  //       doc(db, "users_db", loginUserObject?.accountId),
+  //       // { includeMetadataChanges: true },
+  //       (doc) => {
+  //         // console.log(doc.data());
 
-  useEffect(() => {
-    if (loginUserObject?.accountId !== undefined) {
-      const unsub = onSnapshot(
-        doc(db, "users_db", loginUserObject?.accountId),
-        // { includeMetadataChanges: true },
-        (doc) => {
-          // console.log(doc.data());
-
-          if (doc.data() !== undefined) {
-            dispatch(setUserDetailsObject(doc.data()));
-          }
-        }
-      );
-      return () => {
-        unsub();
-      };
-    }
-  }, []);
+  //         if (doc.data() !== undefined) {
+  //           dispatch(setUserDetailsObject(doc.data()));
+  //         }
+  //       }
+  //     );
+  //     return () => {
+  //       unsub();
+  //     };
+  //   }
+  // }, []);
   ///
   const dummyUserArray = [
     {
@@ -739,7 +790,7 @@ const BackEndDataCatalog = ({ children }) => {
         items.push(doc.data());
         // alert(doc.id());
       });
-
+      // alert("Message cooo ad");
       dispatch(setuserMessages(items));
       console.log(loginUserObject?.accountId, items, "Gakpo");
     });
@@ -747,18 +798,108 @@ const BackEndDataCatalog = ({ children }) => {
       alldata();
     };
   }, []);
+
+  // RETRIEVE PLAYERS FROM API DATABASE
   // useEffect(() => {
-  //   const documentRef = doc(
-  //     db,
-  //     `users_db/${loginUserObject.accountId}/Chats/`,
-  //     "messages"
+  //   const apiPlayers = collection(db, `api_data`);
+
+  //   // const playersQuery = query(collection(db, "players_database"));
+  //   // const playersSnapshot =  getDocs(playersQuery);
+  //   const q = query(apiPlayers);
+  //   const alldata = onSnapshot(q, (querySnapshot) => {
+  //     const items = [];
+  //     querySnapshot.forEach((doc) => {
+  //       items.push(doc.data());
+  //       // alert(doc.id());
+  //     });
+
+  //     const mixedPlayers = [...allPlayersDatabaseFromSlice, ...items];
+
+  //     dispatch(setApiPlayersDatabase(items));
+  //     console.log(items, "Retrieve Api Data");
+  //   });
+  //   return () => {
+  //     alldata();
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   const userUpdateRef = collection(db, `users_db`);
+  //   const q = query(
+  //     userUpdateRef,
+  //     where("accountId", "==", loginUserObject?.accountId)
   //   );
+  //   onSnapshot(q, (querySnapshot) => {
+  //     const items = [];
+  //     querySnapshot.forEach((doc) => {
+  //       items.push(doc.data());
+  //     });
+  //     if (items.length > 0) {
+  //       dispatch(setUserDetailsObject(items[0]));
+  //     }
+  //   });
+
+  //   /// END OF RETRIEVEING USER NDATA
+
+  //   // };
+  // }, []);
+
+  useEffect(() => {
+    const userPlayerInterestRef = collection(
+      db,
+      `users_db/${loginUserObject.accountId}/PlayerInterests`
+    );
+
+    const q = query(userPlayerInterestRef);
+    const alldata = onSnapshot(q, (querySnapshot) => {
+      const items = [];
+      querySnapshot.forEach((doc) => {
+        items.push(doc.data());
+        // alert(doc.id());
+      });
+
+      dispatch(setInterestedPlayers(items));
+      console.log(loginUserObject?.accountId, items, "Gakpo");
+    });
+    return () => {
+      alldata();
+    };
+  }, []);
+
+  /// REtriveing interested COnnections (AGENT CLUB OR SCOUTS)
+
+  useEffect(() => {
+    const userPlayerInterestRef = collection(
+      db,
+      `users_db/${loginUserObject?.accountId}/NonPlayerConnectionInterests`
+    );
+
+    const q = query(userPlayerInterestRef);
+    const alldata = onSnapshot(q, (querySnapshot) => {
+      const items = [];
+      querySnapshot.forEach((doc) => {
+        items.push(doc.data());
+        // alert(doc.id());
+      });
+      console.log("Non Player Conn", items);
+      dispatch(setInterestedConnections(items));
+    });
+    return () => {
+      alldata();
+    };
+  }, [loginUserObject?.accountId]);
+
+  const localStorageId = localStorage.getItem("LoggedAccountId");
+
+  // useEffect(() => {
+  //   const documentRef = doc(db, `users_db`, localStorageId);
 
   //   const unsubscribe = onSnapshot(documentRef, (docSnapshot) => {
   //     if (docSnapshot.exists()) {
   //       const documentData = docSnapshot.data();
   //       console.log("Document Data:", documentData);
 
+  //       dispatch(setUserDetailsObject(documentData));
   //       // Handle the real-time updates of the document data here
   //     } else {
   //       console.log("Document does not exist");
@@ -771,6 +912,57 @@ const BackEndDataCatalog = ({ children }) => {
   //     unsubscribe();
   //   };
   // }, []);
+
+  useEffect(() => {
+    // localStorage.setItem("LoggedAccountId",accountId)
+    const userNotificationRef = collection(
+      db,
+      `users_db/${localStorageId}/Notifications`
+    );
+    const q = query(userNotificationRef);
+    const alldata = onSnapshot(q, (querySnapshot) => {
+      const items = [];
+
+      querySnapshot.forEach((doc) => {
+        items.push(doc.data());
+      });
+      // alert(localStorageId, "  Local storage");nn
+
+      dispatch(setUserNotifications(items));
+      // alert(userLoginDetailsObject?.accountId, "Noot");
+    });
+    return () => {
+      alldata();
+    };
+  }, [localStorageId]);
+
+  // useEffect(() => {
+  //   // const documentRef = collection(db, `users_db`);
+  //   // loginUserObject?.accountId
+  //   const unsub = onSnapshot(doc(db, "users_db", localStorageId), (doc) => {
+  //     console.log("Current data: ", doc.data());
+  //     dispatch(setUserDetailsObject(doc.data()));
+  //   });
+
+  //   return () => {
+  //     unsub();
+  //   };
+  // }, []);
+
+  // const documentRef = doc(db, `users_db`, localStorageId);
+  // onSnapshot(documentRef, (docSnapshot) => {
+  //   if (docSnapshot.exists()) {
+  //     const documentData = docSnapshot.data();
+  //     console.log("Document Data:", documentData);
+
+  //     dispatch(setUserDetailsObject(documentData));
+  //     // Handle the real-time updates of the document data here
+  //   } else {
+  //     console.log("Document does not exist");
+  //     // Handle the case where the document does not exist
+  //   }
+  // });
+
   return (
     <div>
       {/* Other content or logic specific to BackEndDataCatalog */}

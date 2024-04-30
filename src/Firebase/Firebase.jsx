@@ -6,16 +6,16 @@ import { getAnalytics } from "firebase/analytics";
 import { getFunctions } from "firebase/functions";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD7mJJBQt4rKK_98Wya21stWahgvjWKSLk",
-  authDomain: "talentmeet-58ebc.firebaseapp.com",
-  projectId: "talentmeet-58ebc",
-  storageBucket: "talentmeet-58ebc.appspot.com",
-  messagingSenderId: "116903961578",
-  appId: "1:116903961578:web:4c1119a068bd793eed0893",
-  measurementId: "G-Z25QK1784F",
+  apiKey: "AIzaSyB20DRZoLibMAs58-DCDy5TxqaFMg-cBJU",
+  authDomain: "talentmeet-86e99.firebaseapp.com",
+  projectId: "talentmeet-86e99",
+  storageBucket: "talentmeet-86e99.appspot.com",
+  messagingSenderId: "501601935481",
+  appId: "1:501601935481:web:e2c9be635e963b218bb4a8",
+  measurementId: "G-NBKXVZJPV3",
 };
 
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth();
 export const db = getFirestore(app);

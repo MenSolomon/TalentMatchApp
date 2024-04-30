@@ -45,8 +45,12 @@ import {
   setDoc,
 } from "firebase/firestore";
 import moment from "moment";
-import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
+import {
+  selectIsSubscriptionActive,
+  selectUserDetailsObject,
+} from "../../../../statemanager/slices/LoginUserDataSlice";
 import { selectPlayersDatabase } from "../../../../statemanager/slices/DatabaseSlice";
+import handleVideoGloballyClick from "../../../../utilities/VideoPausePlayFunction";
 // import {
 //   arrayUnion,
 //   doc,
@@ -208,12 +212,27 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
 
         const VideoUuid = uuidv4();
 
-        const playerObjectRef = doc(
+        const userNotificationRef = doc(
           db,
-          `players_database/${id}/videos`,
-          VideoUuid
+          `users_db/${userDetailsObject.accountId}/Notifications`,
+          uuid
         );
-        await setDoc(playerObjectRef, {
+        // Notification for user
+
+        await setDoc(userNotificationRef, {
+          NotificationId: uuid,
+          dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+          senderAddress: "talentmeet@gmail.com",
+          senderId: "Admin",
+          type: "Video Review",
+          message: `Your video will be reviewed to be published in a few hours for publication please community guidelines to understand our video publishing policy`,
+          readStatus: false,
+        });
+
+        // Sending Admin video request
+        const AdminRef = doc(db, `Video_Requests`, VideoUuid);
+
+        await setDoc(AdminRef, {
           id: VideoUuid,
           filename: selectedFile?.name,
           dateUploaded: moment().format("MMMM D, YYYY HH:mm:ss"),
@@ -221,17 +240,19 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
           description,
           category,
           views: 0,
+          PlayerId: id,
           // suggestion: thought of making the uploaded by an accountId for specifity instead of names
-          uploadedById: id,
+          uploadedById: userDetailsObject.accountId,
           uploadedBy:
             role === "Club"
               ? userDetailsObject.club
               : `${userDetailsObject.accountId}`,
+          requestStatus: "Pending",
         });
 
         // Creating a object in the field of an object
         // await setDoc(
-        //   playerObjectRef,
+        //   AdminRef,
         //   {
         //     videos: {
         //       [VideoUuid]: {
@@ -259,15 +280,20 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
         handleClose();
         // turnMotherModalAfterSubmitted(false);
 
-        role === "Player"
-          ? dispatch(
-              setSnackbarMessage(`"Video uploaded to your gallery successfuly"`)
-            )
-          : dispatch(
-              setSnackbarMessage(
-                `"Video uploaded to ${firstName} ${surName}'s gallery successfuly"`
-              )
-            );
+        // role === "Player"
+        //   ? dispatch(
+        //       setSnackbarMessage(`"Video uploaded to your gallery successfuly"`)
+        //     )
+        //   : dispatch(
+        //       setSnackbarMessage(
+        //         `"Video uploaded to ${firstName} ${surName}'s gallery successfuly"`
+        //       )
+        //     );
+        dispatch(
+          setSnackbarMessage(
+            `Your video will be reviewed to be published in a few hours for publication please community guidelines to understand our video publishing policy`
+          )
+        );
         dispatch(setSnackbarTriggerCounter());
       } catch (error) {
         console.error(error);
@@ -430,6 +456,7 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
                   }}
                 >
                   <video
+                    onClick={handleVideoGloballyClick}
                     className="sm:h-[23vh] md:w-[20vw] sm:w-[60vw] "
                     src={videoUrl}
                     controls
@@ -499,6 +526,7 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
 
 export default function UploadVideoModal() {
   const dispatch = useDispatch();
+  const subscriptionStatus = useSelector(selectIsSubscriptionActive);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -560,7 +588,17 @@ export default function UploadVideoModal() {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Upload Videos</Button>
+      <Button
+        onClick={() => {
+          if (subscriptionStatus == true) {
+            handleOpen();
+          } else {
+            triggerWarningAlertModal("You do not have an active subscription");
+          }
+        }}
+      >
+        Upload Videos
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

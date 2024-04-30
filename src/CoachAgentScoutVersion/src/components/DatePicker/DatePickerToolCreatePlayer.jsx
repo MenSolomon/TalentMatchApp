@@ -9,15 +9,33 @@ import dayjs from "dayjs";
 import { selectCurrentBrowserSize } from "../../../../statemanager/slices/OtherComponentStatesSlice";
 import { useSelector } from "react-redux";
 
-export default function DatePickerForEditPlayerModal({
+export default function DatePickerToolCreatePlayer({
   label,
   style,
   containerStyle,
   dateValue,
   defaultValue,
 }) {
+  // const handleDateChange = (date) => {
+  //   dateValue(date);
+  // };
+
   const handleDateChange = (date) => {
-    dateValue(date);
+    // Check if selected date is older than 16 years from today
+    const minAgeInMilliseconds = 16 * 365.25 * 24 * 60 * 60 * 1000;
+    const today = dayjs();
+    const selectedDate = dayjs(date);
+    const ageInMilliseconds = today.diff(selectedDate);
+
+    // alert(ageInMilliseconds < minAgeInMilliseconds);
+    if (ageInMilliseconds < minAgeInMilliseconds) {
+      // alert("You must be 16 years or older to select a date.");
+      return; // Prevent setting invalid date
+    } else {
+      dateValue(date);
+      // alert(date.toString());
+      console.log(date);
+    }
   };
 
   const browserSize = useSelector(selectCurrentBrowserSize);
@@ -36,6 +54,7 @@ export default function DatePickerForEditPlayerModal({
           sx={{ ...style, width: browserWidth >= 1024 ? "23vw" : "95vw" }}
           // className="md:w-[23vw] sm:w-[100vw]"
           label={label}
+          disableFuture
         />
       </DemoContainer>
     </LocalizationProvider>

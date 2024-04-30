@@ -19,6 +19,7 @@ import {
   deleteField,
   doc,
   getDoc,
+  onSnapshot,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -51,9 +52,12 @@ export default function NotificationsMenu() {
   const userLoginDetailsObject = useSelector(selectUserDetailsObject);
   const notificationsArray = useSelector(selectUserNotifications);
 
-  const NotificationsTabsArray = ["All",
-  //  "Emails",
-    "Reminders", "Transfers"];
+  const NotificationsTabsArray = [
+    "All",
+    //  "Emails",
+    "Reminders",
+    "Transfers",
+  ];
   // const savedProfileSubCollectionRef = doc(
   //   db,
   //   `users_db/${accountId}/SavedProfiles`,
@@ -95,6 +99,22 @@ export default function NotificationsMenu() {
       return dateB.diff(dateA);
     });
 
+  // I nrought this snapshot here to fix a bug i had no idea how to fix .. DO NOT TOUCH IT .. You dont want that headache..... It was a bug that had to do with getting the doc of old user on acceptance of connection request
+
+  React.useEffect(() => {
+    // localStorage.setItem("LoggedAccountId",accountId)
+
+    const alldata = onSnapshot(
+      doc(db, "users_db", userLoginDetailsObject?.accountId),
+      (querySnapshot) => {
+        dispatch(setUserDetailsObject(querySnapshot.data()));
+      }
+    );
+    return () => {
+      alldata();
+    };
+  }, []);
+
   return (
     <div>
       <div
@@ -131,7 +151,9 @@ export default function NotificationsMenu() {
             <div style={{ flex: ".1" }}>
               <div style={{ paddingLeft: "1vw" }}>
                 <div style={{ width: "100%", display: "flex" }}>
-                  <h4 style={{ marginRight: "55%" }}>Notifications</h4>{" "}
+                  <h4 style={{ marginRight: "55%" }}>
+                    Notifications {userLoginDetailsObject?.accountId}{" "}
+                  </h4>{" "}
                   <IconButton onClick={handleClose} sx={{ float: "right" }}>
                     <Close sx={{ color: "black" }} />
                   </IconButton>

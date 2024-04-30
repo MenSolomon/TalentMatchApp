@@ -5,7 +5,10 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserDataSlice";
+import {
+  selectIsSubscriptionActive,
+  selectUserDetailsObject,
+} from "../../statemanager/slices/LoginUserDataSlice";
 import {
   setSnackbarMessage,
   setSnackbarTriggerCounter,
@@ -16,6 +19,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { v4 } from "uuid";
 import { db } from "../../Firebase/Firebase";
 import moment from "moment";
+import { selectInterestedPlayers } from "../../statemanager/slices/InterestedPlayersSlice";
 
 const style = {
   position: "absolute",
@@ -31,12 +35,19 @@ const style = {
   p: 5,
 };
 
-export default function CreateShowInterestModal({ playerName, playerId }) {
+export default function CreateShowInterestModal({
+  playerName,
+  playerId,
+  currentAccountOwner,
+}) {
+  const subscriptionStatus = useSelector(selectIsSubscriptionActive);
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const [Message, setMessage] = React.useState("");
+  const [DisableButton, setDisableButton] = React.useState(false);
 
   const dispatch = useDispatch();
 
@@ -47,10 +58,16 @@ export default function CreateShowInterestModal({ playerName, playerId }) {
 
   const userLoginAccount = useSelector(selectUserDetailsObject);
 
+  const interestedPlayersArray = useSelector(selectInterestedPlayers);
+  const [isPlayerInterestPending, setIsplayerInterestPending] = React.useState(
+    []
+  );
   // const establishedConnections =userLoginAccount?.Connections
 
   const submitInterest = async () => {
     const uuid = v4();
+
+    const interestsUuid = v4();
 
     // FOR PLAYER ACC HOLDER
     const userNotificationRef = doc(
@@ -62,7 +79,7 @@ export default function CreateShowInterestModal({ playerName, playerId }) {
     /// FOR SELF
     const playerNotificationRef = doc(
       db,
-      `users_db/${playerId}/Notifications`,
+      `users_db/${currentAccountOwner}/Notifications`,
       uuid
     );
 
@@ -90,6 +107,23 @@ export default function CreateShowInterestModal({ playerName, playerId }) {
       readStatus: false,
     });
 
+    // UPDATE THE USER DOC TO PREVENT USER FROM SENDING MESSAGE AGAIN
+
+    const userPlayerInterestRef = doc(
+      db,
+      `users_db/${userLoginAccount.accountId}/PlayerInterests`,
+      uuid
+    );
+
+    //Notification sent
+
+    await setDoc(userPlayerInterestRef, {
+      interestedPlayerId: playerId,
+      Current_Account_Owner: currentAccountOwner,
+      dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
+      interestStatus: "Pending",
+    });
+
     dispatch(
       setSnackbarMessage(
         `You have succesfully established a connection with ${playerName}`
@@ -98,42 +132,61 @@ export default function CreateShowInterestModal({ playerName, playerId }) {
     dispatch(setSnackbarTriggerCounter());
   };
 
+  React.useEffect(() => {
+    const filteredPlayer =
+      interestedPlayersArray &&
+      interestedPlayersArray?.filter(
+        (data) =>
+          (data?.interestStatus === "Pending" &&
+            data?.interestedPlayerId === playerId) ||
+          (data?.interestStatus === "Accepted" &&
+            data?.interestedPlayerId === playerId)
+      );
+
+    setIsplayerInterestPending(filteredPlayer);
+  }, [interestedPlayersArray]);
+
   return (
     <div>
       {/* <Button onClick={handleOpen}>Open modal</Button> */}
       {/* ========================= */}
-      <Button
-        sx={{
-          textTransform: "none",
 
-          fontWeight: "900",
-          marginRight: "1vw",
-          color: "white",
-          background: "#5585FE",
-        }}
-        onClick={handleOpen}
-      >
-        {" "}
-        Show Interest{" "}
-      </Button>
+      {isPlayerInterestPending?.length > 0 ||
+      playerId === userLoginAccount?.accountId ? (
+        ""
+      ) : (
+        <Button
+          disabled={!subscriptionStatus}
+          sx={{
+            textTransform: "none",
+            fontWeight: "900",
+            marginRight: "1vw",
+            color: "white",
+            background: "#5585FE",
+          }}
+          onClick={handleOpen}>
+          {" "}
+          Show Interest{" "}
+        </Button>
+      )}
+
       {/* ========================= */}
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+        aria-describedby="modal-modal-description">
         <Box sx={style} className="primaryTextColor cardBackground">
           <Typography
             id="modal-modal-title"
             variant="h6"
             component="h2"
-            sx={{ fontWeight: "bold" }}
-          >
-            Player Name: {playerName} {playerId}
+            sx={{ fontWeight: "bold" }}>
+            Player Name: {playerName}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 4 }}>
-            <TextField
+            Send Request to show interest and establish connections
+            {/* <TextField
               onChange={(e) => {
                 setMessage(e.target.value);
               }}
@@ -144,11 +197,15 @@ export default function CreateShowInterestModal({ playerName, playerId }) {
               //   defaultValue="Messages"
               sx={{ width: "45vw" }}
               type="text"
-            />
+            /> */}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 4 }}>
             <Button
-              onClick={submitInterest}
+              onClick={() => {
+                setDisableButton(true);
+                submitInterest();
+              }}
+              disabled={DisableButton}
               sx={{
                 textTransform: "none",
 
@@ -156,9 +213,8 @@ export default function CreateShowInterestModal({ playerName, playerId }) {
                 // marginLeft: "35vw",
                 color: "white",
                 background: "#5585FE",
-              }}
-            >
-              submit
+              }}>
+              Send request
             </Button>
           </Typography>
         </Box>

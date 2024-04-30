@@ -8,7 +8,10 @@ import {
   InputLabel,
   OutlinedInput,
   Radio,
+  Stack,
+  Switch,
   TextField,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import FormControl from "@mui/material/FormControl";
@@ -32,7 +35,9 @@ import BasicMenu from "../components/Menu/BasicMenu";
 import BasicButton from "../components/Buttons/BasicButton";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  selectCircularLoadBackdropTriggerState,
   selectCurrentBrowserSize,
+  setOpenCircularLoadBackdrop,
   setWarningAlertModalCounter,
   setWarningAlertModalMessage,
 } from "../statemanager/slices/OtherComponentStatesSlice";
@@ -61,6 +66,8 @@ import { selectUserDetailsObject } from "../statemanager/slices/LoginUserDataSli
 
 const ChangeSubscriptionPackagePage = () => {
   const browserSize = useSelector(selectCurrentBrowserSize);
+  // state to display loading sign or button
+  // const isButtonTriggered = useSelector(selectCircularLoadBackdropTriggerState);
   let browserWidth = parseInt(browserSize?.width, 10);
   // Settings for password input
   const [showPassword, setShowPassword] = useState(false);
@@ -70,13 +77,15 @@ const ChangeSubscriptionPackagePage = () => {
   const Navigate = useNavigate();
 
   // state to store all products
-  const [products, setProducts] = useState([]);
+  const [monthlyPackage, setMonthlyPackage] = useState([]);
+  const [yearlyPackage, setYearlyPackage] = useState([]);
+  const [basic, setBasic] = useState([]);
+
   // product details array
   const productIds = productDetails;
   // state to render loading effect whiles products is being set
   const [isProductsLoading, setIsProductsLoading] = useState(true);
-  // state to display loading sign or button
-  const [isButtonTriggered, setIsButtonTriggered] = useState(false);
+
   // state to hold the roleSelected
   const [role, setRole] = useState();
   // account id
@@ -94,27 +103,45 @@ const ChangeSubscriptionPackagePage = () => {
       const currentUser = auth.currentUser;
       const roleRef = await doc(db, `users_db`, accountId);
       const roleSnap = await getDoc(roleRef);
+      // get user's role
       const roleSelected = await roleSnap.data().role;
       await setRole(roleSelected);
+      console.log(roleSelected);
       try {
         const q = query(
           collection(db, "products"),
           where("active", "==", true)
         );
         const allProducts = [];
-
+        const basicProduct = [];
+        const productRoles = [];
         const querySnapshot = await getDocs(q);
 
         // get all the products
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach(async (doc) => {
           // save them to allProducts array
           allProducts.push({ id: doc.id, data: doc.data() });
+          // get all the procut names and save into the product roles array
+          productRoles.push({ id: doc.id, name: doc.data().name });
+
+          // get and store basic
+          if (doc.data().name == "Basic") {
+            await basicProduct.push({ id: doc.id, data: doc.data() });
+          }
         });
 
-        const selectedIds = productIds
+        // get the products that correspond to the role
+        const selectedIds = [];
+
+        productRoles
+          .filter(({ name }) => name.includes(roleSelected))
+          .forEach(({ id }) => selectedIds.push(id));
+
+        // check the user's role with the roles in productsDetails file and get the products for that role
+        selectedIds
           .filter((prodId) => prodId.role === roleSelected)
           .map((prodId) => prodId.id);
-
+        // check the allProducts array and get the contents of the product/prices collection
         allProducts.map(async (prods) => {
           if (selectedIds.includes(prods.id)) {
             const priceSnap = await getDocs(
@@ -124,22 +151,73 @@ const ChangeSubscriptionPackagePage = () => {
             priceSnap.forEach((priceDoc) => {
               // set counter to +1
               setFetchCounter((prevFetchCounter) => prevFetchCounter + 1);
-              setProducts((prevProducts) => [
-                ...prevProducts,
-                {
-                  name: prods.data.name,
-                  image: prods.data.images,
-                  price: priceDoc.data().unit_amount,
-                  id: prods.id,
-                  priceId: priceDoc.id,
-                  description: prods.data.description,
-                  details: prods.data.details,
-                },
-              ]);
+              if (priceDoc.data().interval == "month") {
+                setMonthlyPackage((prevProducts) => [
+                  ...prevProducts,
+                  {
+                    name: prods.data.name,
+                    image: prods.data.images,
+                    price: priceDoc.data().unit_amount,
+                    id: prods.id,
+                    priceId: priceDoc.id,
+                    description: prods.data.description,
+                    details: prods.data.details,
+                  },
+                ]);
+              } else if (priceDoc.data().interval == "year") {
+                setYearlyPackage((prevProducts) => [
+                  ...prevProducts,
+                  {
+                    name: prods.data.name,
+                    image: prods.data.images,
+                    price: priceDoc.data().unit_amount,
+                    id: prods.id,
+                    priceId: priceDoc.id,
+                    description: prods.data.description,
+                    details: prods.data.details,
+                  },
+                ]);
+              }
+
               // disable loading
               setIsProductsLoading(false);
+              // console.log({
+              //   name: prods.data.name,
+              //   image: prods.data.images,
+              //   price: priceDoc.data().unit_amount,
+              //   id: prods.id,
+              //   priceId: priceDoc.id,
+              //   description: prods.data.description,
+              //   details: prods.data.details,
+              // });
             });
           }
+        });
+
+        // set basic state
+        await basicProduct?.map(async (prods) => {
+          const priceSnap = await getDocs(
+            collection(db, `products/prod_Ps1JzpXiJ69kzn/prices`)
+          );
+
+          priceSnap.forEach((priceDoc) => {
+            // setFetchCounter((prevFetchCounter) => prevFetchCounter + 1);
+            setBasic((prevProducts) => [
+              ...prevProducts,
+              {
+                name: prods.data.name,
+                details: prods.data.details,
+                image: prods.data.images,
+                price: priceDoc.data().unit_amount,
+                interval: priceDoc.data().interval,
+                id: prods.id,
+                priceId: priceDoc.id,
+              },
+            ]);
+
+            // disable loading
+            setIsProductsLoading(false);
+          });
         });
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -197,6 +275,8 @@ const ChangeSubscriptionPackagePage = () => {
       }
     });
   };
+
+  const [duration, setDuration] = useState("monthly");
   return (
     <div
       className="md:w-[100%] md:h-[100vh] md:flex md:flex-col  
@@ -374,7 +454,32 @@ const ChangeSubscriptionPackagePage = () => {
             {" "}
             Unlock powerful features as a {role}
           </h3>
-
+          <div className="flex justify-center">
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Typography
+                variant="h4"
+                sx={{ color: duration == "yearly" ? "#5585FE" : null }}>
+                Yearly
+              </Typography>
+              <Switch
+                defaultChecked
+                inputProps={{ "aria-label": "ant design" }}
+                size="large"
+                onChange={(event) => {
+                  if (event.target.checked == true) {
+                    setDuration("monthly");
+                  } else if (event.target.checked == false) {
+                    setDuration("yearly");
+                  }
+                }}
+              />
+              <Typography
+                variant="h4"
+                sx={{ color: duration == "monthly" ? "#5585FE" : null }}>
+                Monthly
+              </Typography>
+            </Stack>
+          </div>
           {/* Subcscription Cards */}
           {isProductsLoading == true ? (
             <div style={{ textAlign: "center" }}>
@@ -391,17 +496,115 @@ const ChangeSubscriptionPackagePage = () => {
                 className="md:flex md:flex-row md:h-[150vh] md:gap-[30px]     
             sm:flex sm:flex-col sm:h-[130vh] sm:gap-[10px]
             ">
-                {products.map((item) => (
+                {duration == "monthly"
+                  ? monthlyPackage.map((item) => (
+                      <SubscriptionCard
+                        key={item.id}
+                        title={item.name}
+                        description={item.description}
+                        price={item.price / 100}
+                        // isButtonTriggered={isButtonTriggered}
+                        featuresHighlightArray={item.details}
+                        onClick={async () => {
+                          // get current uid
+                          const currentUser = await auth.currentUser;
+                          // alert(accountId);
+                          // Check if an active subscription exists
+                          const userRef = collection(
+                            db,
+                            `users_db/${accountId}/subscriptions`
+                          );
+                          const q = query(
+                            userRef,
+                            where("status", "==", "active")
+                          );
+                          const docSnap = await getDocs(q);
+
+                          if (docSnap.size !== 0) {
+                            // disable loading sign
+                            // dispatch(setOpenCircularLoadBackdrop(false));
+                            triggerWarningAlertModal(
+                              "An active subscription already exists. \n Cancel the existing one first"
+                            );
+                          } else {
+                            // display loading sign
+                            dispatch(setOpenCircularLoadBackdrop(true));
+                            StripeCheckout(item.id, item.priceId);
+                          }
+                        }}
+                        // onClick={() => {
+                        //   console.log(
+                        //     "id:",
+                        //     item.id,
+                        //     "name:",
+                        //     item.name,
+                        //     "descr:",
+                        //     item.description,
+                        //     "price:",
+                        //     item.price / 100
+                        //   );
+                        // }}
+                      />
+                    ))
+                  : yearlyPackage.map((item) => (
+                      <SubscriptionCard
+                        key={item.id}
+                        title={item.name}
+                        description={item.description}
+                        price={item.price / 100}
+                        // isButtonTriggered={isButtonTriggered}
+                        featuresHighlightArray={item.details}
+                        onClick={async () => {
+                          // get current uid
+                          const currentUser = await auth.currentUser;
+                          // alert(accountId);
+                          // Check if an active subscription exists
+                          const userRef = collection(
+                            db,
+                            `users_db/${accountId}/subscriptions`
+                          );
+                          const q = query(
+                            userRef,
+                            where("status", "==", "active")
+                          );
+                          const docSnap = await getDocs(q);
+
+                          if (docSnap.size !== 0) {
+                            // disable loading sign
+                            // dispatch(setOpenCircularLoadBackdrop(false));
+                            triggerWarningAlertModal(
+                              "An active subscription already exists. \n Cancel the existing one first"
+                            );
+                          } else {
+                            // display loading sign
+                            dispatch(setOpenCircularLoadBackdrop(true));
+                            StripeCheckout(item.id, item.priceId);
+                          }
+                        }}
+                        // onClick={() => {
+                        //   console.log(
+                        //     "id:",
+                        //     item.id,
+                        //     "name:",
+                        //     item.name,
+                        //     "descr:",
+                        //     item.description,
+                        //     "price:",
+                        //     item.price / 100
+                        //   );
+                        // }}
+                      />
+                    ))}
+                {/* Basic */}
+                {/* {basic?.map((item) => (
                   <SubscriptionCard
                     key={item.id}
                     title={item.name}
                     description={item.description}
                     price={item.price / 100}
-                    isButtonTriggered={isButtonTriggered}
+                    // isButtonTriggered={isButtonTriggered}
                     featuresHighlightArray={item.details}
                     onClick={async () => {
-                      // display loading sign
-                      setIsButtonTriggered(true);
                       // get current uid
                       const currentUser = await auth.currentUser;
                       // alert(accountId);
@@ -415,16 +618,18 @@ const ChangeSubscriptionPackagePage = () => {
 
                       if (docSnap.size !== 0) {
                         triggerWarningAlertModal(
-                          "An active subscription already exists. \n Cancel the existing one first"
+                          "An active subscription already exists. \n Cancel the existing one or wait till the end of billing period"
                         );
                         // disable loading sign
-                        setIsButtonTriggered(false);
+                        // dispatch(setOpenCircularLoadBackdrop(false));
                       } else {
+                        // display loading sign
+                        dispatch(setOpenCircularLoadBackdrop(true));
                         StripeCheckout(item.id, item.priceId);
                       }
                     }}
                   />
-                ))}
+                ))} */}
               </div>
             </div>
           )}
@@ -448,13 +653,12 @@ const ChangeSubscriptionPackagePage = () => {
 
 export default ChangeSubscriptionPackagePage;
 
-const SubscriptionCard = ({
+export const SubscriptionCard = ({
   title,
   description,
   price,
   featuresHighlightArray,
   onClick,
-  isButtonTriggered,
 }) => {
   return (
     <Card
@@ -501,21 +705,15 @@ const SubscriptionCard = ({
         {/* // Get Started button and outlined features  */}
 
         <div style={{ flex: ".6" }}>
-          {isButtonTriggered ? (
-            <div style={{ textAlign: "center" }}>
-              <CircularProgress />
-            </div>
-          ) : (
-            <BasicButton
-              onClick={onClick}
-              style={{
-                width: "100%",
-                // marginTop: "2vh",
-                marginBottom: "2vh",
-              }}
-              innerText="Get Started"
-            />
-          )}
+          <BasicButton
+            onClick={onClick}
+            style={{
+              width: "100%",
+              // marginTop: "2vh",
+              marginBottom: "2vh",
+            }}
+            innerText="Get Started"
+          />
           {/* ///features ROw */}
 
           {featuresHighlightArray &&

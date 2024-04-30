@@ -22,7 +22,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import BasicButton from "../Buttons/BasicButton";
-import { Star, StarBorder } from "@mui/icons-material";
+import { Star, StarBorder, VideocamOff } from "@mui/icons-material";
 import PlayerOverallAttributes from "../Charts/Bars/PlayerOverallAttributes";
 import { useSelector } from "react-redux";
 import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInAgencySlice";
@@ -38,6 +38,7 @@ import { useEffect } from "react";
 import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "../../Firebase/Firebase";
 import { useQuery } from "@tanstack/react-query";
+import handleVideoGloballyClick from "../../utilities/VideoPausePlayFunction";
 
 function createData(
   name,
@@ -45,7 +46,7 @@ function createData(
   Foot,
   Height,
   Country,
-  MarketValue,
+  Position,
   Club,
   clubName,
   ContractExpiry,
@@ -53,7 +54,8 @@ function createData(
   playerId,
   Nationality,
   StatisticsOverall,
-  StatisticsLastSeason
+  StatisticsLastSeason,
+  videos
 ) {
   return {
     name,
@@ -61,7 +63,7 @@ function createData(
     Foot,
     Height,
     Country,
-    MarketValue,
+    Position,
     Club,
     clubName,
     ContractExpiry,
@@ -95,12 +97,18 @@ function createData(
         DistanceCovered: "29",
       },
     ],
+    videos,
   };
 }
 
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+
+  var positionABR = row?.Position.match(/\((.*?)\)/);
+
+  // Check if there are matches and get the value inside parentheses
+  var result = positionABR ? positionABR[1] : null;
 
   const navigate = useNavigate();
 
@@ -129,14 +137,14 @@ function Row(props) {
           </IconButton>
         </TableCell>
 
-        <TableCell>
+        {/* <TableCell>
           <Checkbox
           // checked={checker}
           // onClick={() => {
           //   handleCheckClicked();
           // }}
           />{" "}
-        </TableCell>
+        </TableCell> */}
 
         <TableCell component="th" scope="row">
           <div
@@ -164,7 +172,9 @@ function Row(props) {
         </TableCell>
         <TableCell align="right">{row.Age}</TableCell>
         <TableCell align="right">{row.Foot}</TableCell>
-        <TableCell align="right">{row.Height}</TableCell>
+        <TableCell align="right"> &nbsp; {row.Height}</TableCell>
+        <TableCell />
+
         <TableCell align="right">
           <Tooltip title={row.Nationality}>
             <img
@@ -183,7 +193,9 @@ function Row(props) {
             />{" "}
           </Tooltip>
         </TableCell>
-        <TableCell align="right">{row.MarketValue}</TableCell>
+        <TableCell align="right">
+          <Tooltip title={row.Position}> {result} </Tooltip>
+        </TableCell>
         <TableCell align="right">{row.ContractExpiry}</TableCell>
       </TableRow>
       {/* /// Collapsible data */}
@@ -291,16 +303,35 @@ function Row(props) {
                       }}
                       className="tableVideo"
                     >
-                      <video
-                        // id={`video-${index}`}
-                        src="/believerJuggling.mp4"
-                        width="100%"
-                        // className="cardBackground md:w-[30vw] md:h-[90%] md:flex md:flex-col   sm:w-[90vw] sm:h-[100%] sm:flex sm:flex-col"
-                        // height="10vh"
-                        style={{ position: "absolute" }}
-                        // autoPlay={true}
-                        controls
-                      ></video>
+                      {row?.videos?.length <= 0 ? (
+                        <div
+                          className="sm:h-[19vh] md:h-[26vh]"
+                          style={{
+                            // height: "90%",
+                            width: "100%",
+                            borderRadius: "1vw",
+                            background: "black",
+                            display: "grid",
+                            placeContent: "center",
+                          }}
+                        >
+                          <VideocamOff
+                            sx={{ color: "white", width: 45, height: 45 }}
+                          />
+                        </div>
+                      ) : (
+                        <video
+                          onClick={handleVideoGloballyClick}
+                          // id={`video-${index}`}
+                          src={row.videos[0]?.url}
+                          width="100%"
+                          // className="cardBackground md:w-[30vw] md:h-[90%] md:flex md:flex-col   sm:w-[90vw] sm:h-[100%] sm:flex sm:flex-col"
+                          // height="10vh"
+                          style={{ position: "absolute" }}
+                          // autoPlay={true}
+                          controls
+                        ></video>
+                      )}
                     </div>
                   </div>
                 </TableCell>{" "}
@@ -453,34 +484,38 @@ export default function FilteredPlayersTable() {
   //   fetch();
   // }, []);
 
-  const {
-    status,
-    data: MatchedPlayersArray,
-    error,
-    refetch,
-    isFetching: isMatchedPlayersArrayFetching,
-  } = useQuery({
-    queryKey: ["fetchAllPlayers"],
-    queryFn: async () => {
-      const playersQuery = query(collection(db, "players_database"));
-      const playersSnapshot = await getDocs(playersQuery);
-      const allProducts = [];
-      const playersSnapshotData = await playersSnapshot.forEach((doc) => {
-        // save them to allProducts array
-        allProducts.push(doc.data());
-      });
-      // console.log("playersSnapshotData", allProducts);
-      return allProducts;
-    },
-    // refetchOnMount: true,
-    // refetchOnWindowFocus: true,
-  });
+  // QUERY FOR PLAYERS IN DATABASE
+  // const {
+  //   status,
+  //   data: MatchedPlayersArray,
+  //   error,
+  //   refetch,
+  //   isFetching: isMatchedPlayersArrayFetching,
+  // } = useQuery({
+  //   queryKey: ["fetchAllPlayers"],
+  //   queryFn: async () => {
+  //     const playersQuery = query(collection(db, "players_database"));
+  //     const playersSnapshot = await getDocs(playersQuery);
+  //     const allProducts = [];
+  //     const playersSnapshotData = await playersSnapshot.forEach((doc) => {
+  //       // save them to allProducts array
+  //       allProducts.push(doc.data());
+  //     });
+  //     // console.log("playersSnapshotData", allProducts);
+  //     return allProducts;
+  //   },
+  //   // refetchOnMount: true,
+  //   // refetchOnWindowFocus: true,
+  // });
+  // END OF QUERY FOR PLAYERS IN DATABASE
+
+  const MatchedPlayersArray = useSelector(selectPlayersDatabase);
+
   // remount component when usequery completes fetch
   useEffect(() => {}, [MatchedPlayersArray]);
 
   const allClubsInDatabase = useSelector(selectClubsInDatabase);
 
-  // const ExistingPlayerProfile = MatchedPlayersArray.filter((data) => {
   //   const {
   //     Nationality,
   //     position,
@@ -526,9 +561,13 @@ export default function FilteredPlayersTable() {
   // );
   const [PossiblePlayerMatch, setPossiblePlayerMatch] = React.useState([]);
   const [rows, setRows] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
+    // setIsLoading(false)
     // alert(profileName);
+    setIsLoading(true);
+
     const currentProfileFilterObjectInEffect = savedUserProfiles.find(
       (data) => {
         return data.label.toLowerCase() === profileName.trim().toLowerCase();
@@ -537,7 +576,105 @@ export default function FilteredPlayersTable() {
 
     console.log("filterObjectsOnline", currentProfileFilterObjectInEffect);
 
-    const ExistingPlayerProfile = MatchedPlayersArray?.filter((data) => {
+    // const ExistingPlayerProfile = MatchedPlayersArray?.filter((data) => {
+    //   const {
+    //     Nationality,
+    //     position,
+    //     Age,
+    //     Statsitics,
+    //     contractEndDate,
+    //     preferredFoot,
+    //     height,
+    //     clubName,
+    //   } = data;
+    //   const filterNationalityValue =
+    //     currentProfileFilterObjectInEffect?.filter.NationalityValue.toLowerCase();
+    //   const filterPositionRangeSliderValues =
+    //     currentProfileFilterObjectInEffect?.filter.PositionRangeSliderValues;
+    //   const filterPlayerPosition =
+    //     currentProfileFilterObjectInEffect?.filter
+    //       .PlayerPositionAutoCompleteValue;
+    //   const filterpreferredFoot =
+    //     currentProfileFilterObjectInEffect?.filter.PrefferedFootRadioValue;
+    //   // const defenceValues = Statsitics.find(
+    //   //   (data) => data?.Season === "Overall"
+    //   // ).Defence;
+    //   // const attackValues = Statsitics.find(
+    //   //   (data) => data?.Season === "Overall"
+    //   // ).Attack;
+    //   // const distributionValues = Statsitics.find(
+    //   //   (data) => data?.Season === "Overall"
+    //   // ).Distribution;
+    //   // const disciplineValues = Statsitics.find(
+    //   //   (data) => data?.Season === "Overall"
+    //   // ).Discipline;
+    //   // const generalValues = Statsitics.find(
+    //   //   (data) => data?.Season === "Overall"
+    //   // ).General;
+    //   const filterFirstHeightRange =
+    //     currentProfileFilterObjectInEffect?.filter.HeightRangeValue[0];
+    //   const filterSecondHeightRange =
+    //     currentProfileFilterObjectInEffect?.filter.HeightRangeValue[1];
+    //   const filterFirstAgeRange =
+    //     currentProfileFilterObjectInEffect?.filter?.AgeRangeValue[0];
+    //   const filterSecondAgeRange =
+    //     currentProfileFilterObjectInEffect?.filter?.AgeRangeValue[1];
+
+    //   const filterStatistics =
+    //     currentProfileFilterObjectInEffect?.filter?.positionRangeSliderValues;
+    //   const filterContractStatus =
+    //     currentProfileFilterObjectInEffect?.filter?.ContractStatusCheckBoxes;
+
+    //   const sampleDate = new Date(contractEndDate);
+    //   // Get the current date
+    //   const currentDate = new Date();
+    //   // Calculate the difference in milliseconds
+    //   const diffMilliseconds = sampleDate - currentDate;
+
+    //   // Convert milliseconds to months
+    //   const monthsDifference = diffMilliseconds / (1000 * 60 * 60 * 24 * 30.44); // Approximate average number of days in a month
+
+    //   // const filterAgeRange =
+    //   //   currentProfileFilterObjectInEffect?.filter.AgeRangeValue;
+
+    //   // Define the variables to compare
+    //   // filterPlayerPosition === "Any" ? 1*2 :( playerPosition === "Winger (W)" ||  playerPosition === "Striker (ST)" )? (attackValues.filterPlayerPosition.Goals >= filterPositionRangeSliderValues.Goals[0] && attackValues.filterPlayerPosition.Goals <= filterPositionRangeSliderValues.Goals[1] )? 1 : 0
+    //   const variablesToCompare = [
+    //     Nationality.toLowerCase() === filterNationalityValue ? 3 : 0,
+
+    //     preferredFoot === filterpreferredFoot || filterpreferredFoot === "Any"
+    //       ? 1
+    //       : 0,
+    //     height >= filterFirstHeightRange && height <= filterSecondHeightRange
+    //       ? 1
+    //       : 0,
+
+    //     Age >= filterFirstAgeRange && Age <= filterSecondAgeRange ? 2 : 0,
+
+    //     filterContractStatus === "Any"
+    //       ? 1
+    //       : filterContractStatus ===
+    //           "Contract Expiring in less than 6 months" && monthsDifference <= 6
+    //       ? 1
+    //       : filterContractStatus ===
+    //           "Contract Expiring in more than 6 months" && monthsDifference >= 6
+    //       ? 1
+    //       : clubName === filterContractStatus
+    //       ? 1
+    //       : 0,
+    //     // Add more variables to compare as needed
+    //   ];
+
+    //   let numberOfMatches = variablesToCompare.reduce(
+    //     (accumulator, currentValue) => accumulator + currentValue,
+    //     0
+    //   );
+
+    //   data.numberOfMatches = numberOfMatches;
+    //   // Check if at least 4 variables match
+    //   return numberOfMatches >= 5;
+    // });
+    const ExistingPlayerProfile = MatchedPlayersArray?.map((data) => {
       const {
         Nationality,
         position,
@@ -548,6 +685,7 @@ export default function FilteredPlayersTable() {
         height,
         clubName,
       } = data;
+
       const filterNationalityValue =
         currentProfileFilterObjectInEffect?.filter.NationalityValue.toLowerCase();
       const filterPositionRangeSliderValues =
@@ -557,21 +695,6 @@ export default function FilteredPlayersTable() {
           .PlayerPositionAutoCompleteValue;
       const filterpreferredFoot =
         currentProfileFilterObjectInEffect?.filter.PrefferedFootRadioValue;
-      // const defenceValues = Statsitics.find(
-      //   (data) => data?.Season === "Overall"
-      // ).Defence;
-      // const attackValues = Statsitics.find(
-      //   (data) => data?.Season === "Overall"
-      // ).Attack;
-      // const distributionValues = Statsitics.find(
-      //   (data) => data?.Season === "Overall"
-      // ).Distribution;
-      // const disciplineValues = Statsitics.find(
-      //   (data) => data?.Season === "Overall"
-      // ).Discipline;
-      // const generalValues = Statsitics.find(
-      //   (data) => data?.Season === "Overall"
-      // ).General;
       const filterFirstHeightRange =
         currentProfileFilterObjectInEffect?.filter.HeightRangeValue[0];
       const filterSecondHeightRange =
@@ -580,38 +703,25 @@ export default function FilteredPlayersTable() {
         currentProfileFilterObjectInEffect?.filter?.AgeRangeValue[0];
       const filterSecondAgeRange =
         currentProfileFilterObjectInEffect?.filter?.AgeRangeValue[1];
-
       const filterStatistics =
         currentProfileFilterObjectInEffect?.filter?.positionRangeSliderValues;
       const filterContractStatus =
         currentProfileFilterObjectInEffect?.filter?.ContractStatusCheckBoxes;
 
       const sampleDate = new Date(contractEndDate);
-      // Get the current date
       const currentDate = new Date();
-      // Calculate the difference in milliseconds
       const diffMilliseconds = sampleDate - currentDate;
+      const monthsDifference = diffMilliseconds / (1000 * 60 * 60 * 24 * 30.44);
 
-      // Convert milliseconds to months
-      const monthsDifference = diffMilliseconds / (1000 * 60 * 60 * 24 * 30.44); // Approximate average number of days in a month
-
-      // const filterAgeRange =
-      //   currentProfileFilterObjectInEffect?.filter.AgeRangeValue;
-
-      // Define the variables to compare
-      // filterPlayerPosition === "Any" ? 1*2 :( playerPosition === "Winger (W)" ||  playerPosition === "Striker (ST)" )? (attackValues.filterPlayerPosition.Goals >= filterPositionRangeSliderValues.Goals[0] && attackValues.filterPlayerPosition.Goals <= filterPositionRangeSliderValues.Goals[1] )? 1 : 0
       const variablesToCompare = [
         Nationality.toLowerCase() === filterNationalityValue ? 3 : 0,
-
         preferredFoot === filterpreferredFoot || filterpreferredFoot === "Any"
           ? 1
           : 0,
         height >= filterFirstHeightRange && height <= filterSecondHeightRange
           ? 1
           : 0,
-
         Age >= filterFirstAgeRange && Age <= filterSecondAgeRange ? 2 : 0,
-
         filterContractStatus === "Any"
           ? 1
           : filterContractStatus ===
@@ -623,76 +733,18 @@ export default function FilteredPlayersTable() {
           : clubName === filterContractStatus
           ? 1
           : 0,
-        // Add more variables to compare as needed
       ];
 
-      // COMPARING STAS
-      // const variablesToCompare = [
-      //   // Your existing comparisons...
-      //   // Example: Nationality, PreferredFoot, Height, Age, etc.
-
-      //   // Add comparisons based on position-specific statistics
-      //   ...Object.entries(filterStatistics).map(([statistic, range]) => {
-      //     let playerStatValue = 0;
-
-      //     // Determine which statistics object to use based on player position
-      //     let statsObject;
-      //     if (
-      //       [
-      //         "Goalkeeper (GK)",
-      //         "Center Back (CB)",
-      //         "Left Back (LB)",
-      //         "Right Back (RB)",
-      //         "Wing Back (WB)",
-      //       ].includes(data.position)
-      //     ) {
-      //       // For Goalkeeper and Defender positions, use Defence statistics
-      //       statsObject = data.Statistics.find(
-      //         (stat) => stat.Season === "Overall"
-      //       )?.Defence;
-      //     } else if (
-      //       [
-      //         "Defensive Midfielder (DM)",
-      //         "Attacking Midfielder (AM)",
-      //         "Central Midfielder (CM)",
-      //       ].includes(data.position)
-      //     ) {
-      //       // For Midfielder positions, use Distribution statistics
-      //       statsObject = data.Statistics.find(
-      //         (stat) => stat.Season === "Overall"
-      //       )?.Distribution;
-      //     } else if (["Winger (W)", "Striker (ST)"].includes(data.position)) {
-      //       // For Winger and Striker positions, use Attack statistics
-      //       statsObject = data.Statistics.find(
-      //         (stat) => stat.Season === "Overall"
-      //       )?.Attack;
-      //     }
-
-      //     // Extract the statistic value for comparison
-      //     if (statsObject && statistic in statsObject) {
-      //       playerStatValue = statsObject[statistic];
-      //     }
-
-      //     // Extract the range for comparison
-      //     const [minRange, maxRange] = range;
-
-      //     // Check if the player's statistic falls within the specified range
-      //     return playerStatValue >= minRange && playerStatValue <= maxRange
-      //       ? 1
-      //       : 0;
-      //   }),
-      // ];
-
-      const numberOfMatches = variablesToCompare.reduce(
+      let numberOfMatches = variablesToCompare.reduce(
         (accumulator, currentValue) => accumulator + currentValue,
         0
       );
 
-      data.numberOfMatches = numberOfMatches;
-      // Check if at least 4 variables match
-      return numberOfMatches >= 5;
-    });
+      // Add the property numberOfMatches to the object
+      const newData = { ...data, numberOfMatches: numberOfMatches };
 
+      return newData;
+    }).filter((data) => data.numberOfMatches >= 5);
     const sortedPlayers = ExistingPlayerProfile?.sort((player1, player2) => {
       return player2.numberOfMatches - player1.numberOfMatches;
     });
@@ -716,9 +768,9 @@ export default function FilteredPlayersTable() {
           Statistics,
           preferredFoot,
           height,
-          marketValue,
           contractStartDate,
           id,
+          videos,
         } = data;
 
         const clubObject = allClubsInDatabase.find((data) => {
@@ -733,7 +785,7 @@ export default function FilteredPlayersTable() {
           preferredFoot,
           height,
           CountryCode,
-          marketValue,
+          position,
           ClubLogo,
           clubName,
           contractStartDate,
@@ -741,10 +793,15 @@ export default function FilteredPlayersTable() {
           id,
           Nationality,
           Statistics[0],
-          Statistics[1]
+          Statistics[1],
+          videos
         );
       });
     setRows(temporalRows);
+
+    console.log("TEMPAHROW", temporalRows);
+
+    setIsLoading(false);
 
     // alert(ExistingPlayerProfile.length);
   }, [profileName, MatchedPlayersArray]);
@@ -806,7 +863,7 @@ export default function FilteredPlayersTable() {
 
   return (
     <div style={{ height: "42.5vh", width: "100%" }}>
-      {PossiblePlayerMatch?.length === 0 ? (
+      {isLoading === false && PossiblePlayerMatch?.length === 0 ? (
         " No Matches "
       ) : (
         <>
@@ -831,11 +888,10 @@ export default function FilteredPlayersTable() {
                   {/* <TableCell /> */}
                   <TableCell />
                   <TableCell />
-
-                  <TableCell sx={{ marginLeft: "4vw" }}>
+                  {/* <TableCell sx={{ marginLeft: "4vw" }}>
                     &nbsp; &nbsp;&nbsp;
                     <Checkbox />{" "}
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell>
                     {" "}
                     &nbsp; &nbsp; Personal
@@ -848,12 +904,12 @@ export default function FilteredPlayersTable() {
                   <TableCell />
                   <TableCell />
 
-                  <TableCell align="right"> Age</TableCell>
-                  <TableCell align="right">Foot</TableCell>
-                  <TableCell align="right">Height</TableCell>
-                  <TableCell align="right">Country</TableCell>
-                  <TableCell align="right">Club</TableCell>
-                  <TableCell align="right">Market value</TableCell>
+                  <TableCell align="left"> Age</TableCell>
+                  <TableCell align="left">Foot</TableCell>
+                  <TableCell align="left">Height</TableCell>
+                  <TableCell align="left">Country</TableCell>
+                  <TableCell align="left">Club</TableCell>
+                  <TableCell align="right">Position</TableCell>
                   <TableCell align="right">Contract Expiry</TableCell>
                 </TableRow>
               </TableHead>
@@ -880,19 +936,9 @@ export default function FilteredPlayersTable() {
                 }}
               >
                 {/* <div style={{ overflowY: "scroll", height: "300px" }}> */}
-                {isMatchedPlayersArrayFetching ? (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignSelf: "center",
-                    }}
-                  >
-                    <CircularProgress />
-                  </div>
-                ) : (
-                  rows?.map((row, key) => <Row key={key} row={row} />)
-                )}
+                {rows?.map((row, key) => (
+                  <Row key={key} row={row} />
+                ))}
                 {/* </div> */}
               </TableBody>{" "}
             </Table>

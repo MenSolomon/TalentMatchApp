@@ -1,7 +1,7 @@
-import { NotificationAdd, Notifications } from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
-import { useEffect } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { Check, NotificationAdd, Notifications } from "@mui/icons-material";
+import { Alert, Button, Tooltip } from "@mui/material";
+import { useEffect, useState } from "react";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import avatarImage from "./assets/images/avatar.jpg";
 
@@ -17,6 +17,7 @@ import CreateProfileModal from "./components/Modals/CreateProfileModal";
 import UploadPlayer from "./components/Tooltips/UploadPlayer";
 import WelcomeMessageModal from "./components/Modals/WelcomeMessageModal";
 import {
+  selectIsSubscriptionActive,
   selectUserDetailsObject,
   setIsSubscriptionActive,
   setLoginStatus,
@@ -36,19 +37,28 @@ import {
   setUserSavedProfiles,
 } from "./statemanager/slices/SavedProfileSlice";
 import {
+  arrayUnion,
   collection,
   doc,
   getDoc,
+  getDocs,
+  increment,
   onSnapshot,
   query,
+  setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { setPriceID } from "./statemanager/slices/SignupStepperSlice";
 import { auth, db } from "./Firebase/Firebase";
+import { signOut } from "@firebase/auth";
+import AlertSnackBar from "./components/Snackbars/AlertSnackBar";
 
 const MotherComponent = () => {
   const userLoginObject = useSelector(selectUserDetailsObject);
   const usersSavedProfile = useSelector(selectUserSavedProfiles);
+  const navigate = useNavigate();
+  const Navigate = useNavigate();
   // const { savedProfile } = LoginUserDetails;
 
   const menuButtonsArray = [
@@ -77,6 +87,8 @@ const MotherComponent = () => {
   const screenSize = useSelector(selectCurrentScreenSize);
 
   let screenWidth = parseInt(screenSize?.width, 10);
+
+  const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
 
   // const [themePallette, setThemePallette] = useState({us});
 
@@ -326,90 +338,18 @@ const MotherComponent = () => {
     }
   }, [themeProviderObject]);
 
-  //   const currentUser = auth.currentUser;
-
-  //   const SubscriptionValidationChecker = async () => {
-  //     const accountId = await currentUser.uid;
-  //     // alert(accountId);
-  //     // get product id form database if the redux state is empty
-  //     const productIDRef = doc(db, `users_db/${accountId}`);
-  //     const productIdSnap = await getDoc(productIDRef);
-  //     const productID = await productIdSnap.data().subscriptionPackage;
-  //     const priceID = await productIdSnap.data().subscriptionPrice;
-  //     // alert(productID);
-  //     //get and store maxProfiles
-  //     const featuresRef = await doc(db, `products/${productID}`);
-  //     const featuresSnap = await getDoc(featuresRef);
-  //     const features = await featuresSnap.data().features;
-  //     // save to redux
-  //     await dispatch(setSubscriptionFeatures(features));
-  //     console.log(`maxProfilesSnap:${features.maxProfiles}`);
-  //     // save priceID to redux
-  //     await dispatch(setPriceID(priceID));
-  //     try {
-  //       const subscriptionsRef = collection(
-  //         db,
-  //         "users_db",
-  //         accountId,
-  //         "subscriptions"
-  //       );
-
-  //       const queryActiveOrTrialing = query(
-  //         subscriptionsRef,
-  //         where("status", "in", ["trialing", "active"])
-  //       );
-
-  //       onSnapshot(queryActiveOrTrialing, async (snapshot) => {
-  //         const doc = snapshot.docs[0];
-  //         const length = snapshot.docs.length;
-  //         // console.log(`no. of subs: ${length}`);
-  //         // console.log(`accountId:${accountId}`);
-  //         alert(length);
-
-  //         if (length > 0) {
-  //           dispatch(setIsSubscriptionActive(true));
-  //           // get end next billing date
-  //           const timestamp = doc.data().current_period_end.seconds;
-  //           const date = await new Date(timestamp * 1000);
-  //           dispatch(setNextBillingDate(date.toDateString()));
-  //         } else if (length == 0) {
-  //           dispatch(setIsSubscriptionActive(false));
-  //           dispatch(setNextBillingDate("N/A"));
-  //         }
-  //       });
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   SubscriptionValidationChecker();
-  // }, [userLoginObject?.accountId]);
+  // SubscriptionValidationChecker
   useEffect(() => {
-    // alert("SubscriptionValidationChecker");
+    // alert("Mother Rendered");
     const currentUser = auth.currentUser;
 
     if (currentUser) {
       const SubscriptionValidationChecker = async () => {
+        // alert("sub chaecker");
         const accountId = await currentUser.uid;
-        // alert(accountId);
-        // get product id form database if the redux state is empty
-        const productIDRef = doc(db, `users_db/${accountId}`);
-        const productIdSnap = await getDoc(productIDRef);
-        const productID = await productIdSnap.data().subscriptionPackage;
-        const priceID = await productIdSnap.data().subscriptionPrice;
-        console.log("priceID", priceID);
-        // save priceID to redux
-        await dispatch(setPriceID(priceID));
-        // alert(productID);
-
-        //get and store maxProfiles
-        const featuresRef = await doc(db, `products/${productID}`);
-        const featuresSnap = await getDoc(featuresRef);
-        const features = await featuresSnap.data().features;
-        // save to redux
-        await dispatch(setSubscriptionFeatures(features));
-        // console.log(`maxProfilesSnap:${features.maxProfiles}`);
-
+        const userRef = doc(db, `users_db/${accountId}`);
         try {
+          // get subscription
           const subscriptionsRef = collection(
             db,
             "users_db",
@@ -422,22 +362,77 @@ const MotherComponent = () => {
             where("status", "in", ["trialing", "active"])
           );
 
-          onSnapshot(queryActiveOrTrialing, async (snapshot) => {
-            const doc = snapshot.docs[0];
-            // console.log(doc.data()?.status);
-            const length = snapshot.docs.length;
+          const subscriptionDocPromise = new Promise((resolve, reject) => {
+            onSnapshot(queryActiveOrTrialing, async (snapshot) => {
+              const doc = snapshot.docs[0];
+              const length = snapshot.docs.length;
+              if (doc?.data().status === "active") {
+                dispatch(setIsSubscriptionActive(true));
+                // get end next billing date
+                const timestamp = doc.data().current_period_end.seconds;
+                const date = await new Date(timestamp * 1000);
+                dispatch(setNextBillingDate(date.toDateString()));
+                resolve(doc);
+              } else if (length == 0) {
+                dispatch(setIsSubscriptionActive(false));
+                dispatch(setNextBillingDate("N/A"));
+                dispatch(
+                  setUserDetailsObject({
+                    ...userLoginObject,
+                    subscriptionPackage: null,
+                    subscriptionPrice: null,
+                  })
+                );
 
-            if (doc) {
-              dispatch(setIsSubscriptionActive(true));
-              // get end next billing date
-              const timestamp = doc.data().current_period_end.seconds;
-              const date = await new Date(timestamp * 1000);
-              dispatch(setNextBillingDate(date.toDateString()));
-            } else if (doc === undefined) {
-              dispatch(setIsSubscriptionActive(false));
-              dispatch(setNextBillingDate("N/A"));
-            }
+                dispatch(
+                  setSubscriptionFeatures({
+                    canHideVisibility: false,
+                    maxPlayersInAgency: 1,
+                    maxProfiles: 1,
+                    maxVideosPerPlayer: 1,
+                  })
+                );
+                resolve(null);
+              }
+            });
           });
+
+          const docData = await subscriptionDocPromise;
+          // if an active subscription exist get the product id and store it
+          if (docData) {
+            // get product id from database if an active
+            const productID = await docData.data().items[0].plan.product;
+            const priceID = await docData.data().items[0].plan.id;
+            // alert(await docData.data().items[0].plan.product);
+            //get and store maxProfiles
+            const featuresRef = await doc(db, `products/${productID}`);
+            const featuresSnap = await getDoc(featuresRef);
+            const features = await featuresSnap.data().features;
+            const userInfoRef = doc(db, `users_db/${accountId}`);
+            // save features to redux
+            dispatch(setSubscriptionFeatures(features));
+            await updateDoc(userInfoRef, {
+              subscriptionPackage: productID,
+              subscriptionPrice: priceID,
+            });
+            // save priceID to redux
+            dispatch(setPriceID(priceID));
+          } else if (docData == null) {
+            // alert("docData null");
+            dispatch(
+              setSubscriptionFeatures({
+                canHideVisibility: false,
+                maxPlayersInAgency: 1,
+                maxProfiles: 1,
+                maxVideosPerPlayer: 1,
+              })
+            );
+            dispatch(setPriceID(null));
+            // set isBasic to true to hide this user from the connections list
+            await updateDoc(userRef, {
+              isBasic: true,
+            });
+          }
         } catch (error) {
           console.log(error);
         }
@@ -446,6 +441,164 @@ const MotherComponent = () => {
     } else {
       dispatch(setIsSubscriptionActive(true));
     }
+  }, []);
+
+  // Function that listens for any new boost points purchase and applies
+  const [boostPointsAlert, setBoostPointsAlert] = useState(false);
+  const handleboostPointsAlertClose = () => {
+    setBoostPointsAlert(false);
+  };
+  useEffect(() => {
+    const ApplyNewBoostPoints = async () => {
+      try {
+        // alert("Applying Boost");
+        const currentUser = auth.currentUser;
+        // alert(currentUser.uid);
+
+        // All Payments query with includes succeeded and failed transcactions
+        const paymentsCollectionQuery = query(
+          collection(db, `users_db/${currentUser.uid}/payments`),
+          where("status", "==", "succeeded")
+        );
+        const paymentsCollectionSnaphot = await getDocs(
+          paymentsCollectionQuery
+        );
+
+        //succeededPayments doc with includes id of only succeeded transcactions
+        const succeededPaymentsDocRef = doc(
+          db,
+          `users_db/${currentUser.uid}/succeededPayments`,
+          "paymentIds"
+        );
+
+        // add BoostPoints Fn
+        const addBoostPoints = async (amount) => {
+          let purchasedBoostPoints;
+
+          switch (amount) {
+            case 1600:
+              purchasedBoostPoints = 1000;
+              break;
+            case 900:
+              purchasedBoostPoints = 500;
+              break;
+            case 200:
+              purchasedBoostPoints = 100;
+              break;
+            default:
+              // Handle other cases if needed
+              break;
+          }
+          try {
+            const userRef = doc(db, `users_db/${currentUser.uid}`);
+            await updateDoc(userRef, {
+              boostPoints: increment(purchasedBoostPoints),
+            });
+          } catch (error) {
+            console.log(error);
+          }
+        };
+
+        try {
+          const succeededPaymentsDocPromise = new Promise(
+            async (resolve, reject) => {
+              const succeededPaymentsDocSnap = await getDoc(
+                succeededPaymentsDocRef
+              );
+              const succeededPaymentsDoc =
+                succeededPaymentsDocSnap?.data()?.ids;
+              if (succeededPaymentsDoc) {
+                // returns an array of ids
+                resolve(succeededPaymentsDoc);
+              } else if (
+                succeededPaymentsDoc == null ||
+                succeededPaymentsDoc == undefined
+              ) {
+                // returns empty array if this is the first time the user makes a boostPoint purchase
+                resolve([]);
+              }
+            }
+          );
+
+          const succeededPaymentsDocResult = await succeededPaymentsDocPromise;
+          // console.log("succeededPaymentsDocResult", succeededPaymentsDocResult);
+          if (
+            succeededPaymentsDocResult ||
+            succeededPaymentsDocResult == [] ||
+            succeededPaymentsDocResult == undefined ||
+            succeededPaymentsDocResult == null
+          ) {
+            // Filter documents by status and price type
+            const boostPointsPayments = [];
+            for (const doc of paymentsCollectionSnaphot.docs) {
+              const payment = doc.data();
+              if (
+                payment.items &&
+                payment.items.length > 0 &&
+                payment.items[0].price
+              ) {
+                const type = payment.items[0].price.type;
+                if (payment.status === "succeeded" && type === "one_time") {
+                  boostPointsPayments.push(payment.items);
+                }
+              }
+            }
+
+            const boostPointsPaymentsDestructured = [];
+
+            for (const itemsArray of boostPointsPayments) {
+              // Assuming itemsArray is an array containing objects like the one you provided
+              for (const item of itemsArray) {
+                boostPointsPaymentsDestructured.push(item);
+              }
+            }
+
+            // });
+            // Check if any of the boostPointsPaymentsDestructured ids are in succeededPaymentsDocResult as a Promise
+            const latestPaymentPromise = new Promise((resolve) => {
+              const latestPayment = [];
+              for (const item of boostPointsPaymentsDestructured) {
+                if (!succeededPaymentsDocResult.includes(item.id)) {
+                  latestPayment.push(item);
+                }
+              }
+              resolve(latestPayment);
+            });
+
+            const latestPaymentPromiseResult = await latestPaymentPromise;
+
+            console.log(
+              "latestPaymentPromiseResult",
+              latestPaymentPromiseResult
+            );
+
+            if (latestPaymentPromiseResult?.length > 0) {
+              // Now you can use the purchasedBoostPoints variable accordingly
+              addBoostPoints(latestPaymentPromiseResult[0].amount_total);
+              setBoostPointsAlert(true);
+
+              // this part sets a new doc if its the users first boost purchase and updates if it's not
+              if (succeededPaymentsDocResult?.length == 0) {
+                await setDoc(succeededPaymentsDocRef, {
+                  ids: arrayUnion(latestPaymentPromiseResult[0].id),
+                });
+              } else if (succeededPaymentsDocResult?.length > 0) {
+                await updateDoc(succeededPaymentsDocRef, {
+                  ids: arrayUnion(latestPaymentPromiseResult[0].id),
+                });
+              }
+            } else if (latestPaymentPromiseResult?.length == 0) {
+              return null;
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      } catch (error) {
+        console.log("ApplyNewBosstPoints", error);
+      }
+    };
+    ApplyNewBoostPoints();
   }, []);
   return (
     <div
@@ -464,6 +617,24 @@ const MotherComponent = () => {
         color: primaryTextColor,
         // zIndex: "-3",
       }}>
+      {/* NO SUBSCRIPTION ALERT */}
+      {isSubscriptionActive ? null : (
+        <Alert
+          severity="error"
+          variant="filled"
+          action={
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              onClick={() => navigate("/changeSubscription")}>
+              Get One
+            </Button>
+          }>
+          No or Inactive Subscrtiption
+        </Alert>
+      )}
+      {/*  NO SUBSCRIPTION ALERT END */}
       {/* //=====  NAVBAR ======= \\ */}
       <div
         className="md:flex md:basis-[11%]  sm:flex sm:basis-[8%]"
@@ -631,8 +802,24 @@ const MotherComponent = () => {
                         key={index}
                         onClick={() => {
                           dispatch(setLoginStatus(false));
+                          dispatch(setIsSubscriptionActive(true));
                           dispatch(setUserDetailsObject({}));
                           dispatch(setUserSavedProfiles([]));
+                          dispatch(
+                            setSubscriptionFeatures({
+                              canHideVisibility: false,
+                              maxPlayersInAgency: 1,
+                              maxProfiles: 1,
+                              maxVideosPerPlayer: 1,
+                            })
+                          );
+                          signOut(auth)
+                            .then(() => {
+                              Navigate("/login");
+                            })
+                            .catch((error) => {
+                              console.log("error:", error);
+                            });
                         }}>
                         <NavBarButton
                           ButtonName={name}
@@ -675,6 +862,13 @@ const MotherComponent = () => {
       </div>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       <BasicSnackBar />
+      <AlertSnackBar
+        open={boostPointsAlert}
+        handleClose={handleboostPointsAlertClose}
+        severity={"success"}
+        icon={Check}
+        message={"Boost Point Purchase Successful"}
+      />
     </div>
   );
 };

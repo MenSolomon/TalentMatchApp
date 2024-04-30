@@ -26,7 +26,7 @@ export default function DatePickerToolCreateAccount({
       return; // Prevent setting invalid date
     } else {
       dateValue(date);
-      alert(date.toString());
+      // alert(date.toString());
       console.log(date);
     }
   };

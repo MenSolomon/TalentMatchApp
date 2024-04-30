@@ -11,11 +11,14 @@ import moment from "moment";
 import {
   arrayRemove,
   arrayUnion,
+  collection,
   deleteField,
   doc,
   getDoc,
+  onSnapshot,
   setDoc,
   updateDoc,
+  query,
 } from "firebase/firestore";
 
 import { v4 } from "uuid";
@@ -30,8 +33,12 @@ import {
 } from "../../statemanager/slices/OtherComponentStatesSlice";
 import { setPlayerSelectedByClubOrScoutInPlayerManagement } from "../../statemanager/slices/PlayersInAgencySlice";
 import BasicButton from "../../components/Buttons/BasicButton";
-import { selectUserNotifications } from "../../statemanager/slices/NofiticationsSlice";
+import {
+  selectUserNotifications,
+  setUserNotifications,
+} from "../../statemanager/slices/NofiticationsSlice";
 import { formatDistanceToNow } from "date-fns";
+import { useEffect } from "react";
 
 const All = () => {
   const dispatch = useDispatch();
@@ -203,6 +210,7 @@ const MenuItemRow = ({
     //   uuid
     // );
 
+    const userAccountId = userLoginDetailsObject?.accountId;
     try {
       const uuid = v4();
       const playerObjetRef = doc(db, `players_database/${transferPlayerId}`);
@@ -284,39 +292,62 @@ const MenuItemRow = ({
         );
         const connectionRequestReceipientRef = doc(
           db,
-          `users_db/${userLoginDetailsObject.accountId}/Notifications`,
+          `users_db/${userAccountId}/Notifications`,
           notificationId
         );
 
-        const userRef = doc(db, `users_db/${userLoginDetailsObject.accountId}`);
-        const senderRef = doc(db, `users_db/${senderId}`);
+        const userRef = doc(db, `users_db/${userAccountId}`);
+        // const senderRef = doc(db, `users_db/${senderId}`);
 
         await updateDoc(connectionRequestSenderRef, {
-          requestAccepted: true,
+          requestAccepted: "Accepted",
         });
 
         await updateDoc(connectionRequestReceipientRef, {
-          requestAccepted: true,
+          requestAccepted: "Accepted",
         });
 
         // Seperating player connections from agent/scout connections
-        if (targetedRole === "Agent" || targetedRole === "Scout") {
+        if (
+          targetedRole === "Agent" ||
+          targetedRole === "Scout" ||
+          targetedRole === "Club"
+        ) {
+          await updateDoc(doc(db, `users_db/${senderId}`), {
+            AgentandScoutConnections: arrayUnion(userAccountId),
+          });
           await updateDoc(userRef, {
             AgentandScoutConnections: arrayUnion(senderId),
           });
 
-          await updateDoc(senderRef, {
-            AgentandScoutConnections: arrayUnion(
-              userLoginDetailsObject.accountId
-            ),
+          const connectionInterestRef = doc(
+            db,
+            `users_db/${senderId}/NonPlayerConnectionInterests`,
+            notificationId
+          );
+
+          //Notification sent
+
+          await updateDoc(connectionInterestRef, {
+            interestStatus: "Accepted",
           });
         } else {
+          await updateDoc(doc(db, `users_db/${senderId}`), {
+            Connections: arrayUnion(userAccountId),
+          });
+
           await updateDoc(userRef, {
             Connections: arrayUnion(senderId),
           });
 
-          await updateDoc(senderRef, {
-            Connections: arrayUnion(userLoginDetailsObject.accountId),
+          const userPlayerInterestRef = doc(
+            db,
+            `users_db/${senderId}/PlayerInterests`,
+            notificationId
+          );
+
+          await updateDoc(userPlayerInterestRef, {
+            interestStatus: "Accepted",
           });
         }
       }
@@ -406,11 +437,46 @@ const MenuItemRow = ({
           console.log("No such document!");
         }
       } else if (type === "Connection request") {
+        // Write a code to give the sender a notification when his player connection interest has been declined
+
         const connectionRequestSenderRef = doc(
           db,
           `users_db/${userLoginDetailsObject.accountId}/Notifications`,
           notificationId
         );
+        ///
+
+        if (targetedRole === "Player") {
+          const userPlayerInterestRef = doc(
+            db,
+            `users_db/${senderId}/PlayerInterests`,
+            notificationId
+          );
+
+          await updateDoc(userPlayerInterestRef, {
+            interestStatus: "Declined",
+          });
+        } else {
+          const connectionRequestSenderRef = doc(
+            db,
+            `users_db/${senderId}/Notifications`,
+            notificationId
+          );
+          const connectionRequestReceipientRef = doc(
+            db,
+            `users_db/${userLoginDetailsObject.accountId}/Notifications`,
+            notificationId
+          );
+
+          await updateDoc(connectionRequestSenderRef, {
+            requestAccepted: "Declined",
+          });
+
+          await updateDoc(connectionRequestReceipientRef, {
+            requestAccepted: "Declined",
+          });
+        }
+
         // await updateDoc(connectionRequestSenderRef, {});
 
         // await updateDoc(connectionRequestSenderRef, {
@@ -489,7 +555,7 @@ const MenuItemRow = ({
               transferCompleteStatus === "pending") ||
             (type === "Connection request" &&
               senderId !== userLoginDetailsObject.accountId &&
-              requestAccepted === false) ? (
+              requestAccepted === "Pending") ? (
               <>
                 <BasicButton
                   onClick={handleAcceptClick}
@@ -501,7 +567,8 @@ const MenuItemRow = ({
                   }}
                 />
 
-                {requestAccepted === false && type === "Connection request" ? (
+                {requestAccepted !== "Pending" &&
+                type === "Connection request" ? (
                   ""
                 ) : (
                   <BasicButton

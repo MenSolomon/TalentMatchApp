@@ -3,6 +3,9 @@ import pitch from "../../assets/images/pitch.jpg";
 import FootBallPitch from "../../components/Cards/FootBallPitch";
 import PlayerPositionStatsBarGraphSummary from "../../components/Charts/Bars/PlayerPositionStatsBarGraphSummary";
 import PlayerOverallAttributes from "../../components/Charts/Bars/PlayerOverallAttributes";
+import BasicButton from "../../components/Buttons/BasicButton";
+import { selectIsSubscriptionActive } from "../../statemanager/slices/LoginUserDataSlice";
+import { useSelector } from "react-redux";
 // import PlayerPositionStatsBarGraphSummary from "../../components/Charts/Bars/PlayerPositionStatsBarGraphSummary";
 
 const PlayerBio = ({
@@ -15,6 +18,7 @@ const PlayerBio = ({
   Position,
 }) => {
   const dateObject = new Date(DateOfBirth);
+  const subscriptionStatus = useSelector(selectIsSubscriptionActive);
 
   // Get the date portion without the time and "GMT"
   const formattedDate = dateObject.toDateString();
@@ -30,12 +34,10 @@ const PlayerBio = ({
           // display: "flex",
           // background: "red",
         }
-      }
-    >
+      }>
       <div
         className="sm:hidden md:block"
-        style={{ flex: ".23", padding: ".3vw" }}
-      >
+        style={{ flex: ".23", padding: ".3vw" }}>
         <FootBallPitch />
       </div>
 
@@ -45,8 +47,7 @@ const PlayerBio = ({
           padding: ".3vw",
           // background: "red",
           paddingLeft: "1vw",
-        }}
-      >
+        }}>
         <div
           className="md:flex md:w-[100%] md:h-[100%] md:flex-row     sm:flex-col md:gap-[.5vw]  sm:gap-[10vw] sm:flex sm:w-[100%] sm:h-[100%]"
           style={{
@@ -55,8 +56,7 @@ const PlayerBio = ({
             // display: "flex",
             // gap: ".5vw",
             background: "transparent",
-          }}
-        >
+          }}>
           <div className="div" style={{ flex: ".32" }}>
             {" "}
             <Card
@@ -73,16 +73,14 @@ const PlayerBio = ({
                 // fontWeight: "800",
                 borderRadius: "1vw",
                 background: "transparent",
-              }}
-            >
+              }}>
               <h6 style={{ fontWeight: "bolder" }}>Personal Information</h6>
               <div
                 style={{
                   fontWeight: "700",
                   fontSize: ".8em",
                   marginBottom: "1.1vh",
-                }}
-              >
+                }}>
                 {" "}
                 Citizenship : {Nationality}{" "}
               </div>
@@ -91,8 +89,7 @@ const PlayerBio = ({
                   fontWeight: "700",
                   fontSize: ".8em",
                   marginBottom: "1.1vh",
-                }}
-              >
+                }}>
                 {" "}
                 Place of birth : {PlaceOfBirth}{" "}
               </div>
@@ -102,8 +99,7 @@ const PlayerBio = ({
                   fontWeight: "700",
                   fontSize: ".8em",
                   marginBottom: "1.1vh",
-                }}
-              >
+                }}>
                 {" "}
                 Date of birth : {formattedDate}{" "}
               </div>
@@ -113,8 +109,7 @@ const PlayerBio = ({
                   fontWeight: "700",
                   fontSize: ".8em",
                   marginBottom: "1.1vh",
-                }}
-              >
+                }}>
                 {" "}
                 Currnet Team : {clubName}{" "}
               </div>
@@ -124,8 +119,7 @@ const PlayerBio = ({
                   fontWeight: "700",
                   fontSize: ".8em",
                   marginBottom: "1.1vh",
-                }}
-              >
+                }}>
                 {" "}
                 Joined : {contractStartDate}{" "}
               </div>
@@ -134,8 +128,7 @@ const PlayerBio = ({
                   fontWeight: "700",
                   fontSize: ".8em",
                   marginBottom: "1.1vh",
-                }}
-              >
+                }}>
                 {" "}
                 Position : {Position}
               </div>
@@ -145,8 +138,7 @@ const PlayerBio = ({
                   fontWeight: "700",
                   fontSize: ".8em",
                   marginBottom: "1.1vh",
-                }}
-              >
+                }}>
                 {" "}
                 Contract Expires : {contactEndDate}{" "}
               </div>
@@ -166,17 +158,25 @@ const PlayerBio = ({
                 paddingTop: "1vh",
                 borderRadius: "1vw",
                 background: "transparent",
-              }}
-            >
-              <PlayerPositionStatsBarGraphSummary />
+              }}>
+              {/* <PlayerPositionStatsBarGraphSummary /> */}
+              <PlayerOverallAttributes />
             </Card>{" "}
           </div>
-          <div className="div" style={{ flex: ".35" }}>
+          <div
+            className="div"
+            style={{
+              flex: ".35",
+            }}>
             <Card
               className="primaryColor"
               sx={{
                 width: "100%",
                 height: "100%",
+                display: "flex",
+                gap: "2vh",
+                flexDirection: "column",
+                padding: "2vh 1vw 0vh 1vw",
                 // background:
                 //   "linear-gradient(133deg, rgba(218,233,234,1) 0%, rgba(189,202,203,1) 35%, rgba(221,234,235,1) 73%, rgba(218,233,234,1) 100%)",
                 // borderBottom: "1px solid #0d818e",
@@ -185,9 +185,21 @@ const PlayerBio = ({
 
                 borderRadius: "1vw",
                 background: "transparent",
-              }}
-            >
-              <PlayerOverallAttributes />
+              }}>
+              <BasicButton
+                disabled={!subscriptionStatus}
+                innerText="Request last 5 games detailed stats"
+              />
+
+              <BasicButton
+                disabled={!subscriptionStatus}
+                innerText="Request last 15 games detailed stats"
+              />
+
+              <BasicButton
+                disabled={!subscriptionStatus}
+                innerText="Request last 30 games detailed stats"
+              />
             </Card>{" "}
           </div>
         </div>

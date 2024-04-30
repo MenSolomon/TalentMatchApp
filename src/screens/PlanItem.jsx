@@ -11,7 +11,6 @@ import {
   doc,
 } from "firebase/firestore";
 import { useSelector } from "react-redux";
-import { selectCredentials } from "../statemanager/slices/LoginUserDataSlice";
 import { auth, db } from "../Firebase/Firebase";
 import { productDetails } from "../utils/ProductDetails";
 
