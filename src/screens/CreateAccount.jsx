@@ -2,7 +2,7 @@ import { Button, TextField } from "@mui/material";
 import logoImage from "../assets/images/AppLogoBlue.png";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import BasicButton from "../components/Buttons/BasicButton";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,12 +39,15 @@ import CountrySelectCreateAccount from "../components/Autocompletes/CountrySelec
 const CreateAccount = () => {
   const browserSize = useSelector(selectCurrentBrowserSize);
   let browserWidth = parseInt(browserSize?.width, 10);
+  const userData = useSelector(selectUserSignUpData);
 
   const soccerPositions = useSelector(selectSoccerPostions);
 
   const preferredFootArray = ["Left", "Right", "Both"];
 
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(
+    userData?.phoneNumber ? userData.phoneNumber : "+233"
+  );
 
   const userFormDataWithOnlySubscriptionPackage =
     useSelector(selectUserSignUpData);
@@ -53,10 +56,10 @@ const CreateAccount = () => {
   const { subscriptionPackage, paymentType, subscriptionPrice } =
     userFormDataWithOnlySubscriptionPackage;
 
-  const handlePhoneNumberChange = (value) => {
-    setPhoneNumber(value);
-    // alert(value);
-  };
+  // const handlePhoneNumberChange = (value) => {
+  //   setPhoneNumber(value);
+  //   // alert(value);
+  // };
 
   // FUNCTIONS FOR MOVING FROM ACCOUNT PAGE TO CONFIRM DETAILS PAGE
   const navigate = useNavigate();
@@ -71,17 +74,20 @@ const CreateAccount = () => {
   const completedStepsObject = useSelector(selectCompleteSteps);
 
   const handleStepsCompleted = () => {
-    dispatch(setCompletedSteps({ ...completedStepsObject, 2: true }));
+    // dispatch(setCompletedSteps({ ...completedStepsObject, 2: true }));
+    dispatch(setCompletedSteps({ ...completedStepsObject, 1: true }));
   };
 
-  const [firstName, setfirstName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [CountryCode, setCountryCode] = useState("");
-  const [Nationality, setNationality] = useState("");
+  const [firstName, setfirstName] = useState(userData?.firstName);
+  const [surname, setSurname] = useState(userData?.surname);
+  const [CountryCode, setCountryCode] = useState(userData?.CountryCode);
+  const [NationalityLabel, setNationality] = useState(userData?.Nationality);
   const [nationalityCodeFromMRZ, setNationalityCodeFromMRZ] = useState("");
 
   const [selectedClubName, setSelectedClubName] = useState("");
-  const [DOB, setDOB] = useState("");
+  const [DOB, setDOB] = useState(
+    userData?.DateOfBirth !== undefined ? userData?.DateOfBirth : ""
+  );
   const [DOBMui, setDOBMui] = useState("");
 
   const [passwordMatch, setPasswordMatch] = useState("");
@@ -90,20 +96,20 @@ const CreateAccount = () => {
   const [preferredFoot, setPreferredFoot] = useState("");
 
   // **** SHORT POLLING THE FIRST NAME FROM THE MRZ STORED IN THE SESSIONS STORAGE  ****
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      const retrievedFirstName = sessionStorage.getItem("firstName");
-      if (retrievedFirstName === "") {
-        setfirstName("");
-      } else if (retrievedFirstName && retrievedFirstName !== firstName) {
-        // alert(retrievedFirstName);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     const retrievedFirstName = sessionStorage.getItem("firstName");
+  //     if (retrievedFirstName === "") {
+  //       setfirstName("");
+  //     } else if (retrievedFirstName && retrievedFirstName !== firstName) {
+  //       // alert(retrievedFirstName);
 
-        setfirstName(retrievedFirstName);
-      }
-    }, 100); // Adjust interval as needed
+  //       setfirstName(retrievedFirstName);
+  //     }
+  //   }, 100); // Adjust interval as needed
 
-    return () => clearInterval(intervalId); // Cleanup on unmount
-  }, [firstName]);
+  //   return () => clearInterval(intervalId); // Cleanup on unmount
+  // }, [firstName]);
 
   // sessionStorage.setItem("firstName", "");
   // sessionStorage.setItem("lastName", "");
@@ -111,67 +117,67 @@ const CreateAccount = () => {
   // sessionStorage.setItem("birthDate", "");
 
   // **** SHORT POLLING THE  SURNAME FROM THE MRZ STORED IN THE SESSIONS STORAGE  ****
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      const retrievedSurname = sessionStorage.getItem("lastName");
-      if (retrievedSurname === "") {
-        setSurname("");
-      } else if (retrievedSurname && retrievedSurname !== surname) {
-        // alert(retrievedSurname);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     const retrievedSurname = sessionStorage.getItem("lastName");
+  //     if (retrievedSurname === "") {
+  //       setSurname("");
+  //     } else if (retrievedSurname && retrievedSurname !== surname) {
+  //       // alert(retrievedSurname);
 
-        setSurname(retrievedSurname);
-      }
-    }, 100); // Adjust interval as needed
+  //       setSurname(retrievedSurname);
+  //     }
+  //   }, 100); // Adjust interval as needed
 
-    return () => clearInterval(intervalId); // Cleanup on unmount
-  }, [surname]);
+  //   return () => clearInterval(intervalId); // Cleanup on unmount
+  // }, [surname]);
 
   // **** SHORT POLLING THE  Date of Birth FROM THE MRZ STORED IN THE SESSIONS STORAGE  ****
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      const retrievedDOB = sessionStorage.getItem("birthDate");
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     const retrievedDOB = sessionStorage.getItem("birthDate");
 
-      if (retrievedDOB === "") {
-        setDOBMui("");
-        // setDOB("");
-      } else if (retrievedDOB && retrievedDOB !== DOB) {
-        // alert(retrievedSurname);
-        // The iso if for material ui component display and standardDate
-        // toLocaleString is for database stpre
+  //     if (retrievedDOB === "") {
+  //       setDOBMui("");
+  //       // setDOB("");
+  //     } else if (retrievedDOB && retrievedDOB !== DOB) {
+  //       // alert(retrievedSurname);
+  //       // The iso if for material ui component display and standardDate
+  //       // toLocaleString is for database stpre
 
-        let formattedDateISOMUi =
-          convertMRZDateToStandardFormatISOStandardForMUI(retrievedDOB);
+  //       let formattedDateISOMUi =
+  //         convertMRZDateToStandardFormatISOStandardForMUI(retrievedDOB);
 
-        let formattedDateISODB =
-          convertMRZDateToStandardFormatISOStandardForDatabase(retrievedDOB);
+  //       let formattedDateISODB =
+  //         convertMRZDateToStandardFormatISOStandardForDatabase(retrievedDOB);
 
-        // alert(formattedDate);
-        setDOBMui(formattedDateISOMUi);
-        setDOB(formattedDateISODB);
-      }
-    }, 100); // Adjust interval as needed
+  //       // alert(formattedDate);
+  //       setDOBMui(formattedDateISOMUi);
+  //       setDOB(formattedDateISODB);
+  //     }
+  //   }, 100); // Adjust interval as needed
 
-    return () => clearInterval(intervalId); // Cleanup on unmount
-  }, [DOB]);
+  //   return () => clearInterval(intervalId); // Cleanup on unmount
+  // }, [DOB]);
 
   // **** SHORT POLLING THE  Nationality(country code) FROM THE MRZ STORED IN THE SESSIONS STORAGE  ****
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      const retrievedNationalityCode = sessionStorage.getItem("nationality");
-      if (retrievedNationalityCode === "") {
-        setNationalityCodeFromMRZ("");
-      } else if (
-        retrievedNationalityCode &&
-        retrievedNationalityCode !== nationalityCodeFromMRZ
-      ) {
-        // alert(retrievedSurname);
-        setNationalityCodeFromMRZ(retrievedNationalityCode);
-      }
-    }, 100); // Adjust interval as needed
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     const retrievedNationalityCode = sessionStorage.getItem("nationality");
+  //     if (retrievedNationalityCode === "") {
+  //       setNationalityCodeFromMRZ("");
+  //     } else if (
+  //       retrievedNationalityCode &&
+  //       retrievedNationalityCode !== nationalityCodeFromMRZ
+  //     ) {
+  //       // alert(retrievedSurname);
+  //       setNationalityCodeFromMRZ(retrievedNationalityCode);
+  //     }
+  //   }, 100); // Adjust interval as needed
 
-    return () => clearInterval(intervalId); // Cleanup on unmount
-  }, [nationalityCodeFromMRZ]);
+  //   return () => clearInterval(intervalId); // Cleanup on unmount
+  // }, [nationalityCodeFromMRZ]);
 
   const handleFirstNameChange = (e) => {
     const inputFirstName = e.target.value;
@@ -284,9 +290,9 @@ const CreateAccount = () => {
         : roleSelected === "Club"
         ? { club: selectedClubName }
         : { organization }),
-      phoneNumber: "",
+      phoneNumber: phoneNumber,
       email,
-      Nationality,
+      Nationality: NationalityLabel,
       password,
       CountryCode,
       subscriptionPrice,
@@ -299,7 +305,7 @@ const CreateAccount = () => {
       DateOfBirth: DOB.toString(),
       phoneNumber: "",
       email,
-      Nationality,
+      Nationality: NationalityLabel,
       CountryCode,
       password,
       height,
@@ -313,11 +319,9 @@ const CreateAccount = () => {
       triggerWarningAlertModal(
         "Please make sure you select a date 16 older or above from today"
       );
+    } else if (NationalityLabel === "" || NationalityLabel === undefined) {
+      triggerWarningAlertModal("Please select your nationality to continue");
     } else {
-      if (Nationality === "" || Nationality === "False") {
-        setNationality("False");
-      }
-
       if (DOB === "" || DOB === "False") {
         setDOB("False");
       }
@@ -385,21 +389,27 @@ const CreateAccount = () => {
     // addEmail(selectedValue, formData.subject, formData.message, "no");
   };
 
-  const userData = useSelector(selectUserSignUpData);
-
   // const handleValueExtract = (e) => {
   //   alert(e);
   //   setPhoneNumber(e);
   // };
 
-  useEffect(() => {
-    console.log(phoneNumber, "PH");
-  }, [phoneNumber]);
-
   /// RESETTING THE THEME WHEN YOU  Navigate to this  page -- this is a temporal solution to the text field label color chnage
   useEffect(() => {
     dispatch(setThemeProviderToLightMode());
   }, []);
+
+  const PhoneInputWrapper = useCallback(
+    () => (
+      <PhoneInputComponent
+        defaultValue={phoneNumber}
+        mobilePhoneValue={(e) => {
+          setPhoneNumber(e);
+        }}
+      />
+    ),
+    [setPhoneNumber]
+  );
 
   return (
     <div
@@ -418,7 +428,7 @@ const CreateAccount = () => {
       <div
         className="accountHeader"
         style={{
-          flex: "0.3",
+          flex: "0.22",
           // background: "red",
           display: "flex",
           flexDirection: "column",
@@ -440,8 +450,7 @@ const CreateAccount = () => {
         <div style={{ flex: "0.5", textAlign: "center" }}>
           <small style={{ fontWeight: "bold" }}>
             Please begin by providing your personal information in the User
-            Credentials <br /> form below. These details should correspond to
-            the account administrator. <br />
+            Credentials form below. <br />
             <span
               onClick={() => {
                 navigate("/player profile verification");
@@ -460,15 +469,17 @@ const CreateAccount = () => {
       {/* FORM AREA */}
 
       <div
-        className="md:pt-[7vh] md:flex md:flex-row     sm:pt-[60vh] sm:flex sm:flex-col "
+        className="md:pt-[4vh] md:flex md:flex-row     sm:pt-[60vh] sm:flex sm:flex-col "
         style={{
-          flex: "0.7",
-          // display: "grid",
-          // placeContent: "center",
+          flex: "0.78",
+          display: "grid",
+          placeContent: "center",
           overflowY: "scroll",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          // background: "blue",
+
+          // display: "flex",
+          // alignItems: "center",
+          // justifyContent: "center",
           // These percentages are for pc
           paddingLeft: "15%",
           paddingRight: "10%",
@@ -476,7 +487,7 @@ const CreateAccount = () => {
           // paddingTop: "25vh", sm
         }}
       >
-        <div style={{ flex: ".7" }}>
+        <div style={{ flex: "1" }}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div
               className="md:flex md:flex-row      sm:flex sm:flex-col"
@@ -528,13 +539,19 @@ setSurname */}
                   style={{ width: browserWidth >= 1024 ? "15vw" : "80vw" }}
                   containerStyle={{ marginTop: "-1vh" }}
                   label="Date of birth"
-                  // defaultValue={userData.DOB}
+                  // defaultValue={
+                  //   userData?.DateOfBirth
+                  //     ? dayjs(
+                  //         userData.DateOfBirth,
+                  //         "ddd, DD MMM YYYY HH:mm:ss [GMT]"
+                  //       ).toDate()
+                  //     : null
+                  // }
                   dateValue={(e) => {
-                    DOB === "" || DOB === undefined || DOB === null
-                      ? setDOB(e)
-                      : "";
+                    alert(e);
+                    setDOB(e);
                   }}
-                  value={DOB && DOB !== "" ? dayjs(DOBMui) : dayjs(DOB)}
+                  value={dayjs(DOB)}
                 />
                 {DOB === "False" ? (
                   <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
@@ -574,7 +591,7 @@ setSurname */}
                   className="md:w-[15vw] sm:w-[80vw]"
                   InputProps={{
                     startAdornment: "",
-                    inputComponent: PhoneInputComponent,
+                    inputComponent: PhoneInputWrapper,
                     inputProps: {
                       style: { width: "10%" },
                     },
@@ -592,7 +609,10 @@ setSurname */}
                   styles={{ width: browserWidth >= 1024 ? "15vw" : "80vw" }}
                   selectLabel="Nationality"
                   ImplememtCountryCode={nationalityCodeFromMRZ}
-                  // defaultValue={userData.Nationality}
+                  defaultValue={{
+                    label: userData?.Nationality,
+                    code: userData?.CountryCode,
+                  }}
                   selectValue={(e) => {
                     setNationality(e);
                   }}
@@ -602,7 +622,7 @@ setSurname */}
                   }}
                 />
                 {/* write a statement for validation */}
-                {Nationality === "False" ? (
+                {NationalityLabel === "False" ? (
                   <p style={{ color: "red", margin: 0, fontSize: ".8em" }}>
                     Select your nationality.
                   </p>
@@ -630,7 +650,7 @@ setSurname */}
                     style={{
                       // ...inputStyles,
                       width: browserWidth >= 1024 ? "15vw" : "80vw",
-                      marginBottom: "2.5vh",
+                      marginBottom: ".5vh",
                       color: "black",
                     }}
                     ListArray={soccerPositions}
@@ -704,8 +724,8 @@ setSurname */}
                 className="md:flex md:flex-row      sm:flex sm:flex-col"
                 style={{
                   // display: "flex",
-                  gap: "2vw",
-                  marginBottom: "1vh",
+                  gap: "0vh 2vw",
+                  // marginBottom: "1vh",
                   // alignItems: "center",
                   // justifyContent: "center",
                   paddingRight: "13%",
@@ -778,7 +798,7 @@ setSurname */}
             <div className="md:hidden sm:h-[3vh] "></div>
           </form>
         </div>
-        <div style={{ flex: ".3", display: "flex" }}>
+        {/* <div style={{ flex: ".3", display: "flex" }}>
           <div>
             <div
               style={{
@@ -792,7 +812,6 @@ setSurname */}
                 padding: "1vw",
               }}
             >
-              {/* Selected files in column*/}
               <div
                 style={{
                   // background: "peru",
@@ -800,11 +819,8 @@ setSurname */}
                   flexDirection: "column",
                 }}
               >
-                {/* column Top style  */}
                 <div style={{ flex: "0.2" }}></div>
-                {/* End of column Top style  */}
-
-                {/* CloudCircleOutlined  */}
+              
                 <div
                   style={{
                     flex: "0.5",
@@ -816,9 +832,7 @@ setSurname */}
                 >
                   <Person sx={{ fontSize: "5em" }} />
                 </div>
-                {/* End of CloudCircleOutlined  */}
-
-                {/* Select_files */}
+]
                 <div style={{ flex: "0.3" }}>
                   <div
                     style={{
@@ -843,11 +857,10 @@ setSurname */}
                     </div>
                   </div>
                 </div>
-                {/* End of Select_files */}
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
@@ -855,21 +868,20 @@ setSurname */}
 
 export default CreateAccount;
 
-function PhoneInputComponent() {
+function PhoneInputComponent({ mobilePhoneValue, defaultValue }) {
   const browserSize = useSelector(selectCurrentBrowserSize);
   let browserWidth = parseInt(browserSize?.width, 10);
   const userData = useSelector(selectUserSignUpData);
   const dispatch = useDispatch();
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumberValue, setphoneNumberValue] = useState(defaultValue);
 
   const handlePhoneNumberChange = (value) => {
-    setPhoneNumber(value);
-    // alert(value);
-
-    dispatch(setUserSignUpData({ ...userData, phoneNumber: value }));
-    // numberPhone(value);
-    // alert(numberPhone(e));
+    // Pass the value to the parent component
+    mobilePhoneValue(value);
+    setphoneNumberValue(value);
+    console.log(value);
   };
+
   return (
     <PhoneInput
       required
@@ -877,15 +889,12 @@ function PhoneInputComponent() {
         height: "8.5vh",
         position: "relative",
         width: browserWidth >= 1024 ? "14vw" : "80vw",
-
-        // width: "30%",
-        // border: "2px solid ",
         borderRadius: "5px",
       }}
       defaultCountry="gh"
+      value={phoneNumberValue}
       placeholder="Phone Number"
-      value={phoneNumber}
-      onChange={handlePhoneNumberChange}
+      onChange={(value) => handlePhoneNumberChange(value)} // Pass the value directly
     />
   );
 }

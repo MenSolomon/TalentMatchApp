@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const steps = [
   "Select your role",
-  "Choose a package",
+  // "Choose a package",
   "Create your account",
   "Confirm details",
 ];
@@ -164,11 +164,11 @@ export default function FreetrialStepper({ stepperValue }) {
       case "/create-account/freetrial":
         setActiveStep(0);
         break;
-      case "/create-account/subscribeTrial":
-        setActiveStep(1);
-        break;
+      // case "/create-account/subscribeTrial":
+      //   setActiveStep(1);
+      //   break;
       case "/create-account/user-form":
-        setActiveStep(2);
+        setActiveStep(1);
         break;
       case "/create-account/confirm-details":
         setActiveStep(3);
@@ -209,9 +209,9 @@ export default function FreetrialStepper({ stepperValue }) {
       case "Select your role":
         navigate("/create-account/freetrial");
         break;
-      case "Choose a package":
-        navigate("/create-account/subscribeTrial");
-        break;
+      // case "Choose a package":
+      //   navigate("/create-account/subscribeTrial");
+      //   break;
       case "Create your account":
         navigate("/create-account/user-form");
 
@@ -265,17 +265,17 @@ export default function FreetrialStepper({ stepperValue }) {
             <Typography sx={{ mt: 2, mb: 1 }}>
               All steps completed - you&apos;re finished
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: "row", pt: 1 }}>
               <Box sx={{ flex: "1 1 auto" }} />
               <Button onClick={handleReset}>Reset</Button>
             </Box>
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1, py: 1, fontWeight: "bolder" }}>
+            <Typography sx={{ mt: 1, mb: 1, py: 1, fontWeight: "bolder" }}>
               Step {activeStep + 1}
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: "row", pt: 0 }}>
               {/* <Button
                 color="inherit"
                 disabled={activeStep === 0}

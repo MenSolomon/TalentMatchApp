@@ -13,6 +13,8 @@ export default function DatePickerToolCreateAccount({
   defaultValue,
   value,
 }) {
+  const [currentDateValue, setCurrentDateValue] = useState(value);
+
   const handleDateChange = (date) => {
     // Check if selected date is older than 16 years from today
     const minAgeInMilliseconds = 16 * 365.25 * 24 * 60 * 60 * 1000;
@@ -26,6 +28,7 @@ export default function DatePickerToolCreateAccount({
       return; // Prevent setting invalid date
     } else {
       dateValue(date);
+      setCurrentDateValue(date);
       // alert(date.toString());
       console.log(date);
     }
@@ -82,14 +85,12 @@ export default function DatePickerToolCreateAccount({
 
   // Ensure DOB is a valid date object or null
   // const parsedDOB = DOB ? new Date(DOB) : null;
-  // const [value, setValue] = (useState < Dayjs) | (null > null);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer sx={{ ...containerStyle }} components={["DatePicker"]}>
         <DatePicker
-          value={value} // Use parsedDOB as the value
-          // defaultValue={}
+          value={currentDateValue} // Use parsedDOB as the value
           onChange={handleDateChange}
           sx={{ ...style }}
           label={label}

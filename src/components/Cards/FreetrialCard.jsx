@@ -18,7 +18,8 @@ const FreetrialCard = ({ name, roleImage, imageStyle, className }) => {
   const dispatch = useDispatch();
 
   const handleTrialNavigation = () => {
-    navigate("/create-account/subscribeTrial");
+    // navigate("/create-account/subscribeTrial");
+    navigate("/create-account/user-form");
   };
 
   const completedStepsObject = useSelector(selectCompleteSteps);

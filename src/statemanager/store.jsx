@@ -31,6 +31,7 @@ const persistConfig = {
     "PlayersInAgencySlice",
     "FormStepper",
     "TempDatabase",
+    "UserData",
     // "UserLoginData",
     "SavedProfiles",
     "OtherComponentStates",

@@ -11,7 +11,7 @@ export default function CountrySelectCreateAccount({
   defaultValue,
   ImplememtCountryCode,
 }) {
-  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(defaultValue);
 
   const handleAutoSelect = (e, v) => {
     console.log(v.label);
@@ -20,17 +20,17 @@ export default function CountrySelectCreateAccount({
     setSelectedCountry(v);
   };
 
-  useEffect(() => {
-    // alert(ImplememtCountryCode);
-    // Update selected country when ImplememtCountryCode changes
+  // useEffect(() => {
+  //   // alert(ImplememtCountryCode);
+  //   // Update selected country when ImplememtCountryCode changes
 
-    const matchedCountry = countries.find(
-      (country) => country.mrzCode === ImplememtCountryCode
-    );
-    setSelectedCountry(matchedCountry);
-    selectCountryCode(matchedCountry?.code);
-    selectValue(matchedCountry?.label);
-  }, [ImplememtCountryCode]);
+  //   const matchedCountry = countries.find(
+  //     (country) => country.mrzCode === ImplememtCountryCode
+  //   );
+  //   setSelectedCountry(matchedCountry);
+  //   selectCountryCode(matchedCountry?.code);
+  //   selectValue(matchedCountry?.label);
+  // }, [ImplememtCountryCode]);
 
   return (
     <Autocomplete
