@@ -966,13 +966,14 @@ const BackEndDataCatalog = ({ children }) => {
   return (
     <div>
       {/* Other content or logic specific to BackEndDataCatalog */}
-      {loginStatus === false ? (
+      {/* {loginStatus === false ? (
         children
       ) : isLoading === true ? (
         <SplashScreen progressPercentage={progressPercentage} />
       ) : (
         children
-      )}
+      )} */}
+      {children}
     </div>
   );
 };

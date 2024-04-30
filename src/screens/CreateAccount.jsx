@@ -350,7 +350,7 @@ const CreateAccount = () => {
           preferredFoot === "False" ||
           password !== confirmPassword
         ) {
-          alert("DO NOTHING");
+          // alert("DO NOTHING");
         } else {
           dispatch(
             setUserSignUpData({

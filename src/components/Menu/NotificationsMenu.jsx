@@ -151,9 +151,7 @@ export default function NotificationsMenu() {
             <div style={{ flex: ".1" }}>
               <div style={{ paddingLeft: "1vw" }}>
                 <div style={{ width: "100%", display: "flex" }}>
-                  <h4 style={{ marginRight: "55%" }}>
-                    Notifications {userLoginDetailsObject?.accountId}{" "}
-                  </h4>{" "}
+                  <h4 style={{ marginRight: "55%" }}>Notifications</h4>{" "}
                   <IconButton onClick={handleClose} sx={{ float: "right" }}>
                     <Close sx={{ color: "black" }} />
                   </IconButton>

@@ -1,4 +1,4 @@
-import { Avatar, CircularProgress } from "@mui/material";
+import { Avatar, CircularProgress, Skeleton } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -19,6 +19,7 @@ import { selectPlayersDatabase } from "../../statemanager/slices/DatabaseSlice";
 import MobileVideoDisplayCarousel from "./MobileVideoDisplayCarousel";
 import BasicButton from "../Buttons/BasicButton";
 import handleVideoGloballyClick from "../../utilities/VideoPausePlayFunction";
+import { useQuery } from "@tanstack/react-query";
 
 const MatchedPlayersCarousel = () => {
   const responsive = {
@@ -45,7 +46,7 @@ const MatchedPlayersCarousel = () => {
 
   const dispatch = useDispatch();
 
-  const [AllVideos, setAllVideos] = useState([]);
+  // const [AllVideos, setAllVideos] = useState([]);
 
   const [onOpen, setOnOpen] = useState(false);
   const [randomizedVideos, setRandomizedVideos] = useState([]);
@@ -73,19 +74,18 @@ const MatchedPlayersCarousel = () => {
   //     setRandomizedVideos(shuffledVideos);
   //   }
   // }, [AllVideos, onOpen]);
-  useEffect(() => {
-    // if (AllVideos.length > 0 && onOpen === false) {
-    //   setOnOpen(true);
-    const shuffledVideos = shuffleArray([...AllVideos]);
-    setRandomizedVideos(shuffledVideos);
-    dispatch(setRandomizedVideosArray(shuffledVideos));
-    // }
-  }, [AllVideos, onOpen]);
 
   // Shuffle the array on page load
 
-  useEffect(() => {
-    const fetchPlayerVideos = async () => {
+  const {
+    status,
+    data: fetchedVideos,
+    error,
+    refetch,
+    isFetching: isVideoLoading,
+  } = useQuery({
+    queryKey: ["fetchAllVideos", AllPlayers], // Include AllPlayers in the queryKey
+    queryFn: async () => {
       const allVideos = [];
 
       await Promise.all(
@@ -114,15 +114,23 @@ const MatchedPlayersCarousel = () => {
         })
       );
 
-      // Now 'allVideos' contains an array of all videos for all players
-      console.log("All Videos: now", allVideos);
-      setAllVideos(allVideos);
+      return allVideos;
       // Use 'allVideos' as needed (e.g., dispatch to Redux store)
-    };
+    },
+  });
 
-    // Call the function to fetch player videos
-    fetchPlayerVideos();
-  }, [AllPlayers, db]);
+  // Use logical OR operator to set AllVideos to an empty array if fetchedVideos is undefined
+  const AllVideos = fetchedVideos || [];
+
+  useEffect(() => {
+    // if (AllVideos.length > 0 && onOpen === false) {
+    //   setOnOpen(true);
+    console.log(AllVideos, "allvid");
+    const shuffledVideos = shuffleArray([...AllVideos]);
+    setRandomizedVideos(shuffledVideos);
+    dispatch(setRandomizedVideosArray(shuffledVideos));
+    // }
+  }, [AllVideos, onOpen]);
 
   // Use the randomized array as needed
   // console.log(AllVideos);
@@ -170,6 +178,7 @@ const MatchedPlayersCarousel = () => {
   };
   // Set up a ref to the Carousel component
 
+  const skeletonArray = ["", "", "", "", "", ""];
   return (
     <div onClick={handleClick}>
       {/* <BasicButton
@@ -178,19 +187,27 @@ const MatchedPlayersCarousel = () => {
         }}
         innerText={"Click"}
       /> */}
-      {randomizedVideos.length === 0 ? (
+      {isVideoLoading && screenWidth >= 790 ? (
         <div
           style={{
-            position: "relative",
+            // background: "red",
             height: "100%",
             width: screenWidth >= 1024 ? "77vw" : "90vw",
-            // background: "red",
-            display: "grid",
-            placeContent: "center",
+            display: "flex",
+            gap: "2vw",
           }}
         >
-          <CircularProgress />{" "}
+          {skeletonArray.map((data, key) => (
+            <Skeleton
+              key={key}
+              animation="wave"
+              variant="rounded"
+              sx={{ bgcolor: "grey.400", width: "13vw", height: "33vh" }}
+            />
+          ))}
         </div>
+      ) : randomizedVideos.length === 0 ? (
+        <div> No videos to display </div>
       ) : (
         <div
           style={{
