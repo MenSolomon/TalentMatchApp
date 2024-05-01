@@ -35,21 +35,21 @@ function Media(props) {
         }}
       >
         <Skeleton
-          sx={{ bgcolor: "grey.400" }}
+          // sx={{  }}
           animation="wave"
           variant="circular"
           width={80}
           height={80}
         />
         <Skeleton
-          sx={{ bgcolor: "grey.400", marginBottom: 3 }}
+          sx={{ marginBottom: 3 }}
           animation="wave"
           variant="rounded"
           width={180}
           height={60}
         />
         <Skeleton
-          sx={{ bgcolor: "grey.400" }}
+          // sx={{  }}
           animation="wave"
           variant="rounded"
           width={180}
@@ -61,15 +61,15 @@ function Media(props) {
           flex: ".34",
         }}
       >
-        <Skeleton sx={{ bgcolor: "grey.400" }} height={50} />
-        <Skeleton sx={{ bgcolor: "grey.400" }} height={50} animation="wave" />
-        <Skeleton sx={{ bgcolor: "grey.400" }} height={50} />
-        <Skeleton sx={{ bgcolor: "grey.400" }} height={50} animation="wave" />
-        <Skeleton sx={{ bgcolor: "grey.400" }} height={50} />
+        <Skeleton sx={{}} height={50} />
+        <Skeleton sx={{}} height={50} animation="wave" />
+        <Skeleton sx={{}} height={50} />
+        <Skeleton sx={{}} height={50} animation="wave" />
+        <Skeleton sx={{}} height={50} />
       </div>
       <div style={{ flex: ".33", paddingLeft: "1vw" }}>
         <Skeleton
-          sx={{ bgcolor: "grey.400" }}
+          sx={{}}
           variant="rounded"
           style={{ height: "35vh" }}
           width={180}

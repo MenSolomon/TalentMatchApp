@@ -202,7 +202,7 @@ const MatchedPlayersCarousel = () => {
               key={key}
               animation="wave"
               variant="rounded"
-              sx={{ bgcolor: "grey.400", width: "13vw", height: "33vh" }}
+              sx={{ bgcolor: "black.200", width: "13vw", height: "33vh" }}
             />
           ))}
         </div>
