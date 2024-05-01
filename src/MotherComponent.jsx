@@ -439,7 +439,7 @@ const MotherComponent = () => {
       };
       SubscriptionValidationChecker();
     } else {
-      dispatch(setIsSubscriptionActive(true));
+      dispatch(setIsSubscriptionActive(false));
     }
   }, []);
 
@@ -802,7 +802,6 @@ const MotherComponent = () => {
                         key={index}
                         onClick={() => {
                           dispatch(setLoginStatus(false));
-                          dispatch(setIsSubscriptionActive(true));
                           dispatch(setUserDetailsObject({}));
                           dispatch(setUserSavedProfiles([]));
                           dispatch(

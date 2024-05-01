@@ -84,8 +84,8 @@ const NewsCarousel = ({ NewsArray }) => {
       // console.log("playersSnapshotData", allProducts);
       return allProducts;
     },
-    // refetchOnMount: true,
-    // refetchOnWindowFocus: true,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
   // remount component when usequery completes fetch
   useEffect(() => {}, [MatchedPlayersArray]);
@@ -393,8 +393,7 @@ const NewsCarousel = ({ NewsArray }) => {
             height: "100%",
             borderRadius: "1vw",
             // width: "93vw",
-          }}
-        >
+          }}>
           {rows?.length === 0
             ? rows?.map((data, index) => {
                 const {
@@ -443,8 +442,7 @@ const NewsCarousel = ({ NewsArray }) => {
                       padding: ".2vw",
                       background:
                         "linear-gradient(90deg, hsla(280, 81%, 58%, 1) 0%, hsla(279, 81%, 59%, 1) 3%, hsla(276, 79%, 60%, 1) 9%, hsla(274, 79%, 60%, 1) 15%, hsla(269, 76%, 61%, 1) 15%, hsla(271, 77%, 61%, 1) 23%, hsla(259, 72%, 62%, 1) 32%, hsla(246, 68%, 64%, 1) 49%, hsla(226, 67%, 60%, 1) 56%, hsla(194, 96%, 42%, 1) 74%, hsla(196, 80%, 79%, 1) 100%)",
-                    }}
-                  >
+                    }}>
                     <div
                       className="cardBackground md:flex md:h-[100%] md:w-[100%]   sm:flex sm:h-[100%] sm:w-[100%]"
                       style={{
@@ -454,8 +452,7 @@ const NewsCarousel = ({ NewsArray }) => {
                         // width: "100%",
                         // height: "100%",
                         // background: `linear-gradient(90deg, rgba(32,32,32,0.9582366589327146) 0%, rgba(55,54,54,0.9535962877030162) 31%, rgba(23,21,21,0.7540603248259861) 44%, rgba(14,50,142,0.8120649651972158) 100%)`,
-                      }}
-                    >
+                      }}>
                       {/* // Player information   */}
                       {/* style={{ flex: ".25" }} */}
                       <div className="md:basis-[30%] sm:basis-[50%]">
@@ -490,8 +487,7 @@ const NewsCarousel = ({ NewsArray }) => {
                           className="md:basis-[50%] md:flex-shrink-0 sm:basis-[50%] sm:flex-shrink-0"
                           style={{
                             overflowY: "scroll",
-                          }}
-                        >
+                          }}>
                           <PlayerComparisonAccordion
                             GeneralObject={Statistics[0].General}
                             DefenseObject={Statistics[0].Defence}
@@ -512,8 +508,7 @@ const NewsCarousel = ({ NewsArray }) => {
                               // position: "relative",
                               paddingTop: "1vh",
                               // background: "blue",
-                            }}
-                          >
+                            }}>
                             {videos.length <= 0 ? (
                               <div
                                 className="sm:h-[19vh] md:h-[90%]"
@@ -524,8 +519,7 @@ const NewsCarousel = ({ NewsArray }) => {
                                   background: "black",
                                   display: "grid",
                                   placeContent: "center",
-                                }}
-                              >
+                                }}>
                                 <VideocamOff
                                   sx={{ color: "white", width: 45, height: 45 }}
                                 />
@@ -539,8 +533,7 @@ const NewsCarousel = ({ NewsArray }) => {
                                 width="100%"
                                 style={{ position: "absolute" }}
                                 // autoPlay={true}
-                                controls
-                              ></video>
+                                controls></video>
                             )}
                           </div>
                         </div>
@@ -597,8 +590,7 @@ const NewsCarousel = ({ NewsArray }) => {
                       padding: ".2vw",
                       background:
                         "linear-gradient(90deg, hsla(280, 81%, 58%, 1) 0%, hsla(279, 81%, 59%, 1) 3%, hsla(276, 79%, 60%, 1) 9%, hsla(274, 79%, 60%, 1) 15%, hsla(269, 76%, 61%, 1) 15%, hsla(271, 77%, 61%, 1) 23%, hsla(259, 72%, 62%, 1) 32%, hsla(246, 68%, 64%, 1) 49%, hsla(226, 67%, 60%, 1) 56%, hsla(194, 96%, 42%, 1) 74%, hsla(196, 80%, 79%, 1) 100%)",
-                    }}
-                  >
+                    }}>
                     <div
                       className="cardBackground md:flex md:h-[100%] md:w-[100%]   sm:flex sm:h-[100%] sm:w-[100%]"
                       style={{
@@ -608,8 +600,7 @@ const NewsCarousel = ({ NewsArray }) => {
                         // width: "100%",
                         // height: "100%",
                         // background: `linear-gradient(90deg, rgba(32,32,32,0.9582366589327146) 0%, rgba(55,54,54,0.9535962877030162) 31%, rgba(23,21,21,0.7540603248259861) 44%, rgba(14,50,142,0.8120649651972158) 100%)`,
-                      }}
-                    >
+                      }}>
                       {/* // Player information   */}
                       {/* style={{ flex: ".25" }} */}
                       <div className="md:basis-[30%] sm:basis-[50%]">
@@ -644,8 +635,7 @@ const NewsCarousel = ({ NewsArray }) => {
                           className="md:basis-[50%] md:flex-shrink-0 sm:basis-[50%] sm:flex-shrink-0"
                           style={{
                             overflowY: "scroll",
-                          }}
-                        >
+                          }}>
                           <PlayerComparisonAccordion
                             GeneralObject={Statistics[0].General}
                             DefenseObject={Statistics[0].Defence}
@@ -666,8 +656,7 @@ const NewsCarousel = ({ NewsArray }) => {
                               // position: "relative",
                               paddingTop: "1vh",
                               // background: "blue",
-                            }}
-                          >
+                            }}>
                             {videos?.length <= 0 ? (
                               <div
                                 className="sm:h-[19vh] md:h-[90%]"
@@ -678,8 +667,7 @@ const NewsCarousel = ({ NewsArray }) => {
                                   background: "black",
                                   display: "grid",
                                   placeContent: "center",
-                                }}
-                              >
+                                }}>
                                 <VideocamOff
                                   sx={{ color: "white", width: 45, height: 45 }}
                                 />
@@ -692,8 +680,7 @@ const NewsCarousel = ({ NewsArray }) => {
                                 width="100%"
                                 style={{ position: "absolute" }}
                                 // autoPlay={true}
-                                controls
-                              ></video>
+                                controls></video>
                             )}
                           </div>
                         </div>

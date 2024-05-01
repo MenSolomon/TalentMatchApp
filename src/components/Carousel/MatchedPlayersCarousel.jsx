@@ -117,6 +117,8 @@ const MatchedPlayersCarousel = () => {
       return allVideos;
       // Use 'allVideos' as needed (e.g., dispatch to Redux store)
     },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   // Use logical OR operator to set AllVideos to an empty array if fetchedVideos is undefined
@@ -195,8 +197,7 @@ const MatchedPlayersCarousel = () => {
             width: screenWidth >= 1024 ? "77vw" : "90vw",
             display: "flex",
             gap: "2vw",
-          }}
-        >
+          }}>
           {skeletonArray.map((data, key) => (
             <Skeleton
               key={key}
@@ -215,14 +216,12 @@ const MatchedPlayersCarousel = () => {
             height: "100%",
             width: screenWidth >= 1024 ? "77vw" : "90vw",
             // background: "red",
-          }}
-        >
+          }}>
           <Carousel
             responsive={responsive}
             arrows={screenWidth >= 1024 ? true : false}
             swipeable={screenWidth >= 1024 ? true : true}
-            draggable={screenWidth >= 1024 ? true : true}
-          >
+            draggable={screenWidth >= 1024 ? true : true}>
             {randomizedVideos.slice(0, videoLength).map((data, index) => {
               const { url, playerProfileImage, playerId, id } = data;
 
@@ -231,15 +230,13 @@ const MatchedPlayersCarousel = () => {
                   // onClick={() => {
                   //   handleVideoClick(index);
                   // }}
-                  key={index}
-                >
+                  key={index}>
                   <span
                     onClick={() => {
                       // alert(index);
 
                       dispatch(setCarouselVideoIndex(index));
-                    }}
-                  >
+                    }}>
                     <VideoCard
                       publisherImg={playerProfileImage}
                       video={url}
@@ -277,8 +274,7 @@ const VideoCard = ({ publisherImg, video, vidIndex, playerId }) => {
             position: "relative",
             paddingTop: "1vh",
             width: "13vw",
-          }}
-        >
+          }}>
           <div
             style={{
               position: "absolute",
@@ -286,13 +282,11 @@ const VideoCard = ({ publisherImg, video, vidIndex, playerId }) => {
               top: "2vh",
               left: ".5vw",
               display: "flex",
-            }}
-          >
+            }}>
             <span
               onClick={() => {
                 navigate(`/player-details/${playerId}`);
-              }}
-            >
+              }}>
               <Avatar
                 className="cardBackground"
                 src={publisherImg}
@@ -313,8 +307,7 @@ const VideoCard = ({ publisherImg, video, vidIndex, playerId }) => {
                 top: "1vh",
                 fontSize: ".75em",
                 fontWeight: "bolder",
-              }}
-            >
+              }}>
               {" "}
               {/* &nbsp; Okachi */}
             </h6>
@@ -325,8 +318,7 @@ const VideoCard = ({ publisherImg, video, vidIndex, playerId }) => {
             id={`carouselVideo-${vidIndex}`}
             width="160vw"
             style={{ height: "33vh" }}
-            controls
-          >
+            controls>
             {" "}
             <source src={video} type="video/mp4" />
           </video>{" "}
@@ -341,8 +333,7 @@ const VideoCard = ({ publisherImg, video, vidIndex, playerId }) => {
             paddingLeft: "1.3vw",
             height: "20vh",
             width: "6vw",
-          }}
-        >
+          }}>
           {/* <Avatar
             className="cardBackground"
             src={publisherImg}
