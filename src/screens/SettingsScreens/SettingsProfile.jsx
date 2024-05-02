@@ -44,6 +44,7 @@ function SettingsProfile() {
 
   const savedProfiles = useSelector(selectUserSavedProfiles);
   const { email } = userLoginDetailsObject;
+  const { role } = userLoginDetailsObject;
   const outputArray = savedProfiles.map((item) => item.label);
   const [selectArray, setSelectArray] = useState(outputArray);
 
@@ -127,7 +128,7 @@ function SettingsProfile() {
           dispatch(setSnackbarMessage("Proile settings saved"));
           dispatch(setSnackbarTriggerCounter());
         } else {
-          const playerVideoRef = ref(
+          const playerImageRef = ref(
             storage,
             `profileImages/${userLoginDetailsObject?.firstName}${
               userLoginDetailsObject?.surname
@@ -138,26 +139,47 @@ function SettingsProfile() {
 
           dispatch(setOpenCircularLoadBackdrop());
           // Upload the image
-          await uploadBytes(playerVideoRef, imageObject);
+          await uploadBytes(playerImageRef, imageObject);
 
           // Get the download URL
-          const url = await getDownloadURL(playerVideoRef);
+          const url = await getDownloadURL(playerImageRef);
 
           // const VideoUuid = uuidv4();
 
-          const playerObjectRef = doc(
+          const profileObjectRef = doc(
             db,
             `users_db`,
             userLoginDetailsObject?.accountId
           );
-          await updateDoc(playerObjectRef, {
+          await updateDoc(profileObjectRef, {
             profileImage: url,
             profileImageLastUpdated: moment().format("MMMM D, YYYY HH:mm:ss"),
             firstName: firstName,
             surname: surName,
           });
 
-          // alert("Saved");
+          if (role === "Player") {
+            const playerObjectRef = doc(
+              db,
+              `players_database`,
+              userLoginDetailsObject?.accountId
+            );
+            // POSSIBLE BUG FIX .. reject any image file name which has %2F or %20 in its name
+            const playerImageRef = ref(
+              storage,
+              `playersProfileImages/${
+                imageObject?.name + "-" + userLoginDetailsObject?.accountId
+              }`
+            );
+
+            await uploadBytes(playerImageRef, imageObject);
+            const PlayerImageUrl = await getDownloadURL(playerImageRef);
+
+            await updateDoc(playerObjectRef, {
+              player_profile_image: PlayerImageUrl,
+            });
+          }
+
           dispatch(setCloseCircularLoadBackdrop());
 
           dispatch(setSnackbarMessage("Proile settings saved"));

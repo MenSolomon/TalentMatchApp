@@ -238,6 +238,13 @@ const PlayerVersionMotherComponent = () => {
         <Alert
           severity="error"
           variant="filled"
+          style={{
+            position: "absolute",
+            zIndex: "10000",
+            width: "60%",
+            left: "17%",
+            opacity: "0.9",
+          }}
           action={
             <Button
               variant="contained"

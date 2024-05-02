@@ -340,22 +340,22 @@ const MotherComponent = () => {
 
   // SubscriptionValidationChecker
   useEffect(() => {
-    // alert("Mother Rendered");
     const currentUser = auth.currentUser;
 
-    if (currentUser) {
+    if (userLoginObject?.accountId) {
       const SubscriptionValidationChecker = async () => {
         // alert("sub chaecker");
-        const accountId = await currentUser.uid;
-        const userRef = doc(db, `users_db/${accountId}`);
+        // const accountId = await currentUser?.uid;
+        const userRef = doc(db, `users_db/${userLoginObject?.accountId}`);
         try {
           // get subscription
           const subscriptionsRef = collection(
             db,
             "users_db",
-            accountId,
+            userLoginObject?.accountId,
             "subscriptions"
           );
+          // alert(`${userLoginObject?.accountId}`);
 
           const queryActiveOrTrialing = query(
             subscriptionsRef,
@@ -366,6 +366,8 @@ const MotherComponent = () => {
             onSnapshot(queryActiveOrTrialing, async (snapshot) => {
               const doc = snapshot.docs[0];
               const length = snapshot.docs.length;
+              // alert(length);
+              // alert(doc?.data().status, "stats");
               if (doc?.data().status === "active") {
                 dispatch(setIsSubscriptionActive(true));
                 // get end next billing date
@@ -374,6 +376,7 @@ const MotherComponent = () => {
                 dispatch(setNextBillingDate(date.toDateString()));
                 resolve(doc);
               } else if (length == 0) {
+                alert("Subsco");
                 dispatch(setIsSubscriptionActive(false));
                 dispatch(setNextBillingDate("N/A"));
                 dispatch(
@@ -408,7 +411,10 @@ const MotherComponent = () => {
             const featuresRef = await doc(db, `products/${productID}`);
             const featuresSnap = await getDoc(featuresRef);
             const features = await featuresSnap.data().features;
-            const userInfoRef = doc(db, `users_db/${accountId}`);
+            const userInfoRef = doc(
+              db,
+              `users_db/${userLoginObject?.accountId}`
+            );
             // save features to redux
             dispatch(setSubscriptionFeatures(features));
             await updateDoc(userInfoRef, {
@@ -441,7 +447,7 @@ const MotherComponent = () => {
     } else {
       dispatch(setIsSubscriptionActive(false));
     }
-  }, []);
+  }, [userLoginObject]);
 
   // Function that listens for any new boost points purchase and applies
   const [boostPointsAlert, setBoostPointsAlert] = useState(false);
@@ -616,21 +622,31 @@ const MotherComponent = () => {
         // background: "red",
         color: primaryTextColor,
         // zIndex: "-3",
-      }}>
+      }}
+    >
       {/* NO SUBSCRIPTION ALERT */}
       {isSubscriptionActive ? null : (
         <Alert
           severity="error"
+          style={{
+            position: "absolute",
+            zIndex: "10000",
+            width: "60%",
+            left: "17%",
+            opacity: "0.8",
+          }}
           variant="filled"
           action={
             <Button
               variant="contained"
               color="success"
               size="small"
-              onClick={() => navigate("/changeSubscription")}>
+              onClick={() => navigate("/changeSubscription")}
+            >
               Get One
             </Button>
-          }>
+          }
+        >
           No or Inactive Subscrtiption
         </Alert>
       )}
@@ -648,7 +664,8 @@ const MotherComponent = () => {
             paddingTop: "1%",
             display: "grid",
             placeContent: "center",
-          }}>
+          }}
+        >
           <div className="sm:block md:hidden">
             <SmallScreenMenuDrawer />{" "}
           </div>
@@ -667,7 +684,8 @@ const MotherComponent = () => {
             // paddingLeft: "4vw",
             // background: "red",
             position: "relative",
-          }}>
+          }}
+        >
           <Marquee
             // className="sm:hidden md:block"
 
@@ -679,7 +697,8 @@ const MotherComponent = () => {
               width: "100%",
               position: "absolute",
               display: screenWidth < 1024 ? "none" : "flex",
-            }}>
+            }}
+          >
             {clubsInDatabase.map((data, index) => {
               const { clubImage, clubName } = data;
               return (
@@ -706,7 +725,8 @@ const MotherComponent = () => {
             paddingTop: "1%",
             paddingLeft: "1.2vw",
             display: "flex",
-          }}>
+          }}
+        >
           {/* sx={{ , marginLeft: "1vw", borderBottom: "none" }} */}
 
           <UploadPlayer
@@ -723,7 +743,8 @@ const MotherComponent = () => {
               marginTop: "1.5vh",
               marginLeft: "-1vw",
               marginRight: "1vw",
-            }}>
+            }}
+          >
             <NotificationsMenu />
           </div>
           {/* </IconButton> */}
@@ -744,7 +765,8 @@ const MotherComponent = () => {
             // background: "green",
             // overflowY: "visible",
           }
-        }>
+        }
+      >
         {/* // NAV ARAEA */}
         <div
           className="md:basis-[18%] md:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:block sm:hidden"
@@ -756,7 +778,8 @@ const MotherComponent = () => {
               // paddingTop: "5vh",
               // background: "yellow",
             }
-          }>
+          }
+        >
           {/* // USE A MAP FOR THIS */}
           {/* // NavBAR FIRST HALF */}
           <div style={{ flex: ".65", overflowY: "scroll", maxHeight: "45vh" }}>
@@ -819,7 +842,8 @@ const MotherComponent = () => {
                             .catch((error) => {
                               console.log("error:", error);
                             });
-                        }}>
+                        }}
+                      >
                         <NavBarButton
                           ButtonName={name}
                           ButtonImage={icon}
@@ -855,7 +879,8 @@ const MotherComponent = () => {
             padding: "2vh 1.5vw",
 
             // background: "blue",
-          }}>
+          }}
+        >
           <Outlet />
         </div>
       </div>
