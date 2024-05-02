@@ -20,11 +20,7 @@ const GalleryVideoComponent = ({ url, videoCategory, videoId }) => {
     if (vidPlayCounter <= 1) {
       // this is to make sure an owner of account's view doesnt get counted as video view
       if (accountId !== id) {
-        const playerVideoToUpdateRef = doc(
-          db,
-          `players_database/${id}/videos`,
-          videoId
-        );
+        const playerVideoToUpdateRef = doc(db, `players_videos`, videoId);
 
         // Atomically increment the views of the video by 1.
         await updateDoc(playerVideoToUpdateRef, {
@@ -36,7 +32,7 @@ const GalleryVideoComponent = ({ url, videoCategory, videoId }) => {
 
   return (
     <div
-    className="md:w-[260px] md:h-[150px] md:flex md:flex-col           sm:w-[260px] sm:h-[150px] sm:flex sm:flex-col"
+      className="md:w-[260px] md:h-[150px] md:flex md:flex-col           sm:w-[260px] sm:h-[150px] sm:flex sm:flex-col"
       // style={{
       //   width: "260px",
       //   height: "150px",

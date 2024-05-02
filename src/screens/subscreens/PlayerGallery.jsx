@@ -3,7 +3,7 @@ import GalleryVideoComponent from "../../components/GalleryVideoComponent";
 import { selectPlayerSelectedToView } from "../../statemanager/slices/PlayersInAgencySlice";
 import { CircularProgress, Pagination } from "@mui/material";
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../Firebase/Firebase";
 import { selectCurrentBrowserSize } from "../../statemanager/slices/OtherComponentStatesSlice";
 
@@ -37,25 +37,55 @@ const PlayerGallery = () => {
   const PlayerSelectedToViewObject = useSelector(selectPlayerSelectedToView);
   // Write a snapshot function that receives data updated in realtime
 
+  // useEffect(() => {
+  //   const playerObjectRef = collection(
+  //     db,
+  //     `players_database/${PlayerSelectedToViewObject.id}/videos`
+  //   );
+
+  //   const q2 = query(playerObjectRef);
+  //   const allVideos = onSnapshot(q2, (querySnapshot) => {
+  //     const videosArray = [];
+  //     querySnapshot.forEach((doc) => {
+  //       videosArray.push(doc.data());
+  //     });
+
+  //     setCircularLoader(false);
+  //     setVideos(videosArray);
+  //   });
+  //   return () => {
+  //     allVideos();
+  //   };
+  // }, [PlayerSelectedToViewObject.id]);
+
   useEffect(() => {
-    const playerObjectRef = collection(
-      db,
-      `players_database/${PlayerSelectedToViewObject.id}/videos`
-    );
+    try {
+      setCircularLoader(true);
 
-    const q2 = query(playerObjectRef);
-    const allVideos = onSnapshot(q2, (querySnapshot) => {
-      const videosArray = [];
-      querySnapshot.forEach((doc) => {
-        videosArray.push(doc.data());
-      });
+      const fetchData = async () => {
+        const qPlayer = query(
+          collection(db, "players_videos"),
+          where("playerId", "==", PlayerSelectedToViewObject.id)
+        );
 
+        const allVideos = onSnapshot(qPlayer, (querySnapshot) => {
+          const videosArray = [];
+          querySnapshot.forEach((doc) => {
+            videosArray.push(doc.data());
+          });
+
+          console.log(videosArray, "vidae");
+          setCircularLoader(false);
+          setVideos(videosArray);
+        });
+      };
+
+      fetchData();
+    } catch (error) {
       setCircularLoader(false);
-      setVideos(videosArray);
-    });
-    return () => {
-      allVideos();
-    };
+      console.error("errorCA", error);
+      console.log("vidae");
+    }
   }, [PlayerSelectedToViewObject.id]);
 
   const VideosPerPage = browserWidth >= 1024 ? 3 : 2;

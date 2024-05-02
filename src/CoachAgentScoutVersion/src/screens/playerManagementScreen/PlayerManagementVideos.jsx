@@ -4,7 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectPlayerSelectedByClubOrScoutInPlayerManagement } from "../../../../statemanager/slices/PlayersInAgencySlice";
 import { selectPlayersDatabase } from "../../../../statemanager/slices/DatabaseSlice";
 import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../../../../Firebase/Firebase";
+
 const PlayerManagementVideos = () => {
   const dispatch = useDispatch();
 
@@ -14,8 +23,41 @@ const PlayerManagementVideos = () => {
   const allPlayerDatabase = useSelector(selectPlayersDatabase);
   const userDetailsObject = useSelector(selectUserDetailsObject);
 
-  const { id, firstName, surName, videos } =
+  const { id, firstName, surName } =
     CurrentPlayerSelectedForClubScoutCoachAndAgentManagement;
+
+  const [videos, setVideos] = useState([]);
+  const [circularLoader, setCircularLoader] = useState(false);
+
+  useEffect(() => {
+    try {
+      setCircularLoader(true);
+
+      const fetchData = async () => {
+        const qPlayer = query(
+          collection(db, "players_videos"),
+          where("playerId", "==", id)
+        );
+
+        const allVideos = onSnapshot(qPlayer, (querySnapshot) => {
+          const videosArray = [];
+          querySnapshot.forEach((doc) => {
+            videosArray.push(doc.data());
+          });
+
+          console.log(videosArray, "vidae");
+          setCircularLoader(false);
+          setVideos(videosArray);
+        });
+      };
+
+      fetchData();
+    } catch (error) {
+      setCircularLoader(false);
+      console.error("errorCA", error);
+      console.log("vidae");
+    }
+  }, []);
 
   // function objectToArray(inputObject) {
   //   return Object.values(inputObject);

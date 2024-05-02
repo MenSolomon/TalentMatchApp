@@ -16,7 +16,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  BoltOutlined,
   CheckCircleOutline,
+  ElectricBoltOutlined,
   ErrorOutline,
   Facebook,
   Instagram,
@@ -52,6 +54,16 @@ import {
 } from "../../../statemanager/slices/OtherComponentStatesSlice";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useQuery } from "@tanstack/react-query";
+import { styled } from "@mui/material/styles";
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    right: -3,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: "0 4px",
+  },
+}));
 
 const CoachAgentScoutVersionPlayerManagement = () => {
   const { playerId } = useParams();
@@ -300,13 +312,15 @@ const CoachAgentScoutVersionPlayerManagement = () => {
       className="md:w-[100%] md:h-[100%] md:flex md:flex-col md:gap-[0px]   sm:gap-[50px]   sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
       style={
         {
+          // fontSize: "0.7em",
           // display: "flex",
           // flexDirection: "column",
           // height: "100%",
           // width: "100%",
           // background: "red",
         }
-      }>
+      }
+    >
       {/* // Player Name , Image an jerseyNumber */}
       <div style={{ flex: ".25", display: "flex" }}>
         {/* Player Image */}
@@ -317,7 +331,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             // background: "red",
             paddingTop: "1.5vh",
             // position: "relative",
-          }}>
+          }}
+        >
           {/* // Image Canvas */}
 
           <Card
@@ -332,7 +347,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               backgroundImage: `url('${player_profile_image}')`,
               backgroundSize: "cover",
               backgroundPosition: "center",
-            }}></Card>
+            }}
+          ></Card>
 
           {/* Club Logo Canvas */}
           <div className="PlayerManagementNationalityTooltip">
@@ -356,7 +372,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
         {/* Player Name */}
         <div
           className="md:pl-[1vw] sm:pl-[-100%]"
-          style={{ flex: ".6", paddingLeft: "1vw" }}>
+          style={{ flex: ".6", paddingLeft: "1vw" }}
+        >
           <h2 style={{ margin: "0" }}> {firstName} </h2>
 
           <h1 style={{ margin: "0" }}>{surName} </h1>
@@ -381,7 +398,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             paddingTop: "6vh",
             // background: "green",
             padding: ".8vw",
-          }}>
+          }}
+        >
           <Card
             className="cardBackground primaryTextColor md:w-[100%] md:h-[100%] md:flex md:flex-col md:p-[1.4vw]   sm:p-[2vw] sm:w-[100%] sm:h-[100%] sm:flex sm:flex-col"
             style={{
@@ -393,11 +411,18 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               borderRadius: "1vw",
               // padding: "1.4vw",
               paddingTop: "8vh",
-            }}>
+            }}
+          >
             {/* // Player position , age , height */}
             <div style={{ flex: ".08", display: "flex" }}>
               {/* // CLUB name  Area */}
-              <h6 style={{ width: "100%", fontWeight: "bolder" }}>
+              <h6
+                style={{
+                  width: "100%",
+                  fontWeight: "bolder",
+                  fontSize: ".75em",
+                }}
+              >
                 Club :{" "}
                 <span style={{ float: "right" }}>
                   {" "}
@@ -412,21 +437,46 @@ const CoachAgentScoutVersionPlayerManagement = () => {
             </div>
             {/* Postion Area */}
             <div style={{ flex: ".08", display: "flex" }}>
-              <h6 style={{ width: "100%", fontWeight: "bolder" }}>
+              <h6
+                style={{
+                  width: "100%",
+                  fontWeight: "bolder",
+                  fontSize: ".75em",
+                }}
+              >
                 Position :<span style={{ float: "right" }}>{position}</span>
               </h6>
             </div>
 
             {/* Postion Area */}
             <div style={{ flex: ".08", display: "flex" }}>
-              <h6 style={{ width: "100%", fontWeight: "bolder" }}>
+              <h6
+                style={{
+                  width: "100%",
+                  fontWeight: "bolder",
+                  fontSize: ".75em",
+                }}
+              >
                 Boost Points :{" "}
-                <Chip
+                <IconButton aria-label="cart">
+                  <Badge
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    max={10000}
+                    badgeContent={playerBoostPoints}
+                    color="secondary"
+                  >
+                    <ElectricBoltOutlined color="primary" />
+                  </Badge>
+                </IconButton>
+                {/* <Chip
                   label={
                     <Typography variant="h6">{playerBoostPoints}</Typography>
                   }
-                  sx={{ backgroundColor: "#F7B900" }}
-                />
+                  sx={{ backgroundColor: "#F7B900", fontSize: ".75em" }}
+                /> */}
               </h6>
             </div>
 
@@ -439,7 +489,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                   Social_media[0].Instagram === "https://www.instagram.com//"
                     ? ""
                     : Social_media[0].Instagram
-                }>
+                }
+              >
                 {" "}
                 <IconButton
                   onClick={() => {
@@ -447,7 +498,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                     Social_media[0].Instagram === "https://www.instagram.com//"
                       ? ""
                       : openLinkInNewPage(Social_media[0].Instagram);
-                  }}>
+                  }}
+                >
                   <Instagram style={{ color: "#5585FE" }} />
                 </IconButton>
               </Tooltip>
@@ -457,14 +509,16 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                   Social_media[0].Facebook === "https://web.facebook.com/"
                     ? ""
                     : openLinkInNewPage(Social_media[0].Facebook);
-                }}>
+                }}
+              >
                 <Tooltip
                   title={
                     Social_media.length == 0 ||
                     Social_media[0].Facebook === "https://web.facebook.com/"
                       ? ""
                       : Social_media[0].Facebook
-                  }>
+                  }
+                >
                   <Facebook style={{ color: "#5585FE" }} />
                 </Tooltip>
               </IconButton>
@@ -476,8 +530,9 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                 flex: ".70",
                 // display: "flex",
                 fontWeight: "bolder",
-                paddingTop: "1.5vh",
-              }}>
+                // paddingTop: "1.5vh",
+              }}
+            >
               {/* <h5>Honors & Awards</h5> */}
 
               {/* // Edit Profile button */}
@@ -492,12 +547,14 @@ const CoachAgentScoutVersionPlayerManagement = () => {
                       id="outlined-number"
                       label="Enter Boost Points"
                       type="number"
+                      size="small"
                       onChange={(e) => {
                         setEnteredBoostPoints(parseInt(e.target.value));
                       }}
                       sx={{
                         width: browserWidth >= 1024 ? "9vw" : "40vw",
-                        marginY: "2vh",
+                        marginBottom: ".4vh",
+                        // marginY: "2vh",
                       }}
                     />
                     <BasicButtonWithEndIcon
@@ -579,7 +636,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
       <Snackbar
         open={openSnackBar}
         autoHideDuration={3000}
-        onClose={handleCloseSnackBar}>
+        onClose={handleCloseSnackBar}
+      >
         <Alert
           variant="filled"
           icon={
@@ -589,7 +647,8 @@ const CoachAgentScoutVersionPlayerManagement = () => {
               <ErrorOutline fontSize="inherit" />
             )
           }
-          severity={alertMessage == "Boost completed" ? "success" : "error"}>
+          severity={alertMessage == "Boost completed" ? "success" : "error"}
+        >
           {alertMessage}
         </Alert>
       </Snackbar>

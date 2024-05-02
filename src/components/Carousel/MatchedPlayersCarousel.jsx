@@ -13,7 +13,7 @@ import {
   setRandomizedVideosArray,
 } from "../../statemanager/slices/VideosSlice";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, query, onSnapshot } from "firebase/firestore";
 import { db } from "../../Firebase/Firebase";
 import { selectPlayersDatabase } from "../../statemanager/slices/DatabaseSlice";
 import MobileVideoDisplayCarousel from "./MobileVideoDisplayCarousel";
@@ -86,36 +86,28 @@ const MatchedPlayersCarousel = () => {
   } = useQuery({
     queryKey: ["fetchAllVideos", AllPlayers], // Include AllPlayers in the queryKey
     queryFn: async () => {
-      const allVideos = [];
+      try {
+        const qPlayer = query(collection(db, "players_videos"));
+        const querySnapshot = await getDocs(qPlayer);
 
-      await Promise.all(
-        AllPlayers.map(async (data) => {
-          const { id: playerId, player_profile_image } = data;
-
-          const videosQuery = query(
-            collection(db, `players_database/${playerId}/videos`)
+        const videosArray = [];
+        querySnapshot.forEach((doc) => {
+          let findPlayerObject = AllPlayers.find(
+            (data) => data.id === doc.data().playerId
           );
 
-          try {
-            const videosSnapshot = await getDocs(videosQuery);
-            const playerVideos = videosSnapshot.docs.map((videoDoc) => ({
-              ...videoDoc.data(),
-              playerId: playerId,
-              playerProfileImage: player_profile_image,
-            }));
+          videosArray.push({
+            ...doc.data(),
+            playerProfileImage: findPlayerObject?.player_profile_image,
+          });
+        });
 
-            allVideos.push(...playerVideos);
-          } catch (error) {
-            console.error(
-              `Error fetching videos for player ${playerId}:`,
-              error
-            );
-          }
-        })
-      );
-
-      // return allVideos;
-      // Use 'allVideos' as needed (e.g., dispatch to Redux store)
+        console.log(videosArray, "vidae");
+        return videosArray;
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+        throw error;
+      }
     },
     refetchOnWindowFocus: false,
     refetchOnMount: false,

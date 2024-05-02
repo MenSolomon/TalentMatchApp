@@ -87,7 +87,7 @@ export default function CreateShowInterestModal({
 
     await setDoc(userNotificationRef, {
       NotificationId: uuid,
-      requestAccepted: false,
+      requestAccepted: "Pending",
       dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
       senderAddress: userLoginAccount.email,
       senderId: userLoginAccount.accountId,
@@ -98,7 +98,7 @@ export default function CreateShowInterestModal({
 
     await setDoc(playerNotificationRef, {
       NotificationId: uuid,
-      requestAccepted: false,
+      requestAccepted: "Pending",
       dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
       senderAddress: userLoginAccount.email,
       senderId: userLoginAccount.accountId,
@@ -111,13 +111,14 @@ export default function CreateShowInterestModal({
 
     const userPlayerInterestRef = doc(
       db,
-      `users_db/${userLoginAccount.accountId}/PlayerInterests`,
+      `users_db/${userLoginAccount?.accountId}/PlayerInterests`,
       uuid
     );
 
     //Notification sent
 
     await setDoc(userPlayerInterestRef, {
+      interestId: uuid,
       interestedPlayerId: playerId,
       Current_Account_Owner: currentAccountOwner,
       dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -164,7 +165,8 @@ export default function CreateShowInterestModal({
             color: "white",
             background: "#5585FE",
           }}
-          onClick={handleOpen}>
+          onClick={handleOpen}
+        >
           {" "}
           Show Interest{" "}
         </Button>
@@ -175,13 +177,15 @@ export default function CreateShowInterestModal({
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
+        aria-describedby="modal-modal-description"
+      >
         <Box sx={style} className="primaryTextColor cardBackground">
           <Typography
             id="modal-modal-title"
             variant="h6"
             component="h2"
-            sx={{ fontWeight: "bold" }}>
+            sx={{ fontWeight: "bold" }}
+          >
             Player Name: {playerName}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 4 }}>
@@ -213,7 +217,8 @@ export default function CreateShowInterestModal({
                 // marginLeft: "35vw",
                 color: "white",
                 background: "#5585FE",
-              }}>
+              }}
+            >
               Send request
             </Button>
           </Typography>

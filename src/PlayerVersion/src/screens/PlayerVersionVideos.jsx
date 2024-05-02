@@ -31,19 +31,37 @@ const PlayerVersionVideos = () => {
     try {
       setCircularLoader(true);
 
+      // const fetchData = async () => {
+      //   const qPlayer = query(
+      //     collection(db, "players_database"),
+      //     where("Current_Account_Owner", "==", userDetailsObject?.accountId)
+      //   );
+      //   const querySnapshot = await getDocs(qPlayer);
+      //   const playerObjectRef = collection(
+      //     db,
+      //     `players_database/${querySnapshot?.docs[0]?.data()?.id}/videos`
+      //   );
+
+      //   const q2 = query(playerObjectRef);
+      //   const allVideos = onSnapshot(q2, (querySnapshot) => {
+      //     const videosArray = [];
+      //     querySnapshot.forEach((doc) => {
+      //       videosArray.push(doc.data());
+      //     });
+
+      //     console.log(videosArray, "vidae");
+      //     setCircularLoader(false);
+      //     setVideos(videosArray);
+      //   });
+      // };
+
       const fetchData = async () => {
         const qPlayer = query(
-          collection(db, "players_database"),
-          where("Current_Account_Owner", "==", userDetailsObject?.accountId)
-        );
-        const querySnapshot = await getDocs(qPlayer);
-        const playerObjectRef = collection(
-          db,
-          `players_database/${querySnapshot?.docs[0]?.data()?.id}/videos`
+          collection(db, "players_videos"),
+          where("playerId", "==", userDetailsObject?.accountId)
         );
 
-        const q2 = query(playerObjectRef);
-        const allVideos = onSnapshot(q2, (querySnapshot) => {
+        const allVideos = onSnapshot(qPlayer, (querySnapshot) => {
           const videosArray = [];
           querySnapshot.forEach((doc) => {
             videosArray.push(doc.data());
@@ -54,6 +72,7 @@ const PlayerVersionVideos = () => {
           setVideos(videosArray);
         });
       };
+
       fetchData();
     } catch (error) {
       setCircularLoader(false);

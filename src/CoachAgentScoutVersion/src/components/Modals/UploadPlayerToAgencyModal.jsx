@@ -1341,7 +1341,9 @@ export default function UploadPlayerToAgencyModal() {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Upload player</Button>
+      {maxPlayersInAgency > 0 ? (
+        <Button onClick={handleOpen}>Upload player</Button>
+      ) : null}
 
       <Modal
         open={open}

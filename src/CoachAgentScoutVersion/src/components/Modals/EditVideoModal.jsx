@@ -94,11 +94,13 @@ export default function EditVideoModal({
   const handleEditVideo = async () => {
     try {
       // alert(selectedPlayer?.id + id);
-      const videoRef = doc(
-        db,
-        `players_database/${selectedPlayer?.id}/videos`,
-        id
-      );
+      // const videoRef = doc(
+      //   db,
+      //   `players_database/${selectedPlayer?.id}/videos`,
+      //   id
+      // );
+
+      const videoRef = doc(db, `players_videos`, id);
 
       await updateDoc(videoRef, {
         description: vidDescription,

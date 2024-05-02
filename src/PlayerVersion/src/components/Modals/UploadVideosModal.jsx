@@ -219,6 +219,10 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
         );
         // Notification for user
 
+        // const userName = allUsersData.find(
+        //   (data) => data?.accountId === uploadedBy
+        // );
+
         await setDoc(userNotificationRef, {
           NotificationId: uuid,
           dateCreated: moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -243,10 +247,10 @@ const PublishVideoModal = ({ openState, videoUrl, selectedFile }) => {
           PlayerId: id,
           // suggestion: thought of making the uploaded by an accountId for specifity instead of names
           uploadedById: userDetailsObject.accountId,
-          uploadedBy:
-            role === "Club"
-              ? userDetailsObject.club
-              : `${userDetailsObject.accountId}`,
+          // uploadedBy:
+          //   role === "Club"
+          //     ? userDetailsObject.club
+          //     : `${userDetailsObject.accountId}`,
           requestStatus: "Pending",
         });
 

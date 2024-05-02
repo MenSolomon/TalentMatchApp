@@ -9,7 +9,7 @@ import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserData
 
 export default function UploadPlayer({ info, image, studioUrl }) {
   const loginUserDetails = useSelector(selectUserDetailsObject);
-  const { role } = loginUserDetails;
+  const { role } = loginUserDetails || {};
   const navigate = useNavigate();
 
   const navigateToStudio = () => {

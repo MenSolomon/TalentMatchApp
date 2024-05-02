@@ -284,21 +284,31 @@ const CoachAgentScoutVersionMotherComponent = () => {
         // paddingBottom: "10vh",
         color: primaryTextColor,
         // zIndex: "-3",
-      }}>
+      }}
+    >
       {/* NO SUBSCRIPTION ALERT */}
       {isSubscriptionActive ? null : (
         <Alert
           severity="error"
           variant="filled"
+          style={{
+            position: "absolute",
+            zIndex: "10000",
+            width: "60%",
+            left: "17%",
+            opacity: "0.8",
+          }}
           action={
             <Button
               variant="contained"
               color="success"
               size="small"
-              onClick={() => navigate("/changeSubscription")}>
+              onClick={() => navigate("/changeSubscription")}
+            >
               Get One
             </Button>
-          }>
+          }
+        >
           No or Inactive Subscrtiption
         </Alert>
       )}
@@ -316,7 +326,8 @@ const CoachAgentScoutVersionMotherComponent = () => {
             paddingTop: "1%",
             display: "grid",
             placeContent: "center",
-          }}>
+          }}
+        >
           <div className="sm:block md:hidden">
             <SmallScreenCoachAgentClubMenuDrawer />{" "}
           </div>
@@ -337,7 +348,8 @@ const CoachAgentScoutVersionMotherComponent = () => {
               width: "100%",
               position: "absolute",
               display: screenWidth < 1024 ? "none" : "flex",
-            }}>
+            }}
+          >
             {clubsInDatabase.map((data, index) => {
               const { clubImage, clubName } = data;
               return (
@@ -361,14 +373,16 @@ const CoachAgentScoutVersionMotherComponent = () => {
             paddingTop: "1%",
             paddingLeft: "1.2vw",
             display: "flex",
-          }}>
+          }}
+        >
           <LightAndDarkModeSwitch />
           <div
             style={{
               marginTop: "1.5vh",
               marginLeft: "-1vw",
               marginRight: "1vw",
-            }}>
+            }}
+          >
             <NotificationsMenu />
           </div>
           <ProfileMenu
@@ -432,7 +446,8 @@ const CoachAgentScoutVersionMotherComponent = () => {
                           dispatch(setUserDetailsObject({}));
                           dispatch(setUserSavedProfiles([]));
                           dispatch(setIsSubscriptionActive(true));
-                        }}>
+                        }}
+                      >
                         <NavBarButton
                           ButtonName={name}
                           ButtonImage={icon}
@@ -465,7 +480,8 @@ const CoachAgentScoutVersionMotherComponent = () => {
           style={{
             // flex: ".82",
             padding: "2vh 1.5vw",
-          }}>
+          }}
+        >
           <Outlet />
         </div>
       </div>

@@ -11,6 +11,7 @@ import {
   orderBy,
   query,
   where,
+  updateDoc,
 } from "firebase/firestore";
 import {
   selectPlayersDatabase,
@@ -27,6 +28,9 @@ import {
 import {
   selectLoginStatus,
   selectUserDetailsObject,
+  setIsSubscriptionActive,
+  setNextBillingDate,
+  setSubscriptionFeatures,
   setUserDetailsObject,
 } from "./slices/LoginUserDataSlice";
 import { selectInternetConnectionStatus } from "./slices/InternetActivitiesSlice";
@@ -42,6 +46,7 @@ import { setAllPlayersVideos } from "./slices/VideosSlice";
 import SplashScreen from "../screens/SplashScreen";
 import { setInterestedPlayers } from "./slices/InterestedPlayersSlice";
 import { setInterestedConnections } from "./slices/InterestedConnectionSlice";
+import { setPriceID } from "./slices/SignupStepperSlice";
 
 const BackEndDataCatalog = ({ children }) => {
   // const id = useSelector(selectLogInUserID).id;
@@ -845,26 +850,26 @@ const BackEndDataCatalog = ({ children }) => {
   // }, []);
 
   useEffect(() => {
+    // alert(loginUserObject?.accountId + "  unterest");
+
     const userPlayerInterestRef = collection(
       db,
-      `users_db/${loginUserObject.accountId}/PlayerInterests`
+      `users_db/${loginUserObject?.accountId}/PlayerInterests`
     );
 
-    const q = query(userPlayerInterestRef);
-    const alldata = onSnapshot(q, (querySnapshot) => {
+    onSnapshot(userPlayerInterestRef, (querySnapshot) => {
       const items = [];
       querySnapshot.forEach((doc) => {
         items.push(doc.data());
         // alert(doc.id());
       });
 
+      // alert(items.length + " items");
+
       dispatch(setInterestedPlayers(items));
       console.log(loginUserObject?.accountId, items, "Gakpo");
     });
-    return () => {
-      alldata();
-    };
-  }, []);
+  }, [loginUserObject?.accountId]);
 
   /// REtriveing interested COnnections (AGENT CLUB OR SCOUTS)
 
@@ -935,6 +940,116 @@ const BackEndDataCatalog = ({ children }) => {
       alldata();
     };
   }, [localStorageId]);
+
+  // useEffect(() => {
+  //   // const currentUser = auth.currentUser;
+
+  //   if (loginUserObject?.accountId) {
+  //     const SubscriptionValidationChecker = async () => {
+  //       // alert("sub chaecker");
+  //       // const accountId = await currentUser?.uid;
+  //       const userRef = doc(db, `users_db/${loginUserObject?.accountId}`);
+  //       try {
+  //         // get subscription
+  //         const subscriptionsRef = collection(
+  //           db,
+  //           "users_db",
+  //           loginUserObject?.accountId,
+  //           "subscriptions"
+  //         );
+  //         // alert(`${userLoginObject?.accountId}`);
+
+  //         const queryActiveOrTrialing = query(
+  //           subscriptionsRef,
+  //           where("status", "in", ["trialing", "active"])
+  //         );
+
+  //         const subscriptionDocPromise = new Promise((resolve, reject) => {
+  //           onSnapshot(queryActiveOrTrialing, async (snapshot) => {
+  //             const doc = snapshot.docs[0];
+  //             const length = snapshot.docs.length;
+  //             // alert(length);
+  //             // alert(doc?.data().status, "stats");
+  //             if (doc?.data().status === "active") {
+  //               dispatch(setIsSubscriptionActive(true));
+  //               // get end next billing date
+  //               const timestamp = doc.data().current_period_end.seconds;
+  //               const date = await new Date(timestamp * 1000);
+  //               dispatch(setNextBillingDate(date.toDateString()));
+  //               resolve(doc);
+  //             } else if (length == 0) {
+  //               // alert("Subsco");
+  //               dispatch(setIsSubscriptionActive(false));
+  //               dispatch(setNextBillingDate("N/A"));
+  //               dispatch(
+  //                 setUserDetailsObject({
+  //                   ...loginUserObject,
+  //                   subscriptionPackage: null,
+  //                   subscriptionPrice: null,
+  //                 })
+  //               );
+
+  //               dispatch(
+  //                 setSubscriptionFeatures({
+  //                   canHideVisibility: false,
+  //                   maxPlayersInAgency: 1,
+  //                   maxProfiles: 1,
+  //                   maxVideosPerPlayer: 1,
+  //                 })
+  //               );
+  //               resolve(null);
+  //             }
+  //           });
+  //         });
+
+  //         const docData = await subscriptionDocPromise;
+  //         // if an active subscription exist get the product id and store it
+  //         if (docData) {
+  //           // get product id from database if an active
+  //           const productID = await docData.data().items[0].plan.product;
+  //           const priceID = await docData.data().items[0].plan.id;
+  //           // alert(await docData.data().items[0].plan.product);
+  //           //get and store maxProfiles
+  //           const featuresRef = await doc(db, `products/${productID}`);
+  //           const featuresSnap = await getDoc(featuresRef);
+  //           const features = await featuresSnap.data().features;
+  //           const userInfoRef = doc(
+  //             db,
+  //             `users_db/${loginUserObject?.accountId}`
+  //           );
+  //           // save features to redux
+  //           dispatch(setSubscriptionFeatures(features));
+  //           await updateDoc(userInfoRef, {
+  //             subscriptionPackage: productID,
+  //             subscriptionPrice: priceID,
+  //           });
+  //           // save priceID to redux
+  //           dispatch(setPriceID(priceID));
+  //         } else if (docData == null) {
+  //           // alert("docData null");
+  //           dispatch(
+  //             setSubscriptionFeatures({
+  //               canHideVisibility: false,
+  //               maxPlayersInAgency: 1,
+  //               maxProfiles: 1,
+  //               maxVideosPerPlayer: 1,
+  //             })
+  //           );
+  //           dispatch(setPriceID(null));
+  //           // set isBasic to true to hide this user from the connections list
+  //           await updateDoc(userRef, {
+  //             isBasic: true,
+  //           });
+  //         }
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     };
+  //     SubscriptionValidationChecker();
+  //   } else {
+  //     dispatch(setIsSubscriptionActive(false));
+  //   }
+  // }, [loginUserObject]);
 
   // useEffect(() => {
   //   // const documentRef = collection(db, `users_db`);
