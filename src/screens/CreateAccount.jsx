@@ -548,7 +548,7 @@ setSurname */}
                   //     : null
                   // }
                   dateValue={(e) => {
-                    alert(e);
+                    // alert(e);
                     setDOB(e);
                   }}
                   value={dayjs(DOB)}
