@@ -91,6 +91,7 @@ const PickedPlayerCard = ({
         height: "37.5vh",
         padding: "2vh .4vw",
         // paddingTop: "2vh",
+        background: "green",
         borderRadius: "1vw",
         color: "white",
         // backgroundImage: `linear-gradient(90deg, rgba(32,32,32,0.8747099767981439) 0%, rgba(55,54,54,0.8538283062645011) 28%, rgba(23,21,21,0.7540603248259861) 44%, rgba(14,50,142,0.8120649651972158) 100%),url("${ClubLogo}")`,
@@ -126,8 +127,8 @@ const PickedPlayerCard = ({
         >
           {" "}
           <BasicButtonWithEndIcon
-            className="md:w-[6.5vw] sm:w-[90%]"
-            style={{ height: "4vh" }}
+            className="lg:w-[9.5vw] lg:h-[4vh] md:w-[15.5vw] md:h-[4vh] sm:w-[90%] sm:h-[4vh] tb:w-[30vw] tb:h-[5vh]"
+            // style={{ height: "4vh" }}
             innerText="Watch"
             endIcon="play_circle"
           />
@@ -137,7 +138,12 @@ const PickedPlayerCard = ({
         <div style={{ flex: ".8", display: "flex", justifyContent: "center" }}>
           <Avatar
             src={PlayerImage}
-            sx={{ width: 80, height: 80, border: "3px solid #5585FE" }}
+            // className="md:w-[90vw] md:h-[90vw] tb:w-[90vw] tb:h-[90vw]"
+            sx={{
+              width: 90,
+              height: 90,
+              border: "3px solid #5585FE",
+            }}
           />
         </div>
       </div>
@@ -158,24 +164,33 @@ const PickedPlayerCard = ({
 
         <div style={{ flex: ".25" }}>
           {" "}
-          <h5>
+          <h5 className="tb:text-[1.9em] md:text-[1.4em]">
             {" "}
             {firstname} {surname}{" "}
           </h5>
           <BasicControlledRating />
         </div>
-        <div style={{ flex: ".5" }}>
+        <div
+          className="tb:text-[1.3em] md:text-[1.5em] lg:text-[1.1em] "
+          style={{ flex: ".5" }}
+        >
           {" "}
           {firstname} {surname} is a player from {PlayerCountry} name who playes
           as {position} for {clubName}
         </div>
 
-        <div style={{ flex: ".25" }}>
+        <div
+          className="tb:text-[1.5em] md:text-[1.2em] lg:text-[1em]"
+          style={{ flex: ".25" }}
+        >
           {" "}
           3 Goals <span style={{ marginLeft: ".6vw" }}>
             2 Total attempts
           </span>{" "}
-          <BasicButton innerText="See more" />{" "}
+          <BasicButton
+            className="lg:w-[6.5vw]  md:w-[15vw] md:h-[4vh] sm:w-[90%] tb:w-[30vw] tb:h-[5vh]"
+            innerText="See more"
+          />{" "}
         </div>
       </div>
     </Card>

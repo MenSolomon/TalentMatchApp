@@ -35,7 +35,7 @@ const PlayerComparisonCard = ({
 
   return (
     <Card
-      className="primaryTextColor cardBackground md:w-[28%] md:h-[70vh]     sm:w-[100%] sm:h-[70vh]"
+      className="primaryTextColor cardBackground lg:w-[28%] lg:h-[70vh]  md:w-[100%] md:h-[70vh]     sm:w-[100%] sm:h-[70vh]"
       sx={{ borderRadius: "1vw" }}
     >
       <div
@@ -75,7 +75,7 @@ const PlayerComparisonCard = ({
               }}
             >
               {/* <AccountCircleOutlined sx={{ fontSize: "65px" }} /> */}
-              <Avatar src={image} sx={{ width: 50, height: 50 }}></Avatar>
+              <Avatar src={image} sx={{ width: 80, height: 80 }}></Avatar>
             </div>
             <div
               style={{
@@ -89,14 +89,16 @@ const PlayerComparisonCard = ({
                   marginTop: "10px",
                 }}
               ></div>
-              <h6>{`${firstName} ${surName} `} </h6>
+              <h6 className="tb:text-[1.8em] md:text-[1.1em]">
+                {`${firstName} ${surName} `}{" "}
+              </h6>
               <h6> {position}</h6>
             </div>
           </div>
           <div style={{ flex: ".3" }}>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <IconButton onClick={handleCardClose}>
-                <Close />
+                <Close sx={{ fontSize: 30, color: "white" }} />
               </IconButton>
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -113,9 +115,11 @@ const PlayerComparisonCard = ({
         </div>
         {/* // CLubs Section */}
         <div style={{ flex: ".1", padding: "10px" }}>
-          <h6>Club Name: {clubName}</h6>
-          <h6>Age: {age}</h6>
-          <h6>Height: {height} </h6>
+          <h6 className="tb:text-[1.3em] md:text-[1.1em]">
+            Club Name: {clubName}
+          </h6>
+          <h6 className="tb:text-[1.3em] md:text-[1.2em]">Age: {age}</h6>
+          <h6 className="tb:text-[1.3em] md:text-[1.1em]">Height: {height} </h6>
         </div>
         <div
           style={{

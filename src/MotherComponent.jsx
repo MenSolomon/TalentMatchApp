@@ -87,6 +87,7 @@ const MotherComponent = () => {
   const screenSize = useSelector(selectCurrentScreenSize);
 
   let screenWidth = parseInt(screenSize?.width, 10);
+  // let screenTabletWidth = parseInt(screenSize?.width, 10);
 
   const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
 
@@ -602,7 +603,9 @@ const MotherComponent = () => {
   }, []);
   return (
     <div
-      className="md:flex md:flex-col md:h-[112vh] md:w-[100vw] md:pb-[0vh] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw] sm:pb-[10vh]"
+      className="  md:flex md:flex-col md:h-[100vh] md:w-[100vw] md:pb-[0vh] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw] sm:pb-[10vh] 
+      lg:flex lg:flex-col lg:h-[112vh] lg:w-[100vw]
+      "
       style={{
         visibility:
           usersSavedProfile && usersSavedProfile.length > 0
@@ -616,7 +619,8 @@ const MotherComponent = () => {
         // background: "red",
         color: primaryTextColor,
         // zIndex: "-3",
-      }}>
+      }}
+    >
       {/* NO SUBSCRIPTION ALERT */}
       {isSubscriptionActive ? null : (
         <Alert
@@ -627,18 +631,22 @@ const MotherComponent = () => {
               variant="contained"
               color="success"
               size="small"
-              onClick={() => navigate("/changeSubscription")}>
+              onClick={() => navigate("/changeSubscription")}
+            >
               Get One
             </Button>
-          }>
+          }
+        >
           No or Inactive Subscrtiption
         </Alert>
       )}
       {/*  NO SUBSCRIPTION ALERT END */}
       {/* //=====  NAVBAR ======= \\ */}
       <div
-        className="md:flex md:basis-[11%]  sm:flex sm:basis-[8%]"
-        // style={{ flex: ".11", display: "flex" }}
+        className="md:flex md:basis-[11%]  sm:flex sm:basis-[8%]
+        lg:flex lg:basis-[11%]
+        "
+        // style={{ background: "red" }}lg
       >
         {/* // Logo Area */}
 
@@ -648,12 +656,14 @@ const MotherComponent = () => {
             paddingTop: "1%",
             display: "grid",
             placeContent: "center",
-          }}>
-          <div className="sm:block md:hidden">
+            // background: "red",
+          }}
+        >
+          <div className="sm:block md:block lg:hidden">
             <SmallScreenMenuDrawer />{" "}
           </div>
           <img
-            className="sm:hidden md:block"
+            className="sm:hidden md:hidden lg:block"
             style={{ width: "110px" }}
             src={logoImage}
           />
@@ -667,7 +677,8 @@ const MotherComponent = () => {
             // paddingLeft: "4vw",
             // background: "red",
             position: "relative",
-          }}>
+          }}
+        >
           <Marquee
             // className="sm:hidden md:block"
 
@@ -679,7 +690,9 @@ const MotherComponent = () => {
               width: "100%",
               position: "absolute",
               display: screenWidth < 1024 ? "none" : "flex",
-            }}>
+            }}
+            // className="lg:w-[100%] lg:hidden lg:absolute lg:block  md:w-[100%] md:absolute  tb:w-[100%] tb:absolute  sm:w-[100%] sm:absolute sm:hidden"
+          >
             {clubsInDatabase.map((data, index) => {
               const { clubImage, clubName } = data;
               return (
@@ -699,14 +712,18 @@ const MotherComponent = () => {
         </div>
         {/* // profile details Area */}
         <div
+          // className="lg:flex lg:justify-center lg:items-center  md:flex md:justify-center md:items-center  sm:flex sm:justify-center sm:items-center  tb:flex tb:justify-center tb:items-center"
           style={{
             // Should be 37
             flex: ".19",
             // background: "yellow",
             paddingTop: "1%",
-            paddingLeft: "1.2vw",
+            // paddingLeft: "1.2vw",
             display: "flex",
-          }}>
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           {/* sx={{ , marginLeft: "1vw", borderBottom: "none" }} */}
 
           <UploadPlayer
@@ -719,11 +736,13 @@ const MotherComponent = () => {
 
           {/* <IconButton sx={{ marginTop: "1vh" }}> */}
           <div
+            className="lg:pt-[1.2vh] md:mt-[.8vh] tb:mt-[1.8vh]"
             style={{
-              marginTop: "1.5vh",
+              // marginTop: "1.8vh",
               marginLeft: "-1vw",
               marginRight: "1vw",
-            }}>
+            }}
+          >
             <NotificationsMenu />
           </div>
           {/* </IconButton> */}
@@ -736,7 +755,7 @@ const MotherComponent = () => {
       </div>
       {/* // ======  PAGE CONTENT ===== \\ */}
       <div
-        className="md:flex md:basis-[89%]  sm:flex sm:basis-[92%] sm:overflow-y-scroll sm:width-[100vw] "
+        className="md:flex md:basis-[89%]  lg:flex lg:basis-[89%]  sm:flex sm:basis-[92%] sm:overflow-y-scroll sm:width-[100vw] "
         style={
           {
             // flex: ".89",
@@ -744,10 +763,11 @@ const MotherComponent = () => {
             // background: "green",
             // overflowY: "visible",
           }
-        }>
+        }
+      >
         {/* // NAV ARAEA */}
         <div
-          className="md:basis-[18%] md:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:block sm:hidden"
+          className="md:basis-[18%] md:flex-shrink-0  lg:basis-[18%] lg:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:hidden sm:hidden lg:block"
           style={
             {
               // flex: ".18",
@@ -756,10 +776,17 @@ const MotherComponent = () => {
               // paddingTop: "5vh",
               // background: "yellow",
             }
-          }>
+          }
+        >
           {/* // USE A MAP FOR THIS */}
           {/* // NavBAR FIRST HALF */}
-          <div style={{ flex: ".65", overflowY: "scroll", maxHeight: "45vh" }}>
+          <div
+            style={{
+              flex: ".65",
+              overflowY: "scroll",
+              maxHeight: "45vh",
+            }}
+          >
             <ul style={{ listStyleType: "none", marginLeft: "2vw" }}>
               {menuButtonsArray &&
                 menuButtonsArray.map((data, index) => {
@@ -820,7 +847,8 @@ const MotherComponent = () => {
                             .catch((error) => {
                               console.log("error:", error);
                             });
-                        }}>
+                        }}
+                      >
                         <NavBarButton
                           ButtonName={name}
                           ButtonImage={icon}
@@ -850,13 +878,14 @@ const MotherComponent = () => {
 
         {/* // ROUTES SECTION */}
         <div
-          className="md:basis-[82%] sm:basis-[100%]"
+          className="md:basis-[82%] sm:basis-[100%] lg:basis-[82%]"
           style={{
             // flex: ".82",
             padding: "2vh 1.5vw",
 
             // background: "blue",
-          }}>
+          }}
+        >
           <Outlet />
         </div>
       </div>

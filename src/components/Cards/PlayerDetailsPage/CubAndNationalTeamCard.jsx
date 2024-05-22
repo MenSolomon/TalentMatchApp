@@ -14,7 +14,8 @@ const ClubandNationalTeamDisplayCard = ({
 }) => {
   return (
     <div
-      className="playerCard md:w-[100%] md:h-[100%] md:flex md:flex-col  sm:w-[50%] sm:h-[100%] sm:flex sm:flex-col"
+      className="playerCard lg:w-[20vw] md:w-[37vw] md:h-[100%] md:flex md:flex-col  sm:w-[50%] sm:h-[100%] sm:flex sm:flex-col"
+      // className="playerCard md:w-[100%] md:h-[100%] md:flex md:flex-col  sm:w-[50%] sm:h-[100%] sm:flex sm:flex-col"
       style={{
         // width: "100%",
         // height: "100%",
@@ -28,6 +29,7 @@ const ClubandNationalTeamDisplayCard = ({
         // borderBottom: "1px solid ",
         // borderRight: "1px solid #BECBCC",
         borderRadius: "1vw",
+        // background: "red",
       }}
     >
       {/* Club name and Club Image Area , Nationality Area */}
@@ -59,8 +61,9 @@ const ClubandNationalTeamDisplayCard = ({
                   paddingBottom: 0,
                   paddingTop: 0,
                   textAlign: "right",
-                  fontSize: ".94em",
+                  // fontSize: ".94em",
                 }}
+                className="lg:text-[1.2em] md:text-[1.5em]  sm:text-[1em] tb:text-[1.3em]"
               >
                 {ClubName}
               </p>{" "}
@@ -115,10 +118,16 @@ const ClubandNationalTeamDisplayCard = ({
         {/* // Height And Preffered Foot Area */}
         <div>
           {" "}
-          <h6 style={{ ...hTagStyle, fontSize: ".95em" }}>
+          <h6
+            className="lg:text-[1.1em] md:text-[1.4em]  sm:text-[1em] tb:text-[1.3em]"
+            style={{ ...hTagStyle }}
+          >
             Preferred foot : {PreferredFoot}
           </h6>{" "}
-          <h6 style={{ ...hTagStyle, fontSize: ".95em" }}>
+          <h6
+            className="lg:text-[1.1em] md:text-[1.1em]  sm:text-[1em] tb:text-[1.3em]"
+            style={{ ...hTagStyle }}
+          >
             Height : {Height} m
           </h6>{" "}
         </div>

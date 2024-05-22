@@ -91,7 +91,7 @@ const NavBarButton = ({ ButtonName, ButtonImage, path, buttonStyle }) => {
         className="NavBarBtns"
         style={{
           ...buttonStyle,
-          fontSize: ".9em",
+          fontSize: "1em",
           fontWeight: "600",
           textTransform: "none",
           paddingRight: "5vw",

@@ -57,6 +57,7 @@ function SettingsProfile() {
 
   const browserSize = useSelector(selectCurrentBrowserSize);
   let browserWidth = parseInt(browserSize?.width, 10);
+  let browserWidthOnLargeScreens = parseInt(browserSize?.width, 10);
   //
 
   const triggerWarningAlertModal = (message) => {
@@ -194,7 +195,9 @@ function SettingsProfile() {
     >
       {/* Header Column */}
       <div style={{ flex: "0.01" }}>
-        <h5>My Profile Settings</h5>
+        <h5 className="lg:text-[2.5em] md:text-[2.7em] tb:text-[2.2em]">
+          My Profile Settings
+        </h5>
       </div>
 
       {/* Divider */}
@@ -235,8 +238,8 @@ function SettingsProfile() {
               <Avatar
                 src={imageUrl}
                 style={{
-                  width: browserWidth >= 1024 ? "5.5vw" : "18%",
-                  height: browserWidth >= 1024 ? "11.5vh" : "90%",
+                  width: browserWidth >= 1024 ? "5.7vw" : "17vw",
+                  height: browserWidth >= 1024 ? "11.5vh" : "10vh",
                 }}
 
                 // className="md:w-[20%] md:h-[80%] sm:w-[15%"
@@ -259,7 +262,10 @@ function SettingsProfile() {
                     // multiple
                   />
                 </div>
-                <Card> {email}</Card>
+                <Card className="lg:w-[17vw] lg:h-[4vh] lg:flex lg:justify-center lg:items-center md:w-[26vw] md:h-[4vh] md:flex md:justify-center md:items-center  tb:w-[35vw] tb:h-[4vh] tb:flex tb:justify-center tb:items-center  sm:w-[50vw] sm:h-[4vh] sm:flex sm:justify-center sm:items-center    sm:text-[.8em] lg:text-[1em] md:text-[1em] tb:text-[1em]">
+                  {" "}
+                  {email}
+                </Card>
               </div>
             </div>
 
@@ -275,7 +281,10 @@ function SettingsProfile() {
                 // justifyContent: "center",
               }}
             >
-              <div style={{ display: "flex", flexDirection: "column-reverse" }}>
+              <div
+                className="lg:text-[1.5em] md:text-[1.4em] tb:text-[1.2em]"
+                style={{ display: "flex", flexDirection: "column-reverse" }}
+              >
                 <TextField
                   size="small"
                   onChange={(e) => {
@@ -299,7 +308,10 @@ function SettingsProfile() {
                 // justifyContent: "center",
               }}
             >
-              <div style={{ display: "flex", flexDirection: "column-reverse" }}>
+              <div
+                className="lg:text-[1.5em] md:text-[1.4em] tb:text-[1.2em]"
+                style={{ display: "flex", flexDirection: "column-reverse" }}
+              >
                 <TextField
                   size="small"
                   onChange={(e) => {
@@ -339,7 +351,10 @@ function SettingsProfile() {
         >
           {/* select saved profile with filter */}
           <div style={{ flex: "0.6" }}>
-            <small> change home carousel filter here* (optional)</small>
+            <small className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]">
+              {" "}
+              change home carousel filter here* (optional)
+            </small>
             <div className="md:w-[100%]  sm:w-[60%]">
               <BasicSelect
                 itemsArray={selectArray}
@@ -351,7 +366,7 @@ function SettingsProfile() {
 
           <div style={{ flex: "0.4" }}>
             <div className="md:flex md:flex-col   sm:flex sm:flex-col">
-              <small>
+              <small className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]">
                 Delete your account and all of your source data. <br /> This is
                 irreversible.
               </small>

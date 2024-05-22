@@ -99,6 +99,7 @@ export default function PlayerDetailsMenuTab({
                   // textTransform: "none",
                 }}
                 {...a11yProps(key)}
+                // style={{ background: "red" }}
               />
             );
           })}

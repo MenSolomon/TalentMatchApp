@@ -83,7 +83,8 @@ const NavBarButton = ({ ButtonName, ButtonImage, path, buttonStyle }) => {
             <Star sx={{ color: buttonColor }} />
           )
         }
-        onClick={handleNavigate}>
+        onClick={handleNavigate}
+      >
         {ButtonName}
       </Button>
     </NavLink>

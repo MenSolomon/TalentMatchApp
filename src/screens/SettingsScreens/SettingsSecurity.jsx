@@ -21,7 +21,9 @@ function SettingsSecurity() {
         className="md:flex md:flex-row  sm:flex sm:flex-row"
         style={{ flex: "0.01" }}
       >
-        <h5>Password & Security Settings</h5>
+        <h5 className="lg:text-[2.5em] md:text-[2.7em] tb:text-[2.2em]">
+          Password & Security Settings
+        </h5>
       </div>
 
       {/* Divider */}
@@ -34,7 +36,10 @@ function SettingsSecurity() {
         // className="md:flex md:flex-row md:gap-[0em] sm:flex sm:flex-col sm:gap-[1em]"
         style={{ flex: "0.89", display: "flex", flexDirection: "column" }}
       >
-        <h5>Set up security and login account</h5> <br />
+        <h5 className="lg:text-[2.5em] md:text-[2.7em] tb:text-[2.2em]">
+          Set up security and login account
+        </h5>{" "}
+        <br />
         <div
           className="sm:flex sm:flex-col md:flex md:flex-row"
           style={{ flex: ".9" }}
@@ -42,20 +47,29 @@ function SettingsSecurity() {
           {/* // LEFT FORM */}
 
           <div style={{ flex: ".3", display: "flex", flexDirection: "column" }}>
-            <div style={{ marginBottom: "4vh" }}>
+            <div
+              className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]"
+              style={{ marginBottom: "4vh" }}
+            >
               Enter full Name here* (optional)
               <br />
               <TextField size="small" value={" first name"} />
             </div>
             {/* Change user surname
       here* */}
-            <div style={{ marginBottom: "4vh" }}>
+            <div
+              className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]"
+              style={{ marginBottom: "4vh" }}
+            >
               Change user surname here*
               <br />
               <TextField size="small" value={" surname"} />
             </div>
             {/* Comopome */}
-            <div style={{ marginBottom: "4vh" }}>
+            <div
+              className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]"
+              style={{ marginBottom: "4vh" }}
+            >
               Change user Tel number here*
               <br />
               <TextField
@@ -70,7 +84,10 @@ function SettingsSecurity() {
 
           <div style={{ flex: ".5", display: "flex", flexDirection: "column" }}>
             {/* OLD PASSWORD */}
-            <div style={{ marginBottom: "4vh" }}>
+            <div
+              className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]"
+              style={{ marginBottom: "4vh" }}
+            >
               Enter current Password here*
               <br />
               <TextField
@@ -81,7 +98,10 @@ function SettingsSecurity() {
             </div>
             {/* NEW PASSWORD */}
 
-            <div style={{ marginBottom: "4vh" }}>
+            <div
+              className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]"
+              style={{ marginBottom: "4vh" }}
+            >
               Enter New Password here*
               <br />
               <TextField

@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  padding: 0;
+  margin: 0;
+  outline: 0;
+  border: 0;
+  /* list-style: none; */
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+}
+/* * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+} */
+
 :root {
   --gradient: linear-gradient(
     90deg,
@@ -25,14 +45,6 @@
   --primaryTextColor: black;
   --buttonColor: #5585fe;
   --secondaryTextColor: black;
-}
-
-* {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
 }
 
 .playerCard {

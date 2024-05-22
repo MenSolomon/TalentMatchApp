@@ -322,12 +322,17 @@ const CoachAgentScoutVersionInbox = () => {
 
   return (
     <div
-      className="primaryTextColor md:gap-[1em] md:flex-row md:flex md:w-[100%] md:h-[100%]    sm:flex sm:w-[100%] sm:gap-[3.5em] sm:flex-col sm:h-[100%]"
+      className="primaryTextColor md:gap-[1em] md:flex-row md:flex md:w-[100%] md:h-[100%]     
+      tb:gap-[1em] tb:flex-row tb:flex tb:w-[100%] tb:h-[100%]
+         sm:flex sm:w-[100%] sm:gap-[3.5em] sm:flex-col sm:h-[100%]"
       // style={{ display: "flex", width: "100%", height: "100%" }}
     >
       {/* MESSAGE OVERVIEW SECTION */}
       <div
-        className="md:flex md:flex-col md:basis-[35%]    sm:basis-[35%] sm:flex sm:flex-col"
+        className="md:flex md:flex-col md:basis-[35%] 
+        tb:flex tb:flex-col tb:basis-[35%]
+        
+           sm:basis-[35%] sm:flex sm:flex-col"
         style={
           {
             // flex: ".35",
@@ -339,7 +344,12 @@ const CoachAgentScoutVersionInbox = () => {
       >
         {/* // INBOX HEADER */}
         <div className="md:basis-[20%]  sm:basis-[20%]">
-          <h5 style={{ fontWeight: "bolder", margin: "0" }}>Messages</h5>
+          <h5
+            className="tb:text-[1.6em] md:text-[1.3em]"
+            style={{ fontWeight: "bolder", margin: "0" }}
+          >
+            Messages
+          </h5>
           {/* <span style={{ fontSize: ".8em" }}>
             102Messages <Circle sx={{ width: 7 }} /> 40 unread
           </span> */}
@@ -367,7 +377,10 @@ const CoachAgentScoutVersionInbox = () => {
           style={{ overflowY: "scroll" }}
         >
           {connections === undefined || connections?.length === 0 ? (
-            <h4 className="primaryTextColor" style={{ textAlign: "center" }}>
+            <h4
+              className="primaryTextColor  tb:text-[1.7em] md:text-[1.3em]"
+              style={{ textAlign: "center" }}
+            >
               No contacts yet
             </h4>
           ) : (
@@ -414,7 +427,9 @@ const CoachAgentScoutVersionInbox = () => {
 
       {/* INBOX CONTENT SECTION */}
       <div
-        className="cardBackground md:flex md:flex-col md:pl-[1.5vw] md:basis-[65%]  sm:basis-[65%]      sm:flex sm:flex-shrink-0 sm:flex-col sm:pl-[0vw]"
+        className="cardBackground md:flex md:flex-col md:pl-[1.5vw] md:basis-[65%] 
+        tb:flex tb:flex-col tb:pl-[1.5vw] tb:basis-[65%]
+         sm:basis-[65%]      sm:flex sm:flex-shrink-0 sm:flex-col sm:pl-[0vw]"
         style={{
           // flex: ".65",
           // background: "red",
@@ -429,7 +444,10 @@ const CoachAgentScoutVersionInbox = () => {
         {selectedUserDetailsObject?.contactId.length === 0 ? (
           <div className="md:basis-[100%] md:grid md:place-content-center    sm:basis-[100%] sm:grid sm:place-content-center">
             {" "}
-            <h5 style={{ textAlign: "center" }}>
+            <h5
+              className="tb:text-[1.6em] md:text-[1.3em]"
+              style={{ textAlign: "center" }}
+            >
               Send and reveive messages without keeping your phone online
             </h5>{" "}
           </div>

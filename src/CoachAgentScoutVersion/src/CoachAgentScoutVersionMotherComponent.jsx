@@ -284,7 +284,9 @@ const CoachAgentScoutVersionMotherComponent = () => {
         // paddingBottom: "10vh",
         color: primaryTextColor,
         // zIndex: "-3",
-      }}>
+        // background: "red",
+      }}
+    >
       {/* NO SUBSCRIPTION ALERT */}
       {isSubscriptionActive ? null : (
         <Alert
@@ -295,10 +297,12 @@ const CoachAgentScoutVersionMotherComponent = () => {
               variant="contained"
               color="success"
               size="small"
-              onClick={() => navigate("/changeSubscription")}>
+              onClick={() => navigate("/changeSubscription")}
+            >
               Get One
             </Button>
-          }>
+          }
+        >
           No or Inactive Subscrtiption
         </Alert>
       )}
@@ -316,12 +320,13 @@ const CoachAgentScoutVersionMotherComponent = () => {
             paddingTop: "1%",
             display: "grid",
             placeContent: "center",
-          }}>
-          <div className="sm:block md:hidden">
+          }}
+        >
+          <div className="sm:block md:block lg:hidden">
             <SmallScreenCoachAgentClubMenuDrawer />{" "}
           </div>
           <img
-            className="sm:hidden md:block"
+            className="sm:hidden md:hidden lg:block"
             style={{ width: "110px" }}
             src={logoImage}
           />
@@ -337,7 +342,8 @@ const CoachAgentScoutVersionMotherComponent = () => {
               width: "100%",
               position: "absolute",
               display: screenWidth < 1024 ? "none" : "flex",
-            }}>
+            }}
+          >
             {clubsInDatabase.map((data, index) => {
               const { clubImage, clubName } = data;
               return (
@@ -361,14 +367,16 @@ const CoachAgentScoutVersionMotherComponent = () => {
             paddingTop: "1%",
             paddingLeft: "1.2vw",
             display: "flex",
-          }}>
+          }}
+        >
           <LightAndDarkModeSwitch />
           <div
             style={{
               marginTop: "1.5vh",
               marginLeft: "-1vw",
               marginRight: "1vw",
-            }}>
+            }}
+          >
             <NotificationsMenu />
           </div>
           <ProfileMenu
@@ -384,13 +392,16 @@ const CoachAgentScoutVersionMotherComponent = () => {
       >
         {/* // NAV ARAEA */}
         <div
-          className="md:basis-[18%] md:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:block sm:hidden"
-          // style={{
-          //   flex: ".18",
-          //   display: "flex",
-          //   flexDirection: "column",
-          //   paddingTop: "5vh",
-          // }}
+          className="md:basis-[18%] md:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:hidden lg:block sm:hidden"
+          style={
+            {
+              // flex: ".18",
+              // display: "flex",
+              // flexDirection: "column",
+              // paddingTop: "5vh",
+              // background: "red",
+            }
+          }
         >
           {/* // USE A MAP FOR THIS */}
           {/* // NavBAR FIRST HALF */}
@@ -432,7 +443,8 @@ const CoachAgentScoutVersionMotherComponent = () => {
                           dispatch(setUserDetailsObject({}));
                           dispatch(setUserSavedProfiles([]));
                           dispatch(setIsSubscriptionActive(true));
-                        }}>
+                        }}
+                      >
                         <NavBarButton
                           ButtonName={name}
                           ButtonImage={icon}
@@ -461,11 +473,13 @@ const CoachAgentScoutVersionMotherComponent = () => {
 
         {/* // ROUTES SECTION */}
         <div
-          className="md:basis-[82%] sm:basis-[100%]"
+          className="md:basis-[100%] sm:basis-[100%]"
           style={{
             // flex: ".82",
             padding: "2vh 1.5vw",
-          }}>
+            // background: "yellow",
+          }}
+        >
           <Outlet />
         </div>
       </div>

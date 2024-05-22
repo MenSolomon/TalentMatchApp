@@ -59,7 +59,8 @@ border-box;`;
 
   return (
     <div
-      className="playerCard md:w-[100%] md:h-[100%] md:flex md:flex-col  sm:w-[50%] sm:h-[100%] sm:flex sm:flex-col"
+      className="playerCard lg:w-[13vw] md:w-[17vw] md:h-[100%] md:flex md:flex-col  sm:w-[50%] sm:h-[100%] sm:flex sm:flex-col"
+      // className="playerCard md:w-[100%] md:h-[100%] md:flex md:flex-col  sm:w-[50%] sm:h-[100%] sm:flex sm:flex-col"
       style={{
         // width: "100%",
         // height: "100%",
@@ -72,7 +73,13 @@ border-box;`;
     >
       <div style={{ flex: ".3", display: "flex" }}>
         {" "}
-        <span style={{ fontWeight: "bolder" }}> Market Value :</span>
+        <span
+          className="lg:text-[1.2em] md:text-[1.3em] tb:text-[1.3em] sm:text-[1em]"
+          style={{ fontWeight: "bolder" }}
+        >
+          {" "}
+          Market Value :
+        </span>
         <BasicButton
           style={{
             width: "4vw",
@@ -100,7 +107,10 @@ border-box;`;
             display: "flex",
           }}
         >
-          condition <Favorite sx={{ fontSize: "1.2em" }} />{" "}
+          <div className="lg:text-[1em] md:text-[1.3em] tb:text-[1.3em]  sm:text-[1em]">
+            condition
+          </div>{" "}
+          <Favorite sx={{ fontSize: "1.2em" }} />{" "}
           <Avatar
             sx={{
               width: 30,
@@ -111,7 +121,10 @@ border-box;`;
           >
             <Icon>vital_signs</Icon>
           </Avatar>{" "}
-          <Details sx={{ fontSize: "1.2em" }} /> Sharpness{" "}
+          <Details sx={{ fontSize: "1.2em" }} />{" "}
+          <div className="lg:text-[1em] md:text-[1.3em] tb:text-[1.3em]  sm:text-[1em]">
+            Sharpness
+          </div>{" "}
         </div>
       </div>
     </div>

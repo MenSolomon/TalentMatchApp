@@ -85,7 +85,7 @@ const Login = () => {
           <h1 style={{ fontSize: "3.3em" }}>
             {" "}
             Welcome Back{" "}
-            <span style={{ fontSize: "2em", color: "blue" }}>.</span>{" "}
+            <span style={{ fontSize: "1em", color: "blue" }}>.</span>{" "}
           </h1>
 
           <h5>

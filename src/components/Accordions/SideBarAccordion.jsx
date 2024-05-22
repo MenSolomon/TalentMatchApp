@@ -5,7 +5,7 @@ import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
-import { Home, Star } from "@mui/icons-material";
+import { Home, Padding, Star } from "@mui/icons-material";
 import { Box, Button } from "@mui/material";
 import { SideBarNavButtons } from "../Buttons/SideBarNavButtons";
 import "@fontsource/material-icons";
@@ -33,6 +33,7 @@ export default function SideBarAccordion({
     <div>
       <MuiAccordion
         sx={{ background: "transparent" }}
+        className="lg:ml-[-9%] tb:ml-[20%]"
         disableGutters
         elevation={0}
         square
@@ -55,7 +56,11 @@ export default function SideBarAccordion({
               <Star sx={{ fontSize: "1.8em", color: buttonColor }} />
             }
             // disabled={true}
-            sx={{ color: "black", textTransform: "none", fontWeight: "600" }}
+            sx={{
+              color: "black",
+              textTransform: "none",
+              fontWeight: "600",
+            }}
           />
         </MuiAccordionSummary>
         <MuiAccordionDetails>

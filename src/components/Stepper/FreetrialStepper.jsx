@@ -242,7 +242,7 @@ export default function FreetrialStepper({ stepperValue }) {
   };
 
   return (
-    <Box className="md:w-[70%] sm:w-[50%]" sx={{ color: "black" }}>
+    <Box className="md:w-[70%] tb:w-[100%] sm:w-[50%]" sx={{ color: "black" }}>
       <Stepper sx={{ color: "black" }} nonLinear activeStep={activeStep}>
         {steps.map((label, index) => (
           <Step
@@ -262,7 +262,7 @@ export default function FreetrialStepper({ stepperValue }) {
       <div>
         {allStepsCompleted() ? (
           <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}>
+            <Typography sx={{ mt: 2, mb: 1, fontSize: 20 }}>
               All steps completed - you&apos;re finished
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
@@ -272,7 +272,9 @@ export default function FreetrialStepper({ stepperValue }) {
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1, py: 1, fontWeight: "bolder" }}>
+            <Typography
+              sx={{ mt: 2, mb: 1, py: 1, fontWeight: "bolder", fontSize: 20 }}
+            >
               Step {activeStep + 1}
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
@@ -296,6 +298,7 @@ export default function FreetrialStepper({ stepperValue }) {
                       display: "inline-block",
                       color: "#5585FE",
                       fontWeight: "bolder",
+                      fontSize: 18,
                     }}
                   >
                     Step {activeStep + 1} already completed

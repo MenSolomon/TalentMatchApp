@@ -25,11 +25,15 @@ const FreeTrial = () => {
           justifyContent: "center",
         }}
       >
-        <h1>Choose your membership</h1>
+        <h1 className="tb:text-[2.5em] md:text-[2.5em]">
+          Choose your membership
+        </h1>
         <h5 style={{ fontWeight: "bold" }}>
           membership is your access point to TalentMatch
         </h5>
-        <small>Just tell us who you are</small>
+        <small className="tb:text-[1em] md:text-[1em]">
+          Just tell us who you are
+        </small>
       </div>
       {/* Subscribe free trial cards */}
       <div

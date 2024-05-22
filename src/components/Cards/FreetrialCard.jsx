@@ -34,7 +34,7 @@ const FreetrialCard = ({ name, roleImage, imageStyle, className }) => {
   return (
     <>
       <Card
-        className={`" md:w-[17%] md:h-[80%] 
+        className={`" lg:w-[17%] lg:h-[80%]   md:w-[37%] md:h-[80%] 
         sm:w-[40%] sm:h-[21.5vh] 
           ${className} "`}
         sx={{

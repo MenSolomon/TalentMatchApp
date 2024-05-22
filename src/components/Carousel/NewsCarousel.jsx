@@ -370,6 +370,7 @@ const NewsCarousel = ({ NewsArray }) => {
   return (
     <Carousel
       className="MatchedPlayers md:h-[100%] md:w-[100%] sm:w-[100%] sm:h-[100%] "
+      // style={{ background: "red" }}
       activeIndex={activeIndex}
       onSelect={handleSelect}
       //   controls={false}
@@ -384,7 +385,7 @@ const NewsCarousel = ({ NewsArray }) => {
         }
       }}
       style={{
-        // background: "black",
+        // background: "red",
         height: "100%",
         borderRadius: "1vw",
         // width: "93vw",
@@ -438,6 +439,7 @@ const NewsCarousel = ({ NewsArray }) => {
                   padding: ".2vw",
                   background:
                     "linear-gradient(90deg, hsla(280, 81%, 58%, 1) 0%, hsla(279, 81%, 59%, 1) 3%, hsla(276, 79%, 60%, 1) 9%, hsla(274, 79%, 60%, 1) 15%, hsla(269, 76%, 61%, 1) 15%, hsla(271, 77%, 61%, 1) 23%, hsla(259, 72%, 62%, 1) 32%, hsla(246, 68%, 64%, 1) 49%, hsla(226, 67%, 60%, 1) 56%, hsla(194, 96%, 42%, 1) 74%, hsla(196, 80%, 79%, 1) 100%)",
+                  // background: "red",
                 }}
               >
                 <div
@@ -445,6 +447,7 @@ const NewsCarousel = ({ NewsArray }) => {
                   style={{
                     borderRadius: "1vw",
                     // display: "flex",
+                    // background: "red",
                     gap: ".5vw",
                     // width: "100%",
                     // height: "100%",
@@ -455,7 +458,10 @@ const NewsCarousel = ({ NewsArray }) => {
                   {/* style={{ flex: ".25" }} */}
                   <div className="md:basis-[30%] sm:basis-[50%]">
                     {/* style={{ width: "100%", height: "100%" }} */}
-                    <div className="md:h-[100%] md:w-[100%]   sm:h-[100%] sm:w-[100%]">
+                    <div
+                      // style={{ background: "peru" }}
+                      className="md:h-[100%] md:w-[100%]   sm:h-[100%] sm:w-[100%]"
+                    >
                       <MatchedPlayerCard
                         key={index}
                         PlayerClubImage={
@@ -477,12 +483,12 @@ const NewsCarousel = ({ NewsArray }) => {
                   </div>
 
                   <div
-                    className="md:flex md:flex-row md:basis-[70%]  sm:flex sm:flex-col-reverse sm:basis-[70%] sm:pb-[1vh] "
+                    className="md:flex md:flex-col  md:basis-[70%]  sm:flex sm:flex-col-reverse sm:basis-[70%] sm:pb-[1vh]       lg:flex lg:flex-row lg:basis-[70%]"
                     // style={{ background: "peru" }}
                   >
                     {/* Plyer statistics */}
                     <div
-                      className="md:basis-[50%] md:flex-shrink-0 sm:basis-[50%] sm:flex-shrink-0"
+                      className="md:basis-[50%] md:flex-shrink-0 sm:basis-[50%] sm:flex-shrink-0    lg:basis-[50%] lg:flex-shrink-0"
                       style={{
                         overflowY: "scroll",
                       }}
@@ -497,26 +503,31 @@ const NewsCarousel = ({ NewsArray }) => {
                     </div>
 
                     {/* Player video higlights  */}
-                    <div className="md:basis-[50%] md:flex-shrink-0 sm:basis-[50%] sm:flex-shrink-0">
+                    <div
+                      className="  lg:basis-[50%] lg:flex-shrink-0 md:basis-[50%] md:flex-shrink-0 sm:basis-[50%] sm:flex-shrink-0"
+                      // style={{ background: "red" }}
+                    >
                       <div
-                        className="sm:w-[100%] sm:relative sm:h-[10%] md:w-[90%] md:h-[100%] md:relative"
+                        className="sm:w-[100%] sm:relative sm:h-[10%] md:w-[90%] md:h-[100%] md:relative   
+                        lg:w-[90%] lg:h-[100%] lg:relative
+                        "
                         style={{
                           // width: "90%",
                           // height: "100%",
                           borderRadius: "1vw",
                           // position: "relative",
                           paddingTop: "1vh",
-                          // background: "blue",
+                          // background: "red",
                         }}
                       >
                         {videos.length <= 0 ? (
                           <div
-                            className="sm:h-[19vh] md:h-[90%]"
+                            className="sm:h-[19vh]  md:h-[90%]"
                             style={{
                               // height: "90%",
                               width: "100%",
                               borderRadius: "1vw",
-                              background: "black",
+                              // background: "red",
                               display: "grid",
                               placeContent: "center",
                             }}
@@ -528,7 +539,7 @@ const NewsCarousel = ({ NewsArray }) => {
                         ) : (
                           <video
                             onClick={handleVideoGloballyClick}
-                            className="sm:h-[19vh] md:h-[90%]"
+                            className="sm:h-[19vh]  md:h-[90%]"
                             id={`video-${index}`}
                             src={videos[0].url}
                             width="100%"

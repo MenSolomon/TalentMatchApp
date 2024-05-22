@@ -12,7 +12,12 @@ function SettingsTerms() {
         flexDirection: "column",
       }}
     >
-      <div style={{ flex: ".01" }}>Terms of Service</div>
+      <div
+        style={{ flex: ".01" }}
+        className="lg:text-[2.5em] md:text-[2.7em] tb:text-[2.2em]"
+      >
+        Terms of Service
+      </div>
       {/* Divider */}
       <div style={{ flex: ".01" }}>
         <Divider sx={{ background: "wheat", width: "100%" }} />

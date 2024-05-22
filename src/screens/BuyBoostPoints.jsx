@@ -183,7 +183,7 @@ const BuyBoostPoints = () => {
 
   return (
     <div
-      className="md:w-[100%] md:h-[100vh] md:flex md:flex-col  
+      className="tb:w-[100%] tb:h-[100vh]  md:w-[100%] md:h-[100%] md:flex md:flex-col  
       sm:w-[100%] sm:h-[100vh] sm:flex sm:flex-col
       "
       style={{
@@ -202,11 +202,13 @@ const BuyBoostPoints = () => {
         // padding: "3vw",
         color: "white",
         overflow: "scroll",
-      }}>
+      }}
+    >
       {/* className="md:block sm:hidden" */}
+
       {/* NAVIGATION AREA */}
       <div
-        className="md:block md:w-[12.5vh] sm:hidden md:w-[5.5vh] "
+        className="md:block md:w-[12.5vh] sm:hidden md:w-[5.5vh] tb:h-[10vh] tb:w-[100%]"
         style={{
           position: "fixed",
           paddingTop: "2.5vh",
@@ -214,7 +216,7 @@ const BuyBoostPoints = () => {
           width: "98%",
 
           display: "flex",
-          // backgroundImage: linear-gradient(90deg, rgba(32,32,32,0.975210066936931) 0%, rgba(55,54,54,0.9780111873851103) 34%, rgba(23,21,21,1) 100%),url("${imageBackground}"),
+          // background: "red",
           background:
             "linear-gradient(90deg, rgba(32,32,32,0.995210066936931) 0%, rgba(55,54,54,0.9980111873851103) 34%, rgba(23,21,21,1) 100%)",
           backgroundSize: "contain",
@@ -222,13 +224,15 @@ const BuyBoostPoints = () => {
           paddingLeft: "3vw",
           paddingRight: "3vw",
           // background: "red",
-        }}>
+        }}
+      >
         {/* LOGO AREA */}
 
         {browserWidth >= 1024 ? (
           <div
-            className="md:block sm:hidden"
-            style={{ flex: ".15", display: "flex" }}>
+            className="md:block md:basis-[15%] sm:hidden tb:basis-[15%] tb:block"
+            style={{ display: "flex" }}
+          >
             {" "}
             <img style={{ width: "120px" }} src={logoImage} />
           </div>
@@ -250,14 +254,15 @@ const BuyBoostPoints = () => {
         {/* FREE TRIAL BUTTON */}
         {browserWidth >= 1024 ? (
           <div
-            className="md:block sm:hidden"
+            className="md:block sm:hidden tb:block"
             style={{
               flex: ".3",
 
               display: "flex",
               justifyContent: "flex-end",
               paddingTop: "1vh",
-            }}>
+            }}
+          >
             <Button
               onClick={() => {
                 Navigate(-1);
@@ -269,7 +274,8 @@ const BuyBoostPoints = () => {
                 color: "white",
                 textTransform: "none",
                 borderRadius: "1.2vw",
-              }}>
+              }}
+            >
               Go Back
             </Button>
           </div>
@@ -278,14 +284,14 @@ const BuyBoostPoints = () => {
         )}
       </div>
 
-      {/* BODY AREA */}
-      <div className="sm:mt-[5vh] md:mt-[10vh]" style={{ flex: ".9" }}>
+      {/* BODY AREA sm:mt-[5vh]  */}
+      <div className="tb:mt-[9vh] tb:basis-[90%] md:mt-[6vh] md:basis-[90%]  sm:mt-[6vh] sm:basis-[90%]">
         {/* CREATE ACCOUNT SECTION */}
 
         {/* // Container housiong the header information  */}
         <div
-          className="md:h-[30vh] md:flex-row md:w-[100%] md:flex    
-          sm:h-[50vh] sm:w-[100%] sm:flex sm:flex-col
+          className="md:basis-[90%] md:h-[30%] md:flex-row md:w-[100%] md:flex    
+          sm:h-[50%] sm:w-[100%] sm:flex sm:flex-col
           "
           style={
             {
@@ -294,13 +300,15 @@ const BuyBoostPoints = () => {
               // display: "flex",
               // background: "green",
             }
-          }>
+          }
+        >
           <div
             style={{
               flex: ".55",
-              paddingTop: "0vh",
+              // paddingTop: "0vh",
               // background: "blue",
-            }}>
+            }}
+          >
             <div
               className="md:h-[100%] md:w-[100%]"
               style={{
@@ -309,14 +317,15 @@ const BuyBoostPoints = () => {
                 padding: "4vw",
                 paddingLeft: "12vw",
                 //   textAlign: "center",
-              }}>
-              <h1 style={{ display: "flex" }}>
+              }}
+            >
+              {/* <h1 style={{ display: "flex" }}>
                 {" "}
                 <img
                   src={logoImage}
                   style={{ width: "160px", marginRight: "2vw" }}
                 />{" "}
-              </h1>
+              </h1> */}
 
               <h1 className="sm:text-[2.2em]  md:text-[3em]">
                 Choose the plan that <br /> best suits your needs.
@@ -337,13 +346,16 @@ const BuyBoostPoints = () => {
         {/* SUBSCRIPTION CARDS */}
 
         <div
-          className="md:w-[100%] md:h-[120vh]    sm:w-[100%] sm:h-[120vh]"
-          style={{
-            // width: "100%",
-            // height: "120vh",
-            // background: "red",
-            paddingTop: "20vh",
-          }}>
+          className="tb:basis-[10%]  md:basis-[10%] md:w-[100%] md:h-[100%] md:mt-[0vh]  sm:mt-[-30vh] sm:basis-[10%]  sm:w-[100%] sm:h-[100%]"
+          style={
+            {
+              // width: "100%",
+              // height: "120vh",
+              // background: "red",
+              // paddingTop: "20vh",
+            }
+          }
+        >
           {/* CARD */}
           <h1 style={{ textAlign: "center" }}> Choose your Plan </h1>
           <h3 style={{ textAlign: "center" }}>
@@ -362,11 +374,13 @@ const BuyBoostPoints = () => {
                 display: "flex",
                 justifyContent: "center",
                 marginTop: "5vh",
-              }}>
+              }}
+            >
               <div
-                className="md:flex md:flex-row md:h-[150vh] md:gap-[30px]     
+                className="tb:h-[140vh] md:flex md:flex-row md:h-[100vh] md:gap-[30px]     
             sm:flex sm:flex-col sm:h-[130vh] sm:gap-[10px]
-            ">
+            "
+              >
                 {boostProducts.map((item) => (
                   <BoostPointCard
                     key={item.id}
@@ -572,8 +586,10 @@ export const BoostPointCard = ({
 }) => {
   return (
     <Card
-      className="uploadPlayerModalCard  md:w-[18vw] md:h-[60vh]   
-      sm:w-[70vw] sm:h-[210vh]
+      className="uploadPlayerModalCard  md:w-[18vw] md:h-[40%]   
+      sm:w-[75vw] sm:h-[100%]
+      tb:h-[100vh] tb:w-[75vw]
+      lg:h-[36vh] lg:w-[25vw]
       "
       onClick={onClick}
       style={{
@@ -583,16 +599,19 @@ export const BoostPointCard = ({
         // height: "55vh",
         borderRadius: "1vw",
         color: "black",
-      }}>
+      }}
+    >
       <div
+        className="md:h-[100%] md:w-[100%]  sm:h-[100%] sm:w-[100%]"
         style={{
-          width: "100%",
-          height: "100%",
+          // width: "100%",
+          // height: "100%",
           padding: ".65vw",
           display: "flex",
           flexDirection: "column",
           gap: ".5vh",
-        }}>
+        }}
+      >
         {/* // NAME DESCRIPTION AND PRICE AREA */}
 
         <div
@@ -601,7 +620,8 @@ export const BoostPointCard = ({
             // background: "green",
             display: "flex",
             flexDirection: "column",
-          }}>
+          }}
+        >
           <Typography variant="h5" color={"primary"}>
             {title}
           </Typography>
@@ -621,7 +641,20 @@ export const BoostPointCard = ({
           </h1>
         </div>
         {/* Image */}
-        <img src={image} />
+        <div className="md:flex md:justify-center md:items-center  sm:flex sm:justify-center sm:items-center">
+          <img
+            src={image}
+            className="md:w-[30%] sm:w-[60%]"
+            style={
+              {
+                // width: "30%",
+                // display: "flex",
+                // justifyContent: "center",
+                // alignItems: "center",
+              }
+            }
+          />
+        </div>
         {/* // Get Started button and outlined features  */}
 
         <div style={{ flex: ".6" }}>
