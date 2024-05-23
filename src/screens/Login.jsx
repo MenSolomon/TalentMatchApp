@@ -519,7 +519,7 @@ const Login = () => {
           >
             {" "}
             Welcome Back{" "}
-            <span style={{ fontSize: "2em", color: "blue" }}>.</span>{" "}
+            <span className="md:hidden lg:block sm:block" style={{ fontSize: "2em", color: "blue" }}>.</span>{" "}
           </h1>
           <div>
             <div className="sm:pt-[5%] md:pt-[0%]">

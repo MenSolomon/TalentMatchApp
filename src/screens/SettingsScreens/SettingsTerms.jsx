@@ -14,7 +14,7 @@ function SettingsTerms() {
     >
       <div
         style={{ flex: ".01" }}
-        className="lg:text-[2.5em] md:text-[2.7em] tb:text-[2.2em]"
+        className="lg:text-[1em] md:text-[1em] tb:text-[1em]"
       >
         Terms of Service
       </div>

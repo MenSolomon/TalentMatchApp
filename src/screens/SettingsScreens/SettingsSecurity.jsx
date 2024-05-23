@@ -21,7 +21,7 @@ function SettingsSecurity() {
         className="md:flex md:flex-row  sm:flex sm:flex-row"
         style={{ flex: "0.01" }}
       >
-        <h5 className="lg:text-[2.5em] md:text-[2.7em] tb:text-[2.2em]">
+        <h5 className="lg:text-[1em] md:text-[1em] tb:text-[1em]">
           Password & Security Settings
         </h5>
       </div>
@@ -36,7 +36,7 @@ function SettingsSecurity() {
         // className="md:flex md:flex-row md:gap-[0em] sm:flex sm:flex-col sm:gap-[1em]"
         style={{ flex: "0.89", display: "flex", flexDirection: "column" }}
       >
-        <h5 className="lg:text-[2.5em] md:text-[2.7em] tb:text-[2.2em]">
+        <h5 className="lg:text-[1em] md:text-[1em] tb:text-[1em]">
           Set up security and login account
         </h5>{" "}
         <br />
@@ -48,7 +48,7 @@ function SettingsSecurity() {
 
           <div style={{ flex: ".3", display: "flex", flexDirection: "column" }}>
             <div
-              className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]"
+              className="lg:text-[1em] md:text-[1em] tb:text-[1em]"
               style={{ marginBottom: "4vh" }}
             >
               Enter full Name here* (optional)
@@ -58,7 +58,7 @@ function SettingsSecurity() {
             {/* Change user surname
       here* */}
             <div
-              className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]"
+              className="lg:text-[1em] md:text-[1em] tb:text-[1em]"
               style={{ marginBottom: "4vh" }}
             >
               Change user surname here*
@@ -67,7 +67,7 @@ function SettingsSecurity() {
             </div>
             {/* Comopome */}
             <div
-              className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]"
+              className="lg:text-[1em] md:text-[1em] tb:text-[1em]"
               style={{ marginBottom: "4vh" }}
             >
               Change user Tel number here*
@@ -85,7 +85,7 @@ function SettingsSecurity() {
           <div style={{ flex: ".5", display: "flex", flexDirection: "column" }}>
             {/* OLD PASSWORD */}
             <div
-              className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]"
+              className="lg:text-[1em] md:text-[1em] tb:text-[1em]"
               style={{ marginBottom: "4vh" }}
             >
               Enter current Password here*
@@ -99,7 +99,7 @@ function SettingsSecurity() {
             {/* NEW PASSWORD */}
 
             <div
-              className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]"
+              className="lg:text-[1em] md:text-[1em] tb:text-[1em]"
               style={{ marginBottom: "4vh" }}
             >
               Enter New Password here*

@@ -39,7 +39,7 @@ const CoachAgentScoutVersionDashboard = () => {
   const { boostPoints, subscriptionPackage } = userLoginDetailsObject;
   const boostPointsTextColor = yellow[500];
   const subscriptionStatus = useSelector(selectIsSubscriptionActive);
-
+  
   const navigate = useNavigate();
 
   const [latestMessages, setLatestMessages] = useState([]);
@@ -323,7 +323,7 @@ const CoachAgentScoutVersionDashboard = () => {
       <div className="md:basis-[10%] lg:basis-[10%] sm:basis-[10%] grid md:grid-cols-2 sm:grid-cols-2">
         <h3
           style={{ margin: 0, float: "left" }}
-          className="primaryTextColor lg:text-[1.5em] tb:text-[1.4em]"
+          className="primaryTextColor lg:text-[1em] tb:text-[1em]"
         >
           Profile Dashboard
           <Stack direction="row" spacing={1}>
@@ -401,7 +401,7 @@ const CoachAgentScoutVersionDashboard = () => {
                   style={{ width: "200px", color: "red" }}
                 />
                 <span
-                  className="lg:text-[1.4em] tb:text-[1.4em]"
+                  className="lg:text-[1em] tb:text-[1em]"
                   style={{ textAlign: "center" }}
                 >
                   Want to add a player to talent meet's database? Create new
@@ -437,14 +437,14 @@ const CoachAgentScoutVersionDashboard = () => {
                 borderBottom: `1px solid ${primaryTextColor}`,
               }}
             >
-              <h5 className="lg:text-[1.4em] tb:text-[1.4em]">
+              <h5 className="lg:text-[1em] tb:text-[1em]">
                 Profile Analytics
               </h5>
 
-              <h6 className="lg:text-[1.2em] tb:text-[1.4em]">
+              <h6 className="lg:text-[1em] tb:text-[1em]">
                 Total players under management
               </h6>
-              <h4 className="lg:text-[1.2em] tb:text-[1.4em]">
+              <h4 className="lg:text-[1em] tb:text-[1em]">
                 {" "}
                 {userLoginObject?.playersInPossession === undefined
                   ? "0"
@@ -460,11 +460,11 @@ const CoachAgentScoutVersionDashboard = () => {
                 borderBottom: `1px solid ${primaryTextColor}`,
               }}
             >
-              <h6 className="lg:text-[1.4em] tb:text-[1.4em]">Summary</h6>
-              <h6 className="secondaryTextColor lg:text-[1.2em] tb:text-[1.4em]">
+              <h6 className="lg:text-[1em] tb:text-[1em]">Summary</h6>
+              <h6 className="secondaryTextColor lg:text-[1em] tb:text-[1em]">
                 Last 28 days
               </h6>
-              <h6 className="lg:text-[1.2em] tb:text-[1.4em]">
+              <h6 className="lg:text-[1em] tb:text-[1em]">
                 Most viewed player
               </h6>
               <h6 className="secondaryTextColor">
@@ -473,11 +473,11 @@ const CoachAgentScoutVersionDashboard = () => {
                   `${playerWithHighestViews?.firstName} ${playerWithHighestViews?.surName}`}{" "}
               </h6>
             </div>
-
+            
             {/* TOP VIDEOS SECTION */}
             <div style={{ flex: ".3", paddingTop: "2vh" }}>
-              <h6 className="lg:text-[1.2em] tb:text-[1.4em]">Top videos</h6>
-              <h6 className="secondaryTextColor lg:text-[1.2em] tb:text-[1.4em]">
+              <h6 className="lg:text-[1em] tb:text-[1em]">Top videos</h6>
+              <h6 className="secondaryTextColor lg:text-[1em] tb:text-[1em]">
                 Last 48 hours
               </h6>
             </div>
@@ -517,7 +517,7 @@ const CoachAgentScoutVersionDashboard = () => {
             }}
           >
             <div style={{ flex: ".2" }}>
-              <h5 className="lg:text-[1.5em] md:text-[1.3em] tb:text-[1.4em]">
+              <h5 className="lg:text-[1em] md:text-[1em] tb:text-[1em]">
                 Recent messages
               </h5>
             </div>
@@ -531,7 +531,7 @@ const CoachAgentScoutVersionDashboard = () => {
               }}
             >
               {latestMessages.length === 0 ? (
-                <span className="lg:text-[1.4em] tb:text-[1.4em]">
+                <span className="lg:text-[1em] tb:text-[1em]">
                   No messages yet
                 </span>
               ) : (
@@ -573,7 +573,7 @@ const CoachAgentScoutVersionDashboard = () => {
               paddingBottom: "2vh",
             }}
           >
-            <h5 className="lg:text-[1.4em] tb:text-[1.4em]">Latest news</h5>
+            <h5 className="lg:text-[1em] tb:text-[1em]">Latest news</h5>
 
             {newData.map((data, index) => {
               const { title, img, url } = data;
@@ -657,7 +657,7 @@ const RecentMessageCard = ({
               fontWeight: "bold",
             }}
           >
-            <div className="lg:text-[1.1em] md:text-[1.1em] tb:text-[1.3em] sm:text-[1em]">
+            <div className="lg:text-[1em] md:text-[1em] tb:text-[1em] sm:text-[.8em]">
               {userName}
             </div>
           </div>
@@ -670,7 +670,7 @@ const RecentMessageCard = ({
               alignItems: "flex-start",
             }}
           >
-            <div className="lg:text-[1.1em] md:text-[1.1em] tb:text-[1.5em] sm:text-[1em]">
+            <div className="lg:text-[1em] md:text-[1em] tb:text-[1em] sm:text-[1em]">
               {message?.length === 20 ? `${message}...` : message}
             </div>
           </div>

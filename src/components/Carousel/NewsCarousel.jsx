@@ -481,7 +481,7 @@ const NewsCarousel = ({ NewsArray }) => {
                       />
                     </div>
                   </div>
-
+                  
                   <div
                     className="md:flex md:flex-col  md:basis-[70%]  sm:flex sm:flex-col-reverse sm:basis-[70%] sm:pb-[1vh]       lg:flex lg:flex-row lg:basis-[70%]"
                     // style={{ background: "peru" }}

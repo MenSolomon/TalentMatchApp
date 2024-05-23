@@ -19,7 +19,7 @@ const CoachAgentScoutVersionAnalytics = () => {
       {/* // Heading Area */}
       <div className="md:basis-[10%]  sm:basis-[10%]">
         <h3
-          className="tb:text-[1.9em] md:text-[1.5em]"
+          className="tb:text-[1em] md:text-[1em]  lg:text-[1em]"
           style={{ margin: 0, float: "left" }}
         >
           Profile Analytics
@@ -63,7 +63,7 @@ const CoachAgentScoutVersionAnalytics = () => {
         >
           {/* // VIEWS GRAPH HEADER */}
           <div style={{ flex: ".12" }}>
-            <h3 className="tb:text-[1.9em] md:text-[1.4em]">
+            <h3 className="tb:text-[1em] md:text-[1em] lg:text-[1em]">
               {" "}
               Your profile has 10 view in the last 30 days{" "}
             </h3>

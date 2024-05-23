@@ -98,12 +98,12 @@ const ScoutsDisplayCard = ({
         {/* NAME AND AGENCY OR CLUB NAME */}
         <div style={{ flex: ".5" }}>
           <h5
-            className="tb:text-[1.4em] md:text-[1.3em] sm:text-[1.1em]"
+            className="tb:text-[1em] md:text-[1em] sm:text-[1em]"
             style={{ marginBottom: ".7vh" }}
           >
             {UserName}
           </h5>
-          <h6 className="tb:text-[1.4em] md:text-[1.3em] sm:text-[1.1em]">
+          <h6 className="tb:text-[1em] md:text-[1em] sm:text-[1em]">
             {AgencyName}
           </h6>
         </div>
