@@ -232,7 +232,8 @@ const PlayerVersionMotherComponent = () => {
         // background: background,
         color: primaryTextColor,
         // zIndex: "-3",
-      }}>
+      }}
+    >
       {/* NO SUBSCRIPTION ALERT */}
       {isSubscriptionActive ? null : (
         <Alert
@@ -250,10 +251,12 @@ const PlayerVersionMotherComponent = () => {
               variant="contained"
               color="success"
               size="small"
-              onClick={() => navigate("/changeSubscription")}>
+              onClick={() => navigate("/changeSubscription")}
+            >
               Get One
             </Button>
-          }>
+          }
+        >
           No or Inactive Subscrtiption
         </Alert>
       )}
@@ -268,7 +271,8 @@ const PlayerVersionMotherComponent = () => {
             paddingTop: "1%",
             display: "grid",
             placeContent: "center",
-          }}>
+          }}
+        >
           <div className="sm:block md:hidden">
             <SmallScreenPlayerMenuDrawer />{" "}
           </div>
@@ -286,7 +290,8 @@ const PlayerVersionMotherComponent = () => {
 
             position: "relative",
             // background: "red",
-          }}>
+          }}
+        >
           <Marquee
             speed={35}
             pauseOnClick={true}
@@ -296,7 +301,8 @@ const PlayerVersionMotherComponent = () => {
               width: "100%",
               position: "absolute",
               display: screenWidth < 1024 ? "none" : "flex",
-            }}>
+            }}
+          >
             {/* I can be a React component, multiple React components, or just some
             text. */}
             {clubsInDatabase.map((data, index) => {
@@ -323,15 +329,16 @@ const PlayerVersionMotherComponent = () => {
             display: "flex",
             // background: "red",
             // paddingLeft: "5vw",
-          }}>
+          }}
+        >
           <LightAndDarkModeSwitch />
 
           <div
+            className="sm:mr-[0.9vh]"
             style={{
               marginTop: "1.5vh",
-              marginLeft: "-1vw",
-              marginRight: "1vw",
-            }}>
+            }}
+          >
             <NotificationsMenu />
           </div>
           <ProfileMenu
@@ -341,7 +348,7 @@ const PlayerVersionMotherComponent = () => {
         </div>
       </div>
       {/* // ======  PAGE CONTENT ===== \\ */}
-      <div className="md:flex md:basis-[89%]  sm:flex sm:basis-[92%] sm:overflow-y-scroll sm:width-[100vw] sm:pb-[10vh] ">
+      <div className="md:flex md:basis-[89%]  sm:flex sm:basis-[82%] sm:overflow-y-scroll sm:width-[100vw] sm:pb-[10vh] ">
         {/* // NAV ARAEA */}
         <div className="md:basis-[18%] md:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:block sm:hidden">
           {/* // USE A MAP FOR THIS */}
@@ -383,7 +390,8 @@ const PlayerVersionMotherComponent = () => {
                           dispatch(setLoginStatus(false));
                           dispatch(setUserDetailsObject({}));
                           dispatch(setUserSavedProfiles([]));
-                        }}>
+                        }}
+                      >
                         <NavBarButton
                           ButtonName={name}
                           ButtonImage={icon}
@@ -416,10 +424,13 @@ const PlayerVersionMotherComponent = () => {
           style={{
             // flex: ".82",
             padding: "2vh 1.5vw",
-          }}>
+          }}
+        >
           <Outlet />
         </div>
       </div>
+
+      <div className="md:flex md:basis-[0%]  sm:flex sm:basis-[10%] "></div>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
     </div>
   );

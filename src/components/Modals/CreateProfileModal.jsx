@@ -67,7 +67,6 @@ const style = {
   border: "transparent",
   boxShadow: 24,
   borderRadius: "1vw",
-  // background: "red",
 };
 
 // currentProfileClicked
@@ -977,7 +976,6 @@ export default function CreateProfileModal({ ProfileType }) {
               // }
             }}
           >
-            }} >
             <Settings />
           </IconButton>
         </Tooltip>
@@ -1030,7 +1028,6 @@ export default function CreateProfileModal({ ProfileType }) {
               display: "grid",
               placeItems: "center",
             }}
-            // className="lg:text-[1.8em] md:text-[1.5em]"
           >
             {" "}
             Create new profile{" "}

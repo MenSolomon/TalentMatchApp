@@ -745,12 +745,12 @@ const MotherComponent = () => {
 
           {/* <IconButton sx={{ marginTop: "1vh" }}> */}
           <div
-            className="lg:pt-[1.2vh] md:mt-[.8vh] tb:mt-[1.8vh]"
-            style={{
-              // marginTop: "1.8vh",
-              marginLeft: "-1vw",
-              marginRight: "1vw",
-            }}
+            className="sm:mt-[1.45vh] sm:mr-[0.9vh] lg:pt-[1.2vh] md:mt-[.8vh] tb:mt-[1.8vh]"
+            style={
+              {
+                // marginTop: "1.8vh",
+              }
+            }
           >
             <NotificationsMenu />
           </div>
@@ -774,9 +774,11 @@ const MotherComponent = () => {
           }
         }
       >
+        {/* className="md:basis-[18%] md:flex-shrink-0  lg:basis-[18%] lg:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:hidden sm:hidden lg:block" */}
+
         {/* // NAV ARAEA */}
         <div
-          className="md:basis-[18%] md:flex-shrink-0  lg:basis-[18%] lg:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:hidden sm:hidden lg:block"
+          className="md:basis-[18%] md:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:block sm:hidden"
           style={
             {
               // flex: ".18",
@@ -789,13 +791,7 @@ const MotherComponent = () => {
         >
           {/* // USE A MAP FOR THIS */}
           {/* // NavBAR FIRST HALF */}
-          <div
-            style={{
-              flex: ".65",
-              overflowY: "scroll",
-              maxHeight: "45vh",
-            }}
-          >
+          <div style={{ flex: ".65", overflowY: "scroll", maxHeight: "45vh" }}>
             <ul style={{ listStyleType: "none", marginLeft: "2vw" }}>
               {menuButtonsArray &&
                 menuButtonsArray.map((data, index) => {
@@ -804,7 +800,7 @@ const MotherComponent = () => {
                   if (name === "none") {
                     // this is to display the accordion list
                     return (
-                      <li key={index}>
+                      <li style={{ marginLeft: "1vw" }} key={index}>
                         {" "}
                         <SavedFilters />
                       </li>

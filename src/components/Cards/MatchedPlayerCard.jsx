@@ -236,8 +236,8 @@ const MatchedPlayerCard = ({
                   <Avatar
                     src={PlayerClubImage}
                     style={{
-                      width: 80,
-                      height: 80,
+                      width: "35px",
+                      height: "35px",
                       borderRadius: "50%",
                       zIndex: "1000",
                     }}
@@ -273,7 +273,7 @@ const MatchedPlayerCard = ({
         </div>
         {/*Player Name*/}
         <div
-          className="tb:text-[1.5em] md:text-[1.2em]"
+          className="tb:text-[1.5em] md:text-[1em]"
           style={{
             flex: ".2",
             // background: "blue",

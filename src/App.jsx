@@ -599,7 +599,8 @@ const App = () => {
           {/* COACH AGENT AND SCOUT VERSION */}
           <Route
             path="/multiStudio"
-            element={<CoachAgentScoutVersionMotherComponent />}>
+            element={<CoachAgentScoutVersionMotherComponent />}
+          >
             <Route path="/multiStudio/favorite" element={<Error404 />} />
             <Route path="/multiStudio/help" element={<Error404 />} />
             <Route path="/multiStudio/settings" element={<Settings />} />
