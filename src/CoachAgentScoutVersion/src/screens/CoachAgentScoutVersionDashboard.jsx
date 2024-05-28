@@ -39,7 +39,7 @@ const CoachAgentScoutVersionDashboard = () => {
   const { boostPoints, subscriptionPackage } = userLoginDetailsObject;
   const boostPointsTextColor = yellow[500];
   const subscriptionStatus = useSelector(selectIsSubscriptionActive);
-  
+
   const navigate = useNavigate();
 
   const [latestMessages, setLatestMessages] = useState([]);
@@ -324,7 +324,7 @@ const CoachAgentScoutVersionDashboard = () => {
           style={{ margin: 0, float: "left" }}
           className="primaryTextColor lg:text-[1em] tb:text-[1em]"
         >
-          Profile Dashboard
+          Dashboard
           <Stack direction="row" spacing={1}>
             <Chip
               label={
@@ -368,8 +368,8 @@ const CoachAgentScoutVersionDashboard = () => {
 
       {/* // Cards  (upload video card , analytics summary card and other information card) */}
       <div className="lg:basis-[90%] lg:flex-row lg:flex lg:gap-[2.5vw]    md:basis-[90%] md:flex-row md:flex md:gap-[2.5vw]     sm:basis-[90%] sm:flex-col sm:flex sm:gap-[2.5vw]">
-        {maxPlayersInAgency > 0 ? (
-          <div style={{ flex: ".33" }}>
+        {
+          <div className="lg:basis-[33%] md:basis-[40%] sm:basis-[33%]">
             {/* // DRAG AND DROP VIDEO CARD*/}
             <div
               className="cardBackground md:w-[100%] md:h-[85%] md:grid md:place-items-center md:relative    sm:w-[100%] sm:h-[50vh] sm:grid sm:place-items-center sm:relative"
@@ -407,11 +407,12 @@ const CoachAgentScoutVersionDashboard = () => {
                   player profile and groom player to become the next big name in
                   football
                 </span>
+
                 <UploadPlayerToAgencyModal />
               </div>
             </div>
           </div>
-        ) : null}
+        }
         <div className="lg:basis-[33%] md:basis-[40%] sm:basis-[33%]">
           {/* PROFILE ANALYTICS  style={{ flex: ".33" }} */}
           <div
@@ -436,9 +437,7 @@ const CoachAgentScoutVersionDashboard = () => {
                 borderBottom: `1px solid ${primaryTextColor}`,
               }}
             >
-              <h5 className="lg:text-[1em] tb:text-[1em]">
-                Profile Analytics
-              </h5>
+              <h5 className="lg:text-[1em] tb:text-[1em]">Profile Analytics</h5>
 
               <h6 className="lg:text-[1em] tb:text-[1em]">
                 Total players under management
@@ -472,7 +471,7 @@ const CoachAgentScoutVersionDashboard = () => {
                   `${playerWithHighestViews?.firstName} ${playerWithHighestViews?.surName}`}{" "}
               </h6>
             </div>
-            
+
             {/* TOP VIDEOS SECTION */}
             <div style={{ flex: ".3", paddingTop: "2vh" }}>
               <h6 className="lg:text-[1em] tb:text-[1em]">Top videos</h6>
@@ -663,7 +662,9 @@ const RecentMessageCard = ({
               display: "flex",
               justifyContent: "flex-start",
               alignItems: "flex-start",
+              cursor: "pointer",
             }}
+            onClick={handleMessageUserSelect}
           >
             <div className="lg:text-[1em] md:text-[1em] tb:text-[1em] sm:text-[1em]">
               {message?.length === 20 ? `${message}...` : message}
@@ -673,6 +674,6 @@ const RecentMessageCard = ({
         <p>{message?.length === 20 ? `${message}...` : message}</p>{" "}
       </div>
       {/* <div style={{ flex: ".2", background: "red" }}></div> */}
-    </div>
+    </>
   );
 };

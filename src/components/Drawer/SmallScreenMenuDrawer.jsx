@@ -103,7 +103,11 @@ export default function SmallScreenMenuDrawer() {
                   // write a destructuring function that will close the drawer on click oof the buttons in the accordion
                   return (
                     <li
-                      style={{ marginBottom: "2.5vh", fontSize: "1.1em" }}
+                      style={{
+                        marginBottom: "2.5vh",
+                        marginLeft: "3.5vw",
+                        fontSize: "1.1em",
+                      }}
                       key={index}
                     >
                       {" "}

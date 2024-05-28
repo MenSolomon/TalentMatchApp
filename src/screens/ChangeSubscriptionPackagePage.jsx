@@ -280,7 +280,7 @@ const ChangeSubscriptionPackagePage = () => {
   return (
     <div
       className="md:w-[100%] md:h-[100vh] md:flex md:flex-col  
-      sm:w-[100%] sm:h-[100vh] sm:flex sm:flex-col
+      sm:w-[100%] sm:h-[100vh] sm:flex sm:flex-col 
       "
       style={{
         // width: "100%",
@@ -298,7 +298,9 @@ const ChangeSubscriptionPackagePage = () => {
         // padding: "3vw",
         color: "white",
         overflow: "scroll",
-      }}>
+        paddingBottom: "3vh",
+      }}
+    >
       {/* className="md:block sm:hidden" */}
       {/* NAVIGATION AREA */}
       <div
@@ -318,13 +320,15 @@ const ChangeSubscriptionPackagePage = () => {
           paddingLeft: "3vw",
           paddingRight: "3vw",
           // background: "red",
-        }}>
+        }}
+      >
         {/* LOGO AREA */}
 
         {browserWidth >= 1024 ? (
           <div
             className="md:block sm:hidden"
-            style={{ flex: ".15", display: "flex" }}>
+            style={{ flex: ".15", display: "flex" }}
+          >
             {" "}
             <img style={{ width: "120px" }} src={logoImage} />
             {/* <Avatar
@@ -360,7 +364,8 @@ const ChangeSubscriptionPackagePage = () => {
               display: "flex",
               justifyContent: "flex-end",
               paddingTop: "1vh",
-            }}>
+            }}
+          >
             <Button
               onClick={() => {
                 Navigate(-1);
@@ -372,7 +377,8 @@ const ChangeSubscriptionPackagePage = () => {
                 color: "white",
                 textTransform: "none",
                 borderRadius: "1.2vw",
-              }}>
+              }}
+            >
               Go Back
             </Button>
           </div>
@@ -397,13 +403,15 @@ const ChangeSubscriptionPackagePage = () => {
               // display: "flex",
               // background: "green",
             }
-          }>
+          }
+        >
           <div
             style={{
               flex: ".55",
               paddingTop: "0vh",
               // background: "blue",
-            }}>
+            }}
+          >
             <div
               className="md:h-[100%] md:w-[100%]"
               style={{
@@ -412,7 +420,8 @@ const ChangeSubscriptionPackagePage = () => {
                 padding: "4vw",
                 paddingLeft: "12vw",
                 //   textAlign: "center",
-              }}>
+              }}
+            >
               <h1 style={{ display: "flex" }}>
                 {" "}
                 <img
@@ -447,7 +456,8 @@ const ChangeSubscriptionPackagePage = () => {
             // height: "120vh",
             // background: "red",
             paddingTop: "20vh",
-          }}>
+          }}
+        >
           {/* CARD */}
           <h1 style={{ textAlign: "center" }}> Choose your Plan </h1>
           <h3 style={{ textAlign: "center" }}>
@@ -458,7 +468,8 @@ const ChangeSubscriptionPackagePage = () => {
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography
                 variant="h4"
-                sx={{ color: duration == "yearly" ? "#5585FE" : null }}>
+                sx={{ color: duration == "yearly" ? "#5585FE" : null }}
+              >
                 Yearly
               </Typography>
               <Switch
@@ -475,7 +486,8 @@ const ChangeSubscriptionPackagePage = () => {
               />
               <Typography
                 variant="h4"
-                sx={{ color: duration == "monthly" ? "#5585FE" : null }}>
+                sx={{ color: duration == "monthly" ? "#5585FE" : null }}
+              >
                 Monthly
               </Typography>
             </Stack>
@@ -491,11 +503,13 @@ const ChangeSubscriptionPackagePage = () => {
                 display: "flex",
                 justifyContent: "center",
                 marginTop: "5vh",
-              }}>
+              }}
+            >
               <div
                 className="md:flex md:flex-row md:h-[150vh] md:gap-[30px]     
             sm:flex sm:flex-col sm:h-[130vh] sm:gap-[10px]
-            ">
+            "
+              >
                 {duration == "monthly"
                   ? monthlyPackage.map((item) => (
                       <SubscriptionCard
@@ -643,7 +657,8 @@ const ChangeSubscriptionPackagePage = () => {
             height: "55vh",
             // background: "red",
             paddingTop: "30vh",
-          }}>
+          }}
+        >
           {" "}
         </div>
       </div>
@@ -662,17 +677,18 @@ export const SubscriptionCard = ({
 }) => {
   return (
     <Card
-      className="uploadPlayerModalCard  md:w-[18vw] md:h-[55vh]   
+      className="uploadPlayerModalCard  md:w-[23vw] md:h-[68vh]   
       sm:w-[70vw] sm:h-[200vh]
       "
       style={{
         // width: "18vw",
         // background: "red",
-
+        fontSize: ".8em",
         // height: "55vh",
         borderRadius: "1vw",
         color: "black",
-      }}>
+      }}
+    >
       <div
         style={{
           width: "100%",
@@ -681,7 +697,9 @@ export const SubscriptionCard = ({
           display: "flex",
           flexDirection: "column",
           gap: ".5vh",
-        }}>
+          paddingBottom: "2vh",
+        }}
+      >
         {/* // NAME DESCRIPTION AND PRICE AREA */}
 
         <div
@@ -690,7 +708,8 @@ export const SubscriptionCard = ({
             // background: "green",
             display: "flex",
             flexDirection: "column",
-          }}>
+          }}
+        >
           <h4>{title}</h4>
           <span style={{ lineHeight: "1em" }}>
             {/* For personal use and elaboration of the technology */}
@@ -701,10 +720,7 @@ export const SubscriptionCard = ({
             <span style={{ fontSize: ".7em" }}>$</span>
             {price}
           </h1>
-        </div>
-        {/* // Get Started button and outlined features  */}
 
-        <div style={{ flex: ".6" }}>
           <BasicButton
             onClick={onClick}
             style={{
@@ -714,6 +730,10 @@ export const SubscriptionCard = ({
             }}
             innerText="Get Started"
           />
+        </div>
+        {/* // Get Started button and outlined features  */}
+
+        <div style={{ flex: ".6" }}>
           {/* ///features ROw */}
 
           {featuresHighlightArray &&
@@ -723,12 +743,13 @@ export const SubscriptionCard = ({
                   key={index}
                   style={{
                     width: "100%",
-                    height: "20%",
+                    minHeight: "10%",
                     // background: "blue",
                     marginBottom: ".8vh",
                     display: "flex",
                     borderBottom: "1px solid gray",
-                  }}>
+                  }}
+                >
                   {/* CHECK CIRCLE AREA */}
                   <div style={{ flex: ".15" }}>
                     {" "}

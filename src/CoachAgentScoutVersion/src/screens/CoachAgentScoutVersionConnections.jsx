@@ -510,11 +510,7 @@ const CoachAgentScoutVersionConnetions = () => {
         ) : (
           connections.map((data, key) => {
             return (
-              <span
-                st
-                yle={{ marginBottom: "1vh", marginTop: "1vh" }}
-                key={key}
-              >
+              <span style={{ marginBottom: "1vh", marginTop: "1vh" }} key={key}>
                 <MessageContactCardForConnectionsScreen
                   profileImage={data?.profileImage}
                   profileName={`${data?.firstName} ${data?.surname}`}

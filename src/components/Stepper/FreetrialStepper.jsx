@@ -242,7 +242,7 @@ export default function FreetrialStepper({ stepperValue }) {
   };
 
   return (
-    <Box className="md:w-[70%] tb:w-[100%] sm:w-[50%]" sx={{ color: "black" }}>
+    <Box className="md:w-[70%] tb:w-[100%] sm:w-[100%]" sx={{ color: "black" }}>
       <Stepper sx={{ color: "black" }} nonLinear activeStep={activeStep}>
         {steps.map((label, index) => (
           <Step

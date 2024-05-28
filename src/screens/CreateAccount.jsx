@@ -471,7 +471,7 @@ const CreateAccount = () => {
       {/* FORM AREA */}
 
       <div
-        className="md:pt-[4vh] md:flex md:flex-row     sm:pt-[60vh] sm:flex sm:flex-col "
+        className="md:pt-[4vh] md:flex md:flex-row     sm:pt-[15vh] sm:flex sm:flex-col "
         style={{
           flex: "0.78",
           display: "grid",

@@ -204,7 +204,7 @@ function SettingsProfile() {
 
   return (
     <div
-      className="md:flex md:flex-col md:w-[100%] md:h-[80vh] sm:w-[100%] sm:h-[80vh] sm:flex sm:flex-col primaryTextColor"
+      className="md:flex md:flex-col md:w-[100%] md:h-[80vh] sm:w-[119%] sm:h-[80vh] sm:flex sm:flex-col primaryTextColor"
       style={
         {
           // width: "100%",
@@ -260,8 +260,8 @@ function SettingsProfile() {
               <Avatar
                 src={imageUrl}
                 style={{
-                  width: browserWidth >= 1024 ? "5.5vw" : "17vw",
-                  height: browserWidth >= 1024 ? "10.5vh" : "10vh",
+                  width: browserWidth >= 1024 ? "5.5vw" : "18vw",
+                  height: browserWidth >= 1024 ? "10.5vh" : "9vh",
                 }}
 
                 // className="md:w-[20%] md:h-[80%] sm:w-[15%"

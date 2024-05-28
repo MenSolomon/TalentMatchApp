@@ -75,9 +75,7 @@ function SettingsBilling() {
     >
       {/* Header Column */}
       <div style={{ flex: "0.01" }}>
-        <h5 className="lg:text-[1em] md:text-[1em] tb:text-[1em]">
-          Billing
-        </h5>
+        <h5 className="lg:text-[1em] md:text-[1em] tb:text-[1em]">Billing</h5>
       </div>
 
       {/* Divider */}
@@ -98,7 +96,7 @@ function SettingsBilling() {
           }}
         >
           <Paper
-            className="cardBackground primaryTextColor md:w-[30vw] md:h-[90%] md:flex md:flex-col sm:pt-[20px]   sm:w-[90vw] sm:h-[15vh] sm:flex sm:flex-col"
+            className="cardBackground primaryTextColor md:w-[30vw] md:h-[90%] md:flex md:flex-col sm:pt-[20px]   sm:w-[90vw] sm:h-[18vh] sm:flex sm:flex-col"
             style={{ padding: "10px 20px" }}
           >
             <div

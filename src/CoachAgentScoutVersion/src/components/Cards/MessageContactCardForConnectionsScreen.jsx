@@ -6,6 +6,7 @@ import {
 } from "../../../../statemanager/slices/OtherComponentStatesSlice";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { selectUserDetailsObject } from "../../../../statemanager/slices/LoginUserDataSlice";
 
 const MessageContactCardForConnectionsScreen = ({
   profileImage,
@@ -16,6 +17,7 @@ const MessageContactCardForConnectionsScreen = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userLoginDetails = useSelector(selectUserDetailsObject);
 
   const handleMessageUserSelect = () => {
     // alert(accountId, " for messaging");
@@ -27,7 +29,11 @@ const MessageContactCardForConnectionsScreen = ({
       })
     );
 
-    navigate("/multiStudio/messages");
+    if (userLoginDetails?.role === "Player") {
+      navigate("/studio/messages");
+    } else {
+      navigate("/multiStudio/messages");
+    }
   };
 
   const selectedContactDetails = useSelector(selectContactSelectedForMessaging);

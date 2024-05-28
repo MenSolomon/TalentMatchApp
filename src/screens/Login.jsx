@@ -476,7 +476,8 @@ const Login = () => {
         // paddingTop: "1.5vh",
 
         color: "white",
-      }}>
+      }}
+    >
       {/* NAVIGATION AREA */}
       <div
         className="md:flex md:basis-[10%]  sm:flex sm:basis-[10%]"
@@ -501,7 +502,8 @@ const Login = () => {
             display: "flex",
             gap: "6vw",
             paddingTop: "1vh",
-          }}>
+          }}
+        >
           {/* <h5>Home</h5>
           <h5>Join</h5> */}
         </div>
@@ -513,14 +515,16 @@ const Login = () => {
         // style={{ flex: ".9", display: "flex" }}
       >
         {/* CREATE ACCOUNT SECTION */}
-        <div className="md:basis-[45%] md:w-[100%] md:flex-shrink-0   sm:basis-[100%] sm:w-[100%] sm:flex-shrink-0 ">
+        <div
+          style={{ paddingTop: "6vh" }}
+          className="md:basis-[45%] md:w-[100%] md:flex-shrink-0   sm:basis-[100%] sm:w-[100%]  sm:flex-shrink-0 "
+        >
           <h1
-            className="sm:block sm:text-[3em]  md:block md:text-[3.3em]"
+            className="sm:block sm:text-[3em]  md:block md:text-[3.3em] "
             //  style={{ fontSize: "3.3em" }}
           >
-            {" "}
             Welcome Back{" "}
-            <span className="md:hidden lg:block sm:block" style={{ fontSize: "2em", color: "blue" }}>.</span>{" "}
+            {/* <span className="md:hidden lg:block sm:block" style={{ fontSize: "2em", color: "blue" }}>.</span>{" "} */}
           </h1>
           <div>
             <div className="sm:pt-[5%] md:pt-[0%]">
@@ -530,7 +534,8 @@ const Login = () => {
                   style={{ color: "#5585FE", cursor: "pointer" }}
                   onClick={() => {
                     Navigate("/create-account/freetrial");
-                  }}>
+                  }}
+                >
                   Choose a plan
                 </span>{" "}
               </h5>
@@ -568,7 +573,8 @@ const Login = () => {
                   sx={{ marginBottom: "3vh" }}
                   variant="outlined"
                   focused
-                  color="info">
+                  color="info"
+                >
                   <InputLabel htmlFor="outlined-adornment-password">
                     Password
                   </InputLabel>
@@ -583,7 +589,8 @@ const Login = () => {
                           aria-label="toggle password visibility"
                           onClick={handleClickShowPassword}
                           onMouseDown={handleMouseDownPassword}
-                          edge="end">
+                          edge="end"
+                        >
                           {showPassword ? (
                             <VisibilityOff style={iconColor} />
                           ) : (
@@ -603,7 +610,8 @@ const Login = () => {
                 <div
                   className="mb-3"
                   onMouseEnter={() => setFpHover(true)}
-                  onMouseLeave={() => setFpHover(false)}>
+                  onMouseLeave={() => setFpHover(false)}
+                >
                   <Link to={"/forgotpassword"}>
                     <Typography color={fpHover ? null : "white"} variant="h6">
                       Forgot Password
@@ -625,7 +633,8 @@ const Login = () => {
                         color: "white",
                         borderRadius: "1vw",
                         fontWeight: "bold",
-                      }}>
+                      }}
+                    >
                       Login
                     </Button>
                   )}
@@ -643,7 +652,8 @@ const Login = () => {
               // display: "flex",
               // flexDirection: "column-reverse",
             }
-          }>
+          }
+        >
           {/* //ICON AREA */}
           <div style={{ flex: ".2" }}>
             {" "}
