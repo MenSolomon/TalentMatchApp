@@ -11,7 +11,7 @@ function Settings() {
   ];
   return (
     <>
-      <div className="md:w-[100%] md:h-[100%]  sm:w-[100%] sm:h-[100%] primaryTextColor">
+      <div className="lg:w-[100%] md:w-[100%] md:h-[100%]  sm:w-[100%] sm:h-[100%] primaryTextColor">
         {/* style={{ background: "pink" }} */}
         <PlayerDetailsMenuTab PlayerTabItemsArray={menuLabelArray} />
       </div>

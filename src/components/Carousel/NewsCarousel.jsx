@@ -482,12 +482,12 @@ const NewsCarousel = ({ NewsArray }) => {
                       </div>
 
                       <div
-                        className="md:flex md:flex-row md:basis-[70%]  sm:flex sm:flex-col-reverse sm:basis-[70%] sm:pb-[1vh] "
+                        className="md:flex md:flex-col  md:basis-[70%]  sm:flex sm:flex-col-reverse sm:basis-[70%] sm:pb-[1vh]       lg:flex lg:flex-row lg:basis-[70%]"
                         // style={{ background: "peru" }}
                       >
                         {/* Plyer statistics */}
                         <div
-                          className="md:basis-[50%] md:flex-shrink-0 sm:basis-[50%] sm:flex-shrink-0"
+                          className="md:basis-[50%] md:flex-shrink-0 sm:basis-[50%] sm:flex-shrink-0    lg:basis-[50%] lg:flex-shrink-0"
                           style={{
                             overflowY: "scroll",
                           }}
@@ -502,26 +502,31 @@ const NewsCarousel = ({ NewsArray }) => {
                         </div>
 
                         {/* Player video higlights  */}
-                        <div className="md:basis-[50%] md:flex-shrink-0 sm:basis-[50%] sm:flex-shrink-0">
+                        <div
+                          className="  lg:basis-[50%] lg:flex-shrink-0 md:basis-[50%] md:flex-shrink-0 sm:basis-[50%] sm:flex-shrink-0"
+                          // style={{ background: "red" }}
+                        >
                           <div
-                            className="sm:w-[100%] sm:relative sm:h-[10%] md:w-[90%] md:h-[100%] md:relative"
+                            className="sm:w-[100%] sm:relative sm:h-[10%] md:w-[90%] md:h-[100%] md:relative   
+                        lg:w-[90%] lg:h-[100%] lg:relative
+                        "
                             style={{
                               // width: "90%",
                               // height: "100%",
                               borderRadius: "1vw",
                               // position: "relative",
                               paddingTop: "1vh",
-                              // background: "blue",
+                              // background: "red",
                             }}
                           >
                             {videos.length <= 0 ? (
                               <div
-                                className="sm:h-[19vh] md:h-[90%]"
+                                className="sm:h-[19vh]  md:h-[90%]"
                                 style={{
                                   // height: "90%",
                                   width: "100%",
                                   borderRadius: "1vw",
-                                  background: "black",
+                                  // background: "red",
                                   display: "grid",
                                   placeContent: "center",
                                 }}
@@ -533,7 +538,7 @@ const NewsCarousel = ({ NewsArray }) => {
                             ) : (
                               <video
                                 onClick={handleVideoGloballyClick}
-                                className="sm:h-[19vh] md:h-[90%]"
+                                className="sm:h-[19vh]  md:h-[90%]"
                                 id={`video-${index}`}
                                 src={videos[0].url}
                                 width="100%"

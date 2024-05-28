@@ -18,7 +18,12 @@ const CoachAgentScoutVersionAnalytics = () => {
     >
       {/* // Heading Area */}
       <div className="md:basis-[10%]  sm:basis-[10%]">
-        <h3 style={{ margin: 0, float: "left" }}>Profile Analytics</h3>{" "}
+        <h3
+          className="tb:text-[1.9em] md:text-[1.5em]"
+          style={{ margin: 0, float: "left" }}
+        >
+          Profile Analytics
+        </h3>{" "}
       </div>
 
       <div
@@ -28,33 +33,40 @@ const CoachAgentScoutVersionAnalytics = () => {
             // flex: ".9",
             // display: "flex",
             // gap: "1vw",
+            // background: "red",
           }
         }
       >
         {/* REALTIME CARD AREA */}
         <div
-          className="md:flex md:justify-center    sm:flex sm:justify-center"
-          style={{
-            flex: ".3",
-
-            // display: "flex",
-            // justifyContent: "center",
-          }}
+          className=" lg:basis-[30%] md:basis-[50%] md:flex md:justify-center    sm:flex sm:justify-center sm:basis-[30%]"
+          style={
+            {
+              // flex: ".3",
+              // display: "flex",
+              // justifyContent: "center",
+            }
+          }
         >
           <ProfileAnalyticsCard />
         </div>
         {/* VIEWS GRAPH AREA */}
         <div
-          className="md:flex md:flex-col  sm:flex sm:flex-col"
-          style={{
-            flex: ".7",
-            // display: "flex",
-            // flexDirection: "column",
-          }}
+          className="lg:basis-[70%] md:basis-[50%] md:flex md:flex-col  sm:flex sm:flex-col sm:basis-[70%]"
+          style={
+            {
+              // flex: ".7",
+              // display: "flex",
+              // flexDirection: "column",
+            }
+          }
         >
           {/* // VIEWS GRAPH HEADER */}
           <div style={{ flex: ".12" }}>
-            <h3> Your profile has 10 view in the last 30 days </h3>
+            <h3 className="tb:text-[1.9em] md:text-[1.4em]">
+              {" "}
+              Your profile has 10 view in the last 30 days{" "}
+            </h3>
           </div>
 
           {/* // VIEWS GRAPH CANVAS */}

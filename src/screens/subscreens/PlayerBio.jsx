@@ -25,6 +25,7 @@ const PlayerBio = ({
 
   return (
     <div
+      // className="lg:flex lg:flex-row  md:flex md:flex-col md:w-[100%] md:h-[40vh]  sm:flex sm:w-[100%] sm:h-[100%] sm:flex-col"
       className="md:flex md:flex-row md:w-[100%] md:h-[40vh]  sm:flex sm:w-[100%] sm:h-[100%] sm:flex-col"
       style={
         {
@@ -34,10 +35,12 @@ const PlayerBio = ({
           // display: "flex",
           // background: "red",
         }
-      }>
+      }
+    >
       <div
-        className="sm:hidden md:block"
-        style={{ flex: ".23", padding: ".3vw" }}>
+        className="sm:hidden md:hidden lg:block"
+        style={{ flex: ".23", padding: ".3vw" }}
+      >
         <FootBallPitch />
       </div>
 
@@ -47,7 +50,8 @@ const PlayerBio = ({
           padding: ".3vw",
           // background: "red",
           paddingLeft: "1vw",
-        }}>
+        }}
+      >
         <div
           className="md:flex md:w-[100%] md:h-[100%] md:flex-row     sm:flex-col md:gap-[.5vw]  sm:gap-[10vw] sm:flex sm:w-[100%] sm:h-[100%]"
           style={{
@@ -56,7 +60,8 @@ const PlayerBio = ({
             // display: "flex",
             // gap: ".5vw",
             background: "transparent",
-          }}>
+          }}
+        >
           <div className="div" style={{ flex: ".32" }}>
             {" "}
             <Card
@@ -73,23 +78,33 @@ const PlayerBio = ({
                 // fontWeight: "800",
                 borderRadius: "1vw",
                 background: "transparent",
-              }}>
-              <h6 style={{ fontWeight: "bolder" }}>Personal Information</h6>
+              }}
+            >
+              <h6
+                className="lg:text-[1em] tb:text-[1.4em]"
+                style={{ fontWeight: "bolder" }}
+              >
+                Personal Information
+              </h6>
               <div
                 style={{
                   fontWeight: "700",
-                  fontSize: ".8em",
+                  // fontSize: ".8em",
                   marginBottom: "1.1vh",
-                }}>
+                }}
+                className="lg:text-[1em] tb:text-[1.3em]"
+              >
                 {" "}
                 Citizenship : {Nationality}{" "}
               </div>
               <div
                 style={{
                   fontWeight: "700",
-                  fontSize: ".8em",
+                  // fontSize: ".8em",
                   marginBottom: "1.1vh",
-                }}>
+                }}
+                className="lg:text-[1em] tb:text-[1.3em]"
+              >
                 {" "}
                 Place of birth : {PlaceOfBirth}{" "}
               </div>
@@ -97,9 +112,11 @@ const PlayerBio = ({
               <div
                 style={{
                   fontWeight: "700",
-                  fontSize: ".8em",
+                  // fontSize: ".8em",
                   marginBottom: "1.1vh",
-                }}>
+                }}
+                className="lg:text-[1em] tb:text-[1.3em]"
+              >
                 {" "}
                 Date of birth : {formattedDate}{" "}
               </div>
@@ -107,9 +124,11 @@ const PlayerBio = ({
               <div
                 style={{
                   fontWeight: "700",
-                  fontSize: ".8em",
+                  // fontSize: ".8em",
                   marginBottom: "1.1vh",
-                }}>
+                }}
+                className="lg:text-[1em] tb:text-[1.3em]"
+              >
                 {" "}
                 Currnet Team : {clubName}{" "}
               </div>
@@ -117,18 +136,22 @@ const PlayerBio = ({
               <div
                 style={{
                   fontWeight: "700",
-                  fontSize: ".8em",
+                  // fontSize: ".8em",
                   marginBottom: "1.1vh",
-                }}>
+                }}
+                className="lg:text-[1em] tb:text-[1.3em]"
+              >
                 {" "}
                 Joined : {contractStartDate}{" "}
               </div>
               <div
                 style={{
                   fontWeight: "700",
-                  fontSize: ".8em",
+                  // fontSize: ".8em",
                   marginBottom: "1.1vh",
-                }}>
+                }}
+                className="lg:text-[1em] tb:text-[1.3em]"
+              >
                 {" "}
                 Position : {Position}
               </div>
@@ -136,9 +159,11 @@ const PlayerBio = ({
               <div
                 style={{
                   fontWeight: "700",
-                  fontSize: ".8em",
+                  // fontSize: ".8em",
                   marginBottom: "1.1vh",
-                }}>
+                }}
+                className="lg:text-[1em] tb:text-[1.3em]"
+              >
                 {" "}
                 Contract Expires : {contactEndDate}{" "}
               </div>
@@ -158,7 +183,8 @@ const PlayerBio = ({
                 paddingTop: "1vh",
                 borderRadius: "1vw",
                 background: "transparent",
-              }}>
+              }}
+            >
               {/* <PlayerPositionStatsBarGraphSummary /> */}
               <PlayerOverallAttributes />
             </Card>{" "}
@@ -167,7 +193,8 @@ const PlayerBio = ({
             className="div"
             style={{
               flex: ".35",
-            }}>
+            }}
+          >
             <Card
               className="primaryColor"
               sx={{
@@ -185,7 +212,8 @@ const PlayerBio = ({
 
                 borderRadius: "1vw",
                 background: "transparent",
-              }}>
+              }}
+            >
               <BasicButton
                 disabled={!subscriptionStatus}
                 innerText="Request last 5 games detailed stats"

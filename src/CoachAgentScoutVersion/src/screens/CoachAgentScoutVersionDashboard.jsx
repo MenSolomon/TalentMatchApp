@@ -308,19 +308,23 @@ const CoachAgentScoutVersionDashboard = () => {
 
   return (
     <div
-      className="md:flex md:flex-col md:h-[100%] md:w-[100%] sm:flex sm:flex-col sm:h-[100%] sm:w-[100%]"
+      className="md:flex md:flex-col md:h-[100%] md:w-[100%]    lg:flex lg:flex-col lg:h-[100%] lg:w-[100%]   sm:flex sm:flex-col sm:h-[100%] sm:w-[100%]"
       style={
         {
           // display: "flex",
           // flexDirection: "column",
           // height: "100%",
           // width: "100%",
+          // background: "red",
         }
       }
     >
-      {/* // Heading Area   style={{ flex: ".1" }}*/}
-      <div className="md:basis-[10%] sm:basis-[10%] grid md:grid-cols-2 sm:grid-cols-2">
-        <h3 style={{ margin: 0, float: "left" }} className="primaryTextColor">
+      } >{/* // Heading Area   style={{ flex: ".1" }}*/}
+      <div className="md:basis-[10%] lg:basis-[10%] sm:basis-[10%] grid md:grid-cols-2 sm:grid-cols-2">
+        <h3
+          style={{ margin: 0, float: "left" }}
+          className="primaryTextColor lg:text-[1.5em] tb:text-[1.4em]"
+        >
           Profile Dashboard
           <Stack direction="row" spacing={1}>
             <Chip
@@ -362,51 +366,54 @@ const CoachAgentScoutVersionDashboard = () => {
           />
         </div>
       </div>
-
       {/* // Cards  (upload video card , analytics summary card and other information card) */}
-      <div className="md:basis-[90%] md:flex-row md:flex md:gap-[2.5vw]     sm:basis-[90%] sm:flex-col sm:flex sm:gap-[2.5vw]">
-        <div style={{ flex: ".33" }}>
-          {/* // DRAG AND DROP VIDEO CARD*/}
-          <div
-            className="cardBackground md:w-[100%] md:h-[85%] md:grid md:place-items-center md:relative    sm:w-[100%] sm:h-[50vh] sm:grid sm:place-items-center sm:relative"
-            style={{
-              // width: "100%",
-              // height: "96%",
-              borderRadius: "1vw",
-              // display: "grid",
-              // placeItems: "center",
-              // position: "relative",
-            }}
-          >
-            {/* // DASHED BORDER DIV */}
+      <div className="lg:basis-[90%] lg:flex-row lg:flex lg:gap-[2.5vw]    md:basis-[90%] md:flex-row md:flex md:gap-[2.5vw]     sm:basis-[90%] sm:flex-col sm:flex sm:gap-[2.5vw]">
+        {maxPlayersInAgency > 0 ? (
+          <div style={{ flex: ".33" }}>
+            {/* // DRAG AND DROP VIDEO CARD*/}
             <div
-              className="cardBackground md:w-[88%] md:h-[90%] md:grid md:place-items-center md:absolute     sm:w-[88%] sm:h-[90%] sm:grid sm:place-items-center sm:relative"
+              className="cardBackground md:w-[100%] md:h-[85%] md:grid md:place-items-center md:relative    sm:w-[100%] sm:h-[50vh] sm:grid sm:place-items-center sm:relative"
               style={{
-                // width: "88%",
-                // height: "90%",
-                borderRadius: ".7vw",
-                border: `1px dashed ${primaryTextColor}`,
-                // position: "absolute",
+                // width: "100%",
+                // height: "96%",
+                borderRadius: "1vw",
                 // display: "grid",
                 // placeItems: "center",
+                // position: "relative",
               }}
             >
-              <img
-                src={PlayerSkeletonImage}
-                style={{ width: "200px", color: "red" }}
-              />
-              <span style={{ textAlign: "center" }}>
-                Want to add a player to talent meet's database? Create new
-                player profile and groom player to become the next big name in
-                football
-              </span>
-              <UploadPlayerToAgencyModal />
+              {/* // DASHED BORDER DIV */}
+              <div
+                className="cardBackground md:w-[88%] md:h-[90%] md:grid md:place-items-center md:absolute     sm:w-[88%] sm:h-[90%] sm:grid sm:place-items-center sm:relative"
+                style={{
+                  // width: "88%",
+                  // height: "90%",
+                  borderRadius: ".7vw",
+                  border: `1px dashed ${primaryTextColor}`,
+                  // position: "absolute",
+                  // display: "grid",
+                  // placeItems: "center",
+                }}
+              >
+                <img
+                  src={PlayerSkeletonImage}
+                  style={{ width: "200px", color: "red" }}
+                />
+                <span
+                  className="lg:text-[1.4em] tb:text-[1.4em]"
+                  style={{ textAlign: "center" }}
+                >
+                  Want to add a player to talent meet's database? Create new
+                  player profile and groom player to become the next big name in
+                  football
+                </span>
+                <UploadPlayerToAgencyModal />
+              </div>
             </div>
           </div>
-        </div>
-
-        <div style={{ flex: ".33" }}>
-          {/* PROFILE ANALYTICS */}
+        ) : null}
+        <div className="lg:basis-[33%] md:basis-[40%] sm:basis-[33%]">
+          {/* PROFILE ANALYTICS  style={{ flex: ".33" }} */}
           <div
             className="cardBackground md:h-[85%] md:w-[100%] md:flex-col md:flex    sm:h-[50vh] sm:w-[100%] sm:flex-col sm:flex"
             style={{
@@ -429,10 +436,14 @@ const CoachAgentScoutVersionDashboard = () => {
                 borderBottom: `1px solid ${primaryTextColor}`,
               }}
             >
-              <h5>Profile Analytics</h5>
+              <h5 className="lg:text-[1.4em] tb:text-[1.4em]">
+                Profile Analytics
+              </h5>
 
-              <h6>Total players under management</h6>
-              <h4>
+              <h6 className="lg:text-[1.2em] tb:text-[1.4em]">
+                Total players under management
+              </h6>
+              <h4 className="lg:text-[1.2em] tb:text-[1.4em]">
                 {" "}
                 {userLoginObject?.playersInPossession === undefined
                   ? "0"
@@ -448,9 +459,13 @@ const CoachAgentScoutVersionDashboard = () => {
                 borderBottom: `1px solid ${primaryTextColor}`,
               }}
             >
-              <h6>Summary</h6>
-              <h6 className="secondaryTextColor">Last 28 days</h6>
-              <h6>Most viewed player</h6>
+              <h6 className="lg:text-[1.4em] tb:text-[1.4em]">Summary</h6>
+              <h6 className="secondaryTextColor lg:text-[1.2em] tb:text-[1.4em]">
+                Last 28 days
+              </h6>
+              <h6 className="lg:text-[1.2em] tb:text-[1.4em]">
+                Most viewed player
+              </h6>
               <h6 className="secondaryTextColor">
                 {" "}
                 {playerWithHighestViews &&
@@ -460,8 +475,10 @@ const CoachAgentScoutVersionDashboard = () => {
 
             {/* TOP VIDEOS SECTION */}
             <div style={{ flex: ".3", paddingTop: "2vh" }}>
-              <h6>Top videos</h6>
-              <h6 className="secondaryTextColor">Last 48 hours</h6>
+              <h6 className="lg:text-[1.2em] tb:text-[1.4em]">Top videos</h6>
+              <h6 className="secondaryTextColor lg:text-[1.2em] tb:text-[1.4em]">
+                Last 48 hours
+              </h6>
             </div>
             <div style={{ flex: ".05" }}>
               <Button>Go to profile analytics</Button>
@@ -471,17 +488,20 @@ const CoachAgentScoutVersionDashboard = () => {
 
         {/* // LATEST NEWS AND COMMENTS */}
         <div
-          className="md:flex md:flex-col md:gap-[2vh]     sm:flex sm:flex-col sm:gap-[2.4vh]"
-          style={{
-            flex: ".33",
-            // background: "white",
-            // display: "flex",
-            // flexDirection: "column",
-            // gap: "2.4vh",
-          }}
+          className="lg:basis-[33%]  md:basis-[60%]  md:flex md:flex-col md:gap-[2vh]     sm:flex sm:flex-col sm:gap-[2.4vh]"
+          style={
+            {
+              // flex: ".33",
+              // background: "pink",
+              // background: "white",
+              // display: "flex",
+              // flexDirection: "column",
+              // gap: "2.4vh",
+            }
+          }
         >
           <div
-            className="cardBackground md:basis-[50%] md:relative md:flex-col md:flex   sm:basis-[50%] sm:relative sm:flex-col sm:flex"
+            className="cardBackground md:basis-[50%] md:relative md:flex-col md:flex   sm:basis-[50%] sm:relative sm:flex-col sm:flex "
             style={{
               // flex: ".5",
               borderRadius: "1vw",
@@ -492,10 +512,13 @@ const CoachAgentScoutVersionDashboard = () => {
               // position: "relative",
               // display: "flex",
               // flexDirection: "column",
+              // background: "red",
             }}
           >
             <div style={{ flex: ".2" }}>
-              <h5>Recent messages</h5>
+              <h5 className="lg:text-[1.5em] md:text-[1.3em] tb:text-[1.4em]">
+                Recent messages
+              </h5>
             </div>
 
             <div
@@ -507,7 +530,9 @@ const CoachAgentScoutVersionDashboard = () => {
               }}
             >
               {latestMessages.length === 0 ? (
-                <span>No messages yet</span>
+                <span className="lg:text-[1.4em] tb:text-[1.4em]">
+                  No messages yet
+                </span>
               ) : (
                 latestMessages.map((data, index) => {
                   const {
@@ -536,7 +561,7 @@ const CoachAgentScoutVersionDashboard = () => {
             </div>
           </div>
           <div
-            className="cardBackground"
+            className="cardBackground "
             style={{
               flex: ".5",
 
@@ -547,7 +572,7 @@ const CoachAgentScoutVersionDashboard = () => {
               paddingBottom: "2vh",
             }}
           >
-            <h5>Latest news</h5>
+            <h5 className="lg:text-[1.4em] tb:text-[1.4em]">Latest news</h5>
 
             {newData.map((data, index) => {
               const { title, img, url } = data;
@@ -600,34 +625,105 @@ const RecentMessageCard = ({
   });
 
   return (
-    <div
-      className="md:20vw md:h-[10vh]  sm:20vw sm:h-[10vh]"
-      style={{
-        // position: "absolute",
-        // width: "20vw",
-        // height: "10vh",
-        // background: "yellow",
-        display: "flex",
-        padding: ".3vw",
-        cursor: "pointer",
-      }}
-      onClick={handleMessageUserSelect}
-    >
-      <div style={{ flex: ".22" }}>
-        <Avatar src={userAvatar} sx={{ width: 50, height: 50 }} />
-      </div>
-      <div style={{ flex: ".78", fontSize: ".85em" }}>
-        {" "}
-        <div>
-          {" "}
-          <span style={{ fontWeight: "bolder" }}> {userName} </span>{" "}
-          <span style={{ float: "right", fontSize: ".7em" }}>
-            {formattedRelativeTime}{" "}
-          </span>
+    <>
+      <div className="lg:w-[100%] lg:h-[10vh] lg:flex lg:flex-row  md:w-[100%] md:h-[10vh] md:flex md:flex-row  tb:w-[100%] tb:h-[10vh] tb:flex tb:flex-row  sm:w-[100%] sm:h-[10vh] sm:flex sm:flex-row">
+        <div
+          style={{
+            flex: ".26",
+            // background: "red",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Avatar src={userAvatar} sx={{ width: 60, height: 60 }} />
         </div>
-        <p>{message?.length === 20 ? `${message}...` : message}</p>{" "}
+        <div
+          style={{
+            flex: ".54",
+            // background: "peru",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div
+            style={{
+              flex: ".5",
+              // background: "pink",
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              fontWeight: "bold",
+            }}
+          >
+            <div className="lg:text-[1.1em] md:text-[1.1em] tb:text-[1.3em] sm:text-[1em]">
+              {userName}
+            </div>
+          </div>
+          <div
+            style={{
+              flex: ".5",
+              // background: "yellow",
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+            }}
+          >
+            <div className="lg:text-[1.1em] md:text-[1.1em] tb:text-[1.5em] sm:text-[1em]">
+              {message?.length === 20 ? `${message}...` : message}
+            </div>
+          </div>
+        </div>
+        <div
+          style={{
+            flex: ".2",
+            // background: "red",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {formattedRelativeTime}
+        </div>
       </div>
-      {/* <div style={{ flex: ".2", background: "red" }}></div> */}
-    </div>
+    </>
+
+    // <div
+    //   className="md:w-[40%] md:h-[10vh] lg:w-[20vw] lg:h-[10vh] tb:w-[90%] tb:h-[10vh]  sm:w-[30vw] sm:h-[10vh]"
+    //   style={{
+    //     display: "flex",
+    //     padding: ".3vw",
+    //     cursor: "pointer",
+    //     flexDirection: "row",
+    //     gap: 10,
+    //   }}
+    //   onClick={handleMessageUserSelect}
+    // >
+    //   <div style={{ flex: ".22" }}>
+    //     <Avatar src={userAvatar} sx={{ width: 60, height: 60 }} />
+    //   </div>
+    //   <div
+    //     style={{
+    //       flex: ".78",
+    //       display: "flex",
+    //       flexDirection: "column",
+    //     }}
+    //   >
+    //     {" "}
+    //     <div className="lg:text-[1.3em] md:text-[1em] tb:text-[1.4em]">
+    //       {" "}
+    //       <span style={{ fontWeight: "bolder" }}> {userName} </span>{" "}
+    //       <span
+    //         className="lg:text-[.9em] md:text-[.9em] tb:text-[1em]"
+    //         style={{ float: "right" }}
+    //       >
+    //         {formattedRelativeTime}
+    //       </span>
+    //     </div>
+    // <p className="lg:text-[1.2em] md:text-[1em] tb:text-[1.2em]">
+    //   {message?.length === 20 ? `${message}...` : message}
+    // </p>
+    //   </div>
+    // </div>
   );
 };

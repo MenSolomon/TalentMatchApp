@@ -11,7 +11,8 @@ const NameAndImageCard = ({
 }) => {
   return (
     <div
-      className="playerCard md:w-[100%] md:h-[100%] md:flex   sm:w-[80%] sm:h-[20vh] sm:flex"
+      // className="playerCard md:w-[100%] md:h-[100%] md:flex   sm:w-[80%] sm:h-[20vh] sm:flex"
+      className="playerCard lg:w-[27vw] md:w-[35vw] md:h-[100%] md:flex   sm:w-[80vw] sm:h-[20vh] sm:flex"
       style={{
         // width: "100%",
         // height: "100%",
@@ -19,6 +20,7 @@ const NameAndImageCard = ({
         borderRadius: "1vw",
         // display: "flex",
         //   borderRadius: "1vw",
+        // background: "red",
       }}
     >
       {/* // Image flex area */}
@@ -43,13 +45,30 @@ const NameAndImageCard = ({
         }}
       >
         {/* // Names */}
-        <h5 style={hTagStyle}> {firstname} </h5> <h5> {surname} </h5>{" "}
+        <h5
+          className="lg:text-[1.7em] md:text-[1.7em]  sm:text-[1em] tb:text-[2em]"
+          style={hTagStyle}
+        >
+          {" "}
+          {firstname}{" "}
+        </h5>{" "}
+        <h5 className="lg:text-[1.7em] md:text-[1.6em]  sm:text-[1em] tb:text-[2em]">
+          {" "}
+          {surname}{" "}
+        </h5>{" "}
         {/* // Age And Postion */}
         <div style={{ width: "100%", height: "35%", display: "flex" }}>
           <div style={{ flex: ".4" }}>
             {/* **** Reduce the size of Age label */}
-            <h6 style={hTagStyle}>Age</h6>
-            <h6>{age}</h6>
+            <h6
+              className="lg:text-[1.3em] md:text-[1.3em]  sm:text-[1em] tb:text-[1.6em]"
+              style={hTagStyle}
+            >
+              Age
+            </h6>
+            <h6 className="lg:text-[1.3em] md:text-[1.3em]  sm:text-[1em] tb:text-[1.3em]">
+              {age}
+            </h6>
           </div>
           <div
             className="md:basis-[60%] md:flex md:flex-col sm:basis-[60%] sm:flex sm:flex-col"

@@ -80,7 +80,8 @@ const SocialAndContactAreaCard = ({
 
   return (
     <div
-      className="playerCard md:w-[100%] md:h-[100%]   sm:w-[50%] sm:h-[100%]"
+      className="playerCard lg:w-[11vw] md:w-[19vw] md:h-[100%]   sm:w-[50%] sm:h-[100%]"
+      // className="playerCard md:w-[100%] md:h-[100%]   sm:w-[50%] sm:h-[100%]"
       style={{
         // width: "100%",
         // height: "100%",

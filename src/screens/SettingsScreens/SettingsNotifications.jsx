@@ -15,7 +15,7 @@ function SettingsNotifications() {
     >
       {/* head columns */}
       <div
-        className="md:flex md:flex-row md:basis-[1%] sm:basis-[1%]  sm:flex sm:flex-row"
+        className="lg:text-[2.5em] md:text-[2.7em] tb:text-[2.2em] md:flex md:flex-row md:basis-[1%] sm:basis-[1%]  sm:flex sm:flex-row"
         // style={{ flex: "0.01" }}
       >
         NOTIFICATIONS
@@ -73,7 +73,7 @@ function SettingsNotifications() {
             >
               <Switch />
               <div className="md:flex md:flex-col   sm:flex sm:flex-col">
-                <div>
+                <div className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]">
                   <b>News and update</b> <br />
                   <small style={{ fontWeight: "lighter" }}>
                     {" "}
@@ -91,9 +91,10 @@ function SettingsNotifications() {
                 alignItems: "center",
               }}
             >
+              {/* className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]" */}
               <Switch />
               <div className="md:flex md:flex-col   sm:flex sm:flex-col">
-                <div>
+                <div className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]">
                   <b>Messages</b> <br />
                   <small style={{ fontWeight: "lighter" }}>
                     Get notifications when you receive a message
@@ -112,7 +113,7 @@ function SettingsNotifications() {
             >
               <Switch />
               <div className="md:flex md:flex-col   sm:flex sm:flex-col">
-                <div>
+                <div className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]">
                   <b>Reminders</b> <br />
                   <small style={{ fontWeight: "lighter" }}>
                     {" "}

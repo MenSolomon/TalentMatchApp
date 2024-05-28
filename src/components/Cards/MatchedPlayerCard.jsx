@@ -112,29 +112,32 @@ const MatchedPlayerCard = ({
           // borderTopLeftRadius: "6%",
           display: "flex",
           flexDirection: "column",
-          padding: "1vh .7vw",
+          padding: "1vh 2vw",
           gap: "1vh",
           cursor: "pointer",
+          // background: "red",
           // zIndex: "1000",
 
           // borderBottom: "3px solid white",
           // borderLeft: "3px solid white",
+          // background: "red",
         }}
       >
         {/* Player Image And Club */}
         <div
           style={{
             flex: ".4",
-            //   background: "white",
+
             display: "flex",
             gap: ".5vw",
+            // background: "red",
           }}
         >
           {/* //Player Position Player CLub and Country */}
           <div
             style={{
               flex: ".4",
-              // background: "blue",
+
               display: "flex",
               flexDirection: "column",
             }}
@@ -233,8 +236,8 @@ const MatchedPlayerCard = ({
                   <Avatar
                     src={PlayerClubImage}
                     style={{
-                      width: "35px",
-                      height: "35px",
+                      width: 80,
+                      height: 80,
                       borderRadius: "50%",
                       zIndex: "1000",
                     }}
@@ -258,20 +261,22 @@ const MatchedPlayerCard = ({
             <Avatar
               src={PlayerImage}
               style={{
-                width: "85px",
-                height: "85px",
+                width: 80,
+                height: 80,
                 borderRadius: "50%",
                 border: "4px solid #5585FE",
                 zIndex: "1000",
+                // background: "blue",
               }}
             />
           </div>
         </div>
         {/*Player Name*/}
         <div
+          className="tb:text-[1.5em] md:text-[1.2em]"
           style={{
             flex: ".2",
-            //   background: "blue",
+            // background: "blue",
             fontWeight: "900",
             display: "grid",
             placeContent: "center",
@@ -367,6 +372,7 @@ const MatchedPlayerCard = ({
             }}
           >
             <BasicButton
+              className="tb:text-[1.5em] lg:text-[1.2em] md:text-[1.8em]"
               style={{
                 textTransform: "none",
                 color: "white",

@@ -10,7 +10,7 @@ const NewsCard = ({ title, image, url, source, style }) => {
   return (
     <>
       <Card
-        className="newsCard md:w-[30%] md:h-[45%] md:relative md:flex md:flex-col   sm:w-[100%] sm:h-[45%] sm:relative sm:flex sm:flex-col"
+        className="newsCard  lg:w-[30%] lg:h-[45%] md:w-[100%] md:h-[45%] md:relative md:flex md:flex-col   sm:w-[100%] sm:h-[45%] sm:relative sm:flex sm:flex-col"
         sx={{
           ...style,
           // width: "30%",
@@ -69,7 +69,7 @@ const NewsCard = ({ title, image, url, source, style }) => {
               onClick={() => {
                 handNavigateUrl(url);
               }}
-              className="newsText"
+              className="newsText  tb:text-[1.2em] md:text-[1em]"
               style={{ cursor: "pointer" }}
             >
               {title && title?.length > 100

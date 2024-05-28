@@ -54,7 +54,7 @@ export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
   let browserWidth = parseInt(browserSize?.width, 10);
 
   return (
-    <Box sx={{ width: "90vw" }}>
+    <Box className="lg:w-[70vw] md:w-[90vw] tb:w-[70vw] sm:w-[90vw]">
       <Box sx={{ borderColor: "divider" }}>
         <Tabs
           value={value}
@@ -81,7 +81,7 @@ export default function PlayerDetailsMenuTab({ PlayerTabItemsArray }) {
               <Tab
                 key={key}
                 className="primaryColor "
-                label={browserWidth >= 1024 ? data : `${data.slice(0, 5)}..`}
+                label={browserWidth >= 1024 ? data : `${data.slice(0, 3)}..`}
                 sx={{
                   // maxWidth: "3vw",
                   // width: "10vw",

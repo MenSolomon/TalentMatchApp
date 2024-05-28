@@ -481,16 +481,19 @@ const PlayerDetails = () => {
       </div>
       {/* // Card Display Area */}
       <div
-        className="sm:flex sm:flex-col sm:gap-[0%]  md:flex md:flex-row"
+        className="sm:flex sm:flex-col sm:gap-[0%] lg:flex lg:flex-nowrap   md:flex md:flex-row md:flex-nowrap"
+        // className="sm:flex sm:flex-col sm:gap-[0%]  md:flex md:flex-row"
         style={{
           gridArea: "CardDisplay",
+          // overflowY: "hidden",
+          // background: "red",
           display: isCardsCollapsedVariable === false ? "flex" : "none",
         }}
       >
         {/* // Image And Name Area */}
         {/* sm:flex sm:justify-center  */}
         <div
-          className=" md:basis-[26%] sm:basis-[26%] "
+          className=" md:basis-[26%] sm:basis-[26%]"
           style={{ padding: "1vw" }}
         >
           <NameAndImageCard
@@ -525,7 +528,7 @@ const PlayerDetails = () => {
         </div>
         {/* Achievements and Trophies Area */}
         <div
-          className="sm:hidden md:block md:basis-[27%] sm:basis-[27%]"
+          className="sm:hidden md:hidden lg:block md:basis-[27%] sm:basis-[27%]"
           style={{ flex: ".27", padding: "1vw" }}
         >
           {" "}

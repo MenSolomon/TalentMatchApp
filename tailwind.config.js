@@ -126,10 +126,10 @@ export default {
     },
     screens: {
       sm: "100px",
-      // md: "769px",
       md: "900px",
       lg: "1024px",
-      max: "1280px",
+      // max: "1280px",
+      tb: "768px",
     },
     spacing: {
       ...intVwObject,

@@ -225,7 +225,8 @@ const SubscribeTrial = () => {
         // gap: "5vw",
         paddingLeft: "4%",
         // flexDirection: "column",
-      }}>
+      }}
+    >
       <div
         className="md:flex md:justify-end md:basis-[55%]   sm:flex sm:justify-center sm:basis-[0.5] "
         style={{
@@ -234,7 +235,8 @@ const SubscribeTrial = () => {
           // display: "flex",
           // justifyContent: "flex-end",
           paddingRight: "10px",
-        }}>
+        }}
+      >
         {/* // LEFT PAPER  */}
 
         <div
@@ -248,12 +250,14 @@ const SubscribeTrial = () => {
               // display: "flex",
               // flexDirection: "column",
             }
-          }>
+          }
+        >
           <div
             style={{
               flex: "0.5",
               display: "flex",
-            }}>
+            }}
+          >
             <div
               style={{
                 flex: "0.3",
@@ -261,7 +265,8 @@ const SubscribeTrial = () => {
                 display: "flex",
                 justifyContent: "flex-end",
                 alignItems: "center",
-              }}>
+              }}
+            >
               {/* 
 
  */}
@@ -287,12 +292,14 @@ const SubscribeTrial = () => {
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "center",
-              }}>
+              }}
+            >
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                }}>
+                }}
+              >
                 <div>
                   <h5 style={{ fontWeight: "bold" }}>
                     Start your free trial for 30 <br /> days
@@ -304,7 +311,8 @@ const SubscribeTrial = () => {
                       style={{ color: "#5585FE", cursor: "pointer" }}
                       onClick={() => {
                         navigate("/create-account/freetrial");
-                      }}>
+                      }}
+                    >
                       change your membership
                     </span>
                   </small>
@@ -321,12 +329,14 @@ const SubscribeTrial = () => {
               flexDirection: "column",
               gap: "5px",
               // background: "red",
-            }}>
+            }}
+          >
             {/* Duration Switch */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography
                 variant="h4"
-                sx={{ color: duration == "year" ? "#5585FE" : null }}>
+                sx={{ color: duration == "year" ? "#5585FE" : null }}
+              >
                 Yearly
               </Typography>
               <Switch
@@ -343,7 +353,8 @@ const SubscribeTrial = () => {
               />
               <Typography
                 variant="h4"
-                sx={{ color: duration == "month" ? "#5585FE" : null }}>
+                sx={{ color: duration == "month" ? "#5585FE" : null }}
+              >
                 Monthly
               </Typography>
             </Stack>
@@ -370,7 +381,8 @@ const SubscribeTrial = () => {
                   dispatch(setPriceID(priceId));
                   // save product id
                   dispatch(setProductID(id));
-                }}>
+                }}
+              >
                 {isProductsLoading == true ? (
                   <div>
                     <CircularProgress />
@@ -391,7 +403,8 @@ const SubscribeTrial = () => {
                             style={{
                               marginLeft: "16vw",
                               fontWeight: "bolder",
-                            }}>
+                            }}
+                          >
                             $ {item.price / 100}{" "}
                             {item.interval == "month"
                               ? "Monthly"
@@ -422,7 +435,8 @@ const SubscribeTrial = () => {
                           style={{
                             marginLeft: "16vw",
                             fontWeight: "bolder",
-                          }}>
+                          }}
+                        >
                           $ {item.price / 100}{" "}
                         </span>
                       </div>
@@ -443,25 +457,36 @@ const SubscribeTrial = () => {
           // justifyContent: "flex-start",
           // background: "red",
           padding: "10px 10px",
-        }}>
+        }}
+      >
         <Card
-          className="md:w-[25vw] md:h-[42vh]    sm:w-[100%] sm:h-[30vh] sm:pb-[1.5vh] sm:text-[.85em] "
+          className="lg:w-[25vw] lg:h-[42vh]  md:w-[38vw] md:h-[42vh]    sm:w-[100%] sm:h-[35vh] sm:pb-[1.5vh] sm:text-[.85em] "
           sx={{
             // width: "25vw",
             // height: "42vh",
             borderRadius: "5px",
             paddingBottom: "2vh",
             padding: ".5vw",
-          }}>
+          }}
+        >
           <h5
-          // style={{ color: "#5585FE" }}
+            // style={{ color: "#5585FE" }}
+            className="tb:text-[1.8em] md:text-[1.5em] sm:text-[1.3em]"
           >
             Package Summary
           </h5>
           <ul style={{ width: "90%", ...ulStyle }}>
             {" "}
-            <li style={{ margin: 0 }}>{roleSelected} Membership </li>
-            <li style={{ margin: 0 }}>
+            <li
+              className="tb:text-[1.5em] md:text-[1.5em] sm:text-[1.2em]"
+              style={{ margin: 0 }}
+            >
+              {roleSelected} Membership{" "}
+            </li>
+            <li
+              className="tb:text-[1.5em] md:text-[1.5em] sm:text-[1.2em]"
+              style={{ margin: 0 }}
+            >
               {
                 products.find((data) => {
                   return data.id === packageValue;
@@ -482,7 +507,8 @@ const SubscribeTrial = () => {
             </li>
           </ul>
           <h5
-          //  style={{ color: "#5585FE" }}
+            //  style={{ color: "#5585FE" }}
+            className="tb:text-[1.8em] md:text-[1.5em] sm:text-[1.3em]"
           >
             Whats Included
           </h5>
@@ -498,7 +524,11 @@ const SubscribeTrial = () => {
                         ?.details) ||
                     []
                   ).map((detail) => (
-                    <li style={{ margin: 0 }} key={detail}>
+                    <li
+                      className="tb:text-[1.2em] md:text-[1.1em] sm:text-[1em]"
+                      style={{ margin: 0 }}
+                      key={detail}
+                    >
                       {detail}
                     </li>
                   ))}
@@ -522,7 +552,8 @@ const SubscribeTrial = () => {
                   })
                 );
               }
-            }}>
+            }}
+          >
             <BasicButton
               style={{
                 width: "90%",
@@ -530,7 +561,8 @@ const SubscribeTrial = () => {
                 marginBottom: browserWidth >= 1024 ? "" : "1.5vh",
                 marginLeft: "5%",
               }}
-              innerText="Start Trial">
+              innerText="Start Trial"
+            >
               {" "}
             </BasicButton>
           </div>

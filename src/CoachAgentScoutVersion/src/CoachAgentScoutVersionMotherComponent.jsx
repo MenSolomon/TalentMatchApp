@@ -284,6 +284,7 @@ const CoachAgentScoutVersionMotherComponent = () => {
         // paddingBottom: "10vh",
         color: primaryTextColor,
         // zIndex: "-3",
+        // background: "red",
       }}
     >
       {/* NO SUBSCRIPTION ALERT */}
@@ -332,7 +333,7 @@ const CoachAgentScoutVersionMotherComponent = () => {
             <SmallScreenCoachAgentClubMenuDrawer />{" "}
           </div>
           <img
-            className="sm:hidden md:block"
+            className="sm:hidden md:hidden lg:block"
             style={{ width: "110px" }}
             src={logoImage}
           />
@@ -398,13 +399,16 @@ const CoachAgentScoutVersionMotherComponent = () => {
       >
         {/* // NAV ARAEA */}
         <div
-          className="md:basis-[18%] md:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:block sm:hidden"
-          // style={{
-          //   flex: ".18",
-          //   display: "flex",
-          //   flexDirection: "column",
-          //   paddingTop: "5vh",
-          // }}
+          className="md:basis-[18%] md:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:hidden lg:block sm:hidden"
+          style={
+            {
+              // flex: ".18",
+              // display: "flex",
+              // flexDirection: "column",
+              // paddingTop: "5vh",
+              // background: "red",
+            }
+          }
         >
           {/* // USE A MAP FOR THIS */}
           {/* // NavBAR FIRST HALF */}
@@ -476,7 +480,7 @@ const CoachAgentScoutVersionMotherComponent = () => {
 
         {/* // ROUTES SECTION */}
         <div
-          className="md:basis-[82%] sm:basis-[100%]"
+          className="md:basis-[100%] sm:basis-[100%]"
           style={{
             // flex: ".82",
             padding: "2vh 1.5vw",

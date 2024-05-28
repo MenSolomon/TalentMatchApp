@@ -27,13 +27,14 @@ export default function PlayerComparisonDrawer() {
 
   const list = (anchor) => (
     <Box
-      className="cardBackground primaryTextColor md:w-[100%] md:h-[100%] md:flex md:flex-col   sm:w-[80vw] sm:h-[100%] sm:flex sm:flex-col"
+      className="cardBackground primaryTextColor lg:w-[100%] md:w-[60vw] md:h-[100%] md:flex md:flex-col   sm:w-[80vw] sm:h-[100%] sm:flex sm:flex-col"
       sx={{
         // width: 400,
         // height: "100%",
         padding: "3vh 1vw",
         // display: "flex",
         // flexDirection: "column",
+        // background: "red",
         zIndex: "10000",
       }}
       role="presentation"
@@ -44,7 +45,7 @@ export default function PlayerComparisonDrawer() {
 
       <div style={{ flex: ".08" }}>
         {" "}
-        <h3> Add a player </h3>{" "}
+        <h3 className="tb:text-[2em] md:text-[1.5em]"> Add a player </h3>{" "}
       </div>
 
       {/* //Search and Filter Sections */}
@@ -85,7 +86,7 @@ const PlayerProfileAdd = ({ clickFunction }) => {
   return (
     <>
       <div
-        className="md:w-[12vw] md:h-[25vh] md:flex md:items-center md:justify-center    sm:w-[40vw] sm:h-[20vh] sm:flex sm:items-center sm:justify-center"
+        className="lg:w-[12vw] lg:h-[25vh] lg:flex lg:items-center lg:justify-center    md:w-[35vw] md:h-[25vh] md:flex md:items-center md:justify-center    sm:w-[40vw] sm:h-[20vh] sm:flex sm:items-center sm:justify-center tb:w-[30vw] tb:h-[20vh]"
         onClick={clickFunction}
         style={{
           // width: "12vw",

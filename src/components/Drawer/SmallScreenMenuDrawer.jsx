@@ -102,7 +102,10 @@ export default function SmallScreenMenuDrawer() {
                   // onClick={toggleDrawer(anchor, false)}
                   // write a destructuring function that will close the drawer on click oof the buttons in the accordion
                   return (
-                    <li style={{ marginBottom: "2.5vh" }} key={index}>
+                    <li
+                      style={{ marginBottom: "2.5vh", fontSize: "1.1em" }}
+                      key={index}
+                    >
                       {" "}
                       <SavedFilters />
                     </li>
@@ -113,6 +116,7 @@ export default function SmallScreenMenuDrawer() {
                       key={index}
                       style={{ marginBottom: "2.5vh" }}
                       onClick={toggleDrawer(anchor, false)}
+                      // className="tb:text-[1.2em]"
                     >
                       <NavBarButton
                         ButtonName={name}
@@ -158,6 +162,7 @@ export default function SmallScreenMenuDrawer() {
                     key={index}
                     style={{ marginBottom: "2.5vh" }}
                     onClick={toggleDrawer(anchor, false)}
+                    // className="tb:text-[1.3em]"
                   >
                     <NavBarButton
                       ButtonName={name}

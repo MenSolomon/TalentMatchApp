@@ -125,6 +125,7 @@ export default function PlayerManagementTabs({
                         width: "100%",
                         display: "flex",
                         justifyContent: "center",
+                        // background: "red",
                       }}
                     >
                       <CircularProgress />

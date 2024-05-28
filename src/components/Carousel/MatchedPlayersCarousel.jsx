@@ -35,7 +35,7 @@ const MatchedPlayersCarousel = () => {
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
-      items: 2,
+      items: 6,
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
@@ -271,6 +271,7 @@ const VideoCard = ({ publisherImg, video, vidIndex, playerId }) => {
             position: "relative",
             paddingTop: "1vh",
             width: "13vw",
+            // background: "red",
           }}
         >
           <div

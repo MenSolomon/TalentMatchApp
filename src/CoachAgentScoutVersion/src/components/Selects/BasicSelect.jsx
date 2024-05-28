@@ -22,6 +22,7 @@ export default function BasicSelect({ widthSize, label, MenuItemArray }) {
         // size="small"
         sx={{ width: widthSize ? widthSize : 200 }}
         onChange={handleChange}
+        // className="lg:w-[300vw]"
       >
         {MenuItemArray &&
           MenuItemArray?.map((data, index) => {

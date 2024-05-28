@@ -445,7 +445,9 @@ const CreateAccount = () => {
           }}
         >
           <img src={logoImage} style={{ width: "100px" }} />
-          <h2>Create new account</h2>
+          <h2 className="tb:text-[2em] md:text-[1.3em] sm:text-[1em]">
+            Create new account
+          </h2>
         </div>
         <div style={{ flex: "0.5", textAlign: "center" }}>
           <small style={{ fontWeight: "bold" }}>

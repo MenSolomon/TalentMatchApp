@@ -52,7 +52,10 @@ const ScoutsDisplayCard = ({
 
   return (
     <Card
-      className="playerCard primaryTextColor md:mb-[3vh] md:flex md:flex-col md:w-[25vw] md:h-[18vh]  sm:flex sm:flex-col sm:w-[100%] sm:h-[18vh] sm:mb-[3vh]"
+      className="playerCard primaryTextColor md:mb-[3vh] md:p-[0px] md:flex md:flex-col md:w-[100%] md:h-[18vh]  sm:flex sm:flex-col sm:w-[100%] sm:p-[10px] sm:h-[18vh] sm:mb-[3vh]  
+      tb:flex tb:flex-col tb:w-[100%] tb:h-[18vh] tb:p-[15px]
+      lg:flex lg:flex-col lg:w-[25vw] lg:h-[18vh] lg:p-[0px]
+      "
       style={{
         // ...style,
         // display: "flex",
@@ -60,7 +63,9 @@ const ScoutsDisplayCard = ({
         // width: "20vw",
         // height: "23vh",
         borderRadius: "1vw",
+        // background: "red",
         // marginBottom: "3vh",
+        padding: 10,
       }}
     >
       {/* <div
@@ -84,14 +89,23 @@ const ScoutsDisplayCard = ({
       >
         {/* AVATAR */}
         <div style={{ flex: ".2" }}>
-          <Avatar src={playerImageUrl}></Avatar>
+          <Avatar
+            style={{ width: 65, height: 65 }}
+            // className="md:text-[10.3]"
+            src={playerImageUrl}
+          ></Avatar>
         </div>
         {/* NAME AND AGENCY OR CLUB NAME */}
         <div style={{ flex: ".5" }}>
-          <h5 style={{ fontSize: "1.1em", marginBottom: ".7vh" }}>
+          <h5
+            className="tb:text-[1.4em] md:text-[1.3em] sm:text-[1.1em]"
+            style={{ marginBottom: ".7vh" }}
+          >
             {UserName}
           </h5>
-          <h6 style={{ fontSize: ".8em" }}>{AgencyName}</h6>
+          <h6 className="tb:text-[1.4em] md:text-[1.3em] sm:text-[1.1em]">
+            {AgencyName}
+          </h6>
         </div>
         {/* SIGN UP CHIP */}
         <div style={{ flex: ".3" }}>
@@ -101,7 +115,7 @@ const ScoutsDisplayCard = ({
           ) : (
             <Stack direction="row" spacing={1}>
               <Chip
-                sx={{ cursor: "pointer" }}
+                sx={{ cursor: "pointer", fontSize: 20 }}
                 label="Connect"
                 color="primary"
                 onClick={() => {
@@ -112,7 +126,7 @@ const ScoutsDisplayCard = ({
               />
               {deleteBtnVisible && (
                 <Chip
-                  sx={{ cursor: "pointer" }}
+                  sx={{ cursor: "pointer", fontSize: 20 }}
                   color="error"
                   label="Delete"
                   onClick={handleDelete}

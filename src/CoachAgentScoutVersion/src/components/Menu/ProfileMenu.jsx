@@ -51,7 +51,8 @@ export default function ProfileMenu({ style, name }) {
           marginRight: ".4vw",
           float: "right",
         }}
-        src={avatarImage}></Avatar>
+        src={avatarImage}
+      ></Avatar>
 
       <Menu
         id="basic-menu"
@@ -60,7 +61,8 @@ export default function ProfileMenu({ style, name }) {
         onClose={handleClose}
         MenuListProps={{
           "aria-labelledby": "basic-button",
-        }}>
+        }}
+      >
         <MenuItem sx={{ color: "black" }} onClick={handleClose}>
           Profiles
         </MenuItem>
@@ -72,7 +74,8 @@ export default function ProfileMenu({ style, name }) {
           onClick={() => {
             handleClose();
             Navigate("/login");
-          }}>
+          }}
+        >
           Logout
         </MenuItem>
       </Menu>

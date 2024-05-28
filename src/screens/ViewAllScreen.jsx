@@ -45,7 +45,8 @@ const Players = () => {
         flexDirection: "column",
         height: "100%",
         width: "100%",
-      }}>
+      }}
+    >
       <div style={{ flex: ".1", display: "flex" }}>
         <h3 style={{ margin: 0, float: "left" }}>{profileName} Profile</h3>
 
@@ -64,7 +65,8 @@ const Players = () => {
           // flexWrap: "wrap",
           // display: "flex",
           // background: "red",
-        }}>
+        }}
+      >
         {/* {PlayerArray.slice(0, 9).map((data, index) => {
           const {
             firstName,

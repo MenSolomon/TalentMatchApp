@@ -24,7 +24,7 @@ const Attack = ({ Period }) => {
   return (
     <div
       className="primaryColor md:gap-[0em] md:flex md:flex-row sm:flex sm:flex-col sm:gap-[1em] sm:overflow-y-scroll "
-      // style={{  overflowY: "scroll" }}
+      // style={{ background: "red" }}
     >
       <div style={{ flex: ".4" }}>
         <PlayerGoalDetailsGraph

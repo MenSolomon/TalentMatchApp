@@ -67,6 +67,7 @@ const style = {
   border: "transparent",
   boxShadow: 24,
   borderRadius: "1vw",
+  // background: "red",
 };
 
 // currentProfileClicked
@@ -976,6 +977,7 @@ export default function CreateProfileModal({ ProfileType }) {
               // }
             }}
           >
+            }} >
             <Settings />
           </IconButton>
         </Tooltip>
@@ -1028,6 +1030,7 @@ export default function CreateProfileModal({ ProfileType }) {
               display: "grid",
               placeItems: "center",
             }}
+            // className="lg:text-[1.8em] md:text-[1.5em]"
           >
             {" "}
             Create new profile{" "}
@@ -1059,8 +1062,8 @@ export default function CreateProfileModal({ ProfileType }) {
       >
         <Fade in={open}>
           <div
-            className="cardBackground primaryTextColor md:flex md:flex-col md:pt-[3vh]
-            md:w-[85%] md:h-[97%] md:p-[2vw] md:absolute     sm:flex sm:flex-col sm:pt-[3vh]
+            className="cardBackground primaryTextColor lg:w-[85%] lgflex-col: md:flex md:flex-col md:pt-[3vh]
+            md:w-[100%] md:h-[97%] md:p-[2vw] md:absolute     sm:flex sm:flex-col sm:pt-[3vh]
             sm:w-[100%] sm:h-[100%] sm:p-[2vw] sm:absolute md:top-[50%] md:left-[50%]    sm:top-[50%] sm:left-[50%]"
             style={style}
           >
@@ -1074,7 +1077,7 @@ export default function CreateProfileModal({ ProfileType }) {
                 // gap: "4vw",
               }}
             >
-              <h2 className="secondaryTextColor">
+              <h2 className="secondaryTextColor lg:text-[2em] md:text-[2.5em]">
                 {" "}
                 {ProfileType === "Edit"
                   ? "Edit Profile"
@@ -1082,7 +1085,7 @@ export default function CreateProfileModal({ ProfileType }) {
                   ? "Default Profile"
                   : "Search Profile"}{" "}
               </h2>{" "}
-              <h6>
+              <h6 className="lg:text-[1.8em] md:text-[1.5em]">
                 {/* Who are you looking for? */}
                 Profile name
               </h6>{" "}
@@ -1126,15 +1129,17 @@ export default function CreateProfileModal({ ProfileType }) {
                 {/* </IconButton> */}
               </div>
             </div>
+
+            {/*  */}
             <div
-              className="md:flex md:flex-row md:overflow-y-hidden md:gap-[0%] sm:flex-col  sm:gap-[2vh] sm:flex sm:overflow-y-scroll"
+              className="lg:basis-[85%]  md:basis-[85%] md:flex md:flex-row md:overflow-y-hidden md:gap-[0%] sm:flex-col  sm:basis-[85%] sm:gap-[2vh] sm:flex sm:overflow-y-scroll"
               style={{ flex: ".85" }}
             >
               {/* // Personal information */}
               <div
-                className="md:flex md:flex-col md:relative md:gap-[2vh] md:ml-[2%]  sm:ml-[0%] sm:flex sm:flex-col  sm:relative sm:gap-[2vh] "
+                className="lg::basis-[33%]   md:basis-[35%] md:flex md:flex-col md:relative md:gap-[2vh] md:ml-[2%]  sm:ml-[0%] sm:flex sm:flex-col  sm:basis-[33%] sm:relative sm:gap-[2vh] "
                 style={{
-                  flex: ".33",
+                  // flex: ".33",
                   // display: "flex",
                   // gap: "2vh",
                   // flexDirection: "column",
@@ -1143,7 +1148,7 @@ export default function CreateProfileModal({ ProfileType }) {
                 }}
               >
                 {" "}
-                <h4 className="secondaryTextColor">
+                <h4 className="secondaryTextColor lg:text-[1.8em] md:text-[1.5em]">
                   Personal Information{" "}
                   <IconTooltip
                     info={
@@ -1191,13 +1196,15 @@ export default function CreateProfileModal({ ProfileType }) {
               </div>
               {/* Player Data */}
               <div
-                className="md:flex md:flex-col sm:flex sm:flex-col md:mr-[4%] sm:mr-[0%]"
-                style={{
-                  flex: ".34",
-                  // display: "flex",
-                  // flexDirection: "column",
-                  // background: "yellow",
-                }}
+                className="lg:basis-[34%]   md:basis-[32%] md:flex md:flex-col sm:flex sm:basis-[34%] sm:flex-col md:mr-[4%] sm:mr-[0%]"
+                style={
+                  {
+                    // flex: ".34",
+                    // display: "flex",
+                    // flexDirection: "column",
+                    // background: "yellow",
+                  }
+                }
               >
                 <div
                   className="sm:ml-[2%]"
@@ -1206,7 +1213,7 @@ export default function CreateProfileModal({ ProfileType }) {
                   }}
                 >
                   {" "}
-                  <h4 className="secondaryTextColor">
+                  <h4 className="secondaryTextColor lg:text-[1.8em] md:text-[1.5em]">
                     Player Information{" "}
                     <IconTooltip
                       info={
@@ -1362,7 +1369,7 @@ export default function CreateProfileModal({ ProfileType }) {
                   {/* MARKET VALUE RANGE */}
                   <BasicSelect
                     label="Market Value ($)"
-                    inputStyle={{ width: 300 }}
+                    inputStyle={{ width: 250 }}
                     itemsArray={marketValue$}
                     selectedValue={handleMarketValue}
                     defaultSelect={MarketValue}
@@ -1377,7 +1384,7 @@ export default function CreateProfileModal({ ProfileType }) {
                   {/* SALARY EXPECTATION VALUE RANGE */}
                   <BasicSelect
                     label="Salary Expectation ($ 000) per month"
-                    inputStyle={{ width: 300 }}
+                    inputStyle={{ width: 250 }}
                     itemsArray={salaryExpectation}
                     selectedValue={handleSalaryExpectation}
                     defaultSelect={SalaryExpectationValue}
@@ -1400,16 +1407,18 @@ export default function CreateProfileModal({ ProfileType }) {
               </div>
               {/* Extra Info Data */}
               <div
-                className="md:flex md:flex-col  md:gap-[4.5vh]  sm:flex sm:flex-col sm:gap-[2vh]"
-                style={{
-                  flex: ".33",
-                  // display: "flex",
-                  // gap: "2vh",
-                  // flexDirection: "column",
-                  // background: "green",
-                }}
+                className="lg:basis-[33%]  md:basis-[33%] md:flex md:flex-col  md:gap-[4.5vh]  sm:basis-[33%] sm:flex sm:flex-col sm:gap-[2vh]"
+                style={
+                  {
+                    // flex: ".33",
+                    // display: "flex",
+                    // gap: "2vh",
+                    // flexDirection: "column",
+                    // background: "green",
+                  }
+                }
               >
-                <h4 className="secondaryTextColor">
+                <h4 className="secondaryTextColor lg:text-[1.8em] md:text-[1.5em]">
                   Other Information{" "}
                   <IconTooltip
                     info={
@@ -1427,7 +1436,7 @@ export default function CreateProfileModal({ ProfileType }) {
 
                 <BasicSelect
                   label={"Division"}
-                  inputStyle={{ width: 300 }}
+                  inputStyle={{ width: 250 }}
                   itemsArray={leagueDivisions}
                   selectedValue={handlePlayerDivisionValue}
                   defaultSelect={PlayerDivisionValue}
@@ -1440,7 +1449,7 @@ export default function CreateProfileModal({ ProfileType }) {
                 /> */}
                 <BasicSelect
                   label={"Contract Status"}
-                  inputStyle={{ width: 300 }}
+                  inputStyle={{ width: 250 }}
                   itemsArray={contractStatusArray}
                   selectedValue={handleContractStatusCheckBoxes}
                   defaultSelect={ContractStatusCheckBoxes}

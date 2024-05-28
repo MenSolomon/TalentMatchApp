@@ -25,7 +25,10 @@ const PlayerComparison = () => {
       }
     >
       <div className="md:basis-[10%] sm:basis-[10%]">
-        <h3> PlayerComparison </h3>
+        <h3 className=" lg:text-[2em] tb:text-[1.8em] md:text-[1.7em]">
+          {" "}
+          Player Comparison{" "}
+        </h3>
       </div>
 
       {selectedPlayersToCompare && selectedPlayersToCompare.length <= 0 ? (
@@ -49,7 +52,7 @@ const PlayerComparison = () => {
         // DISPLAY CARDS WITH PLAYERS DETAILS
 
         <div
-          className="md:basis-[90%] md:flex md:justify-center md:gap-[3vw] md:flex-row   sm:basis-[90%] sm:flex sm:justify-center sm:gap-[2vw] sm:flex-col"
+          className="lg:basis-[90%] lg:flex lg:justify-center lg:gap-[3vw] lg:flex-row       md:basis-[90%] md:flex md:justify-center md:gap-[3vw] md:flex-col    sm:basis-[90%] sm:flex sm:justify-center sm:gap-[2vw] sm:flex-col"
           style={
             {
               // flex: ".9",
