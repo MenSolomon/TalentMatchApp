@@ -443,6 +443,7 @@ const NewsCarousel = ({ NewsArray }) => {
                       padding: ".2vw",
                       background:
                         "linear-gradient(90deg, hsla(280, 81%, 58%, 1) 0%, hsla(279, 81%, 59%, 1) 3%, hsla(276, 79%, 60%, 1) 9%, hsla(274, 79%, 60%, 1) 15%, hsla(269, 76%, 61%, 1) 15%, hsla(271, 77%, 61%, 1) 23%, hsla(259, 72%, 62%, 1) 32%, hsla(246, 68%, 64%, 1) 49%, hsla(226, 67%, 60%, 1) 56%, hsla(194, 96%, 42%, 1) 74%, hsla(196, 80%, 79%, 1) 100%)",
+                      // background: "red",
                     }}
                   >
                     <div
@@ -450,6 +451,7 @@ const NewsCarousel = ({ NewsArray }) => {
                       style={{
                         borderRadius: "1vw",
                         // display: "flex",
+                        // background: "red",
                         gap: ".5vw",
                         // width: "100%",
                         // height: "100%",
@@ -460,7 +462,10 @@ const NewsCarousel = ({ NewsArray }) => {
                       {/* style={{ flex: ".25" }} */}
                       <div className="md:basis-[30%] sm:basis-[50%]">
                         {/* style={{ width: "100%", height: "100%" }} */}
-                        <div className="md:h-[100%] md:w-[100%]   sm:h-[100%] sm:w-[100%]">
+                        <div
+                          // style={{ background: "peru" }}
+                          className="md:h-[100%] md:w-[100%]   sm:h-[100%] sm:w-[100%]"
+                        >
                           <MatchedPlayerCard
                             key={index}
                             PlayerClubImage={

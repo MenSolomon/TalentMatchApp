@@ -273,7 +273,7 @@ const MatchedPlayerCard = ({
         </div>
         {/*Player Name*/}
         <div
-          className="tb:text-[1.5em] md:text-[1em]"
+          className="tb:text-[.8em] md:text-[.8em] lg:text-[1em]  sm:text-[.8em]"
           style={{
             flex: ".2",
             // background: "blue",

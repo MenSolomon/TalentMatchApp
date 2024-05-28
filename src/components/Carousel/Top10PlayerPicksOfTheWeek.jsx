@@ -164,14 +164,14 @@ const PickedPlayerCard = ({
 
         <div style={{ flex: ".25" }}>
           {" "}
-          <h5 className="tb:text-[1.9em] md:text-[1.4em]">
+          <h5 className="tb:text-[1em] md:text-[1em]  lg:text-[.9em]">
             {" "}
             {firstname} {surname}{" "}
           </h5>
           <BasicControlledRating />
         </div>
         <div
-          className="tb:text-[1.3em] md:text-[1.5em] lg:text-[1.1em] "
+          className="tb:text-[1em] md:text-[1em] lg:text-[.95em] "
           style={{ flex: ".5" }}
         >
           {" "}
@@ -180,7 +180,7 @@ const PickedPlayerCard = ({
         </div>
 
         <div
-          className="tb:text-[1.5em] md:text-[1.2em] lg:text-[1em]"
+          className="tb:text-[1em] md:text-[1em] lg:text-[.9em]"
           style={{ flex: ".25" }}
         >
           {" "}

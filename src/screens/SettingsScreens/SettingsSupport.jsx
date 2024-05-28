@@ -24,7 +24,7 @@ function SettingsSupport() {
     >
       {/* Support Header */}
       <div style={{ flex: "0.01" }}>
-        <h4 className="lg:text-[2.5em] md:text-[2.7em] tb:text-[2.2em]">
+        <h4 className="lg:text-[1em] md:text-[1em] tb:text-[1em]">
           Support{" "}
         </h4>
       </div>
@@ -42,7 +42,7 @@ function SettingsSupport() {
         >
           <div style={{ flex: ".6" }}>
             {/* Helpline */}
-            <h4 className="lg:text-[2.5em] md:text-[2.7em] tb:text-[2.2em]">
+            <h4 className="lg:text-[1em] md:text-[1em] tb:text-[1em]">
               How can we help you ?
             </h4>
             <ConfirmDetailTextField
@@ -54,7 +54,7 @@ function SettingsSupport() {
             className="md:flex md:flex-col sm:flex sm:flex-col"
             style={{ flex: ".4" }}
           >
-            <b className="lg:text-[1.2em] md:text-[1.7em] tb:text-[1.2em]">
+            <b className="lg:text-[1em] md:text-[1em] tb:text-[1em]">
               Contact Support
             </b>
             <small>24/7 help from our support staff</small>

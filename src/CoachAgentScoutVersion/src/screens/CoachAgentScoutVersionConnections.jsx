@@ -367,12 +367,12 @@ const CoachAgentScoutVersionConnetions = () => {
           // style={{ background: "yellow" }}
         >
           <h5
-            className="tb:text-[1.5em] md:text-[1.5em] lg:text-[1.2em] sm:text-[1.2em]"
+            className="tb:text-[1em] md:text-[1em] lg:text-[1em] sm:text-[1em]"
             style={{ fontWeight: "bolder", margin: "0" }}
           >
             Connections
           </h5>
-          <h6 className="tb:text-[1.5em] md:text-[1.5em]">Filter</h6>
+          <h6 className="tb:text-[1em] md:text-[1em]">Filter</h6>
           {/* <span style={{ fontSize: ".8em" }}>
             102Messages <Circle sx={{ width: 7 }} /> 40 unread
           </span> */}
@@ -489,7 +489,7 @@ const CoachAgentScoutVersionConnetions = () => {
       {/* USER ADDED CONNECTIONS */}
       <div
         // cardBackground
-        className=" md:flex md:flex-col md:pl-[1.5vw] md:basis-[40%] md:flex-shrink-0  sm:basis-[80%]      sm:flex sm:flex-shrink-0 sm:flex-col sm:pl-[0vw]  tb:text-[1.5em] md:text-[1.3em]"
+        className=" md:flex md:flex-col md:pl-[1.5vw] md:basis-[40%] md:flex-shrink-0  sm:basis-[80%]      sm:flex sm:flex-shrink-0 sm:flex-col sm:pl-[0vw] lg:text-[1em]  tb:text-[1em] md:text-[1em]"
         style={{
           // flex: ".65",
           // background: "green",

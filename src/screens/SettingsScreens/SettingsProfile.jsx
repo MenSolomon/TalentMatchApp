@@ -217,7 +217,7 @@ function SettingsProfile() {
     >
       {/* Header Column */}
       <div style={{ flex: "0.01" }}>
-        <h5 className="lg:text-[2.5em] md:text-[2.7em] tb:text-[2.2em]">
+        <h5 className="lg:text-[1em] md:text-[1em] tb:text-[1em]">
           My Profile Settings
         </h5>
       </div>
@@ -260,8 +260,8 @@ function SettingsProfile() {
               <Avatar
                 src={imageUrl}
                 style={{
-                  width: browserWidth >= 1024 ? "5.7vw" : "17vw",
-                  height: browserWidth >= 1024 ? "11.5vh" : "10vh",
+                  width: browserWidth >= 1024 ? "5.5vw" : "17vw",
+                  height: browserWidth >= 1024 ? "10.5vh" : "10vh",
                 }}
 
                 // className="md:w-[20%] md:h-[80%] sm:w-[15%"
@@ -304,7 +304,7 @@ function SettingsProfile() {
               }}
             >
               <div
-                className="lg:text-[1.5em] md:text-[1.4em] tb:text-[1.2em]"
+                className="lg:text-[1em] md:text-[1em] tb:text-[1em]"
                 style={{ display: "flex", flexDirection: "column-reverse" }}
               >
                 <TextField
@@ -331,7 +331,7 @@ function SettingsProfile() {
               }}
             >
               <div
-                className="lg:text-[1.5em] md:text-[1.4em] tb:text-[1.2em]"
+                className="lg:text-[1em] md:text-[1em] tb:text-[1em]"
                 style={{ display: "flex", flexDirection: "column-reverse" }}
               >
                 <TextField
@@ -373,7 +373,7 @@ function SettingsProfile() {
         >
           {/* select saved profile with filter */}
           <div style={{ flex: "0.6" }}>
-            <small className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]">
+            <small className="lg:text-[1em] md:text-[1em] tb:text-[1em]">
               {" "}
               change home carousel filter here* (optional)
             </small>
@@ -388,7 +388,7 @@ function SettingsProfile() {
 
           <div style={{ flex: "0.4" }}>
             <div className="md:flex md:flex-col   sm:flex sm:flex-col">
-              <small className="lg:text-[1.2em] md:text-[1.4em] tb:text-[1.2em]">
+              <small className="lg:text-[1em] md:text-[1em] tb:text-[1em]">
                 Delete your account and all of your source data. <br /> This is
                 irreversible.
               </small>

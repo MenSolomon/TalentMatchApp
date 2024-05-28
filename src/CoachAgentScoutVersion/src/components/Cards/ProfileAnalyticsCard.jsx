@@ -19,12 +19,12 @@ const ProfileAnalyticsCard = () => {
       <div style={{ flex: ".2", borderBottom: "1px solid grey" }}>
         <h5
           style={{ margin: 0 }}
-          className="tb:text-[1.9em] md:text-[1.4em] lg:text-[1.6em] sm:text-[1.3em]"
+          className="tb:text-[1em] md:text-[1em] lg:text-[1em] sm:text-[1em]"
         >
           {" "}
           Realtime{" "}
         </h5>
-        <span className="tb:text-[1.4em] md:text-[1.4em] lg:text-[1.3em] sm:text-[1.1em]">
+        <span className="tb:text-[1em] md:text-[1em] lg:text-[1em] sm:text-[1em]">
           {" "}
           <Circle sx={{ width: 10 }} /> Live update{" "}
         </span>
@@ -38,11 +38,11 @@ const ProfileAnalyticsCard = () => {
           paddingTop: "1vh",
         }}
       >
-        <h4 className="tb:text-[1.4em] md:text-[1.4em] lg:text-[1.3em] sm:text-[1.1em]">
+        <h4 className="tb:text-[1em] md:text-[1em] lg:text-[1em] sm:text-[1em]">
           {" "}
           0{" "}
         </h4>
-        <h6 className="tb:text-[1.4em] md:text-[1.4em] lg:text-[1.3em] sm:text-[1.1em]">
+        <h6 className="tb:text-[1em] md:text-[1em] lg:text-[1em] sm:text-[1em]">
           Total contacts matched
         </h6>
         <Button style={{ fontSize: 16 }}> View all contacts </Button>
@@ -56,11 +56,11 @@ const ProfileAnalyticsCard = () => {
           paddingTop: "1vh",
         }}
       >
-        <h4 className="tb:text-[1.4em] md:text-[1.4em] lg:text-[1.3em] sm:text-[1.1em]">
+        <h4 className="tb:text-[1em] md:text-[1em] lg:text-[1em] sm:text-[1em]">
           {" "}
           0{" "}
         </h4>
-        <h6 className="tb:text-[1.4em] md:text-[1.4em] lg:text-[1.1em] sm:text-[1.1em]">
+        <h6 className="tb:text-[1em] md:text-[1em] lg:text-[1em] sm:text-[1em]">
           Profile view <Circle sx={{ width: 3 }} /> Last 48 hours{" "}
         </h6>
       </div>

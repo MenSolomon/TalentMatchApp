@@ -75,7 +75,7 @@ function SettingsBilling() {
     >
       {/* Header Column */}
       <div style={{ flex: "0.01" }}>
-        <h5 className="lg:text-[2.5em] md:text-[2.7em] tb:text-[2.2em]">
+        <h5 className="lg:text-[1em] md:text-[1em] tb:text-[1em]">
           Billing
         </h5>
       </div>
@@ -148,10 +148,10 @@ function SettingsBilling() {
         >
           <div style={{ flex: ".7" }}>
             <div style={{ padding: "10px 20px" }}>
-              <h4 className="lg:text-[1.5em] md:text-[1.4em] tb:text-[1.2em]">
+              <h4 className="lg:text-[1em] md:text-[1em] tb:text-[1em]">
                 Subscription
               </h4>
-              <small className="lg:text-[1.1em] md:text-[1.4em] tb:text-[1.2em]">
+              <small className="lg:text-[1em] md:text-[1em] tb:text-[1em]">
                 Modify your subscription <br /> Cancel or renew
               </small>
             </div>

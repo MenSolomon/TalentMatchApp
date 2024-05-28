@@ -285,7 +285,7 @@ const HomePage = () => {
           <WelcomeMessageModal />
 
           <h6
-            className="tb:text-[1.5em] md:text-[1.2em]"
+            className="tb:text-[1em] md:text-[1em] lg:text-[1em]"
             style={{ float: "left", fontWeight: "800" }}
           >
             Flicks for you

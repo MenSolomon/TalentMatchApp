@@ -104,7 +104,7 @@ function PlayerComparisonAccordionDetails({
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography style={{ fontWeight: "bold", fontSize: 18 }}>
+          <Typography className="sm:text-[.5em] lg:text-[.8em] mdsm:text-[.8em] tb:text-[.8em]" style={{ fontWeight: "bold" }}>
             {title}
           </Typography>
         </AccordionSummary>
@@ -150,8 +150,8 @@ function PlayerComparisonOverviewList({ names, numbers }) {
         alignItems: "center",
       }}
     >
-      <div className="tb:text-[1.7em] md:text-[1.3em]">{names}</div>
-      <div className="tb:text-[1.7em] md:text-[1.3em]">{numbers}</div>
+      <div className="tb:text-[1em] md:text-[1em] sm:text-[.8em] lg:text-[1em]">{names}</div>
+      <div className="tb:text-[1em] md:text-[1em] sm:text-[.8em] lg:text-[1em]">{numbers}</div>
     </div>
   );
 }
