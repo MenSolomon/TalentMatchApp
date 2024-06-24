@@ -51,7 +51,7 @@ export const productDetails = [
     details: [],
   },
   {
-    id: "prod_PaU961QtG9oT80",
+    id: "prod_Q0dsExeNenv8Bl",
     name: "Agent Starter",
     role: "Agent",
     details: [],
@@ -106,7 +106,6 @@ export default function ProductDetails() {
   );
 }
 
-
 // exports.processBoostPointsPayment = functions.firestore
 //     .document("users_db/{userId}/payments/{paymentId}")
 //     .onWrite(async (change, context) => {
@@ -142,77 +141,76 @@ export default function ProductDetails() {
 //       });
 //     });
 
+// try {
+//   const q = query(
+//     collection(db, `users_db/${accountId}/payments`)
+//   );
+//   const querySnapshot = await getDocs(q);
 
-                      // try {
-                      //   const q = query(
-                      //     collection(db, `users_db/${accountId}/payments`)
-                      //   );
-                      //   const querySnapshot = await getDocs(q);
+//   const filteredItems = [];
 
-                      //   const filteredItems = [];
+//   // Filter documents by status and price type
+//   for (const doc of querySnapshot.docs) {
+//     const payment = doc.data();
+//     if (
+//       payment.items &&
+//       payment.items.length > 0 &&
+//       payment.items[0].price
+//     ) {
+//       const type = payment.items[0].price.type;
+//       if (
+//         payment.status === "succeeded" &&
+//         type === "one_time"
+//       ) {
+//         filteredItems.push(payment.items);
+//       }
+//       // Use type value as needed
+//     }
+//   }
+//   console.log("filteredItems", filteredItems);
 
-                      //   // Filter documents by status and price type
-                      //   for (const doc of querySnapshot.docs) {
-                      //     const payment = doc.data();
-                      //     if (
-                      //       payment.items &&
-                      //       payment.items.length > 0 &&
-                      //       payment.items[0].price
-                      //     ) {
-                      //       const type = payment.items[0].price.type;
-                      //       if (
-                      //         payment.status === "succeeded" &&
-                      //         type === "one_time"
-                      //       ) {
-                      //         filteredItems.push(payment.items);
-                      //       }
-                      //       // Use type value as needed
-                      //     }
-                      //   }
-                      //   console.log("filteredItems", filteredItems);
+//   const filtered = [];
 
-                      //   const filtered = [];
+//   for (const itemsArray of filteredItems) {
+//     // Assuming itemsArray is an array containing objects like the one you provided
+//     for (const item of itemsArray) {
+//       filtered.push(item);
+//     }
+//   }
 
-                      //   for (const itemsArray of filteredItems) {
-                      //     // Assuming itemsArray is an array containing objects like the one you provided
-                      //     for (const item of itemsArray) {
-                      //       filtered.push(item);
-                      //     }
-                      //   }
+//   console.log("filtered", filtered);
 
-                      //   console.log("filtered", filtered);
+//   // Find item with latest created timestamp
+//   const latestItem = filtered.reduce((prev, current) => {
+//     // Check if prev is null or if current has a higher created timestamp
+//     if (
+//       !prev ||
+//       current.price.created > prev.price.created
+//     ) {
+//       return current;
+//     } else {
+//       return prev;
+//     }
+//   }, null);
 
-                      //   // Find item with latest created timestamp
-                      //   const latestItem = filtered.reduce((prev, current) => {
-                      //     // Check if prev is null or if current has a higher created timestamp
-                      //     if (
-                      //       !prev ||
-                      //       current.price.created > prev.price.created
-                      //     ) {
-                      //       return current;
-                      //     } else {
-                      //       return prev;
-                      //     }
-                      //   }, null);
+//   console.log("latestItem", latestItem);
 
-                      //   console.log("latestItem", latestItem);
+//   // Check if the latest item's purchase time exists in the boostPurchaseTime collection
+//   const boostPurchaseTimeRef = collection(
+//     db,
+//     `users_db/${accountId}/boostPurchaseTime`
+//   );
+//   const boostPurchaseTimeQuery = query(
+//     boostPurchaseTimeRef,
+//     where("created", "==", latestItem.price.created)
+//   );
+//   const boostPurchaseTimeSnapshot = await getDocs(
+//     boostPurchaseTimeQuery
+//   );
 
-                      //   // Check if the latest item's purchase time exists in the boostPurchaseTime collection
-                      //   const boostPurchaseTimeRef = collection(
-                      //     db,
-                      //     `users_db/${accountId}/boostPurchaseTime`
-                      //   );
-                      //   const boostPurchaseTimeQuery = query(
-                      //     boostPurchaseTimeRef,
-                      //     where("created", "==", latestItem.price.created)
-                      //   );
-                      //   const boostPurchaseTimeSnapshot = await getDocs(
-                      //     boostPurchaseTimeQuery
-                      //   );
-
-                      //   if (!isEmpty(boostPurchaseTimeSnapshot.docs)) {
-                      //     status = null;
-                      //   }
-                      // } catch (error) {
-                      //   console.log(error);
-                      // }
+//   if (!isEmpty(boostPurchaseTimeSnapshot.docs)) {
+//     status = null;
+//   }
+// } catch (error) {
+//   console.log(error);
+// }

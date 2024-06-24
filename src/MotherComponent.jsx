@@ -460,24 +460,23 @@ const MotherComponent = () => {
   };
   useEffect(() => {
     const ApplyNewBoostPoints = async () => {
+      console.log(`ApplyNewBoostPoints`);
       try {
         // alert("Applying Boost");
-        const currentUser = auth.currentUser;
-        // alert(currentUser.uid);
 
         // All Payments query with includes succeeded and failed transcactions
         const paymentsCollectionQuery = query(
-          collection(db, `users_db/${currentUser.uid}/payments`),
+          collection(db, `users_db/${userLoginObject?.accountId}/payments`),
           where("status", "==", "succeeded")
         );
         const paymentsCollectionSnaphot = await getDocs(
           paymentsCollectionQuery
         );
 
-        //succeededPayments doc with includes id of only succeeded transcactions
+        //succeededPayments doc which includes id of only succeeded transcactions
         const succeededPaymentsDocRef = doc(
           db,
-          `users_db/${currentUser.uid}/succeededPayments`,
+          `users_db/${userLoginObject?.accountId}/succeededPayments`,
           "paymentIds"
         );
 
@@ -486,7 +485,7 @@ const MotherComponent = () => {
           let purchasedBoostPoints;
 
           switch (amount) {
-            case 1600:
+            case 1900:
               purchasedBoostPoints = 1000;
               break;
             case 900:
@@ -500,7 +499,8 @@ const MotherComponent = () => {
               break;
           }
           try {
-            const userRef = doc(db, `users_db/${currentUser.uid}`);
+            const userRef = doc(db, `users_db/${userLoginObject?.accountId}`);
+            console.log("Points: ", purchasedBoostPoints);
             await updateDoc(userRef, {
               boostPoints: increment(purchasedBoostPoints),
             });
@@ -542,6 +542,7 @@ const MotherComponent = () => {
             const boostPointsPayments = [];
             for (const doc of paymentsCollectionSnaphot.docs) {
               const payment = doc.data();
+              // console.log(`payment.items, ${doc.data()}`);
               if (
                 payment.items &&
                 payment.items.length > 0 &&
@@ -553,7 +554,7 @@ const MotherComponent = () => {
                 }
               }
             }
-
+            console.log(`boostPointsPayments`, boostPointsPayments);
             const boostPointsPaymentsDestructured = [];
 
             for (const itemsArray of boostPointsPayments) {
@@ -562,8 +563,11 @@ const MotherComponent = () => {
                 boostPointsPaymentsDestructured.push(item);
               }
             }
+            console.log(
+              "boostPointsPaymentsDestructured",
+              boostPointsPaymentsDestructured
+            );
 
-            // });
             // Check if any of the boostPointsPaymentsDestructured ids are in succeededPaymentsDocResult as a Promise
             const latestPaymentPromise = new Promise((resolve) => {
               const latestPayment = [];
@@ -605,7 +609,7 @@ const MotherComponent = () => {
           console.log(error);
         }
       } catch (error) {
-        console.log("ApplyNewBosstPoints", error);
+        console.log("ApplyNewBoostPoints", error);
       }
     };
     ApplyNewBoostPoints();
@@ -628,8 +632,7 @@ const MotherComponent = () => {
         // background: "red",
         color: primaryTextColor,
         // zIndex: "-3",
-      }}
-    >
+      }}>
       {/* NO SUBSCRIPTION ALERT */}
       {isSubscriptionActive ? null : (
         <Alert
@@ -647,12 +650,10 @@ const MotherComponent = () => {
               variant="contained"
               color="success"
               size="small"
-              onClick={() => navigate("/changeSubscription")}
-            >
+              onClick={() => navigate("/changeSubscription")}>
               Get One
             </Button>
-          }
-        >
+          }>
           No or Inactive Subscrtiption
         </Alert>
       )}
@@ -667,8 +668,7 @@ const MotherComponent = () => {
           width: "100%",
           top: 0,
           zIndex: "1100",
-        }}
-      >
+        }}>
         {/* // Logo Area */}
 
         <div
@@ -677,8 +677,7 @@ const MotherComponent = () => {
             paddingTop: "1%",
             display: "grid",
             placeContent: "center",
-          }}
-        >
+          }}>
           <div className="sm:block md:hidden">
             <SmallScreenMenuDrawer />{" "}
           </div>
@@ -697,8 +696,7 @@ const MotherComponent = () => {
             // paddingLeft: "4vw",
             // background: "red",
             position: "relative",
-          }}
-        >
+          }}>
           <Marquee
             // className="sm:hidden md:block"
 
@@ -710,8 +708,7 @@ const MotherComponent = () => {
               width: "100%",
               position: "absolute",
               display: screenWidth < 1024 ? "none" : "flex",
-            }}
-          >
+            }}>
             {clubsInDatabase.map((data, index) => {
               const { imageDataURL, name } = data;
               return (
@@ -739,8 +736,7 @@ const MotherComponent = () => {
             paddingTop: "1%",
             // paddingLeft: "1.2vw",
             display: "flex",
-          }}
-        >
+          }}>
           {/* sx={{ , marginLeft: "1vw", borderBottom: "none" }} */}
 
           <UploadPlayer
@@ -758,8 +754,7 @@ const MotherComponent = () => {
               {
                 // marginTop: "1.8vh",
               }
-            }
-          >
+            }>
             <NotificationsMenu />
           </div>
           {/* </IconButton> */}
@@ -779,8 +774,7 @@ const MotherComponent = () => {
           // display: "flex",
           // background: "green",
           // overflowY: "visible",
-        }}
-      >
+        }}>
         {/* className="md:basis-[18%] md:flex-shrink-0  lg:basis-[18%] lg:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:hidden sm:hidden lg:block" */}
 
         {/* // NAV ARAEA */}
@@ -794,8 +788,7 @@ const MotherComponent = () => {
               // paddingTop: "5vh",
               // background: "yellow",
             }
-          }
-        >
+          }>
           {/* // USE A MAP FOR THIS */}
           {/* // NavBAR FIRST HALF */}
           <div style={{ flex: ".65", overflowY: "scroll", maxHeight: "45vh" }}>
@@ -858,8 +851,7 @@ const MotherComponent = () => {
                             .catch((error) => {
                               console.log("error:", error);
                             });
-                        }}
-                      >
+                        }}>
                         <NavBarButton
                           ButtonName={name}
                           ButtonImage={icon}
@@ -895,8 +887,7 @@ const MotherComponent = () => {
             padding: "2vh 1.5vw",
 
             // background: "blue",
-          }}
-        >
+          }}>
           <Outlet />
         </div>
       </div>
