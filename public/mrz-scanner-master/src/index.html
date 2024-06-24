@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
 
     <!-- build:js -->
-     <script src="js/mrz-worker.bundle-min-wrapped.js"></script>
-     <script src="js/demo.bundle-min.js"></script>
+    <script src="js/mrz-worker.bundle-min-wrapped.js"></script>
+    <script src="js/demo.bundle-min.js"></script>
     <!-- endbuild -->
     <style>
-
-      html, body {
+      html,
+      body {
         padding: 0;
         margin: 0;
       }
@@ -53,9 +53,23 @@
         left: 0;
 
         /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+100&0+0,0.32+100 */
-        background: -moz-radial-gradient(center, ellipse cover, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 100%); /* FF3.6-15 */
-        background: -webkit-radial-gradient(center, ellipse cover, rgba(0,0,0,0) 0%,rgba(0,0,0,0.25) 100%); /* Chrome10-25,Safari5.1-6 */
-        background: radial-gradient(ellipse at center, rgba(0,0,0,0) 0%,rgba(0,0,0,0.25) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        background: -moz-radial-gradient(
+          center,
+          ellipse cover,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.25) 100%
+        ); /* FF3.6-15 */
+        background: -webkit-radial-gradient(
+          center,
+          ellipse cover,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.25) 100%
+        ); /* Chrome10-25,Safari5.1-6 */
+        background: radial-gradient(
+          ellipse at center,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.25) 100%
+        ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#52000000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
         display: flex;
         align-items: center;
@@ -72,9 +86,8 @@
         width: 40%;
         border: 2px solid black;
         background: white;
-        box-shadow: 0.5em 0.5em 0.5em rgba(0,0,0,0.25);
+        box-shadow: 0.5em 0.5em 0.5em rgba(0, 0, 0, 0.25);
         border-radius: 0.2em;
-
       }
 
       progress {
@@ -86,7 +99,8 @@
         padding: 5px;
       }
 
-      div.wrapper, div.wrapper > div {
+      div.wrapper,
+      div.wrapper > div {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -96,10 +110,9 @@
       #parsed .error {
         padding: 0px 1em;
         max-width: 60%;
-
       }
 
-      div#detected{
+      div#detected {
         margin-bottom: 1em;
         flex-direction: column-reverse;
       }
@@ -109,7 +122,7 @@
         margin: 5px;
       }
 
-      canvas[title=crop] {
+      canvas[title="crop"] {
         max-width: 100%;
         margin: 0px 5px;
       }
@@ -119,14 +132,17 @@
 
       @media screen and (orientation: portrait) {
       }
-
-
     </style>
   </head>
   <body>
     <div class="wrapper">
       <div class="input">
-        <input type="file" id="photo" name="photo" accept="image/png, image/jpeg"/>
+        <input
+          type="file"
+          id="photo"
+          name="photo"
+          accept="image/png, image/jpeg"
+        />
       </div>
       <!--div class="image">
         <img id="image"></img>

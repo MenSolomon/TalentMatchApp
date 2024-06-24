@@ -158,13 +158,18 @@ const MarketValueGraph = ({ marketValueDates, MarketValuePrices }) => {
 
   return (
     <div
-      style={{ marginTop: "1vh", paddingLeft: ".6vw", paddingRight: ".6vw" }}
+      style={{
+        marginTop: "1vh",
+        paddingLeft: ".6vw",
+        paddingRight: ".6vw",
+        height: "30vh",
+      }}
     >
       {/* <h6 style={{ fontWeight: "bolder" }}>Last 5 matches G/A ratio</h6> */}
       <Line
         data={data}
         options={options}
-        className="md:w-[20%] md:h-[15vh] sm:w-[80%] sm:h-[25vh]"
+        // className="md:w-[20%] md:h-[15vh] sm:w-[80%] sm:h-[25vh]"
         style={{ marginTop: "0vh" }}
         // style={{ background: "transparent" ,padding:"1px"}}
       ></Line>

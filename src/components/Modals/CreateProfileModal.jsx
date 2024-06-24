@@ -1256,7 +1256,7 @@ export default function CreateProfileModal({ ProfileType }) {
                   {PlayerPositionAutoCompleteValue === ""
                     ? ""
                     : //Goalkeeper
-                    PlayerPositionAutoCompleteValue === "Goalkeeper (GK)"
+                    PlayerPositionAutoCompleteValue === "Goalkeeper"
                     ? GKTextFieldArray.map((data, index) => {
                         return (
                           <RangeSlider
@@ -1272,11 +1272,11 @@ export default function CreateProfileModal({ ProfileType }) {
                         );
                       })
                     : // DEFEMDERS
-                    PlayerPositionAutoCompleteValue === "Defender (D)" ||
-                      PlayerPositionAutoCompleteValue === "Center Back (CB)" ||
-                      PlayerPositionAutoCompleteValue === "Right Back (RB)" ||
-                      PlayerPositionAutoCompleteValue === "Left Back (LB)" ||
-                      PlayerPositionAutoCompleteValue === "Wing back (WB)"
+                    PlayerPositionAutoCompleteValue === "Defender" ||
+                      PlayerPositionAutoCompleteValue === "Center Back" ||
+                      PlayerPositionAutoCompleteValue === "Right Back" ||
+                      PlayerPositionAutoCompleteValue === "Left Back" ||
+                      PlayerPositionAutoCompleteValue === "Wing back"
                     ? DefendersTextFieldArray.map((data, index) => {
                         return (
                           <RangeSlider
@@ -1292,13 +1292,12 @@ export default function CreateProfileModal({ ProfileType }) {
                         );
                       })
                     : // MIDFIELDERS
-                    PlayerPositionAutoCompleteValue === "Midfielder (MF)" ||
+                    PlayerPositionAutoCompleteValue === "Midfielder" ||
                       PlayerPositionAutoCompleteValue ===
-                        "Central Midfielder (CM)" ||
+                        "Central Midfielder" ||
                       PlayerPositionAutoCompleteValue ===
-                        "Defensive Midfielder (DM)" ||
-                      PlayerPositionAutoCompleteValue ===
-                        "Attacking Midfielder (CM)"
+                        "Defensive Midfielder" ||
+                      PlayerPositionAutoCompleteValue === "Attacking Midfielder"
                     ? MidfieldersTextFieldArray.map((data, index) => {
                         return (
                           <RangeSlider
@@ -1313,12 +1312,12 @@ export default function CreateProfileModal({ ProfileType }) {
                           />
                         );
                       }) // Attackers
-                    : // PlayerPositionAutoCompleteValue === "Forward (F)" ||
-                    PlayerPositionAutoCompleteValue === "Striker (ST)" ||
+                    : PlayerPositionAutoCompleteValue === "Forward" ||
+                      PlayerPositionAutoCompleteValue === "Striker" ||
                       //  ||
                       // PlayerPositionAutoCompleteValue ===
                       //   "Center Forward (CF)"
-                      PlayerPositionAutoCompleteValue === "Winger (W)"
+                      PlayerPositionAutoCompleteValue === "Winger"
                     ? AttackerTextFieldArray.map((data, index) => {
                         return (
                           <RangeSlider

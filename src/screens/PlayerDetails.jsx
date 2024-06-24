@@ -67,7 +67,7 @@ const PlayerDetails = () => {
   const [surName, setSurName] = useState("");
 
   const clubObject = allClubsInDatabase.find((data) => {
-    return data.clubName === selectedPlayerArray[0]?.clubName;
+    return data.wyId === selectedPlayerArray[0]?.currentTeamId;
   });
 
   const countries = [
@@ -392,7 +392,7 @@ const PlayerDetails = () => {
     setSelectedPlayerArray(fileteredPlayer);
     dispatch(setPlayerSelectedToView(fileteredPlayer[0]));
     console.log(selectedPlayerArray, fileteredPlayer);
-  }, [playerId, allPlayersArray]);
+  }, [playerId]);
 
   const hTagStyle = {
     marginBottom: 0,
@@ -517,11 +517,11 @@ const PlayerDetails = () => {
           {" "}
           <ClubandNationalTeamDisplayCard
             hTagStyle={hTagStyle}
-            clubImage={clubObject === undefined ? "" : clubObject?.clubImage}
+            clubImage={clubObject ? clubObject?.imageDataURL : ""}
             Nationality={selectedPlayerArray[0]?.Nationality}
             // countryCode={selectedPlayerArray[0]?.CountryCode}
             countryCode={PlayerCountryCode}
-            ClubName={selectedPlayerArray[0]?.clubName}
+            ClubName={clubObject ? clubObject?.name : ""}
             PreferredFoot={selectedPlayerArray[0]?.preferredFoot}
             Height={selectedPlayerArray[0]?.height}
           />
@@ -551,6 +551,7 @@ const PlayerDetails = () => {
             facebook={selectedPlayerArray[0]?.Social_media[0]?.Facebook}
             playerName={`${selectedPlayerArray[0]?.firstName} ${selectedPlayerArray[0]?.surName}`}
             PlayerId={selectedPlayerArray[0]?.Account_creator_id}
+            isPlayerFromApi={selectedPlayerArray[0]?.isApiData}
           />
         </div>
       </div>
@@ -559,7 +560,7 @@ const PlayerDetails = () => {
           Nationality={selectedPlayerArray[0]?.Nationality}
           PlaceOfBirth={selectedPlayerArray[0]?.Nationality}
           DateOfBirth={selectedPlayerArray[0]?.date_of_birth}
-          clubName={selectedPlayerArray[0]?.clubName}
+          clubName={selectedPlayerArray[0]?.currentTeamId}
           contractStartDate={selectedPlayerArray[0]?.contractStartDate}
           contactEndDate={selectedPlayerArray[0]?.contractEndDate}
           Position={selectedPlayerArray[0]?.position}

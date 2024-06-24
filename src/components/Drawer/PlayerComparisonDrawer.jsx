@@ -35,7 +35,7 @@ export default function PlayerComparisonDrawer() {
         // display: "flex",
         // flexDirection: "column",
         // background: "red",
-        zIndex: "10000",
+        zIndex: "1300",
       }}
       role="presentation"
       //   onClick={toggleDrawer(anchor, false)}

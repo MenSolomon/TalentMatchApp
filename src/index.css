@@ -22,6 +22,10 @@
   margin: 0;
 } */
 
+.MsoNormal {
+  color: white !important;
+}
+
 :root {
   --gradient: linear-gradient(
     90deg,

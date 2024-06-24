@@ -60,7 +60,8 @@ export default function SmallScreenMenuDrawer() {
         padding: "3vh 1vw",
         display: "flex",
         flexDirection: "column",
-        zIndex: "10000",
+        zIndex: "1300",
+        background: "red",
       }}
       role="presentation"
       //   onClick={toggleDrawer(anchor, false)}
@@ -85,7 +86,7 @@ export default function SmallScreenMenuDrawer() {
           // className="sm:hidden md:block"
           style={{ width: "110px", height: "60px" }}
           src={logoImage}
-        />
+        />{" "}
       </div>
 
       {/* //Search and Filter Sections */}

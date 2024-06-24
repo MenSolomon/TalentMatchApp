@@ -54,7 +54,8 @@ export default function SmallScreenCoachAgentClubMenuDrawer() {
         padding: "3vh 1vw",
         display: "flex",
         flexDirection: "column",
-        zIndex: "10000",
+        zIndex: "1300",
+        background: "red",
       }}
       role="presentation"
       //   onClick={toggleDrawer(anchor, false)}

@@ -32,7 +32,7 @@ const persistConfig = {
     // "FormStepper",
     // "TempDatabase",
     // "UserData",
-    // // "UserLoginData",
+
     // "SavedProfiles",
     // "OtherComponentStates",
     // "Database",
@@ -48,9 +48,9 @@ const persistConfig = {
     "OtherComponentStates",
     "Videos",
     "TempDatabase",
-    "clubsInTalentMeetDatabase",
+    // "clubsInTalentMeetDatabase",
   ],
-  // whitelist:
+  whitelist: ["UserLoginData", "clubsInTalentMeetDatabase"],
 };
 
 const PlayersInAgencySlicePersistConfig = {
@@ -84,12 +84,15 @@ const UserLoginDataSlicePersistConfig = {
   key: "UserLoginData",
   version: 1,
   storage,
-  blacklist: ["logInStatus", "userDetailsObject", "credentials"],
+  blacklist: [],
   whitelist: [
     "subscriptionFeatures",
     "isSubscriptionActive",
     "selectSubscriptionFeatures",
     "selectBoostPoints",
+    "logInStatus",
+    "userDetailsObject",
+    "credentials",
   ],
 };
 

@@ -41,6 +41,7 @@ import {
   selectUsersDatabase,
 } from "../statemanager/slices/DatabaseSlice";
 import {
+  selectSoccerPositionsFullObject,
   setCloseCircularLoadBackdrop,
   setOpenCircularLoadBackdrop,
   setWarningAlertModalCounter,
@@ -53,6 +54,9 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage";
 
 const ConfirmDetails = () => {
   //
+
+  const positionsFullObject = useSelector(selectSoccerPositionsFullObject);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const roleSelected = useSelector(selectRoleSelected);
@@ -363,6 +367,12 @@ const ConfirmDetails = () => {
                     // alert("Storing ID IMAGe", url);
                   }
 
+                  const playerPositionObject = positionsFullObject.find(
+                    (position) =>
+                      position?.name?.trim().toLowerCase() ===
+                      userData?.PlayerPosition?.trim().toLowerCase()
+                  );
+
                   await setDoc(doc(db, `players_database`, user.uid), {
                     id: user.uid,
                     Account_creator_id: user.uid,
@@ -376,6 +386,15 @@ const ConfirmDetails = () => {
                     Age: currentAge,
                     boostPoints: 0,
                     isBasic: true,
+                    currentTeamId: null,
+                    currentNationalTeamId: null,
+                    gender: "",
+                    isApiData: false,
+                    isVerified: false,
+                    shortName:
+                      userData?.firstName.slice(0, 1) + "." + userData?.surname,
+                    status: "active",
+                    role: playerPositionObject,
                     position: userData?.PlayerPosition,
                     date_of_birth: userData?.DateOfBirth,
                     jerseyNumber: "",
@@ -398,58 +417,6 @@ const ConfirmDetails = () => {
                     Club_History: [],
                     Statistics: [
                       {
-                        Season: "Overall",
-                        General: {
-                          Games_Played: 0,
-                          Minutes_Played: 0,
-                          Starts: 0,
-                          Subbed_off: 0,
-                        },
-                        Defence: {
-                          Clearance: 0,
-                          Tackles: 0,
-                          Duels: 0,
-                          Aeriel_duels: 0,
-                          Blocks: 0,
-                          Interceptions: 0,
-                        },
-                        Attack: {
-                          Total_shots: 0,
-                          Shots_on_target: 0,
-                          Goals_Scored: 0,
-                          Conversion_rate: 0,
-                          Minutes_per_goal: 0,
-                          Header_goals: 0,
-                          Left_goals: 0,
-                          Right_goals: 0,
-                          Other_goals: 0,
-                          Goals_outside_the_box: 0,
-                          Goals_inside_the_box: 0,
-                          Goals_from_freekicks: 0,
-                        },
-                        Discipline: {
-                          Fouls_conceeded: 0,
-                          Fouls_won: 0,
-                          Yellow_cards: 0,
-                          Red_cards: 0,
-                        },
-                        Distribution: {
-                          Assists: 0,
-                          Pass_success_rate: 0,
-                          Long_passes_rate: 0,
-                          Opponent_half_pass_accuracy: 0,
-                          Own_half_pass_accuracy: 0,
-                          Pass_direction_forward_percent: 0,
-                          Pass_direction_backward_percent: 0,
-                          Pass_direction_left_percent: 0,
-                          Pass_direction_right_percent: 0,
-                          Total_passes: 0,
-                          Successful_passes: 0,
-                          Key_passes: 0,
-                          Total_passes_per_90_mins: 0,
-                        },
-                      },
-                      {
                         Season: "23/24",
                         General: {
                           Games_Played: 0,
@@ -469,36 +436,22 @@ const ConfirmDetails = () => {
                           Total_shots: 0,
                           Shots_on_target: 0,
                           Goals_Scored: 0,
-                          Conversion_rate: 0,
-                          Minutes_per_goal: 0,
-                          Header_goals: 0,
-                          Left_goals: 0,
-                          Right_goals: 0,
-                          Other_goals: 0,
-                          Goals_outside_the_box: 0,
-                          Goals_inside_the_box: 0,
-                          Goals_from_freekicks: 0,
+                          Goal_conversion_rate: 0,
                         },
                         Discipline: {
                           Fouls_conceeded: 0,
-                          Fouls_won: 0,
                           Yellow_cards: 0,
                           Red_cards: 0,
                         },
                         Distribution: {
                           Assists: 0,
-                          Pass_success_rate: 0,
-                          Long_passes_rate: 0,
-                          Opponent_half_pass_accuracy: 0,
-                          Own_half_pass_accuracy: 0,
-                          Pass_direction_forward_percent: 0,
-                          Pass_direction_backward_percent: 0,
-                          Pass_direction_left_percent: 0,
-                          Pass_direction_right_percent: 0,
-                          Total_passes: 0,
+                          Received_passes: 0,
+                          Succesful_cross_rate: 0,
+                          Successful_key_passes: 0,
+                          Successful_long_passes_rate: 0,
+                          Successful_pass_rate: 0,
                           Successful_passes: 0,
-                          Key_passes: 0,
-                          Total_passes_per_90_mins: 0,
+                          Total_passes: 0,
                         },
                       },
                       {
@@ -521,36 +474,22 @@ const ConfirmDetails = () => {
                           Total_shots: 0,
                           Shots_on_target: 0,
                           Goals_Scored: 0,
-                          Conversion_rate: 0,
-                          Minutes_per_goal: 0,
-                          Header_goals: 0,
-                          Left_goals: 0,
-                          Right_goals: 0,
-                          Other_goals: 0,
-                          Goals_outside_the_box: 0,
-                          Goals_inside_the_box: 0,
-                          Goals_from_freekicks: 0,
+                          Goal_conversion_rate: 0,
                         },
                         Discipline: {
                           Fouls_conceeded: 0,
-                          Fouls_won: 0,
                           Yellow_cards: 0,
                           Red_cards: 0,
                         },
                         Distribution: {
                           Assists: 0,
-                          Pass_success_rate: 0,
-                          Long_passes_rate: 0,
-                          Opponent_half_pass_accuracy: 0,
-                          Own_half_pass_accuracy: 0,
-                          Pass_direction_forward_percent: 0,
-                          Pass_direction_backward_percent: 0,
-                          Pass_direction_left_percent: 0,
-                          Pass_direction_right_percent: 0,
-                          Total_passes: 0,
+                          Received_passes: 0,
+                          Succesful_cross_rate: 0,
+                          Successful_key_passes: 0,
+                          Successful_long_passes_rate: 0,
+                          Successful_pass_rate: 0,
                           Successful_passes: 0,
-                          Key_passes: 0,
-                          Total_passes_per_90_mins: 0,
+                          Total_passes: 0,
                         },
                       },
                       {
@@ -573,36 +512,22 @@ const ConfirmDetails = () => {
                           Total_shots: 0,
                           Shots_on_target: 0,
                           Goals_Scored: 0,
-                          Conversion_rate: 0,
-                          Minutes_per_goal: 0,
-                          Header_goals: 0,
-                          Left_goals: 0,
-                          Right_goals: 0,
-                          Other_goals: 0,
-                          Goals_outside_the_box: 0,
-                          Goals_inside_the_box: 0,
-                          Goals_from_freekicks: 0,
+                          Goal_conversion_rate: 0,
                         },
                         Discipline: {
                           Fouls_conceeded: 0,
-                          Fouls_won: 0,
                           Yellow_cards: 0,
                           Red_cards: 0,
                         },
                         Distribution: {
                           Assists: 0,
-                          Pass_success_rate: 0,
-                          Long_passes_rate: 0,
-                          Opponent_half_pass_accuracy: 0,
-                          Own_half_pass_accuracy: 0,
-                          Pass_direction_forward_percent: 0,
-                          Pass_direction_backward_percent: 0,
-                          Pass_direction_left_percent: 0,
-                          Pass_direction_right_percent: 0,
-                          Total_passes: 0,
+                          Received_passes: 0,
+                          Succesful_cross_rate: 0,
+                          Successful_key_passes: 0,
+                          Successful_long_passes_rate: 0,
+                          Successful_pass_rate: 0,
                           Successful_passes: 0,
-                          Key_passes: 0,
-                          Total_passes_per_90_mins: 0,
+                          Total_passes: 0,
                         },
                       },
                       {
@@ -625,36 +550,22 @@ const ConfirmDetails = () => {
                           Total_shots: 0,
                           Shots_on_target: 0,
                           Goals_Scored: 0,
-                          Conversion_rate: 0,
-                          Minutes_per_goal: 0,
-                          Header_goals: 0,
-                          Left_goals: 0,
-                          Right_goals: 0,
-                          Other_goals: 0,
-                          Goals_outside_the_box: 0,
-                          Goals_inside_the_box: 0,
-                          Goals_from_freekicks: 0,
+                          Goal_conversion_rate: 0,
                         },
                         Discipline: {
                           Fouls_conceeded: 0,
-                          Fouls_won: 0,
                           Yellow_cards: 0,
                           Red_cards: 0,
                         },
                         Distribution: {
                           Assists: 0,
-                          Pass_success_rate: 0,
-                          Long_passes_rate: 0,
-                          Opponent_half_pass_accuracy: 0,
-                          Own_half_pass_accuracy: 0,
-                          Pass_direction_forward_percent: 0,
-                          Pass_direction_backward_percent: 0,
-                          Pass_direction_left_percent: 0,
-                          Pass_direction_right_percent: 0,
-                          Total_passes: 0,
+                          Received_passes: 0,
+                          Succesful_cross_rate: 0,
+                          Successful_key_passes: 0,
+                          Successful_long_passes_rate: 0,
+                          Successful_pass_rate: 0,
                           Successful_passes: 0,
-                          Key_passes: 0,
-                          Total_passes_per_90_mins: 0,
+                          Total_passes: 0,
                         },
                       },
                       {
@@ -677,36 +588,22 @@ const ConfirmDetails = () => {
                           Total_shots: 0,
                           Shots_on_target: 0,
                           Goals_Scored: 0,
-                          Conversion_rate: 0,
-                          Minutes_per_goal: 0,
-                          Header_goals: 0,
-                          Left_goals: 0,
-                          Right_goals: 0,
-                          Other_goals: 0,
-                          Goals_outside_the_box: 0,
-                          Goals_inside_the_box: 0,
-                          Goals_from_freekicks: 0,
+                          Goal_conversion_rate: 0,
                         },
                         Discipline: {
                           Fouls_conceeded: 0,
-                          Fouls_won: 0,
                           Yellow_cards: 0,
                           Red_cards: 0,
                         },
                         Distribution: {
                           Assists: 0,
-                          Pass_success_rate: 0,
-                          Long_passes_rate: 0,
-                          Opponent_half_pass_accuracy: 0,
-                          Own_half_pass_accuracy: 0,
-                          Pass_direction_forward_percent: 0,
-                          Pass_direction_backward_percent: 0,
-                          Pass_direction_left_percent: 0,
-                          Pass_direction_right_percent: 0,
-                          Total_passes: 0,
+                          Received_passes: 0,
+                          Succesful_cross_rate: 0,
+                          Successful_key_passes: 0,
+                          Successful_long_passes_rate: 0,
+                          Successful_pass_rate: 0,
                           Successful_passes: 0,
-                          Key_passes: 0,
-                          Total_passes_per_90_mins: 0,
+                          Total_passes: 0,
                         },
                       },
                     ],
@@ -854,6 +751,7 @@ const ConfirmDetails = () => {
                 // consitions
                 if (errorCode == "auth/email-already-in-use") {
                   triggerWarningAlertModal("G-Account Exists");
+                  dispatch(setCloseCircularLoadBackdrop());
                 }
               });
 
@@ -863,13 +761,12 @@ const ConfirmDetails = () => {
       }
     } catch (error) {
       console.error("Error fetching document:", error);
-      alert("Error in createing player database");
-
-      dispatch(setCloseCircularLoadBackdrop());
+      // alert("Error in createing player database");
 
       triggerWarningAlertModal(
         "Error creating your account please wait a while and try again"
       );
+      dispatch(setCloseCircularLoadBackdrop());
 
       // Handle the error as needed
     }

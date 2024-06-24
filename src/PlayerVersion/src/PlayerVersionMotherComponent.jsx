@@ -262,7 +262,20 @@ const PlayerVersionMotherComponent = () => {
       )}
       {/*  NO SUBSCRIPTION ALERT END */}
       {/* //=====  NAVBAR ======= \\ */}
-      <div className="md:flex md:basis-[11%]  sm:flex sm:basis-[8%]">
+      <div
+        // className="md:flex md:basis-[11%]  sm:flex sm:basis-[8%]"
+        className={`md:flex md:basis-[11%]  sm:flex sm:basis-[8%]
+          lg:flex lg:basis-[11%] ${
+            screenWidth < 1024 ? "cardBackground" : ""
+          } `}
+        style={{
+          // background: "red",
+          position: "fixed",
+          width: "100%",
+          top: 0,
+          zIndex: "1100",
+        }}
+      >
         {/* // Logo Area */}
 
         <div
@@ -306,11 +319,11 @@ const PlayerVersionMotherComponent = () => {
             {/* I can be a React component, multiple React components, or just some
             text. */}
             {clubsInDatabase.map((data, index) => {
-              const { clubImage, clubName } = data;
+              const { imageDataURL, name } = data;
               return (
-                <Tooltip key={index} title={clubName}>
+                <Tooltip key={index} title={name}>
                   <Avatar
-                    src={clubImage}
+                    src={imageDataURL}
                     sx={{ width: 38, height: 38, marginRight: 1.6 }}
                   />
                 </Tooltip>
@@ -348,7 +361,12 @@ const PlayerVersionMotherComponent = () => {
         </div>
       </div>
       {/* // ======  PAGE CONTENT ===== \\ */}
-      <div className="md:flex md:basis-[89%]  sm:flex sm:basis-[82%] sm:overflow-y-scroll sm:width-[100vw] sm:pb-[10vh] ">
+      <div
+        className="md:flex md:basis-[89%]  sm:flex sm:basis-[82%] sm:overflow-y-scroll sm:width-[100vw] sm:pb-[10vh] "
+        style={{
+          paddingTop: screenWidth < 1024 ? "7vh" : "11vh",
+        }}
+      >
         {/* // NAV ARAEA */}
         <div className="md:basis-[18%] md:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:block sm:hidden">
           {/* // USE A MAP FOR THIS */}

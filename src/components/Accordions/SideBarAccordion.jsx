@@ -67,7 +67,6 @@ export default function SideBarAccordion({
           {categoryOptionsList.map((data, key) => {
             const { label, dateCreated, startIcon, path } = data;
 
-            console.log(dateCreated, "dae");
             return (
               <SideBarNavButtons
                 key={key}

@@ -150,12 +150,6 @@ const HomePage = () => {
   //
   const playersInAgencyArray = useSelector(selectPlayersInAgencyArray);
 
-  console.log(playersInAgencyArray);
-
-  const matchedPlayerArrayDummy = ["1", "2", "3", "1", "1", "1"];
-
-  const navigate = useNavigate();
-
   const top10Carousel = [
     {
       firstName: "Benjamin",
@@ -183,6 +177,7 @@ const HomePage = () => {
         // gridTemplateColumns: "1fr",
         // gridTemplateRows: "14vh 93vh 5vh",
         gridTemplateAreas: "'flicks''PlayerContent''empty' ",
+        // overflowX: "hidden",
       }}
       className="tb:flex tb:flex-col-reverse md:w-[100%] md:h-[100%] md:flex md:flex-col-reverse md:gap-[1vh]  sm:w-[100%] sm:h-[130%] sm:grid sm:grid-cols-1 sm:grid-rows-[14vh,93vh,5vh] sm:gap-[3vh] 
       lg:w-[100%] lg:h-[100%] lg:flex lg:flex-col lg:gap-[0vh]

@@ -6,6 +6,7 @@ import PlayerOverallAttributes from "../../components/Charts/Bars/PlayerOverallA
 import BasicButton from "../../components/Buttons/BasicButton";
 import { selectIsSubscriptionActive } from "../../statemanager/slices/LoginUserDataSlice";
 import { useSelector } from "react-redux";
+import { selectClubsInDatabase } from "../../statemanager/slices/ClubsInDatabaseSlice";
 // import PlayerPositionStatsBarGraphSummary from "../../components/Charts/Bars/PlayerPositionStatsBarGraphSummary";
 
 const PlayerBio = ({
@@ -22,6 +23,14 @@ const PlayerBio = ({
 
   // Get the date portion without the time and "GMT"
   const formattedDate = dateObject.toDateString();
+
+  const allClubsInDatabase = useSelector(selectClubsInDatabase);
+  const clubObject = allClubsInDatabase.find((data) => {
+    return data.wyId === clubName;
+  });
+
+  const ClubLogo = clubObject === undefined ? "" : clubObject?.imageDataURL;
+  const ClubName = clubObject === undefined ? "Free agent" : clubObject?.name;
 
   return (
     <div
@@ -130,7 +139,7 @@ const PlayerBio = ({
                 className="lg:text-[1em] tb:text-[1.3em]"
               >
                 {" "}
-                Currnet Team : {clubName}{" "}
+                Current Team : {ClubName}{" "}
               </div>
 
               <div

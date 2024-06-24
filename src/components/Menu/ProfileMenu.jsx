@@ -31,7 +31,6 @@ export default function ProfileMenu({ style, name }) {
   const dispatch = useDispatch();
   const Navigate = useNavigate();
   const loginUserDetails = useSelector(selectUserDetailsObject);
-  const { firstName, surname } = loginUserDetails;
 
   return (
     <div style={importStyle}>
@@ -59,7 +58,8 @@ export default function ProfileMenu({ style, name }) {
           float: "right",
         }}
         src={loginUserDetails?.profileImage && loginUserDetails?.profileImage}
-        onClick={handleClick}></Avatar>
+        onClick={handleClick}
+      ></Avatar>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
@@ -67,14 +67,16 @@ export default function ProfileMenu({ style, name }) {
         onClose={handleClose}
         MenuListProps={{
           "aria-labelledby": "basic-button",
-        }}>
+        }}
+      >
         <MenuItem
           sx={{ color: "black" }}
           color="secondary"
           onClick={() => {
             handleClose();
             Navigate("/settings");
-          }}>
+          }}
+        >
           Profile
         </MenuItem>
         {/* <MenuItem sx={{ color: "black" }} onClick={handleClose}>
@@ -95,7 +97,8 @@ export default function ProfileMenu({ style, name }) {
             );
             dispatch(setIsSubscriptionActive(true));
             Navigate("/login");
-          }}>
+          }}
+        >
           Logout
         </MenuItem>
       </Menu>

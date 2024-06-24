@@ -7,7 +7,7 @@ function Settings() {
     "Security",
     "Billing",
     "Support",
-    "Terms",
+    "Legal",
   ];
   return (
     <>

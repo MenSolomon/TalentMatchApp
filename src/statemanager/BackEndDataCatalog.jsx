@@ -47,6 +47,7 @@ import SplashScreen from "../screens/SplashScreen";
 import { setInterestedPlayers } from "./slices/InterestedPlayersSlice";
 import { setInterestedConnections } from "./slices/InterestedConnectionSlice";
 import { setPriceID } from "./slices/SignupStepperSlice";
+import { setClubsInDatabase } from "./slices/ClubsInDatabaseSlice";
 
 const BackEndDataCatalog = ({ children }) => {
   // const id = useSelector(selectLogInUserID).id;
@@ -197,6 +198,53 @@ const BackEndDataCatalog = ({ children }) => {
       alldata();
     };
   }, [loginUserObject]);
+
+  // Retrieving all Teeams in the database
+  async function getClubsFromFirestore() {
+    try {
+      const docRef = doc(db, "wyScout", "Teams");
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists) {
+        const clubData = docSnap.data();
+        dispatch(setClubsInDatabase(clubData?.teams)); // Dispatch action to update state
+
+        console.log("club data found in Firestore.", clubData);
+      } else {
+        console.log(" no club data found in Firestore.");
+      }
+    } catch (error) {
+      console.error("Error fetching club data:", error);
+    }
+  }
+
+  useEffect(() => {
+    getClubsFromFirestore();
+  }, []);
+
+  // useEffect(() => {
+  //   // const savedProfileSubCollectionRef = doc(
+  //   //   db,
+  //   //   `users_db/${loginUserObject?.accountId}/SavedProfiles`,
+  //   //   loginUserObject?.accountId
+  //   // );
+
+  //   const playersRef = collection(db, `players_database`);
+
+  //   const q = query(playersRef);
+  //   const alldata = onSnapshot(q, (querySnapshot) => {
+  //     const items = [];
+  //     querySnapshot.forEach((doc) => {
+  //       items.push(doc.data());
+  //     });
+
+  //     dispatch(setPlayersFromApi(items));
+  //     console.log("API PLAYERS", items);
+  //   });
+  //   return () => {
+  //     alldata();
+  //   };
+  // }, [loginUserObject]);
 
   // // Notifications
   // useEffect(() => {

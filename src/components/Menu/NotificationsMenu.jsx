@@ -107,7 +107,12 @@ export default function NotificationsMenu() {
     const alldata = onSnapshot(
       doc(db, "users_db", userLoginDetailsObject?.accountId),
       (querySnapshot) => {
-        dispatch(setUserDetailsObject(querySnapshot.data()));
+        dispatch(
+          setUserDetailsObject({
+            ...querySnapshot.data(),
+            dateCreated: querySnapshot.data().dateCreated.toMillis(),
+          })
+        );
       }
     );
     return () => {

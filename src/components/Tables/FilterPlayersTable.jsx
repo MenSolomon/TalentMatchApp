@@ -19,6 +19,7 @@ import {
   Checkbox,
   CircularProgress,
   FormControlLabel,
+  Pagination,
   Tooltip,
 } from "@mui/material";
 import BasicButton from "../Buttons/BasicButton";
@@ -39,6 +40,8 @@ import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "../../Firebase/Firebase";
 import { useQuery } from "@tanstack/react-query";
 import handleVideoGloballyClick from "../../utilities/VideoPausePlayFunction";
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { selectUserDetailsObject } from "../../statemanager/slices/LoginUserDataSlice";
 
 function createData(
   name,
@@ -105,11 +108,6 @@ function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
 
-  var positionABR = row?.Position.match(/\((.*?)\)/);
-
-  // Check if there are matches and get the value inside parentheses
-  var result = positionABR ? positionABR[1] : null;
-
   const navigate = useNavigate();
 
   // const playerNameWithoutSpaces = row.name.replace(/\s/g, "");
@@ -170,31 +168,31 @@ function Row(props) {
             )}
           </div>
         </TableCell>
-        <TableCell align="right">{row.Age}</TableCell>
-        <TableCell align="right">{row.Foot}</TableCell>
-        <TableCell align="right"> &nbsp; {row.Height}</TableCell>
-        <TableCell />
+        <TableCell align="right">{row?.Age}</TableCell>
+        <TableCell align="right">{row?.Foot}</TableCell>
+        <TableCell align="right"> &nbsp; {row?.Height}</TableCell>
+        {/* <TableCell /> */}
 
         <TableCell align="right">
-          <Tooltip title={row.Nationality}>
+          <Tooltip title={row?.Nationality}>
             <img
               style={{ marginLeft: "1.5vw" }}
-              src={`https://flagcdn.com/${row.Country.toLowerCase()}.svg`}
+              src={`https://flagcdn.com/${row?.Country?.toLowerCase()}.svg`}
               width="30"
               alt=""
             />{" "}
           </Tooltip>
         </TableCell>
         <TableCell align="right">
-          <Tooltip title={row.clubName}>
+          <Tooltip title={row?.clubName}>
             <Avatar
               sx={{ width: 30, height: 30, marginRight: 1 }}
-              src={row.Club}
+              src={row?.Club}
             />{" "}
           </Tooltip>
         </TableCell>
         <TableCell align="right">
-          <Tooltip title={row.Position}> {result} </Tooltip>
+          <Tooltip title={row.Position.name}> {row.Position.name} </Tooltip>
         </TableCell>
         <TableCell align="right">{row.ContractExpiry}</TableCell>
       </TableRow>
@@ -389,40 +387,48 @@ function Row(props) {
                     </TableCell>
                   </TableRow>
                   {/* // Last season currently 23/24 */}
-                  <TableRow>
-                    <TableCell>{row.StatisticsLastSeason.Season}</TableCell>
-                    <TableCell>
-                      {row.StatisticsLastSeason.General.Games_Played}
-                    </TableCell>
 
-                    <TableCell>
-                      {row.StatisticsLastSeason.Attack.Goals_Scored}
-                    </TableCell>
-                    <TableCell align="right">
-                      {row.StatisticsLastSeason.Distribution.Assists}
-                    </TableCell>
-                    <TableCell align="right">
-                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
-                      {row.StatisticsLastSeason.Distribution.Pass_success_rate}
-                    </TableCell>
-                    <TableCell align="right">
-                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
-                      {row.StatisticsLastSeason.Defence.Interceptions}
-                    </TableCell>
-                    <TableCell align="right">
-                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
-                      {row.StatisticsLastSeason.Defence.Tackles}
-                    </TableCell>
-                    <TableCell align="right">
-                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
-                      {row.StatisticsLastSeason.Discipline.Yellow_cards}
-                    </TableCell>
+                  {row.StatisticsLastSeason.length > 0 ? (
+                    <TableRow>
+                      <TableCell>{row.StatisticsLastSeason.Season}</TableCell>
+                      <TableCell>
+                        {row.StatisticsLastSeason.General.Games_Played}
+                      </TableCell>
 
-                    <TableCell align="right">
-                      {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
-                      {row.StatisticsLastSeason.General.Minutes_Played}
-                    </TableCell>
-                  </TableRow>
+                      <TableCell>
+                        {row.StatisticsLastSeason.Attack.Goals_Scored}
+                      </TableCell>
+                      <TableCell align="right">
+                        {row.StatisticsLastSeason.Distribution.Assists}
+                      </TableCell>
+                      <TableCell align="right">
+                        {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                        {
+                          row.StatisticsLastSeason.Distribution
+                            .Pass_success_rate
+                        }
+                      </TableCell>
+                      <TableCell align="right">
+                        {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                        {row.StatisticsLastSeason.Defence.Interceptions}
+                      </TableCell>
+                      <TableCell align="right">
+                        {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                        {row.StatisticsLastSeason.Defence.Tackles}
+                      </TableCell>
+                      <TableCell align="right">
+                        {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                        {row.StatisticsLastSeason.Discipline.Yellow_cards}
+                      </TableCell>
+
+                      <TableCell align="right">
+                        {/* {Math.round(historyRow.amount * row.Club * 100) / 100} */}
+                        {row.StatisticsLastSeason.General.Minutes_Played}
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    ""
+                  )}
                 </TableBody>
               </Table>
             </Box>
@@ -467,336 +473,111 @@ export default function FilteredPlayersTable() {
   const currentProfileNameSelected = useSelector(selectCurrentProfile);
 
   const savedUserProfiles = useSelector(selectUserSavedProfiles);
-  // const MatchedPlayersArray = useSelector(selectPlayersDatabase);
-
-  // useEffect(() => {
-  //   const fetch = async () => {
-  //     const playersQuery = query(collection(db, "players_database"));
-  //     const playersSnapshot = await getDocs(playersQuery);
-  //     const allProducts = [];
-  //     const playersSnapshotData = await playersSnapshot.forEach((doc) => {
-  //       // save them to allProducts array
-  //       allProducts.push(doc.data());
-  //     });
-  //     console.log("playersSnapshotData", allProducts);
-  //     return allProducts;
-  //   };
-  //   fetch();
-  // }, []);
-
-  // QUERY FOR PLAYERS IN DATABASE
-  // const {
-  //   status,
-  //   data: MatchedPlayersArray,
-  //   error,
-  //   refetch,
-  //   isFetching: isMatchedPlayersArrayFetching,
-  // } = useQuery({
-  //   queryKey: ["fetchAllPlayers"],
-  //   queryFn: async () => {
-  //     const playersQuery = query(collection(db, "players_database"));
-  //     const playersSnapshot = await getDocs(playersQuery);
-  //     const allProducts = [];
-  //     const playersSnapshotData = await playersSnapshot.forEach((doc) => {
-  //       // save them to allProducts array
-  //       allProducts.push(doc.data());
-  //     });
-  //     // console.log("playersSnapshotData", allProducts);
-  //     return allProducts;
-  //   },
-  //   // refetchOnMount: true,
-  //   // refetchOnWindowFocus: true,
-  // });
-  // END OF QUERY FOR PLAYERS IN DATABASE
-
-  const MatchedPlayersArray = useSelector(selectPlayersDatabase);
-
-  // remount component when usequery completes fetch
-  useEffect(() => {}, [MatchedPlayersArray]);
 
   const allClubsInDatabase = useSelector(selectClubsInDatabase);
+  const userLoginDetailsObject = useSelector(selectUserDetailsObject);
 
-  //   const {
-  //     Nationality,
-  //     position,
-  //     // date_of_birth,
-  //     Statsitics,
-  //     height,
-  //   } = data;
-
-  //   // Define the variables to compare
-  //   const variablesToCompare = [
-  //     Nationality.toLowerCase() ===
-  //       currentProfileFilterObject?.filter.NationalityValue.toLowerCase(),
-  //     Nationality.toLowerCase() ===
-  //       currentProfileFilterObject?.filter.NationalityValue.toLowerCase(),
-  //     data?.Age >= currentProfileFilterObject?.filter.AgeRangeValue[0] &&
-  //       data?.Age <= currentProfileFilterObject?.filter.AgeRangeValue[1],
-  //     height >= currentProfileFilterObject?.filter.HeightRangeValue[0] &&
-  //       height <= currentProfileFilterObject?.filter.HeightRangeValue[1],
-  //     data?.marketValue >= currentProfileFilterObject?.filter.MarketValue[0] &&
-  //       data?.marketValue <= currentProfileFilterObject?.filter.MarketValue[1],
-  //     currentProfileFilterObject?.filter?.PlayerPositionAutoCompleteValue.toLowerCase() ===
-  //       position.toLowerCase(),
-  //     data?.preferredFoot.toLowerCase() ===
-  //       currentProfileFilterObject?.filter.PrefferedFootRadioValue.toLowerCase(),
-  //     currentProfileFilterObject?.filter.ContractStatusCheckBoxes.includes(
-  //       data?.clubName
-  //     ),
-  //     // Add more variables to compare as needed
-  //   ];
-
-  //   // Count the number of matches
-  //   const numberOfMatches = variablesToCompare.filter((match) => match).length;
-
-  //   // alert(numberOfMatches);
-  //   // Check if at least 4 variables match
-  //   return numberOfMatches >= 5;
-  // });
-
-  // alert("first one" + ExistingPlayerProfile.length);
-
-  // const [PossiblePlayerMatch, setPossiblePlayerMatch] = React.useState(
-  //   ExistingPlayerProfile
-  // );
   const [PossiblePlayerMatch, setPossiblePlayerMatch] = React.useState([]);
   const [rows, setRows] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
 
-  React.useEffect(() => {
-    // setIsLoading(false)
-    // alert(profileName);
-    setIsLoading(true);
+  const functions = getFunctions();
+  const getSortedPlayers = httpsCallable(functions, "getSortedPlayers");
+  const fetchSortedPlayers = async (userIdParam, profileNameParam) => {
+    try {
+      const result = await getSortedPlayers({
+        userId: userIdParam,
+        profileName: profileNameParam,
+      });
+      return result.data.sortedPlayers;
+    } catch (error) {
+      console.error("Error fetching sorted players:", error);
+      // setIsMatchedPlayersArrayFetching(false);
+    }
+  };
 
-    const currentProfileFilterObjectInEffect = savedUserProfiles.find(
-      (data) => {
-        return data.label.toLowerCase() === profileName.trim().toLowerCase();
+  const {
+    status,
+    data: MatchedPlayersArray,
+    error,
+    refetch,
+    isFetching: isMatchedPlayersArrayFetching,
+  } = useQuery({
+    queryKey: [
+      "fetchSortedPlayers",
+      userLoginDetailsObject?.accountId,
+      profileName,
+    ], // Include AllPlayers in the queryKey
+    queryFn: async () => {
+      try {
+        // alert(currentProfileNameSelected);
+        const userId = userLoginDetailsObject?.accountId;
+
+        let sortedPlayers = fetchSortedPlayers(userId, profileName);
+
+        return sortedPlayers;
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+        throw error;
       }
-    );
+    },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
 
-    console.log("filterObjectsOnline", currentProfileFilterObjectInEffect);
+  React.useEffect(() => {
+    // console.log(ExistingPlayerProfile + "Mawu");
+    setPossiblePlayerMatch(MatchedPlayersArray);
 
-    // const ExistingPlayerProfile = MatchedPlayersArray?.filter((data) => {
-    //   const {
-    //     Nationality,
-    //     position,
-    //     Age,
-    //     Statsitics,
-    //     contractEndDate,
-    //     preferredFoot,
-    //     height,
-    //     clubName,
-    //   } = data;
-    //   const filterNationalityValue =
-    //     currentProfileFilterObjectInEffect?.filter.NationalityValue.toLowerCase();
-    //   const filterPositionRangeSliderValues =
-    //     currentProfileFilterObjectInEffect?.filter.PositionRangeSliderValues;
-    //   const filterPlayerPosition =
-    //     currentProfileFilterObjectInEffect?.filter
-    //       .PlayerPositionAutoCompleteValue;
-    //   const filterpreferredFoot =
-    //     currentProfileFilterObjectInEffect?.filter.PrefferedFootRadioValue;
-    //   // const defenceValues = Statsitics.find(
-    //   //   (data) => data?.Season === "Overall"
-    //   // ).Defence;
-    //   // const attackValues = Statsitics.find(
-    //   //   (data) => data?.Season === "Overall"
-    //   // ).Attack;
-    //   // const distributionValues = Statsitics.find(
-    //   //   (data) => data?.Season === "Overall"
-    //   // ).Distribution;
-    //   // const disciplineValues = Statsitics.find(
-    //   //   (data) => data?.Season === "Overall"
-    //   // ).Discipline;
-    //   // const generalValues = Statsitics.find(
-    //   //   (data) => data?.Season === "Overall"
-    //   // ).General;
-    //   const filterFirstHeightRange =
-    //     currentProfileFilterObjectInEffect?.filter.HeightRangeValue[0];
-    //   const filterSecondHeightRange =
-    //     currentProfileFilterObjectInEffect?.filter.HeightRangeValue[1];
-    //   const filterFirstAgeRange =
-    //     currentProfileFilterObjectInEffect?.filter?.AgeRangeValue[0];
-    //   const filterSecondAgeRange =
-    //     currentProfileFilterObjectInEffect?.filter?.AgeRangeValue[1];
-
-    //   const filterStatistics =
-    //     currentProfileFilterObjectInEffect?.filter?.positionRangeSliderValues;
-    //   const filterContractStatus =
-    //     currentProfileFilterObjectInEffect?.filter?.ContractStatusCheckBoxes;
-
-    //   const sampleDate = new Date(contractEndDate);
-    //   // Get the current date
-    //   const currentDate = new Date();
-    //   // Calculate the difference in milliseconds
-    //   const diffMilliseconds = sampleDate - currentDate;
-
-    //   // Convert milliseconds to months
-    //   const monthsDifference = diffMilliseconds / (1000 * 60 * 60 * 24 * 30.44); // Approximate average number of days in a month
-
-    //   // const filterAgeRange =
-    //   //   currentProfileFilterObjectInEffect?.filter.AgeRangeValue;
-
-    //   // Define the variables to compare
-    //   // filterPlayerPosition === "Any" ? 1*2 :( playerPosition === "Winger (W)" ||  playerPosition === "Striker (ST)" )? (attackValues.filterPlayerPosition.Goals >= filterPositionRangeSliderValues.Goals[0] && attackValues.filterPlayerPosition.Goals <= filterPositionRangeSliderValues.Goals[1] )? 1 : 0
-    //   const variablesToCompare = [
-    //     Nationality.toLowerCase() === filterNationalityValue ? 3 : 0,
-
-    //     preferredFoot === filterpreferredFoot || filterpreferredFoot === "Any"
-    //       ? 1
-    //       : 0,
-    //     height >= filterFirstHeightRange && height <= filterSecondHeightRange
-    //       ? 1
-    //       : 0,
-
-    //     Age >= filterFirstAgeRange && Age <= filterSecondAgeRange ? 2 : 0,
-
-    //     filterContractStatus === "Any"
-    //       ? 1
-    //       : filterContractStatus ===
-    //           "Contract Expiring in less than 6 months" && monthsDifference <= 6
-    //       ? 1
-    //       : filterContractStatus ===
-    //           "Contract Expiring in more than 6 months" && monthsDifference >= 6
-    //       ? 1
-    //       : clubName === filterContractStatus
-    //       ? 1
-    //       : 0,
-    //     // Add more variables to compare as needed
-    //   ];
-
-    //   let numberOfMatches = variablesToCompare.reduce(
-    //     (accumulator, currentValue) => accumulator + currentValue,
-    //     0
-    //   );
-
-    //   data.numberOfMatches = numberOfMatches;
-    //   // Check if at least 4 variables match
-    //   return numberOfMatches >= 5;
-    // });
-    const ExistingPlayerProfile = MatchedPlayersArray?.map((data) => {
+    const temporalRows = MatchedPlayersArray?.sort(
+      (a, b) => b?.boostPoints - a?.boostPoints
+    ).map((data, index) => {
       const {
-        Nationality,
-        position,
+        firstName,
+        surName,
         Age,
-        Statsitics,
-        contractEndDate,
+        position,
+        CountryCode,
+        Nationality,
+        jerseyNumber,
+        player_profile_image,
+        clubName,
+        Statistics,
         preferredFoot,
         height,
-        clubName,
+        contractStartDate,
+        id,
+        videos,
+        role,
+        currentTeamId,
       } = data;
 
-      const filterNationalityValue =
-        currentProfileFilterObjectInEffect?.filter.NationalityValue.toLowerCase();
-      const filterPositionRangeSliderValues =
-        currentProfileFilterObjectInEffect?.filter.PositionRangeSliderValues;
-      const filterPlayerPosition =
-        currentProfileFilterObjectInEffect?.filter
-          .PlayerPositionAutoCompleteValue;
-      const filterpreferredFoot =
-        currentProfileFilterObjectInEffect?.filter.PrefferedFootRadioValue;
-      const filterFirstHeightRange =
-        currentProfileFilterObjectInEffect?.filter.HeightRangeValue[0];
-      const filterSecondHeightRange =
-        currentProfileFilterObjectInEffect?.filter.HeightRangeValue[1];
-      const filterFirstAgeRange =
-        currentProfileFilterObjectInEffect?.filter?.AgeRangeValue[0];
-      const filterSecondAgeRange =
-        currentProfileFilterObjectInEffect?.filter?.AgeRangeValue[1];
-      const filterStatistics =
-        currentProfileFilterObjectInEffect?.filter?.positionRangeSliderValues;
-      const filterContractStatus =
-        currentProfileFilterObjectInEffect?.filter?.ContractStatusCheckBoxes;
-
-      const sampleDate = new Date(contractEndDate);
-      const currentDate = new Date();
-      const diffMilliseconds = sampleDate - currentDate;
-      const monthsDifference = diffMilliseconds / (1000 * 60 * 60 * 24 * 30.44);
-
-      const variablesToCompare = [
-        Nationality.toLowerCase() === filterNationalityValue ? 3 : 0,
-        preferredFoot === filterpreferredFoot || filterpreferredFoot === "Any"
-          ? 1
-          : 0,
-        height >= filterFirstHeightRange && height <= filterSecondHeightRange
-          ? 1
-          : 0,
-        Age >= filterFirstAgeRange && Age <= filterSecondAgeRange ? 2 : 0,
-        filterContractStatus === "Any"
-          ? 1
-          : filterContractStatus ===
-              "Contract Expiring in less than 6 months" && monthsDifference <= 6
-          ? 1
-          : filterContractStatus ===
-              "Contract Expiring in more than 6 months" && monthsDifference >= 6
-          ? 1
-          : clubName === filterContractStatus
-          ? 1
-          : 0,
-      ];
-
-      let numberOfMatches = variablesToCompare.reduce(
-        (accumulator, currentValue) => accumulator + currentValue,
-        0
-      );
-
-      // Add the property numberOfMatches to the object
-      const newData = { ...data, numberOfMatches: numberOfMatches };
-
-      return newData;
-    }).filter((data) => data.numberOfMatches >= 5);
-    const sortedPlayers = ExistingPlayerProfile?.sort((player1, player2) => {
-      return player2.numberOfMatches - player1.numberOfMatches;
-    });
-
-    // console.log(ExistingPlayerProfile + "Mawu");
-    setPossiblePlayerMatch(sortedPlayers);
-
-    const temporalRows = sortedPlayers
-      ?.sort((a, b) => b.boostPoints - a.boostPoints)
-      .map((data, index) => {
-        const {
-          firstName,
-          surName,
-          Age,
-          position,
-          CountryCode,
-          Nationality,
-          jerseyNumber,
-          player_profile_image,
-          clubName,
-          Statistics,
-          preferredFoot,
-          height,
-          contractStartDate,
-          id,
-          videos,
-        } = data;
-
-        const clubObject = allClubsInDatabase.find((data) => {
-          return data.clubName === clubName;
-        });
-
-        const ClubLogo = clubObject === undefined ? "" : clubObject?.clubImage;
-
-        return createData(
-          `${firstName} ${surName}`,
-          Age,
-          preferredFoot,
-          height,
-          CountryCode,
-          position,
-          ClubLogo,
-          clubName,
-          contractStartDate,
-          player_profile_image,
-          id,
-          Nationality,
-          Statistics[0],
-          Statistics[1],
-          videos
-        );
+      const clubObject = allClubsInDatabase.find((data) => {
+        return data.wyId === currentTeamId;
       });
+
+      const ClubLogo = clubObject === undefined ? "" : clubObject?.imageDataURL;
+      const ClubName =
+        clubObject === undefined ? "Free agent" : clubObject?.name;
+
+      return createData(
+        `${firstName} ${surName}`,
+        Age,
+        preferredFoot,
+        height,
+        CountryCode,
+        role,
+        ClubLogo,
+        ClubName,
+        contractStartDate,
+        player_profile_image,
+        id,
+        Nationality,
+        Statistics[0],
+        Statistics.length > 1 ? Statistics[1] : [],
+        videos
+      );
+    });
     setRows(temporalRows);
 
     console.log("TEMPAHROW", temporalRows);
@@ -805,6 +586,33 @@ export default function FilteredPlayersTable() {
 
     // alert(ExistingPlayerProfile.length);
   }, [profileName, MatchedPlayersArray]);
+
+  const myDivRef = React.useRef(null);
+
+  const handleScrollToTop = () => {
+    // myDivRef?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    if (myDivRef.current) {
+      myDivRef.current.scrollTo(0, 0); // Scroll to the top
+    }
+  };
+
+  const PlayersPerPage = 50;
+
+  const [currentPage, setCurrentPage] = React.useState(1);
+
+  const getTotalPages = () => Math.ceil(rows?.length / PlayersPerPage);
+
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+    handleScrollToTop();
+  };
+
+  const getplayersSortedArrayForPage = () => {
+    const startIndex = (currentPage - 1) * PlayersPerPage;
+    const endIndex = startIndex + PlayersPerPage;
+    return rows?.slice(startIndex, endIndex);
+  };
 
   // useEffect(() => {
   //   alert(profileName + "   " + rows.length);
@@ -863,46 +671,50 @@ export default function FilteredPlayersTable() {
 
   return (
     <div style={{ height: "42.5vh", width: "100%" }}>
-      {isLoading === false && PossiblePlayerMatch?.length === 0 ? (
+      {isMatchedPlayersArrayFetching === false &&
+      PossiblePlayerMatch?.length === 0 ? (
         " No Matches "
       ) : (
         <>
-          <TableContainer
-            className="cardBackground primaryTextColor"
-            sx={{
-              width: "100%",
-              height: "30%",
-              overflowY: "scroll",
-              borderRadius: "0vw",
-              borderTopLeftRadius: ".4vw",
-              borderTopRightRadius: ".4vw",
-            }}
-            component={Card}
-          >
-            <Table
-              aria-label="collapsible table"
-              sx={{ width: "100%", height: "80%" }}
+          {isMatchedPlayersArrayFetching ? (
+            <CircularProgress />
+          ) : (
+            <TableContainer
+              className="cardBackground primaryTextColor"
+              sx={{
+                width: "100%",
+                height: "65vh",
+                borderRadius: "0vw",
+                overflowY: "scroll",
+              }}
+              component={Card}
             >
-              <TableHead>
-                <TableRow>
-                  {/* <TableCell /> */}
-                  <TableCell />
-                  <TableCell />
-                  {/* <TableCell sx={{ marginLeft: "4vw" }}>
-                    &nbsp; &nbsp;&nbsp;
-                    <Checkbox />{" "}
-                  </TableCell> */}
+              <Table
+                stickyHeader
+                aria-label="collapsible table"
+                sx={{ width: "100%", height: "80%" }}
+                className="cardBackground primaryTextColor"
+              >
+                <TableHead className="cardBackground primaryTextColor">
+                  <TableCell>
+                    {/* <IconButton
+                      aria-label="expand row"
+                      size="small"
+                      onClick={() => setOpen(!open)}
+                    >
+                      {open ? (
+                        <KeyboardArrowUpIcon />
+                      ) : (
+                        <KeyboardArrowDownIcon />
+                      )}
+                    </IconButton> */}
+                  </TableCell>
                   <TableCell>
                     {" "}
-                    &nbsp; &nbsp; Personal
+                    Personal
+                    {/* <div style={{ paddingLeft: "10vw" }}>Personal</div> */}
                     {/* {PossiblePlayerMatch?.length} */}
                   </TableCell>
-                  <TableCell />
-
-                  <TableCell />
-                  <TableCell />
-                  <TableCell />
-                  <TableCell />
 
                   <TableCell align="left"> Age</TableCell>
                   <TableCell align="left">Foot</TableCell>
@@ -911,39 +723,38 @@ export default function FilteredPlayersTable() {
                   <TableCell align="left">Club</TableCell>
                   <TableCell align="right">Position</TableCell>
                   <TableCell align="right">Contract Expiry</TableCell>
-                </TableRow>
-              </TableHead>
-            </Table>
-          </TableContainer>
-          <TableContainer
-            className="cardBackground primaryTextColor"
-            sx={{
-              width: "100%",
-              height: "130%",
-              overflowY: "scroll",
-              borderRadius: "0vw",
-            }}
-            component={Card}
-          >
-            <Table
-              aria-label="collapsible table"
-              sx={{ width: "100%", height: "80%" }}
-            >
-              <TableBody
-                sx={{
-                  overflowY: "scroll",
-                  maxHeight: "20vh",
-                }}
-              >
-                {/* <div style={{ overflowY: "scroll", height: "300px" }}> */}
-                {rows?.map((row, key) => (
-                  <Row key={key} row={row} />
-                ))}
-                {/* </div> */}
-              </TableBody>{" "}
-            </Table>
-          </TableContainer>
-          {rows?.length} players matched
+                </TableHead>
+                <TableBody
+                  sx={{
+                    // display: "block",
+                    // minHeight: "40vh",
+                    width: "100%",
+                  }}
+                  ref={myDivRef}
+                >
+                  {/* <div style={{ overflowY: "scroll", height: "300px" }}> */}
+                  {getplayersSortedArrayForPage()?.map((row, key) => (
+                    <Row key={key} row={row} />
+                  ))}
+                  {/* </div> */}
+                </TableBody>{" "}
+              </Table>
+            </TableContainer>
+          )}
+
+          <div style={{ display: "flex", gap: "2vw", paddingTop: "1vh" }}>
+            {" "}
+            {MatchedPlayersArray?.length} players matched{" "}
+            <Pagination
+              className="primaryTextColor"
+              sx={{ color: "white" }}
+              count={getTotalPages()}
+              color="primary"
+              page={currentPage}
+              onChange={handlePageChange}
+            />{" "}
+            <span style={{ fontSize: ".8em" }}> 50 players per page </span>{" "}
+          </div>
         </>
       )}
     </div>

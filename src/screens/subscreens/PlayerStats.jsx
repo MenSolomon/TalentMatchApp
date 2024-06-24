@@ -34,10 +34,10 @@ const PlayerStats = ({ Statistics }) => {
     },
   ];
   const seasonsMenu = [
-    {
-      value: "Overall",
-      label: "Overall",
-    },
+    // {
+    //   value: "Overall",
+    //   label: "Overall",
+    // },
     {
       value: "23/24",
       label: "23/24",
@@ -61,7 +61,7 @@ const PlayerStats = ({ Statistics }) => {
   ];
 
   const [statsCategory, setStatsCategory] = useState("Attack");
-  const [statsSeason, setStatsSeason] = useState("Overall");
+  const [statsSeason, setStatsSeason] = useState("23/24");
 
   const handleCategoryChange = (e) => {
     setStatsCategory(e.target.value);
@@ -131,7 +131,7 @@ const PlayerStats = ({ Statistics }) => {
           size="small"
           select
           // label="Select"
-          defaultValue="Overall"
+          defaultValue="23/24"
           className="md:w-[15%] sm:w-[90%]"
           // style={{ width: "15%" }}
           onChange={(e) => {

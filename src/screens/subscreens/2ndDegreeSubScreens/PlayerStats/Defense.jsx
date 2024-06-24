@@ -13,9 +13,7 @@ const Defense = ({ Period }) => {
     return data.Season === Period;
   });
 
-  console.log(filteredSeasonStats);
-
-  const { Defence } = filteredSeasonStats;
+  const { Defence } = filteredSeasonStats || {};
   console.log(Defence);
 
   return (
@@ -36,50 +34,69 @@ const Defense = ({ Period }) => {
     : 0,
     : 0,
     : 0 */}
-      {/* // Displaying Figures without Chart */}
-      <div style={{ flex: ".4", display: "flex" }}>
-        {/* Clearance */}
-        <span style={{ flex: ".33" }}>
-          <RawStatsDisplay value={Defence.Clearance} label="Clearances" />
-        </span>
-        {/* Interceptions */}
-        <span style={{ flex: ".33" }}>
-          <RawStatsDisplay value={Defence.Aeriel_duels} label="Aerial duels" />
-        </span>
-        {/* Blocks */}
-        <span style={{ flex: ".33" }}>
-          <RawStatsDisplay value={Defence.Duels} label="Duels" />
-          {}
-        </span>
-      </div>
-      {/* Displaying Doughnut CHart */}
-      <div style={{ flex: ".6", display: "flex" }}>
-        {/* Clearance */}
-        <span style={{ flex: ".33", display: "grid", placeContent: "center" }}>
-          <PlayerStatsDoughnut
-            PercentageSuccess={Defence.Interceptions}
-            Label={"Interceptions"}
-          />
-        </span>
-        {/* Interceptions */}
-        <span style={{ flex: ".33", display: "grid", placeContent: "center" }}>
-          <PlayerStatsDoughnut
-            PercentageSuccess={Defence.Tackles}
-            Label="Tackles"
-            // style={{ width: "15%", height: "4vh" }}
-          />
-        </span>
-        {/* Blocks */}
-        <span style={{ flex: ".33", display: "grid", placeContent: "center" }}>
-          <PlayerStatsDoughnut
-            PercentageSuccess={Defence.Blocks}
-            Label="Blocks"
-            // style={{ width: "15%", height: "4vh" }}
-          />
 
-          {}
-        </span>
-      </div>
+      {filteredSeasonStats === undefined ? (
+        <div style={{ color: "black" }}>
+          {" "}
+          we do not have records for this season{" "}
+        </div>
+      ) : (
+        <>
+          {/* // Displaying Figures without Chart */}
+          <div style={{ flex: ".4", display: "flex" }}>
+            {/* Clearance */}
+            <span style={{ flex: ".33" }}>
+              <RawStatsDisplay value={Defence.Clearance} label="Clearances" />
+            </span>
+            {/* Interceptions */}
+            <span style={{ flex: ".33" }}>
+              <RawStatsDisplay
+                value={Defence.Aeriel_duels}
+                label="Aerial duels"
+              />
+            </span>
+            {/* Blocks */}
+            <span style={{ flex: ".33" }}>
+              <RawStatsDisplay value={Defence.Duels} label="Duels" />
+              {}
+            </span>
+          </div>
+          {/* Displaying Doughnut CHart */}
+          <div style={{ flex: ".6", display: "flex" }}>
+            {/* Clearance */}
+            <span
+              style={{ flex: ".33", display: "grid", placeContent: "center" }}
+            >
+              <PlayerStatsDoughnut
+                PercentageSuccess={Defence.Interceptions}
+                Label={"Interceptions Success"}
+              />
+            </span>
+            {/* Interceptions */}
+            <span
+              style={{ flex: ".33", display: "grid", placeContent: "center" }}
+            >
+              <PlayerStatsDoughnut
+                PercentageSuccess={Defence.Tackles}
+                Label="Tackles success"
+                // style={{ width: "15%", height: "4vh" }}
+              />
+            </span>
+            {/* Blocks */}
+            <span
+              style={{ flex: ".33", display: "grid", placeContent: "center" }}
+            >
+              <PlayerStatsDoughnut
+                PercentageSuccess={Defence.Blocks}
+                Label="Blocks success"
+                // style={{ width: "15%", height: "4vh" }}
+              />
+
+              {}
+            </span>
+          </div>
+        </>
+      )}
     </div>
   );
 };

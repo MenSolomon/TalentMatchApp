@@ -47,8 +47,9 @@ const PlayerStatsDoughnut = ({ PercentageSuccess, Label }) => {
         style={{
           position: "absolute",
           bottom: "32%",
-          left: Label === "Interceptions" ? "15%" : "26%",
+          left: "12%",
           textAlign: "center",
+          fontSize: ".8em",
         }}
       >
         {" "}

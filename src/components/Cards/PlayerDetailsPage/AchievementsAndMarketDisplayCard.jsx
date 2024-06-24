@@ -59,7 +59,7 @@ border-box;`;
 
   return (
     <div
-      className="playerCard lg:w-[13vw] md:w-[17vw] md:h-[100%] md:flex md:flex-col  sm:w-[50%] sm:h-[100%] sm:flex sm:flex-col"
+      className="playerCard lg:w-[17vw] md:w-[17vw] md:h-[100%] md:flex md:flex-col  sm:w-[50%] sm:h-[100%] sm:flex sm:flex-col"
       // className="playerCard md:w-[100%] md:h-[100%] md:flex md:flex-col  sm:w-[50%] sm:h-[100%] sm:flex sm:flex-col"
       style={{
         // width: "100%",
@@ -74,7 +74,7 @@ border-box;`;
       <div style={{ flex: ".3", display: "flex" }}>
         {" "}
         <span
-          className="lg:text-[1.2em] md:text-[1.3em] tb:text-[1.3em] sm:text-[1em]"
+          className="lg:text-[1em] md:text-[1em]  sm:text-[1em] tb:text-[2em]"
           style={{ fontWeight: "bolder" }}
         >
           {" "}

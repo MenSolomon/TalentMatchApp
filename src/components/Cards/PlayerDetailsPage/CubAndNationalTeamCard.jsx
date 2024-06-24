@@ -63,7 +63,7 @@ const ClubandNationalTeamDisplayCard = ({
                   textAlign: "right",
                   // fontSize: ".94em",
                 }}
-                className="lg:text-[1.2em] md:text-[1.5em]  sm:text-[1em] tb:text-[1.3em]"
+                className="lg:text-[1em] md:text-[1em]  sm:text-[1em] tb:text-[2em]"
               >
                 {ClubName}
               </p>{" "}
@@ -119,16 +119,17 @@ const ClubandNationalTeamDisplayCard = ({
         <div>
           {" "}
           <h6
-            className="lg:text-[1.1em] md:text-[1.4em]  sm:text-[1em] tb:text-[1.3em]"
+            className="lg:text-[1em] md:text-[1em]  sm:text-[1em] tb:text-[2em]"
             style={{ ...hTagStyle }}
           >
             Preferred foot : {PreferredFoot}
           </h6>{" "}
           <h6
-            className="lg:text-[1.1em] md:text-[1.1em]  sm:text-[1em] tb:text-[1.3em]"
+            className="lg:text-[1em] md:text-[1em]  sm:text-[1em] tb:text-[2em]"
             style={{ ...hTagStyle }}
           >
-            Height : {Height} m
+            Height :{" "}
+            {Height === null || Height === 0 ? "" : <span> {Height} m </span>}
           </h6>{" "}
         </div>
       </div>

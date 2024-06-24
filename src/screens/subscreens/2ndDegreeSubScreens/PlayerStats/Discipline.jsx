@@ -11,9 +11,7 @@ const Discipline = ({ Period }) => {
     return data.Season === Period;
   });
 
-  console.log(filteredSeasonStats);
-
-  const { Discipline } = filteredSeasonStats;
+  const { Discipline } = filteredSeasonStats || {};
   console.log(Discipline);
 
   return (
@@ -21,24 +19,30 @@ const Discipline = ({ Period }) => {
       className="primaryColor  sm:flex sm:flex-col sm:gap-[7vh]  md:gap-[5vw] md:flex-row  lg:flex-row max:flex-row "
       style={{ width: "100%", height: "100%" }}
     >
-      <CardDisplay
-        CardName="Yellow Cards"
-        number={Discipline.Yellow_cards}
-        borderColor="yellow"
-        backgroundColor="#FFFAC2"
-      />
-      <CardDisplay
-        CardName="Red Cards"
-        number={Discipline.Red_cards}
-        borderColor="red"
-        backgroundColor="#FCD3C1"
-      />
-
-      <AttributesToFormat
-        name="Fouls conceeded"
-        number={Discipline.Fouls_conceeded}
-      />
-      <AttributesToFormat name="Fouls won" number={Discipline.Fouls_won} />
+      {filteredSeasonStats === undefined ? (
+        <div> we do not have records for this season </div>
+      ) : (
+        <>
+          {" "}
+          <CardDisplay
+            CardName="Yellow Cards"
+            number={Discipline.Yellow_cards}
+            borderColor="yellow"
+            backgroundColor="#FFFAC2"
+          />
+          <CardDisplay
+            CardName="Red Cards"
+            number={Discipline.Red_cards}
+            borderColor="red"
+            backgroundColor="#FCD3C1"
+          />
+          <AttributesToFormat
+            name="Fouls conceeded"
+            number={Discipline.Fouls_conceeded}
+          />
+          <AttributesToFormat name="Fouls won" number={Discipline.Fouls_won} />{" "}
+        </>
+      )}
     </div>
   );
 };

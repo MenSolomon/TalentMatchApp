@@ -1,18 +1,27 @@
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import { selectLoginStatus } from "../statemanager/slices/LoginUserDataSlice";
+import {
+  selectLoginStatus,
+  selectUserDetailsObject,
+} from "../statemanager/slices/LoginUserDataSlice";
 import { useEffect } from "react";
+import { auth } from "../Firebase/Firebase";
 
 const PrivateRoutes = () => {
   const navigate = useNavigate();
-  let auth = useSelector(selectLoginStatus);
+  let authEN = useSelector(selectLoginStatus);
+  const userId = useSelector(selectUserDetailsObject);
+  const currentUser = auth?.currentUser;
   useEffect(() => {
-    if (!auth) {
+    // console.log(currentUser, userId?.accountId, "LOGi");
+
+    // alert(currentUser + userId?.accountId);
+    if (!authEN) {
       navigate("/login");
     }
-  }, [auth]);
+  }, [userId, authEN]);
 
-  return auth ? <Outlet /> : null;
+  return authEN ? <Outlet /> : null;
 };
 
 export default PrivateRoutes;

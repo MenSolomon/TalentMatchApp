@@ -363,6 +363,8 @@ const VideoCard = ({
     return data.id === playerId;
   });
 
+  console.log("data", currnetPlayer);
+
   let screenWidth = parseInt(screenSize?.width, 10);
   let browserWidth = parseInt(browserSize?.width, 10);
 
@@ -432,7 +434,7 @@ const VideoCard = ({
               }}
             >
               {" "}
-              {currnetPlayer.firstName}
+              {currnetPlayer?.firstName}
             </h4>
 
             <h2
@@ -446,9 +448,9 @@ const VideoCard = ({
               // onClick={onClick}
             >
               {" "}
-              {currnetPlayer.surName.length < 15
-                ? currnetPlayer.surName
-                : `${currnetPlayer.surName.slice(0, 15)}...`}{" "}
+              {currnetPlayer?.surName.length < 15
+                ? currnetPlayer?.surName
+                : `${currnetPlayer?.surName.slice(0, 15)}...`}{" "}
               <span style={{ fontSize: ".65em" }}>
                 {moment(dateUploaded).fromNow()}
               </span>

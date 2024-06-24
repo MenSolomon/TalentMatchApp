@@ -85,6 +85,8 @@ import BuyBoostPoints from "./screens/BuyBoostPoints";
 import RequestExistingPlayerProfile from "./screens/RequestExistingPlayerProfile";
 import { setUserNotifications } from "./statemanager/slices/NofiticationsSlice";
 import ForgotPassword from "./screens/Authentication/ForgotPassword";
+import TermsAndConditionPage from "./screens/TermsAndConditionPage";
+import PrivacyPage from "./screens/PrivacyPage";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -534,6 +536,17 @@ const App = () => {
   //   }
   // }, []);
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -653,6 +666,11 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/productUpload" element={<ProductDetails />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route
+          path="/terms-and-conditions"
+          element={<TermsAndConditionPage />}
+        />
 
         <Route path="/membership-plans" element={<MembershipPlanPage />} />
 

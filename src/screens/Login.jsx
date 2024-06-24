@@ -268,10 +268,11 @@ const Login = () => {
             accountId: accountId,
             firstName: userInfoSnap.data().firstName,
             role: userInfoSnap.data().role,
-            dateCreated: {
-              seconds: userInfoSnap.data().dateCreated.seconds,
-              nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
-            },
+            // dateCreated: {
+            //   seconds: userInfoSnap.data().dateCreated.seconds,
+            //   nanoseconds: userInfoSnap.data().dateCreated.nanoseconds,
+            // },
+            dateCreated: userInfoSnap.data().dateCreated.toMillis(),
             stripeId: userInfoSnap.data().stripeId,
             subscriptionPrice: userInfoSnap.data().subscriptionPrice,
             playersInPossession: userInfoSnap.data().playersInPossession,
@@ -455,6 +456,8 @@ const Login = () => {
   //       }
   //     });
   // };
+
+  const navigate = useNavigate();
 
   return (
     <div
@@ -678,6 +681,38 @@ const Login = () => {
             <WorldMaps />
           </div>
         </div>
+      </div>
+
+      <div
+        style={{
+          color: "white",
+          fontSize: ".9em",
+          position: "fixed",
+          bottom: 3,
+        }}
+      >
+        <span
+          style={{ cursor: "pointer" }}
+          // onClick={() => {
+          //   navigate("/terms-and-conditions");
+          // }}
+        >
+          {" "}
+          <Link to="/terms-and-conditions"> Terms and conditions </Link>
+        </span>
+        <span
+          style={{ marginLeft: "1vw", cursor: "pointer" }}
+          // onClick={() => {
+          //   navigate("/privacy");
+          // }}
+        >
+          {" "}
+          <Link to="/privacy">Privacy </Link>{" "}
+        </span>{" "}
+        <span style={{ marginLeft: "1vw", cursor: "pointer" }}>
+          {" "}
+          © 2024 TalentMeet.org{" "}
+        </span>
       </div>
     </div>
   );

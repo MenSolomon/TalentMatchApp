@@ -47,7 +47,7 @@ export default function ChoosePlanPageDrawer() {
         padding: "3vh 1vw",
         display: "flex",
         flexDirection: "column",
-        zIndex: "10000",
+        zIndex: "1300",
       }}
       role="presentation"
       //   onClick={toggleDrawer(anchor, false)}

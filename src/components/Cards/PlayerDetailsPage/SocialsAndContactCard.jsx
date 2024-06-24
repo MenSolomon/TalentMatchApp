@@ -17,6 +17,7 @@ const SocialAndContactAreaCard = ({
   playerName,
   PlayerId,
   currentAccountOwner,
+  isPlayerFromApi,
 }) => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
   const { primaryTextColor } = themeProviderObject;
@@ -80,7 +81,7 @@ const SocialAndContactAreaCard = ({
 
   return (
     <div
-      className="playerCard lg:w-[11vw] md:w-[19vw] md:h-[100%]   sm:w-[50%] sm:h-[100%]"
+      className="playerCard lg:w-[13vw] md:w-[19vw] md:h-[100%]   sm:w-[50%] sm:h-[100%]"
       // className="playerCard md:w-[100%] md:h-[100%]   sm:w-[50%] sm:h-[100%]"
       style={{
         // width: "100%",
@@ -162,11 +163,15 @@ const SocialAndContactAreaCard = ({
         }}
         innerText={"Show interest"}
       /> */}
-      <CreateShowInterestModal
-        playerId={PlayerId}
-        playerName={playerName}
-        currentAccountOwner={currentAccountOwner}
-      />
+
+      <div style={{ visibility: isPlayerFromApi ? "hidden" : "visible" }}>
+        {" "}
+        <CreateShowInterestModal
+          playerId={PlayerId}
+          playerName={playerName}
+          currentAccountOwner={currentAccountOwner}
+        />
+      </div>
     </div>
   );
 };

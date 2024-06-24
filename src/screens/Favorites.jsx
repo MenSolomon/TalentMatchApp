@@ -36,7 +36,7 @@ const Favorites = () => {
 
   // Pagination settings
 
-  const PlayersPerPage = browserWidth <= 1024 ? 4 : 9;
+  const PlayersPerPage = browserWidth <= 1024 ? 4 : 6;
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -62,7 +62,10 @@ const Favorites = () => {
         <h3 style={{ margin: 0, float: "left" }}>Favourites</h3>{" "}
       </div>
 
-      <div className="md:flex md:flex-row md:gap-[1em] md:flex-wrap md:basis-[70%]  sm:flex sm:flex-col sm:gap-[1em] sm:basis-[70%]">
+      <div
+        className="md:flex md:flex-row md:gap-[1vh 1vw] md:flex-wrap md:basis-[70%]  sm:flex sm:flex-col sm:gap-[1em] sm:basis-[70%]"
+        style={{ gap: "1vh 1vw" }}
+      >
         {playersInFavoriteArray === undefined ||
         playersInFavoriteArray?.length === 0 ? (
           <div> No players for this club yet </div>
@@ -75,6 +78,7 @@ const Favorites = () => {
               position,
               Nationality,
               jerseyNumber,
+              role,
               player_profile_image,
               id,
             } = data;
@@ -94,7 +98,7 @@ const Favorites = () => {
                 image={player_profile_image}
                 surName={surName}
                 age={Age}
-                position={result}
+                position={role?.code2}
                 positionToolTipInFull={position}
                 jerseyNumber={jerseyNumber}
                 firstName={firstName}

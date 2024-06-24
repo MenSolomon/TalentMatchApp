@@ -30,10 +30,10 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const PlayerManagementStatistics = () => {
   const seasonsMenu = [
-    {
-      value: "Overall",
-      label: "Overall",
-    },
+    // {
+    //   value: "Overall",
+    //   label: "Overall",
+    // },
     {
       value: "23/24",
       label: "23/24",
@@ -508,13 +508,13 @@ const PlayerManagementStatistics = () => {
                   id="standard-basic"
                   label="Conversion rate"
                   variant="standard"
-                  value={inputValues.Attack.Conversion_rate}
-                  onChange={handleInputChange("Attack.Conversion_rate")}
+                  value={inputValues.Attack.Goal_conversion_rate}
+                  onChange={handleInputChange("Attack.Goal_conversion_rate")}
                   type="number"
                 />
               </Tooltip>
             </TableCell>
-            <TableCell>
+            {/* <TableCell>
               <Tooltip title="Minutes per goal">
                 <TextField
                   id="standard-basic"
@@ -609,7 +609,7 @@ const PlayerManagementStatistics = () => {
                   type="number"
                 />
               </Tooltip>
-            </TableCell>
+            </TableCell> */}
           </TableRow>
         </TableHead>
       </Table>
@@ -631,7 +631,7 @@ const PlayerManagementStatistics = () => {
                 />
               </Tooltip>
             </TableCell>
-            <TableCell>
+            {/* <TableCell>
               <Tooltip title="Fouls won">
                 <TextField
                   id="standard-basic"
@@ -642,7 +642,7 @@ const PlayerManagementStatistics = () => {
                   type="number"
                 />
               </Tooltip>
-            </TableCell>
+            </TableCell> */}
             <TableCell>
               <Tooltip title="Yellow cards">
                 <TextField
@@ -689,90 +689,86 @@ const PlayerManagementStatistics = () => {
               </Tooltip>
             </TableCell>
             <TableCell>
-              <Tooltip title="Pass success rate">
+              <Tooltip title="Received passes">
                 <TextField
                   id="standard-basic"
-                  label="Pass success rate"
+                  label="Received passes"
                   variant="standard"
-                  value={inputValues.Distribution.Pass_success_rate}
-                  onChange={handleInputChange("Distribution.Pass_success_rate")}
+                  value={inputValues.Distribution.Received_passes}
+                  onChange={handleInputChange("Distribution.Received_passes")}
                   type="number"
                 />
               </Tooltip>
             </TableCell>
             <TableCell>
-              <Tooltip title="Long passes rate">
+              <Tooltip title="Successful cross rate">
                 <TextField
                   id="standard-basic"
-                  label="Long passes rate"
+                  label="Successful cross rate"
                   variant="standard"
-                  value={inputValues.Distribution.Long_passes_rate}
-                  onChange={handleInputChange("Distribution.Long_passes_rate")}
-                  type="number"
-                />
-              </Tooltip>
-            </TableCell>
-            <TableCell>
-              <Tooltip title="Opponent half pass accuracy">
-                <TextField
-                  id="standard-basic"
-                  label="Opponent half pass accuracy"
-                  variant="standard"
-                  value={inputValues.Distribution.Opponent_half_pass_accuracy}
+                  value={inputValues.Distribution.Succesful_cross_rate}
                   onChange={handleInputChange(
-                    "Distribution.Opponent_half_pass_accuracy"
+                    "Distribution.Succesful_cross_rate"
                   )}
                   type="number"
                 />
               </Tooltip>
             </TableCell>
             <TableCell>
-              <Tooltip title="Own half pass accuracy">
+              <Tooltip title="Successful key passes">
                 <TextField
                   id="standard-basic"
-                  label="Own half pass accuracy"
+                  label="Successful key passes"
                   variant="standard"
-                  value={inputValues.Distribution.Own_half_pass_accuracy}
+                  value={inputValues.Distribution.Successful_key_passes}
                   onChange={handleInputChange(
-                    "Distribution.Own_half_pass_accuracy"
+                    "Distribution.Successful_key_passes"
                   )}
                   type="number"
                 />
               </Tooltip>
             </TableCell>
             <TableCell>
-              <Tooltip title="Pass direction forward percent">
+              <Tooltip title="Successful long passes rate">
                 <TextField
                   id="standard-basic"
-                  label="Pass direction forward percent"
+                  label="Successful long passes rate"
                   variant="standard"
-                  value={
-                    inputValues.Distribution.Pass_direction_forward_percent
-                  }
+                  value={inputValues.Distribution.Successful_long_passes_rate}
                   onChange={handleInputChange(
-                    "Distribution.Pass_direction_forward_percent"
+                    "Distribution.Successful_long_passes_rate"
                   )}
                   type="number"
                 />
               </Tooltip>
             </TableCell>
             <TableCell>
-              <Tooltip title="Pass direction backward percent">
+              <Tooltip title="Successful pass rate">
                 <TextField
                   id="standard-basic"
-                  label="Pass direction backward percent"
+                  label="Successful pass rate"
                   variant="standard"
-                  value={
-                    inputValues.Distribution.Pass_direction_backward_percent
-                  }
+                  value={inputValues.Distribution.Successful_pass_rate}
                   onChange={handleInputChange(
-                    "Distribution.Pass_direction_backward_percent"
+                    "Distribution.Successful_pass_rate"
                   )}
                   type="number"
                 />
               </Tooltip>
             </TableCell>
             <TableCell>
+              <Tooltip title="Successful passes">
+                <TextField
+                  id="standard-basic"
+                  label="Successful passes"
+                  variant="standard"
+                  value={inputValues.Distribution.Successful_passes}
+                  onChange={handleInputChange("Distribution.Successful_passes")}
+                  type="number"
+                />
+              </Tooltip>
+            </TableCell>
+            {/* <TableCell>
               <Tooltip title="Pass direction left percent">
                 <TextField
                   id="standard-basic"
@@ -785,8 +781,8 @@ const PlayerManagementStatistics = () => {
                   type="number"
                 />
               </Tooltip>
-            </TableCell>
-            <TableCell>
+            </TableCell> */}
+            {/* <TableCell>
               <Tooltip title="Pass direction right percent">
                 <TextField
                   id="standard-basic"
@@ -799,7 +795,7 @@ const PlayerManagementStatistics = () => {
                   type="number"
                 />
               </Tooltip>
-            </TableCell>
+            </TableCell> */}
             <TableCell>
               <Tooltip title="Total passes">
                 <TextField
@@ -812,7 +808,7 @@ const PlayerManagementStatistics = () => {
                 />
               </Tooltip>
             </TableCell>
-            <TableCell>
+            {/* <TableCell>
               <Tooltip title="Successful passes">
                 <TextField
                   id="standard-basic"
@@ -849,7 +845,7 @@ const PlayerManagementStatistics = () => {
                   type="number"
                 />
               </Tooltip>
-            </TableCell>
+            </TableCell> */}
           </TableRow>
         </TableHead>
       </Table>

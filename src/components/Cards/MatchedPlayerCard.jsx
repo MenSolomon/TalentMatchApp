@@ -36,6 +36,7 @@ const MatchedPlayerCard = ({
   PlayerCountry,
   PlayerCountryCode,
   PlayerId,
+  IsPlayerVerifiedFromApi,
   // This is a temporal solution it is the only key identify to show the difference between player from Api (goalserve) from and player created on the platform
   DoesClubLogoKeyExist,
 }) => {
@@ -177,7 +178,7 @@ const MatchedPlayerCard = ({
                 style={{
                   zIndex: "1000",
                 }}
-                title={PlayerCountry.toString()}
+                title={"PlayerCountry"}
               >
                 <Avatar
                   sx={{
@@ -189,7 +190,7 @@ const MatchedPlayerCard = ({
                     // left: "30%",
                     // did the positioning Styling in css because wanted the tooltip to move with the avatar
                   }}
-                  src={`https://flagcdn.com/${PlayerCountryCode.toLowerCase()}.svg`}
+                  src={`https://flagcdn.com/${PlayerCountryCode?.toLowerCase()}.svg`}
                   alt={PlayerCountryCode}
                 />{" "}
               </Tooltip>{" "}
@@ -348,7 +349,7 @@ const MatchedPlayerCard = ({
                   zIndex: "1000",
                 }}
               >
-                {DoesClubLogoKeyExist === true ? (
+                {IsPlayerVerifiedFromApi === true ? (
                   <Tooltip title="Verified">
                     <Verified sx={{ color: "#5585FE" }} />{" "}
                   </Tooltip>

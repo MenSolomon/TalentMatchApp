@@ -28,16 +28,35 @@ export const OtherComponentStatesSlice = createSlice({
     carouselVideoIndex: 0,
     playerPositions: [
       // "Any",
-      "Goalkeeper (GK)",
-      "Center Back (CB)",
-      "Right Back (RB)",
-      "Left Back (LB)",
-      "Wing Back (WB) ",
-      "Defensive Midfielder (DM)",
-      "Central Midfielder (CM)",
-      "Attacking Midfielder (AM)",
-      "Winger (W)",
-      "Striker (ST)",
+      "Goalkeeper",
+      "Defender",
+      "Center Back",
+      "Right Back",
+      "Left Back",
+      "Wing Back",
+      "Midfielder",
+      "Defensive Midfielder",
+      "Central Midfielder",
+      "Attacking Midfielder",
+      "Foward",
+      "Winger",
+      "Striker",
+    ],
+
+    positionsFullObject: [
+      { name: "Goalkeeper", code2: "GK", code3: "GKP" },
+      { name: "Defender", code2: "DF", code3: "DEF" },
+      { name: "Center Back", code2: "CB", code3: "CBK" },
+      { name: "Right Back", code2: "RB", code3: "RBK" },
+      { name: "Left Back", code2: "LB", code3: "LBK" },
+      { name: "Wing Back", code2: "WB", code3: "WBK" },
+      { name: "Midfielder", code2: "MF", code3: "MID" },
+      { name: "Defensive Midfielder", code2: "DM", code3: "DMF" },
+      { name: "Central Midfielder", code2: "CM", code3: "CMF" },
+      { name: "Attacking Midfielder", code2: "AM", code3: "AMF" },
+      { name: "Forward", code2: "FW", code3: "FWD" },
+      { name: "Winger", code2: "WG", code3: "WNG" },
+      { name: "Striker", code2: "ST", code3: "STK" },
     ],
     // messaging user selected
     contactSelectedForMessaging: {
@@ -150,6 +169,8 @@ export const selectCarouselVideoIndex = (state) =>
   state.OtherComponentStates.carouselVideoIndex;
 export const selectSoccerPostions = (state) =>
   state.OtherComponentStates.playerPositions;
+export const selectSoccerPositionsFullObject = (state) =>
+  state.OtherComponentStates.positionsFullObject;
 
 export const selectContactSelectedForMessaging = (state) =>
   state.OtherComponentStates.contactSelectedForMessaging;

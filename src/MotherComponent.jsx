@@ -383,6 +383,9 @@ const MotherComponent = () => {
                 dispatch(
                   setUserDetailsObject({
                     ...userLoginObject,
+                    dateCreated:
+                      userLoginObject.dateCreated &&
+                      userLoginObject?.dateCreated?.toMillis(),
                     subscriptionPackage: null,
                     subscriptionPrice: null,
                   })
@@ -609,8 +612,8 @@ const MotherComponent = () => {
   }, []);
   return (
     <div
-      className="  md:flex md:flex-col md:h-[100vh] md:w-[100vw] md:pb-[0vh] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw] sm:pb-[10vh] 
-      lg:flex lg:flex-col lg:h-[112vh] lg:w-[100vw]
+      className="  md:flex md:flex-col md:h-[100vh] md:w-[100%] md:pb-[0vh] sm:flex sm:flex-col sm:h-[107vh] sm:w-[100vw] sm:pb-[10vh] 
+      lg:flex lg:flex-col lg:h-[112vh] lg:w-[100%]
       "
       style={{
         visibility:
@@ -656,10 +659,15 @@ const MotherComponent = () => {
       {/*  NO SUBSCRIPTION ALERT END */}
       {/* //=====  NAVBAR ======= \\ */}
       <div
-        className="md:flex md:basis-[11%]  sm:flex sm:basis-[8%]
-        lg:flex lg:basis-[11%]
-        "
-        // style={{ background: "red" }}lg
+        className={`md:flex md:basis-[11%]  sm:flex sm:basis-[8%]
+        lg:flex lg:basis-[11%] ${screenWidth < 1024 ? "cardBackground" : ""} `}
+        style={{
+          // background: "red",
+          position: "fixed",
+          width: "100%",
+          top: 0,
+          zIndex: "1100",
+        }}
       >
         {/* // Logo Area */}
 
@@ -705,11 +713,11 @@ const MotherComponent = () => {
             }}
           >
             {clubsInDatabase.map((data, index) => {
-              const { clubImage, clubName } = data;
+              const { imageDataURL, name } = data;
               return (
-                <Tooltip key={index} title={clubName}>
+                <Tooltip key={index} title={name}>
                   <Avatar
-                    src={clubImage}
+                    src={imageDataURL}
                     sx={{ width: 38, height: 38, marginRight: 1.6 }}
                   />
                 </Tooltip>
@@ -764,15 +772,14 @@ const MotherComponent = () => {
       </div>
       {/* // ======  PAGE CONTENT ===== \\ */}
       <div
-        className="md:flex md:basis-[89%]  lg:flex lg:basis-[89%]  sm:flex sm:basis-[92%] sm:overflow-y-scroll sm:width-[100vw] "
-        style={
-          {
-            // flex: ".89",
-            // display: "flex",
-            // background: "green",
-            // overflowY: "visible",
-          }
-        }
+        className="md:flex md:basis-[100%]  lg:flex lg:basis-[89%]  sm:flex sm:basis-[100%] sm:overflow-y-scroll sm:width-[100vw] "
+        style={{
+          paddingTop: screenWidth < 1024 ? "7vh" : "9vh",
+          // flex: ".89",
+          // display: "flex",
+          // background: "green",
+          // overflowY: "visible",
+        }}
       >
         {/* className="md:basis-[18%] md:flex-shrink-0  lg:basis-[18%] lg:flex-shrink-0  md:pt-[5vh] md:flex-col md:flex md:hidden sm:hidden lg:block" */}
 

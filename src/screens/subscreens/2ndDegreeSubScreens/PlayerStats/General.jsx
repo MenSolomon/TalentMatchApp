@@ -11,9 +11,7 @@ const General = ({ Period }) => {
     return data.Season === Period;
   });
 
-  console.log(filteredSeasonStats);
-
-  const { General } = filteredSeasonStats;
+  const { General } = filteredSeasonStats || {};
   console.log(General);
 
   return (
@@ -21,16 +19,25 @@ const General = ({ Period }) => {
       className="primaryColor"
       style={{ width: "100%", height: "100%", display: "flex", gap: "5vw" }}
     >
-      <AttributesToFormat name="Match starts" number={General.Starts} />
-      <AttributesToFormat name="Games played" number={General.Games_Played} />
-      <AttributesToFormat
-        name="Minutes played"
-        number={General.Minutes_Played}
-      />
-      <AttributesToFormat
-        name="Number of times Subbed off"
-        number={General.Subbed_off}
-      />
+      {filteredSeasonStats === undefined ? (
+        <div> we do not have records for this season </div>
+      ) : (
+        <>
+          <AttributesToFormat name="Match starts" number={General.Starts} />
+          <AttributesToFormat
+            name="Games played"
+            number={General.Games_Played}
+          />
+          <AttributesToFormat
+            name="Minutes played"
+            number={General.Minutes_Played}
+          />
+          <AttributesToFormat
+            name="Number of times Subbed off"
+            number={General.Subbed_off}
+          />
+        </>
+      )}
     </div>
   );
 };
