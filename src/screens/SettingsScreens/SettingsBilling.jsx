@@ -60,7 +60,7 @@ function SettingsBilling() {
     } catch (error) {
       console.log(`fetchProducts`, error);
     }
-    console.log(productsObjectsArray);
+    // console.log(productsObjectsArray);
     return productsObjectsArray;
   };
 
@@ -72,7 +72,7 @@ function SettingsBilling() {
   } = useQuery({ queryKey: ["fetchProducts"], queryFn: fetchProductIds });
 
   const handleCustomerPortal = async () => {
-    const functions = getFunctions(app, "europe-west2");
+    const functions = getFunctions(app);
     const createPortalLink = httpsCallable(
       functions,
       "ext-firestore-stripe-payments-createPortalLink"

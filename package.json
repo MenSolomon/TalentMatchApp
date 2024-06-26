@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "responsive-css": "tailwindcss build src/Tailwind.css -o TailwindResponsiveStyle/style.css"
   },
+  "proxy": "https://europe-west2-talentmeet-86e99.cloudfunctions.net",
   "dependencies": {
     "@emailjs/browser": "^4.3.3",
     "@emotion/react": "^11.11.1",

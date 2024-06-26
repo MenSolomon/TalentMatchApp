@@ -12,8 +12,7 @@ export default function PlayerManagementSettingsAccordion() {
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
+          id="panel1a-header">
           <Typography>Accordion 1</Typography>
         </AccordionSummary>
         <AccordionDetails>
