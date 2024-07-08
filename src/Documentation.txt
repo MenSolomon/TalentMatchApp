@@ -1,0 +1,2 @@
+ // In SettingsBilling file We take the names from a dublicate array in the src directory to prevent unecessary reads from firestore
+  const productids = productDetails;

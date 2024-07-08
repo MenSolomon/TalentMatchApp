@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { app, functions } from "../../Firebase/Firebase";
+import { app, db, functions } from "../../Firebase/Firebase";
 import { productDetails } from "../../utils/ProductDetails";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ import {
   setCircularLoadBackdropMessage,
   setOpenCircularLoadBackdrop,
 } from "../../statemanager/slices/OtherComponentStatesSlice";
+import { collection, getDocs } from "firebase/firestore";
 
 function SettingsBilling() {
   const navigate = useNavigate();
@@ -41,11 +42,37 @@ function SettingsBilling() {
 
   // product details array
   // We take the names from a dublicate array in the src directory to prevent unecessary reads from firestore
-  const productids = productDetails;
+  // const productids = productDetails;
   const isSubscriptionActive = useSelector(selectIsSubscriptionActive);
+  const fetchProductIds = async () => {
+    const productsObjectsArray = [];
+
+    try {
+      const productsCollectionRef = collection(db, `products`);
+      const productsDocs = await getDocs(productsCollectionRef);
+
+      for (const product of productsDocs.docs) {
+        productsObjectsArray.push({
+          id: product.id,
+          name: product.data().name,
+        });
+      }
+    } catch (error) {
+      console.log(`fetchProducts`, error);
+    }
+    // console.log(productsObjectsArray);
+    return productsObjectsArray;
+  };
+
+  const {
+    status,
+    data: productids,
+    error,
+    refetch,
+  } = useQuery({ queryKey: ["fetchProducts"], queryFn: fetchProductIds });
 
   const handleCustomerPortal = async () => {
-    const functions = getFunctions(app, "europe-west2");
+    const functions = getFunctions(app);
     const createPortalLink = httpsCallable(
       functions,
       "ext-firestore-stripe-payments-createPortalLink"
@@ -71,8 +98,7 @@ function SettingsBilling() {
           // flexDirection: "column",
           // overflowY: "scroll",
         }
-      }
-    >
+      }>
       {/* Header Column */}
       <div style={{ flex: "0.01" }}>
         <h5 className="lg:text-[1em] md:text-[1em] tb:text-[1em]">Billing</h5>
@@ -93,12 +119,10 @@ function SettingsBilling() {
             flexDirection: "row",
             marginBottom: "5vh",
             gap: "5em",
-          }}
-        >
+          }}>
           <Paper
             className="cardBackground primaryTextColor md:w-[30vw] md:h-[90%] md:flex md:flex-col sm:pt-[20px]   sm:w-[90vw] sm:h-[18vh] sm:flex sm:flex-col"
-            style={{ padding: "10px 20px" }}
-          >
+            style={{ padding: "10px 20px" }}>
             <div
               style={{
                 flex: ".3",
@@ -107,12 +131,11 @@ function SettingsBilling() {
                 flexDirection: "row",
                 // alignItems: "center",
                 // justifyContent: "space-between",
-              }}
-            >
+              }}>
               <div className="padding" style={{ flex: ".7" }}>
-                {productids.map((item) => {
+                {productids?.map((item) => {
                   if (subscriptionPackage === item.id) {
-                    return <div>{item.name}</div>;
+                    return <div key={item.id}>{item.name}</div>;
                   }
                 })}
                 {isSubscriptionActive ? "Active" : "Inactive"}
@@ -121,8 +144,7 @@ function SettingsBilling() {
                 <div style={{ padding: "5px 0px" }}>
                   <Button
                     variant="contained"
-                    onClick={() => navigate("/changeSubscription")}
-                  >
+                    onClick={() => navigate("/changeSubscription")}>
                     Change Package
                   </Button>
                 </div>
@@ -142,8 +164,7 @@ function SettingsBilling() {
             marginBottom: "3vh",
             display: "flex",
             flexDirection: "row",
-          }}
-        >
+          }}>
           <div style={{ flex: ".7" }}>
             <div style={{ padding: "10px 20px" }}>
               <h4 className="lg:text-[1em] md:text-[1em] tb:text-[1em]">
@@ -181,8 +202,7 @@ function SettingsBilling() {
                     justifyContent: "start",
                     // padding: "10px",
                   }}
-                  size="small"
-                >
+                  size="small">
                   Manage Subscription
                 </Button>
               )}

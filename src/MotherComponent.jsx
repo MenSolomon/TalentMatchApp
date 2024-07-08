@@ -465,13 +465,13 @@ const MotherComponent = () => {
   };
   useEffect(() => {
     const ApplyNewBoostPoints = async () => {
+      console.log(`ApplyNewBoostPoints`);
       try {
         // alert("Applying Boost");
-        const currentUser = auth.currentUser;
-        // alert(currentUser.uid);
 
         // All Payments query with includes succeeded and failed transcactions
         const paymentsCollectionQuery = query(
+          collection(db, `users_db/${userLoginObject?.accountId}/payments`),
           collection(db, `users_db/${userLoginObject?.accountId}/payments`),
           where("status", "==", "succeeded")
         );
@@ -479,9 +479,10 @@ const MotherComponent = () => {
           paymentsCollectionQuery
         );
 
-        //succeededPayments doc with includes id of only succeeded transcactions
+        //succeededPayments doc which includes id of only succeeded transcactions
         const succeededPaymentsDocRef = doc(
           db,
+          `users_db/${userLoginObject?.accountId}/succeededPayments`,
           `users_db/${userLoginObject?.accountId}/succeededPayments`,
           "paymentIds"
         );
@@ -491,7 +492,7 @@ const MotherComponent = () => {
           let purchasedBoostPoints;
 
           switch (amount) {
-            case 1600:
+            case 1900:
               purchasedBoostPoints = 1000;
               break;
             case 900:
@@ -547,6 +548,7 @@ const MotherComponent = () => {
             const boostPointsPayments = [];
             for (const doc of paymentsCollectionSnaphot.docs) {
               const payment = doc.data();
+              // console.log(`payment.items, ${doc.data()}`);
               if (
                 payment.items &&
                 payment.items.length > 0 &&
@@ -558,7 +560,7 @@ const MotherComponent = () => {
                 }
               }
             }
-
+            console.log(`boostPointsPayments`, boostPointsPayments);
             const boostPointsPaymentsDestructured = [];
 
             for (const itemsArray of boostPointsPayments) {
@@ -567,8 +569,11 @@ const MotherComponent = () => {
                 boostPointsPaymentsDestructured.push(item);
               }
             }
+            console.log(
+              "boostPointsPaymentsDestructured",
+              boostPointsPaymentsDestructured
+            );
 
-            // });
             // Check if any of the boostPointsPaymentsDestructured ids are in succeededPaymentsDocResult as a Promise
             const latestPaymentPromise = new Promise((resolve) => {
               const latestPayment = [];
@@ -610,7 +615,7 @@ const MotherComponent = () => {
           console.log(error);
         }
       } catch (error) {
-        console.log("ApplyNewBosstPoints", error);
+        console.log("ApplyNewBoostPoints", error);
       }
     };
     ApplyNewBoostPoints();
