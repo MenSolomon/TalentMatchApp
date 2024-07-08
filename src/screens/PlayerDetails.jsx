@@ -48,6 +48,7 @@ import { selectClubsInDatabase } from "../statemanager/slices/ClubsInDatabaseSli
 import { selectUserDetailsObject } from "../statemanager/slices/LoginUserDataSlice";
 import { doc, increment, updateDoc } from "firebase/firestore";
 import { db } from "../Firebase/Firebase";
+import moment from "moment/moment";
 
 const PlayerDetails = () => {
   const { playerId } = useParams();
@@ -455,6 +456,17 @@ const PlayerDetails = () => {
     };
   }, []);
 
+  const calculateAge = () => {
+    const birthDate = moment(
+      selectedPlayerArray[0]?.["date_of_birth"],
+      "YYYY-MM-DD"
+    );
+    const today = moment();
+    return today.diff(birthDate, "years");
+  };
+
+  const playerAge = calculateAge();
+
   return (
     <div
       className="md:w-[100%] md:h-[95%]  sm:w-[100%] sm:h-[100%]"
@@ -500,11 +512,7 @@ const PlayerDetails = () => {
             firstname={selectedPlayerArray[0]?.firstName}
             surname={selectedPlayerArray[0]?.surName}
             position={selectedPlayerArray[0]?.position}
-            age={
-              selectedPlayerArray[0]?.Age === null
-                ? ""
-                : selectedPlayerArray[0]?.Age
-            }
+            age={playerAge}
             image={selectedPlayerArray[0]?.player_profile_image}
             hTagStyle={hTagStyle}
           />
@@ -566,6 +574,10 @@ const PlayerDetails = () => {
           Position={selectedPlayerArray[0]?.position}
           PlayerTabItemsArray={menuLabelArray}
           Statistics={selectedPlayerArray[0]?.Statistics}
+          matchIdFromPlayerDatabase={
+            selectedPlayerArray[0]?.matches[0]?.matchId
+          }
+          allMatchesPlayedArray={selectedPlayerArray[0]?.matches}
         />
       </div>
       <div style={{ gridArea: "ContentArea" }}></div>

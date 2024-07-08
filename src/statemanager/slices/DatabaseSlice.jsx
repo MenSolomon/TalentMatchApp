@@ -6,6 +6,7 @@ export const DatabaseSlice = createSlice({
     usersDatabase: [],
     playersDatabase: [],
     ApiPlayersDatabase: [],
+    AllSeasonsIdFromApi: [],
   },
 
   reducers: {
@@ -18,6 +19,9 @@ export const DatabaseSlice = createSlice({
     setApiPlayersDatabase: (state, action) => {
       state.ApiPlayersDatabase = action.payload;
     },
+    setAllSeasonsIdFromApi: (state, action) => {
+      state.AllSeasonsIdFromApi = action.payload;
+    },
   },
 });
 
@@ -25,7 +29,13 @@ export const selectUsersDatabase = (state) => state.Database.usersDatabase;
 export const selectPlayersDatabase = (state) => state.Database.playersDatabase;
 export const selectApiPlayersDatabase = (state) =>
   state.Database.ApiPlayersDatabase;
+export const selectAllSeasonsIdFromApi = (state) =>
+  state.Database.AllSeasonsIdFromApi;
 
-export const { setUsersDatabase, setPlayersDatabase, setApiPlayersDatabase } =
-  DatabaseSlice.actions;
+export const {
+  setUsersDatabase,
+  setPlayersDatabase,
+  setApiPlayersDatabase,
+  setAllSeasonsIdFromApi,
+} = DatabaseSlice.actions;
 export default DatabaseSlice.reducer;

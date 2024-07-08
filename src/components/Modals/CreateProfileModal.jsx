@@ -701,15 +701,30 @@ export default function CreateProfileModal({ ProfileType }) {
     // setPlaceOfBirth(value);
   };
 
-  const handelNationalityValue = (value) => {
-    console.log(value, "Nationality");
+  useEffect(() => {
+    // alert(NationalityValue);
+  }, [NationalityValue]);
+
+  // const handelNationalityValue = (value) => {
+  //   console.log(value, "Nationality");
+  //   dispatch(
+  //     setCurrentProfileFilterObject({
+  //       ...currentProfileFilterObject,
+  //       NationalityValue: value,
+  //     })
+  //   );
+  //   // setNationalityValue(value);
+  // };
+  const [nationalityValue, setNationalityValue] = useState(NationalityValue);
+
+  const handleNationalityValue = (value) => {
+    setNationalityValue(value);
     dispatch(
       setCurrentProfileFilterObject({
         ...currentProfileFilterObject,
         NationalityValue: value,
       })
     );
-    // setNationalityValue(value);
   };
 
   const handleAgeRangeValue = (value) => {
@@ -1082,7 +1097,7 @@ export default function CreateProfileModal({ ProfileType }) {
                   ? "Default Profile"
                   : "Search Profile"}{" "}
               </h2>{" "}
-              <h6 className="lg:text-[1.8em] md:text-[1.5em]">
+              <h6 className="lg:text-[1.3em] md:text-[1.3em]">
                 {/* Who are you looking for? */}
                 Profile name
               </h6>{" "}
@@ -1145,7 +1160,7 @@ export default function CreateProfileModal({ ProfileType }) {
                 }}
               >
                 {" "}
-                <h4 className="secondaryTextColor lg:text-[1.8em] md:text-[1.5em]">
+                <h4 className="secondaryTextColor lg:text-[1.3em] md:text-[1.3em]">
                   Personal Information{" "}
                   <IconTooltip
                     info={
@@ -1161,8 +1176,16 @@ export default function CreateProfileModal({ ProfileType }) {
                   defaultValue={PlaceOfBirth}
                 /> */}
                 {/* Nationality  */}
-                <CountrySelect
+                {/* <CountrySelect
                   selectValue={handelNationalityValue}
+                  selectLabel="Nationality"
+                  defaultValue={NationalityValue}
+                /> */}
+                <CountrySelect
+                  selectValue={handleNationalityValue}
+                  selectCountryCode={(code) =>
+                    console.log("Selected country code:", code)
+                  }
                   selectLabel="Nationality"
                   defaultValue={NationalityValue}
                 />
@@ -1210,7 +1233,7 @@ export default function CreateProfileModal({ ProfileType }) {
                   }}
                 >
                   {" "}
-                  <h4 className="secondaryTextColor lg:text-[1.8em] md:text-[1.5em]">
+                  <h4 className="secondaryTextColor lg:text-[1.3em] md:text-[1.3em]">
                     Player Information{" "}
                     <IconTooltip
                       info={
@@ -1414,7 +1437,7 @@ export default function CreateProfileModal({ ProfileType }) {
                   }
                 }
               >
-                <h4 className="secondaryTextColor lg:text-[1.8em] md:text-[1.5em]">
+                <h4 className="secondaryTextColor lg:text-[1.3em] md:text-[1.3em]">
                   Other Information{" "}
                   <IconTooltip
                     info={

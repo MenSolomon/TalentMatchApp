@@ -1,4 +1,4 @@
-import { Star, StarBorder } from "@mui/icons-material";
+import { LocalPoliceOutlined, Star, StarBorder } from "@mui/icons-material";
 import { Card, Checkbox, FormControlLabel, Tooltip } from "@mui/material";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +18,8 @@ const FavoritePlayerViewCard = ({
   jerseyNumber,
   id,
   positionToolTipInFull,
+  clubName,
+  clubImage,
 }) => {
   const navigate = useNavigate();
 
@@ -91,10 +93,10 @@ const FavoritePlayerViewCard = ({
         }}
       >
         {/* Image Area */}
-        <div style={{ flex: ".3" }}>
+        <div style={{ flex: ".28" }}>
           <img
             src={image}
-            style={{ width: "100%", height: "100%", borderRadius: ".8vw" }}
+            style={{ minWidth: "80px", height: "80px", borderRadius: ".8vw" }}
           />
 
           {}
@@ -102,7 +104,7 @@ const FavoritePlayerViewCard = ({
         {/* NAme Details  and Descriptive Data*/}
         <div
           style={{
-            flex: ".6",
+            flex: ".52",
 
             display: "flex",
             flexDirection: "column",
@@ -111,14 +113,16 @@ const FavoritePlayerViewCard = ({
           {/* Name Details */}
           <div style={{ flex: ".5" }}>
             <p style={{ margin: 0 }}>
-              {firstName.length >= 10 ? (
-                <Tooltip title={firstName}>{firstName.slice(0, 10)}...</Tooltip>
+              {firstName?.length >= 10 ? (
+                <Tooltip title={firstName}>
+                  {firstName?.slice(0, 10)}...
+                </Tooltip>
               ) : (
                 firstName
               )}
             </p>{" "}
             <h4 style={{ margin: 0 }}>
-              {surName.length >= 10 ? (
+              {surName?.length >= 10 ? (
                 <Tooltip title={surName}>{surName.slice(0, 7)}...</Tooltip>
               ) : (
                 surName
@@ -135,9 +139,9 @@ const FavoritePlayerViewCard = ({
             {/* Nationality */}
             <div style={{ flex: ".5" }}>
               <span style={{ fontWeight: "700" }}>Country </span> <br />{" "}
-              {nationality.length >= 20 ? (
+              {nationality?.length >= 20 ? (
                 <Tooltip title={nationality}>
-                  {nationality.slice(0, 18)}...
+                  {nationality?.slice(0, 18)}...
                 </Tooltip>
               ) : (
                 nationality
@@ -156,13 +160,33 @@ const FavoritePlayerViewCard = ({
         {/* Jersey Number */}
         <div
           style={{
-            flex: ".1",
+            flex: ".2",
             display: "flex",
             // alignContent: "center",
             // justifyContent: "center",
+            // background: "red",
           }}
         >
           {" "}
+          {clubImage ? (
+            <Tooltip title={clubName}>
+              <img
+                src={clubImage}
+                style={{
+                  width: "170px",
+                  height: "60px",
+                  borderRadius: ".8vw",
+                }}
+              />
+            </Tooltip>
+          ) : (
+            <Tooltip title={"Free Agent"}>
+              {" "}
+              <LocalPoliceOutlined
+                style={{ width: "170px", height: "40px", borderRadius: ".8vw" }}
+              />{" "}
+            </Tooltip>
+          )}
           {/* <FormControlLabel
             onChange={(event) => {
               if (event.target.checked) {

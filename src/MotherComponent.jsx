@@ -73,6 +73,11 @@ const MotherComponent = () => {
       icon: "compare_arrows",
       path: "/player-compare",
     },
+    {
+      name: "View Stats",
+      icon: "monitoring",
+      path: "/requested-stats",
+    },
   ];
 
   const menuButtonsArrayTWO2 = [
@@ -467,7 +472,7 @@ const MotherComponent = () => {
 
         // All Payments query with includes succeeded and failed transcactions
         const paymentsCollectionQuery = query(
-          collection(db, `users_db/${currentUser.uid}/payments`),
+          collection(db, `users_db/${userLoginObject?.accountId}/payments`),
           where("status", "==", "succeeded")
         );
         const paymentsCollectionSnaphot = await getDocs(
@@ -477,7 +482,7 @@ const MotherComponent = () => {
         //succeededPayments doc with includes id of only succeeded transcactions
         const succeededPaymentsDocRef = doc(
           db,
-          `users_db/${currentUser.uid}/succeededPayments`,
+          `users_db/${userLoginObject?.accountId}/succeededPayments`,
           "paymentIds"
         );
 
@@ -500,7 +505,7 @@ const MotherComponent = () => {
               break;
           }
           try {
-            const userRef = doc(db, `users_db/${currentUser.uid}`);
+            const userRef = doc(db, `users_db/${userLoginObject?.accountId}`);
             await updateDoc(userRef, {
               boostPoints: increment(purchasedBoostPoints),
             });

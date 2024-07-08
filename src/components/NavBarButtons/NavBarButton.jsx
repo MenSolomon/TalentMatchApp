@@ -63,6 +63,7 @@ import {
   Favorite,
   Help,
   Home,
+  MonitorOutlined,
   Newspaper,
   Settings,
   Star,
@@ -110,6 +111,8 @@ const NavBarButton = ({ ButtonName, ButtonImage, path, buttonStyle }) => {
             <Help sx={{ color: buttonColor }} />
           ) : ButtonName === "Settings" ? (
             <Settings sx={{ color: buttonColor }} />
+          ) : ButtonName === "View Stats" ? (
+            <MonitorOutlined sx={{ color: buttonColor }} />
           ) : ButtonName === "Logout" ? (
             <DoorBack sx={{ color: buttonColor }} />
           ) : (

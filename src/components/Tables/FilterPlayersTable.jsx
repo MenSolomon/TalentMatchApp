@@ -23,7 +23,12 @@ import {
   Tooltip,
 } from "@mui/material";
 import BasicButton from "../Buttons/BasicButton";
-import { Star, StarBorder, VideocamOff } from "@mui/icons-material";
+import {
+  LocalPoliceOutlined,
+  Star,
+  StarBorder,
+  VideocamOff,
+} from "@mui/icons-material";
 import PlayerOverallAttributes from "../Charts/Bars/PlayerOverallAttributes";
 import { useSelector } from "react-redux";
 import { selectPlayersInAgencyArray } from "../../statemanager/slices/PlayersInAgencySlice";
@@ -184,12 +189,28 @@ function Row(props) {
           </Tooltip>
         </TableCell>
         <TableCell align="right">
-          <Tooltip title={row?.clubName}>
+          {/* <Tooltip title={row?.clubName}>
             <Avatar
               sx={{ width: 30, height: 30, marginRight: 1 }}
               src={row?.Club}
             />{" "}
-          </Tooltip>
+          </Tooltip> */}
+
+          {row?.clubName ? (
+            <Tooltip title={row?.clubName}>
+              <Avatar
+                src={row?.Club}
+                s={{ width: 30, height: 30, marginRight: 1 }}
+              />
+            </Tooltip>
+          ) : (
+            <Tooltip title={"Free Agent"}>
+              {" "}
+              <LocalPoliceOutlined
+                sx={{ width: 30, height: 30, marginRight: 1 }}
+              />{" "}
+            </Tooltip>
+          )}
         </TableCell>
         <TableCell align="right">
           <Tooltip title={row.Position.name}> {row.Position.name} </Tooltip>

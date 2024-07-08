@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import {
   selectPlayersDatabase,
+  setAllSeasonsIdFromApi,
   setApiPlayersDatabase,
   setPlayersDatabase,
   setUsersDatabase,
@@ -198,6 +199,58 @@ const BackEndDataCatalog = ({ children }) => {
       alldata();
     };
   }, [loginUserObject]);
+
+  // Player IDS REQUESTED STATS
+  useEffect(() => {
+    // const savedProfileSubCollectionRef = doc(
+    //   db,
+    //   `users_db/${loginUserObject?.accountId}/SavedProfiles`,
+    //   loginUserObject?.accountId
+    // );
+
+    const resquestedPlayersIdRef = collection(
+      db,
+      `users_db/${loginUserObject?.accountId}/requestedAdvancedStatisics`
+    );
+    const q = query(resquestedPlayersIdRef);
+    const alldata = onSnapshot(q, (querySnapshot) => {
+      const items = [];
+      querySnapshot.forEach((doc) => {
+        items.push(doc.data());
+      });
+
+      console.log(loginUserObject?.accountId, "  edem", items);
+      // dispatch(setUserSavedProfiles(items));
+    });
+    return () => {
+      alldata();
+    };
+  }, [loginUserObject]);
+
+  // ******** RETRIEVING ALL SEASONS FROM WYSCOUT API STORED IN FIRESTORE ********
+  // Database
+
+  async function getSeasonsFromFirestore() {
+    try {
+      const docRef = doc(db, "wyScout", "SeasonIDs");
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists) {
+        const seasonsData = docSnap.data();
+        dispatch(setAllSeasonsIdFromApi(seasonsData?.SeasonDetails?.seasons)); // Dispatch action to update state
+
+        console.log("seasons data found in Firestore.", seasonsData);
+      } else {
+        console.log(" no seasons data found in Firestore.");
+      }
+    } catch (error) {
+      console.error("Error fetching seasons data:", error);
+    }
+  }
+
+  useEffect(() => {
+    getSeasonsFromFirestore();
+  }, []);
 
   // Retrieving all Teeams in the database
   async function getClubsFromFirestore() {

@@ -6,6 +6,7 @@ import FavoritePlayerViewCard from "../components/Cards/FavoritePlayerViewCard";
 import { selectPlayersDatabase } from "../statemanager/slices/DatabaseSlice";
 import { selectUserDetailsObject } from "../statemanager/slices/LoginUserDataSlice";
 import { selectCurrentBrowserSize } from "../statemanager/slices/OtherComponentStatesSlice";
+import { selectClubsInDatabase } from "../statemanager/slices/ClubsInDatabaseSlice";
 
 const Favorites = () => {
   const browserSize = useSelector(selectCurrentBrowserSize);
@@ -14,6 +15,8 @@ const Favorites = () => {
   const allPlayersInDatabase = useSelector(selectPlayersDatabase);
 
   const userLoginObject = useSelector(selectUserDetailsObject);
+  const allTeamsInDatabase = useSelector(selectClubsInDatabase);
+
   const playersInFavoriteArray =
     userLoginObject?.favoritePlayers &&
     userLoginObject?.favoritePlayers.map((player) => {
@@ -81,11 +84,16 @@ const Favorites = () => {
               role,
               player_profile_image,
               id,
-            } = data;
+              currentTeamId,
+            } = data || {};
 
-            // A reget to extract the position Abreviation
+            const foundTeamObject = allTeamsInDatabase?.find(
+              (team) => team?.wyId === currentTeamId
+            );
 
-            var positionABR = position.match(/\((.*?)\)/);
+            // A regex to extract the position Abreviation
+
+            var positionABR = position?.match(/\((.*?)\)/);
 
             // Check if there are matches and get the value inside parentheses
             var result = positionABR ? positionABR[1] : null;
@@ -104,6 +112,8 @@ const Favorites = () => {
                 firstName={firstName}
                 nationality={Nationality}
                 id={id}
+                clubImage={foundTeamObject?.imageDataURL}
+                clubName={foundTeamObject?.name}
               />
             );
           })

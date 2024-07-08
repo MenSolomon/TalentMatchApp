@@ -53,6 +53,8 @@ export default function PlayerDetailsMenuTab({
   contactEndDate,
   Position,
   Statistics,
+  matchIdFromPlayerDatabase,
+  allMatchesPlayedArray,
 }) {
   const [value, setValue] = useState(0);
 
@@ -121,6 +123,8 @@ export default function PlayerDetailsMenuTab({
                   contactEndDate={contactEndDate}
                   Position={Position}
                   Statistics={Statistics}
+                  matchIdFromPlayerDatabase={matchIdFromPlayerDatabase}
+                  allMatchesPlayedArray={allMatchesPlayedArray}
                 />
               </Suspense>
             </CustomTabPanel>

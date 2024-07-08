@@ -17,7 +17,7 @@ export const InternetActivitiesSlice = createSlice({
 });
 
 export const selectInternetConnectionStatus = (state) =>
-  state.InternetActivities.userDetailsObject;
+  state.InternetActivities.InternetConnectionStatus;
 
 export const { setInternetConnectionOffline, setInternetConnectionOnline } =
   InternetActivitiesSlice.actions;

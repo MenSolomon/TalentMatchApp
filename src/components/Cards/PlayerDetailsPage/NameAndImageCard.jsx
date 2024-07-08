@@ -47,17 +47,25 @@ const NameAndImageCard = ({
           style={hTagStyle}
         >
           {" "}
-          {firstname}{" "}
+          {firstname?.length >= 10 ? (
+            <Tooltip title={firstname}>{firstname?.slice(0, 10)}...</Tooltip>
+          ) : (
+            firstname
+          )}
         </h5>{" "}
         <h5 className="lg:text-[1em] md:text-[1em]  sm:text-[1em] tb:text-[2em]">
           {" "}
-          {surname}{" "}
+          {surname?.length >= 10 ? (
+            <Tooltip title={surname}>{surname?.slice(0, 12)}...</Tooltip>
+          ) : (
+            surname
+          )}
         </h5>{" "}
         {/* // Age And Postion */}
         <div
           style={{
             width: "100%",
-            height: "27%",
+            height: "20%",
             display: "flex",
             // background: "blue",
           }}
@@ -82,11 +90,16 @@ const NameAndImageCard = ({
               // display: "flex",
               // flexDirection: "column",
               paddingBottom: ".6vh",
+              // background: "red",
+              fonstSize: ".8em",
             }}
           >
             {/* <div style={{ flex: "0.5" }}></div> */}
             {/* // POSTION PLACEMENT */}
-            <div className="md:basis-[5%] md:flex sm:basis-[5%] sm:flex">
+            <div
+              style={{ position: "relative" }}
+              className="md:basis-[5%] md:flex sm:basis-[5%] sm:flex"
+            >
               <Avatar
                 src=""
                 alt=""
@@ -94,7 +107,10 @@ const NameAndImageCard = ({
                   width: 13,
                   height: 13,
                   background: "#384DCB",
-                  marginRight: ".4vw",
+                  marginLeft: ".4vw",
+                  position: "absolute",
+                  top: "0.5vh",
+                  right: 0,
                 }}
               >
                 <img src="" alt="" />
@@ -103,6 +119,12 @@ const NameAndImageCard = ({
             </div>
           </div>
         </div>
+        <h6
+          className="lg:text-[.9em] md:text-[.9em]  sm:text-[.9em] tb:text-[.9em]"
+          style={hTagStyle}
+        >
+          Age: {age}
+        </h6>
         <h5>
           <Tooltip title="Verified">
             <Verified sx={{ color: "#5585FE" }} />{" "}

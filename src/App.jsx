@@ -59,6 +59,7 @@ import {
 } from "./statemanager/slices/OtherComponentStatesSlice";
 import BasicBackdrop from "./components/Backdrops/BasicBackdrop";
 import {
+  selectInternetConnectionStatus,
   setInternetConnectionOffline,
   setInternetConnectionOnline,
 } from "./statemanager/slices/InternetActivitiesSlice";
@@ -87,6 +88,10 @@ import { setUserNotifications } from "./statemanager/slices/NofiticationsSlice";
 import ForgotPassword from "./screens/Authentication/ForgotPassword";
 import TermsAndConditionPage from "./screens/TermsAndConditionPage";
 import PrivacyPage from "./screens/PrivacyPage";
+import RequestedStats from "./screens/ResquestedStats";
+import TransitionsSnackbar from "./components/Snackbars/SlideSnackBar";
+import Slide from "@mui/material/Slide";
+import InternetTransitionsSnackbar from "./components/Snackbars/InternetConnectivitySnackBar";
 
 const App = () => {
   const themeProviderObject = useSelector(selectThemeProviderObject);
@@ -547,6 +552,51 @@ const App = () => {
     };
   }, []);
 
+  const internetConnectivityStatus = useSelector(
+    selectInternetConnectionStatus
+  );
+  const [isAppFreshlyOpened, setIsAppFreshlyOpened] = useState(true);
+
+  useEffect(() => {
+    if (internetConnectivityStatus && !isAppFreshlyOpened) {
+      handleSnackbarOpen("You are online", "success");
+    } else if (!isAppFreshlyOpened && !internetConnectivityStatus) {
+      handleSnackbarOpen(
+        "Check your internet. You are appearing offline",
+        "error"
+      );
+    } else if (isAppFreshlyOpened) {
+      setIsAppFreshlyOpened(false);
+    }
+  }, [internetConnectivityStatus]);
+
+  const [snackbarState, setSnackbarState] = useState({
+    open: false,
+    message: "",
+    Transition: Slide,
+    variant: "normal", // default to "normal"
+  });
+
+  const handleSnackbarOpen = (
+    message,
+    variant = "normal",
+    Transition = Slide
+  ) => {
+    setSnackbarState({
+      open: true,
+      message: message,
+      Transition: Transition,
+      variant: variant,
+    });
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarState({
+      ...snackbarState,
+      open: false,
+    });
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -560,7 +610,7 @@ const App = () => {
             <Route path="/favorite" element={<Favorites />} />
             <Route path="/help" element={<Error404 />} />
             <Route path="/settings" element={<Settings />} />
-
+            <Route path="/requested-stats" element={<RequestedStats />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/profile/:profileName" element={<ViewAllScreen />} />
 
@@ -705,6 +755,14 @@ const App = () => {
 
       <BasicBackdrop message={circularLoadBackdropMessage} />
       <ContactSupportModal />
+
+      <InternetTransitionsSnackbar
+        open={snackbarState.open}
+        onClose={handleSnackbarClose}
+        message={snackbarState.message}
+        Transition={snackbarState.Transition}
+        variant={snackbarState.variant} // pass the variant prop
+      />
     </ThemeProvider>
   );
 };

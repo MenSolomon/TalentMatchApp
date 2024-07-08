@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -9,10 +10,21 @@ export default function CountrySelect({
   selectCountryCode,
   defaultValue,
 }) {
+  const [selectedCountry, setSelectedCountry] = useState(null);
+
+  useEffect(() => {
+    if (defaultValue) {
+      const country = countries.find(
+        (country) => country.label === defaultValue
+      );
+      setSelectedCountry(country);
+    }
+  }, [defaultValue]);
+
   const handleAutoSelect = (e, v) => {
-    console.log(v.label);
-    selectValue(v.label);
-    selectCountryCode(v.code);
+    setSelectedCountry(v);
+    selectValue(v?.label || "");
+    selectCountryCode(v?.code || "");
   };
 
   return (
@@ -21,7 +33,7 @@ export default function CountrySelect({
       className="sm:w-[100%] md:w-[90%]"
       sx={{ color: "black" }}
       options={countries}
-      value={countries.find((country) => country.label === defaultValue)}
+      value={selectedCountry}
       autoHighlight
       onChange={handleAutoSelect}
       getOptionLabel={(option) => option.label}
@@ -47,9 +59,6 @@ export default function CountrySelect({
           sx={styles}
           {...params}
           label={selectLabel}
-          // onChange={(e) => {
-          //   alert(e.target.value);
-          // }}
           inputProps={{
             ...params.inputProps,
             autoComplete: "new-password", // disable autocomplete and autofill
